@@ -77,3 +77,8 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
   - `doses-rascunho.md`: rascunho de apresentações e doses feito pelo assistente, TUDO "A VALIDAR" (usuário vai conferir nas fontes).
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
 - Próximo passo: receber as apresentações; depois, escrever os casos clínicos iniciais.
+- **App iniciado (React + TS + Vite + Vitest).** Como rodar: `README.md`.
+  - `src/logica/calculos.ts`: fórmulas puras (dose por peso, volume, diluição C1V1, fator BIC, vazão, VIG, Holliday) com testes.
+  - Modo **"Passo a passo"** pronto: trilha de setas, animações (avançar/voltar), explicação, rascunho e folha preenchidos etapa a etapa. Detalhes e como criar roteiros: `docs/passo-a-passo.md`.
+  - Roteiros: RN com sepse (prescrição completa, 20 etapas) e adrenalina 1:10.000 (diluição). Doses todas "A VALIDAR".
+  - Pendente: roteiro de rediluição (aguarda apresentações da Santa Casa); soro com eletrólitos; infusão contínua.

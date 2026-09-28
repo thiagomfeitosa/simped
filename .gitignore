@@ -4,3 +4,8 @@ referencias/privado/*
 
 # Arquivos do sistema
 .DS_Store
+
+# Programa (gerados automaticamente)
+node_modules/
+dist/
+*.tsbuildinfo
