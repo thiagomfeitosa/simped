@@ -1,0 +1,6 @@
+# Livros e materiais com direitos autorais: ficam só no computador do usuário, nunca vão para o GitHub
+referencias/privado/*
+!referencias/privado/LEIA-ME.md
+
+# Arquivos do sistema
+.DS_Store

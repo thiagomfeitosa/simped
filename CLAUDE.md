@@ -63,6 +63,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 ## Fontes de referência
 - Padrão: **SBP**. Opcionais e selecionáveis pelo usuário: **MS**, **AAP** e outras sociedades (neonatologia, AHA/PALS, NRP, GINA etc.). Detalhes em `docs/fase-0/fontes.md`.
 - Escopo etário: neonatologia + pediatria + hebiatria.
+- Biblioteca de fontes em `referencias/`: `catalogo.md` (códigos das fontes), `publicas/` (vai para o GitHub), `privado/` (livros com direitos autorais; fica só no Mac, ignorado pelo git), `trechos/` (tabelas transcritas com página).
 
 ## Estado atual
 - Fase 0 em andamento. Documentos em `docs/fase-0/`:
