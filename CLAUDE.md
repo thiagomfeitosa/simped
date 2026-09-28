@@ -71,9 +71,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Ler fontes pelo número de página; transcrever tabelas em `referencias/trechos/`.
 
 ## Estado atual
-- Fase 0 em andamento. Documentos em `docs/fase-0/`:
-  - `medicacoes-mvp.md`: lista definida pelo usuário (inclui cortisona, hidrocortisona e metilprednisolona, manter todas); faltam as apresentações (usuário vai levantar).
-  - `fontes.md`: fontes e regra de escolha.
-  - `doses-rascunho.md`: rascunho de apresentações e doses feito pelo assistente, TUDO "A VALIDAR" (usuário vai conferir nas fontes).
-  - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
-- Próximo passo: receber as apresentações; depois, escrever os casos clínicos iniciais.
+- Fase 0 com pendências: apresentações (usuário vai levantar), validação das doses de `docs/fase-0/doses-rascunho.md` e casos clínicos iniciais.
+- **Fase 1 iniciada** — plano e andamento em `docs/fase-1/plano.md`.
+  - Passo 1 feito: projeto React + TypeScript + Vite; fórmulas em `src/clinica/formulas.ts` com testes (`npm test`); primeira tela com aviso, paciente fictício, folha com as 9 seções (linhas em texto livre), rascunho e calculadora da BIC (volume final por hospital em `src/dados/hospitais.ts`).
+- Próximo passo: passo 2 (banco de medicações) quando chegarem as apresentações; ou passo 3 (item de medicação estruturado com conferência das contas), que pode começar sem doses.

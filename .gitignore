@@ -4,3 +4,7 @@ referencias/privado/*
 
 # Arquivos do sistema
 .DS_Store
+
+# Dependências e arquivos gerados
+node_modules/
+dist/
