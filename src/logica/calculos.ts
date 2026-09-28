@@ -135,3 +135,120 @@ export function hollidaySegar(pesoKg: number): number {
   if (pesoKg <= 20) return arredondar(1000 + (pesoKg - 10) * 50);
   return arredondar(1500 + (pesoKg - 20) * 20);
 }
+
+// 8. Eletrólitos (mEq) ----------------------------------------------------------
+
+/**
+ * Quantos mg de cada sal correspondem a 1 mEq (massa molar; sais monovalentes).
+ * São dados de QUÍMICA, não doses: NaCl = 23 + 35,5; KCl = 39 + 35,5.
+ */
+export const MG_POR_MEQ = {
+  NaCl: 58.5,
+  KCl: 74.5,
+} as const;
+
+/**
+ * mEq por mL de uma solução de sal a X%.
+ * X% = X g em 100 mL = X × 10 mg em 1 mL → divide pelos mg de 1 mEq.
+ * Ex.: NaCl 3% → 30 ÷ 58,5 ≈ 0,513 mEq/mL; KCl 19,1% → 191 ÷ 74,5 ≈ 2,56 mEq/mL.
+ */
+export function meqPorMl(percentual: number, mgPorMeq: number): number {
+  exigirPositivo('Concentração (%)', percentual);
+  exigirPositivo('mg por mEq', mgPorMeq);
+  return arredondar((percentual * 10) / mgPorMeq);
+}
+
+/** Concentração em mEq/L: mEq ÷ volume (mL) × 1000. */
+export function meqPorLitro(meq: number, volumeMl: number): number {
+  exigirPositivo('mEq', meq);
+  exigirPositivo('Volume', volumeMl);
+  return arredondar((meq * 1000) / volumeMl);
+}
+
+/**
+ * Menor volume (mL) em que uma quantidade de eletrólito pode ser diluída
+ * sem passar da concentração máxima (mEq/L): mEq ÷ máximo × 1000.
+ */
+export function volumeMinimoDiluicao(meq: number, concentracaoMaximaMeqL: number): number {
+  exigirPositivo('mEq', meq);
+  exigirPositivo('Concentração máxima', concentracaoMaximaMeqL);
+  return arredondar((meq * 1000) / concentracaoMaximaMeqL);
+}
+
+/** Água corporal total aproximada usada nas fórmulas de sódio (fração do peso). */
+export const FRACAO_AGUA_CORPORAL_PADRAO = 0.6;
+
+/**
+ * Déficit de sódio (mEq) para levar o Na sérico de "atual" até "desejado":
+ * (Na desejado − Na atual) × fração de água corporal × peso.
+ */
+export function deficitSodio(naDesejado: number, naAtual: number, pesoKg: number, fracaoAgua = FRACAO_AGUA_CORPORAL_PADRAO): number {
+  exigirPositivo('Na desejado', naDesejado);
+  exigirPositivo('Na atual', naAtual);
+  exigirPositivo('Peso', pesoKg);
+  exigirPositivo('Fração de água corporal', fracaoAgua);
+  if (naDesejado <= naAtual) throw new Error('O Na desejado deve ser maior que o Na atual.');
+  return arredondar((naDesejado - naAtual) * fracaoAgua * pesoKg);
+}
+
+/**
+ * Quanto o Na sérico deve subir (mEq/L) com uma quantidade de sódio infundida.
+ * É a mesma fórmula do déficit, "de trás para frente": mEq ÷ (fração de água × peso).
+ * Estimativa grosseira — o que manda é o sódio dosado.
+ */
+export function subidaEstimadaSodio(meqInfundidos: number, pesoKg: number, fracaoAgua = FRACAO_AGUA_CORPORAL_PADRAO): number {
+  exigirPositivo('mEq infundidos', meqInfundidos);
+  exigirPositivo('Peso', pesoKg);
+  exigirPositivo('Fração de água corporal', fracaoAgua);
+  return arredondar(meqInfundidos / (fracaoAgua * pesoKg));
+}
+
+/** Velocidade de infusão em mEq/kg/h: mEq ÷ horas ÷ peso. */
+export function meqPorKgPorHora(meq: number, tempoHoras: number, pesoKg: number): number {
+  exigirPositivo('mEq', meq);
+  exigirPositivo('Tempo', tempoHoras);
+  exigirPositivo('Peso', pesoKg);
+  return arredondar(meq / tempoHoras / pesoKg);
+}
+
+// 9. Diluição: quanto do concentrado usar -------------------------------------
+
+/**
+ * C1 × V1 = C2 × V2 resolvida para V1: quanto aspirar da solução concentrada
+ * para obter V2 mL na concentração C2. Ex.: NaCl 3% a partir do 20%, 20 mL → 3 mL.
+ */
+export function volumeDoConcentrado(c1: number, c2: number, v2: number): number {
+  exigirPositivo('C1', c1);
+  exigirPositivo('C2', c2);
+  exigirPositivo('V2', v2);
+  if (c2 > c1) throw new Error('A concentração final (C2) não pode ser maior que a inicial (C1).');
+  return arredondar((c2 * v2) / c1);
+}
+
+/**
+ * Divide um volume numa proporção (ex.: soro 4:1 → [4, 1]).
+ * Devolve o volume de cada parte, na mesma ordem.
+ */
+export function dividirEmProporcao(volumeTotalMl: number, partes: number[]): number[] {
+  exigirPositivo('Volume total', volumeTotalMl);
+  if (partes.length === 0) throw new Error('Informe ao menos uma parte da proporção.');
+  partes.forEach((p) => exigirPositivo('Parte da proporção', p));
+  const soma = partes.reduce((s, p) => s + p, 0);
+  return partes.map((p) => arredondar((volumeTotalMl * p) / soma));
+}
+
+// 10. Recém-nascido ---------------------------------------------------------------
+
+/** Horas de vida = dias completos × 24 + horas. */
+export function horasDeVida(dias: number, horas = 0): number {
+  if (!Number.isFinite(dias) || dias < 0) throw new Error(`Dias deve ser zero ou mais (recebido: ${dias}).`);
+  if (!Number.isFinite(horas) || horas < 0 || horas >= 24) throw new Error(`Horas deve estar entre 0 e 23 (recebido: ${horas}).`);
+  return dias * 24 + horas;
+}
+
+/** Perda de peso (%) = (peso de nascimento − peso atual) ÷ peso de nascimento × 100. */
+export function percentualPerdaPeso(pesoNascimento: number, pesoAtual: number): number {
+  exigirPositivo('Peso de nascimento', pesoNascimento);
+  exigirPositivo('Peso atual', pesoAtual);
+  return arredondar(((pesoNascimento - pesoAtual) / pesoNascimento) * 100, 2);
+}

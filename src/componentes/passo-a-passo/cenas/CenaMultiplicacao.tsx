@@ -1,53 +1,94 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import type { CenaMultiplicacao as TipoCenaMultiplicacao } from '../../../dados/roteiros/tipos';
+import { arredondar } from '../../../logica/calculos';
 import { fmt } from '../../../logica/formatacao';
+import { useRitmo } from '../ritmo';
 import { prefereMenosMovimento, useNumeroAnimado } from '../useNumeroAnimado';
 
 /** Tempo entre um bloco e outro; com muitos blocos (peso alto) fica mais rápido. */
-const INTERVALO_MAXIMO_MS = 420;
-const DURACAO_TOTAL_MS = 2400;
+const INTERVALO_MAXIMO_MS = 700;
+const DURACAO_TOTAL_MS = 4200;
+const ESPERA_INICIAL_MS = 1000;
+
+interface Bloco {
+  kg: number;
+  valorPorKg: number;
+  faixa: number;
+  /** Número do kg (1º, 2º…) — só para blocos inteiros. */
+  ordem: number;
+}
+
+/** Um bloco por kg; com `faixas`, cada faixa de peso tem o seu valor (ex.: Holliday-Segar). */
+export function montarBlocos(cena: TipoCenaMultiplicacao): Bloco[] {
+  const faixas = cena.faixas ?? [{ kg: cena.pesoKg, valorPorKg: cena.valorPorKg }];
+  const blocos: Bloco[] = [];
+  let ordem = 0;
+  faixas.forEach((f, faixa) => {
+    const inteiros = Math.floor(f.kg + 1e-9);
+    const fracao = arredondar(f.kg - inteiros, 2);
+    for (let i = 0; i < inteiros; i++) blocos.push({ kg: 1, valorPorKg: f.valorPorKg, faixa, ordem: ++ordem });
+    if (fracao > 0) blocos.push({ kg: fracao, valorPorKg: f.valorPorKg, faixa, ordem });
+  });
+  return blocos;
+}
 
 /**
  * "Dose × peso" desenhado: cada bloco é 1 kg do paciente com a sua parte da dose.
  * Os blocos acendem um a um e a soma vai crescendo até o total.
  */
 export function CenaMultiplicacao({ cena }: { cena: TipoCenaMultiplicacao }) {
-  const inteiros = Math.floor(cena.pesoKg);
-  const fracao = Math.round((cena.pesoKg - inteiros) * 100) / 100;
-  const blocos = Array.from({ length: inteiros + (fracao > 0 ? 1 : 0) }, (_, i) => (i < inteiros ? 1 : fracao));
+  const fator = useRitmo();
+  const blocos = montarBlocos(cena);
 
-  const intervalo = Math.min(INTERVALO_MAXIMO_MS, DURACAO_TOTAL_MS / blocos.length);
+  const intervalo = Math.min(INTERVALO_MAXIMO_MS, DURACAO_TOTAL_MS / blocos.length) * fator;
   const [acesos, setAcesos] = useState(prefereMenosMovimento() ? blocos.length : 0);
   useEffect(() => {
     if (acesos >= blocos.length) return;
-    const t = window.setTimeout(() => setAcesos((n) => n + 1), acesos === 0 ? 700 : intervalo);
+    const t = window.setTimeout(() => setAcesos((n) => n + 1), acesos === 0 ? ESPERA_INICIAL_MS * fator : intervalo);
     return () => window.clearTimeout(t);
-  }, [acesos, blocos.length, intervalo]);
+  }, [acesos, blocos.length, intervalo, fator]);
 
-  const somaParcial = blocos.slice(0, acesos).reduce((s, kg) => s + kg * cena.valorPorKg, 0);
-  const soma = useNumeroAnimado(somaParcial, intervalo - 40, 0);
+  const somaParcial = blocos.slice(0, acesos).reduce((s, b) => s + b.kg * b.valorPorKg, 0);
+  const soma = useNumeroAnimado(somaParcial, Math.max(120, intervalo - 40), 0);
   const terminou = acesos >= blocos.length;
-  const casas = cena.valorPorKg < 1 ? 3 : 1;
+  const menorValor = Math.min(...blocos.map((b) => b.valorPorKg));
+  const casas = menorValor < 1 ? 3 : 1;
 
   return (
     <div className="cena-multiplicacao">
       <p className="mult-legenda">
-        <strong>
-          {fmt(cena.valorPorKg, 3)} {cena.unidade}
-        </strong>{' '}
-        para cada kg <span className="mult-x">×</span> <strong>{fmt(cena.pesoKg)} kg</strong>
+        {cena.faixas ? (
+          cena.faixas.map((f, i) => (
+            <Fragment key={i}>
+              {i > 0 && <span className="mult-mais"> + </span>}
+              <span className={`mult-faixa faixa-${i}`}>
+                <strong>
+                  {fmt(f.valorPorKg, 3)} {cena.unidade}
+                </strong>{' '}
+                <span className="mult-x">×</span> <strong>{fmt(f.kg)} kg</strong>
+              </span>
+            </Fragment>
+          ))
+        ) : (
+          <>
+            <strong>
+              {fmt(cena.valorPorKg, 3)} {cena.unidade}
+            </strong>{' '}
+            para cada kg <span className="mult-x">×</span> <strong>{fmt(cena.pesoKg)} kg</strong>
+          </>
+        )}
       </p>
 
-      <div className={`mult-blocos ${blocos.length > 6 ? 'muitos' : ''}`}>
-        {blocos.map((kg, i) => (
+      <div className={`mult-blocos ${blocos.length > 6 ? 'muitos' : ''} ${blocos.length > 12 ? 'muitissimos' : ''}`}>
+        {blocos.map((b, i) => (
           <div
             key={i}
-            className={`mult-bloco ${i < acesos ? 'aceso' : ''} ${kg < 1 ? 'parcial' : ''}`}
-            style={{ animationDelay: `${i * 90}ms`, ['--fracao' as string]: kg }}
+            className={`mult-bloco faixa-${b.faixa} ${i < acesos ? 'aceso' : ''} ${b.kg < 1 ? 'parcial' : ''}`}
+            style={{ animationDelay: `${i * 90 * fator}ms`, ['--fracao' as string]: b.kg }}
           >
-            <span className="mult-kg">{kg < 1 ? `${fmt(kg)} kg` : `${i + 1}º kg`}</span>
+            <span className="mult-kg">{b.kg < 1 ? `${fmt(b.kg)} kg` : `${b.ordem}º kg`}</span>
             <span className="mult-valor">
-              {fmt(kg * cena.valorPorKg, 3)} {cena.unidade}
+              {fmt(b.kg * b.valorPorKg, 3)} {cena.unidade}
             </span>
           </div>
         ))}

@@ -13,7 +13,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 1. Identificação do paciente
 2. Oxigenoterapia (se aplicável)
 3. Dieta
-4. Reposição volêmica e glicose
+4. Reposição volêmica, glicose e eletrólitos (inclui correções de Na/K)
 5. Antibióticos / antiparasitários / ARV
 6. Demais medicações
 7. Exames solicitados
@@ -80,5 +80,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - **App iniciado (React + TS + Vite + Vitest).** Como rodar: `README.md`.
   - `src/logica/calculos.ts`: fórmulas puras (dose por peso, volume, diluição C1V1, fator BIC, vazão, VIG, Holliday) com testes.
   - Modo **"Passo a passo"** pronto: trilha de setas, animações (avançar/voltar), explicação, rascunho e folha preenchidos etapa a etapa. Detalhes e como criar roteiros: `docs/passo-a-passo.md`.
-  - Roteiros: RN com sepse (prescrição completa, 20 etapas) e adrenalina 1:10.000 (diluição). Doses todas "A VALIDAR".
-  - Pendente: roteiro de rediluição (aguarda apresentações da Santa Casa); soro com eletrólitos; infusão contínua.
+  - Roteiros (menu agrupado por tema): **Neonatologia** — RN com sepse, icterícia neonatal (fototerapia); **Distúrbios hidroeletrolíticos** — desidratação grave (Plano C + soro 4:1 com KCl + reposição), hiponatremia com convulsão (NaCl 3% do 20%, teto 24 h), hipocalemia (KCl, concentração e velocidade); **Emergência** — adrenalina 1:10.000. Doses todas "A VALIDAR"; lista para conferir: `docs/roteiros-a-validar.md`.
+  - Todo roteiro termina na etapa automática **"Prescrição com os cálculos"** (folha completa + contas de cada item, imprimível).
+  - Contas animadas devagar, com **desfazer/refazer por conta**; seletor de velocidade das animações (Devagar/Normal/Rápido).
+  - Pendente: roteiro de rediluição (aguarda apresentações da Santa Casa); hipercalemia/hipocalcemia; hipernatremia; infusão contínua; escolha de fonte (SBP × AAP 2022) nos limiares de icterícia.

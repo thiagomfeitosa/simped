@@ -3,8 +3,13 @@ import type { Roteiro, SecaoPrescricao } from '../../dados/roteiros/tipos';
 import { SECOES } from '../../dados/secoes';
 import type { EstadoFolha, LinhaRascunho } from '../../logica/progresso';
 
-/** Rascunho de cálculos: as contas vão se acumulando, a mais nova em destaque. */
-export function Rascunho({ linhas, idEtapaAtual }: { linhas: LinhaRascunho[]; idEtapaAtual: string }) {
+/**
+ * Rascunho de cálculos: as contas vão se acumulando, a mais nova em destaque.
+ * A conta da etapa atual só é escrita quando o resultado aparece na explicação
+ * (e é apagada de novo se o aluno desfizer o resultado).
+ */
+export function Rascunho({ linhas: todas, idEtapaAtual, ocultarAtual = false }: { linhas: LinhaRascunho[]; idEtapaAtual: string; ocultarAtual?: boolean }) {
+  const linhas = ocultarAtual ? todas.filter((l) => l.idEtapa !== idEtapaAtual) : todas;
   // Rola só dentro do rascunho (sem mexer na página) para mostrar a conta mais nova.
   const refPapel = useRef<HTMLElement>(null);
   useEffect(() => {

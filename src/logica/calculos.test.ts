@@ -2,13 +2,24 @@ import { describe, expect, it } from 'vitest';
 import {
   concentracao,
   concentracaoFinalDiluicao,
+  deficitSodio,
+  dividirEmProporcao,
   dosePorPeso,
   fatorCorrecaoBic,
   hollidaySegar,
+  horasDeVida,
   infusaoContinuaMlPorHora,
+  MG_POR_MEQ,
+  meqPorKgPorHora,
+  meqPorLitro,
+  meqPorMl,
+  percentualPerdaPeso,
+  subidaEstimadaSodio,
   vazaoMlPorHora,
   vig,
   volumeAAspirar,
+  volumeDoConcentrado,
+  volumeMinimoDiluicao,
 } from './calculos';
 import { fmt } from './formatacao';
 
@@ -84,6 +95,57 @@ describe('Holliday-Segar', () => {
     expect(hollidaySegar(8)).toBe(800);
     expect(hollidaySegar(15)).toBe(1250);
     expect(hollidaySegar(30)).toBe(1700);
+  });
+});
+
+describe('eletrólitos (mEq)', () => {
+  it('mEq/mL das apresentações mais usadas', () => {
+    expect(meqPorMl(0.9, MG_POR_MEQ.NaCl)).toBeCloseTo(0.154, 3); // SF 0,9% = 154 mEq/L
+    expect(meqPorMl(3, MG_POR_MEQ.NaCl)).toBeCloseTo(0.513, 3);
+    expect(meqPorMl(20, MG_POR_MEQ.NaCl)).toBeCloseTo(3.42, 2);
+    expect(meqPorMl(19.1, MG_POR_MEQ.KCl)).toBeCloseTo(2.56, 2);
+    expect(meqPorMl(10, MG_POR_MEQ.KCl)).toBeCloseTo(1.34, 2);
+  });
+  it('concentração em mEq/L', () => {
+    expect(meqPorLitro(8, 200)).toBe(40);
+    expect(meqPorLitro(8, 12)).toBeCloseTo(666.67, 1);
+  });
+  it('volume mínimo para não passar da concentração máxima', () => {
+    expect(volumeMinimoDiluicao(8, 40)).toBe(200);
+  });
+  it('déficit de sódio: (126 − 118) × 0,6 × 10 = 48 mEq', () => {
+    expect(deficitSodio(126, 118, 10)).toBe(48);
+    expect(() => deficitSodio(118, 126, 10)).toThrow();
+  });
+  it('subida estimada do sódio é o déficit ao contrário', () => {
+    expect(subidaEstimadaSodio(48, 10)).toBe(8);
+    expect(subidaEstimadaSodio(20 * meqPorMl(3, MG_POR_MEQ.NaCl), 10)).toBeCloseTo(1.71, 2);
+  });
+  it('mEq/kg/h', () => {
+    expect(meqPorKgPorHora(8, 2, 16)).toBe(0.25);
+  });
+});
+
+describe('diluição a partir do concentrado e proporções', () => {
+  it('NaCl 3% a partir do 20%: 20 mL → 3 mL do concentrado', () => {
+    expect(volumeDoConcentrado(20, 3, 20)).toBe(3);
+    expect(volumeDoConcentrado(20, 3, 100)).toBe(15);
+    expect(() => volumeDoConcentrado(3, 20, 10)).toThrow();
+  });
+  it('soro 4:1 e 1:1', () => {
+    expect(dividirEmProporcao(1100, [4, 1])).toEqual([880, 220]);
+    expect(dividirEmProporcao(600, [1, 1])).toEqual([300, 300]);
+  });
+});
+
+describe('recém-nascido', () => {
+  it('horas de vida', () => {
+    expect(horasDeVida(2)).toBe(48);
+    expect(horasDeVida(1, 12)).toBe(36);
+    expect(() => horasDeVida(1, 24)).toThrow();
+  });
+  it('perda de peso em %', () => {
+    expect(percentualPerdaPeso(3200, 2944)).toBe(8);
   });
 });
 

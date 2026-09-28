@@ -2,9 +2,13 @@ import { useState } from 'react';
 import type { Etapa } from '../../../dados/roteiros/tipos';
 import type { Direcao } from '../PassoAPasso';
 import { CenaBancada } from './CenaBancada';
+import { CenaBarras } from './CenaBarras';
 import { CenaCartoes, CenaConclusao } from './CenaCartoes';
+import { CenaIctericia } from './CenaIctericia';
+import { CenaMistura } from './CenaMistura';
 import { CenaMultiplicacao } from './CenaMultiplicacao';
 import { CenaPaciente } from './CenaPaciente';
+import { CenaRegua } from './CenaRegua';
 
 /**
  * Escolhe a animação da etapa.
@@ -28,6 +32,10 @@ export function Cena({ etapa, direcao }: { etapa: Etapa; direcao: Direcao }) {
         {cena.tipo === 'multiplicacao' && <CenaMultiplicacao cena={cena} />}
         {cena.tipo === 'cartoes' && <CenaCartoes cena={cena} />}
         {cena.tipo === 'conclusao' && <CenaConclusao cena={cena} />}
+        {cena.tipo === 'regua' && <CenaRegua cena={cena} />}
+        {cena.tipo === 'barras' && <CenaBarras cena={cena} />}
+        {cena.tipo === 'mistura' && <CenaMistura cena={cena} />}
+        {cena.tipo === 'ictericia' && <CenaIctericia cena={cena} />}
       </div>
       <button type="button" className="botao-repetir" onClick={() => setPedido({ idEtapa: etapa.id, vezes: repeticao + 1 })} title="Ver a animação desta etapa de novo">
         ↻ Repetir animação

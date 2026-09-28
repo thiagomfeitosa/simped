@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CenaBancada as TipoCenaBancada, CorLiquido, EstadoBancada } from '../../../dados/roteiros/tipos';
 import { fmt } from '../../../logica/formatacao';
+import { useRitmo } from '../ritmo';
 import { prefereMenosMovimento, useNumeroAnimado } from '../useNumeroAnimado';
 
 /** Cores só para ensino (na vida real quase tudo é transparente). */
@@ -14,7 +15,7 @@ export const CORES_LIQUIDO: Record<CorLiquido, string> = {
   mistura: 'var(--liq-mistura)',
 };
 
-const ATRASO_ANIMACAO_MS = 650;
+const ATRASO_ANIMACAO_MS = 900;
 
 interface Props {
   cena: TipoCenaBancada;
@@ -24,13 +25,14 @@ interface Props {
 }
 
 export function CenaBancada({ cena, idEtapa, animarDoInicio }: Props) {
+  const fator = useRitmo();
   const usarInicial = animarDoInicio && !!cena.estadoInicial && !prefereMenosMovimento();
   const [mostrado, setMostrado] = useState<EstadoBancada>(usarInicial ? cena.estadoInicial! : cena.estado);
 
   useEffect(() => {
     if (usarInicial) {
       setMostrado(cena.estadoInicial!);
-      const t = window.setTimeout(() => setMostrado(cena.estado), ATRASO_ANIMACAO_MS);
+      const t = window.setTimeout(() => setMostrado(cena.estado), ATRASO_ANIMACAO_MS * fator);
       return () => window.clearTimeout(t);
     }
     setMostrado(cena.estado);
@@ -164,7 +166,7 @@ function Seringa({ capacidadeMl, camadas, rotulo }: NonNullable<EstadoBancada['s
   const total = camadas.reduce((s, c) => s + c.volumeMl, 0);
   const alturaTotal = alturas.reduce((s, h) => s + h, 0);
   const topoLiquido = SERINGA.base - alturaTotal;
-  const totalAnimado = useNumeroAnimado(total, 700, 0);
+  const totalAnimado = useNumeroAnimado(total, 1300 * useRitmo(), 0);
 
   const menor = capacidadeMl <= 1 ? 0.1 : capacidadeMl <= 5 ? 0.5 : 1;
   const rotuloCada = capacidadeMl <= 1 ? 0.5 : capacidadeMl <= 5 ? 1 : capacidadeMl <= 10 ? 2 : 5;
@@ -277,7 +279,7 @@ function Bolsa({ rotulo, cor, gotejando }: NonNullable<EstadoBancada['bolsa']>) 
 }
 
 function Bic({ vazaoMlH, ligada, rotulo }: NonNullable<EstadoBancada['bic']>) {
-  const vazao = useNumeroAnimado(vazaoMlH, 1000, 0);
+  const vazao = useNumeroAnimado(vazaoMlH, 1600 * useRitmo(), 0);
   return (
     <g className="surgir">
       <rect className="bic-corpo" x={440} y={236} width={182} height={96} rx={12} />
@@ -318,12 +320,13 @@ function Medidor({ rotulo, valor, unidade, minimo, maximo, faixaAlvo }: NonNulla
   const x0 = 40;
   const largura = 300;
   const escala = (v: number) => x0 + ((Math.min(maximo, Math.max(minimo, v)) - minimo) / (maximo - minimo)) * largura;
+  const fator = useRitmo();
   const [valorMostrado, setValorMostrado] = useState(minimo);
   useEffect(() => {
-    const t = window.setTimeout(() => setValorMostrado(valor), 300);
+    const t = window.setTimeout(() => setValorMostrado(valor), 500 * fator);
     return () => window.clearTimeout(t);
-  }, [valor]);
-  const animado = useNumeroAnimado(valorMostrado, 1100, minimo);
+  }, [valor, fator]);
+  const animado = useNumeroAnimado(valorMostrado, 1700 * fator, minimo);
   const dentro = valor >= faixaAlvo[0] && valor <= faixaAlvo[1];
 
   return (

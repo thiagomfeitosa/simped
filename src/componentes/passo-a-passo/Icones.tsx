@@ -131,6 +131,40 @@ const DESENHOS: Record<Icone, ReactElement> = {
       <path d="M17 17l14 14M31 17L17 31" />
     </>
   ),
+  lampada: (
+    <>
+      <rect x="6" y="6" width="36" height="9" rx="3" />
+      <path d="M12 20l-3 6M20 20l-1 6M28 20l1 6M36 20l3 6" />
+      <path d="M10 38c4-4 24-4 28 0v4H10z" />
+    </>
+  ),
+  olho: (
+    <>
+      <path d="M4 24s7-12 20-12 20 12 20 12-7 12-20 12S4 24 4 24z" />
+      <circle cx="24" cy="24" r="5" />
+      <path d="M8 40L40 8" />
+    </>
+  ),
+  gota: (
+    <>
+      <path d="M24 6c7 10 12 16 12 23a12 12 0 0 1-24 0c0-7 5-13 12-23z" />
+      <path d="M18 30a6 6 0 0 0 6 6" />
+    </>
+  ),
+  cerebro: (
+    <>
+      <path d="M24 10c-3-4-11-3-12 3-5 1-6 7-3 10-3 3-1 9 4 9 1 5 8 7 11 3z" />
+      <path d="M24 10c3-4 11-3 12 3 5 1 6 7 3 10 3 3 1 9-4 9-1 5-8 7-11 3z" />
+      <path d="M24 10v25" />
+      <path d="M26 16l4 3-4 3 4 3" />
+    </>
+  ),
+  ecg: (
+    <>
+      <rect x="4" y="10" width="40" height="28" rx="4" />
+      <path d="M8 26h8l3-7 4 13 3-9 2 3h12" />
+    </>
+  ),
 };
 
 export function IconeSvg({ nome, tamanho = 44 }: { nome: Icone; tamanho?: number }) {

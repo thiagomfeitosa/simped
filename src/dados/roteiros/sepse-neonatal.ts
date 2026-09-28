@@ -86,6 +86,7 @@ const seringaGentaPronta = {
 
 export const roteiroSepseNeonatal: Roteiro = {
   id: 'sepse-neonatal',
+  tema: 'Neonatologia',
   titulo: 'RN com suspeita de sepse — prescrição completa',
   resumo: 'Da identificação à revisão final: soro com VIG, ampicilina (reconstituição + BIC) e gentamicina (BIC 12 mL).',
   paciente: {

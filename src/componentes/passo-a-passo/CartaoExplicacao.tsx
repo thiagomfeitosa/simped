@@ -1,9 +1,21 @@
 import type { Etapa } from '../../dados/roteiros/tipos';
 import { SECOES } from '../../dados/secoes';
+import { ContaAnimada } from './ContaAnimada';
 import type { Direcao } from './PassoAPasso';
+import { useRitmo } from './ritmo';
 
-/** Texto da etapa + conta em três tempos (fórmula → números → resultado). */
-export function CartaoExplicacao({ etapa, direcao, numero, total }: { etapa: Etapa; direcao: Direcao; numero: number; total: number }) {
+interface Props {
+  etapa: Etapa;
+  direcao: Direcao;
+  numero: number;
+  total: number;
+  /** Avisa quando o resultado da conta está na tela (o rascunho só escreve depois). */
+  aoMudarConta?: (completa: boolean) => void;
+}
+
+/** Texto da etapa + conta em tempos (fórmula → números → resultado), com desfazer/refazer. */
+export function CartaoExplicacao({ etapa, direcao, numero, total, aoMudarConta }: Props) {
+  const fator = useRitmo();
   const secao = SECOES[etapa.secao];
   return (
     <article key={etapa.id} className={`explicacao entrar-${direcao}`} style={{ ['--cor-secao' as string]: secao.cor }}>
@@ -19,29 +31,12 @@ export function CartaoExplicacao({ etapa, direcao, numero, total }: { etapa: Eta
 
       <h2>{etapa.titulo}</h2>
       {etapa.explicacao.map((p, i) => (
-        <p key={i} className="explicacao-paragrafo" style={{ animationDelay: `${120 + i * 140}ms` }}>
+        <p key={i} className="explicacao-paragrafo" style={{ animationDelay: `${(120 + i * 160) * fator}ms` }}>
           {p}
         </p>
       ))}
 
-      {etapa.conta && (
-        <div className="conta" aria-label="Cálculo">
-          <div className="conta-linha conta-formula" style={{ animationDelay: '350ms' }}>
-            <span className="conta-rotulo">Fórmula</span>
-            <span>{etapa.conta.formula}</span>
-          </div>
-          <SetaConta atraso={650} />
-          <div className="conta-linha conta-substituicao" style={{ animationDelay: '850ms' }}>
-            <span className="conta-rotulo">Com os números</span>
-            <span>{etapa.conta.substituicao}</span>
-          </div>
-          <SetaConta atraso={1150} />
-          <div className="conta-linha conta-resultado" style={{ animationDelay: '1350ms' }}>
-            <span className="conta-rotulo">Resultado</span>
-            <span>{etapa.conta.resultado}</span>
-          </div>
-        </div>
-      )}
+      {etapa.conta && <ContaAnimada conta={etapa.conta} comecarCompleta={direcao === 'voltar'} aoMudar={aoMudarConta} />}
 
       {etapa.dica && (
         <div className="dica">
@@ -61,13 +56,5 @@ export function CartaoExplicacao({ etapa, direcao, numero, total }: { etapa: Eta
       )}
       {!etapa.aValidar && etapa.fonte && <p className="fonte">Fonte: {etapa.fonte}</p>}
     </article>
-  );
-}
-
-function SetaConta({ atraso }: { atraso: number }) {
-  return (
-    <svg className="conta-seta" viewBox="0 0 24 22" width="22" height="20" style={{ animationDelay: `${atraso}ms` }} aria-hidden="true">
-      <path d="M12 2 V17 M5 11 L12 18 L19 11" />
-    </svg>
   );
 }

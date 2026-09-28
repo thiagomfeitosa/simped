@@ -4,6 +4,7 @@ import { montarFolha, montarRascunho } from '../../logica/progresso';
 import { CartaoExplicacao } from './CartaoExplicacao';
 import { Cena } from './cenas/Cena';
 import { FolhaPrescricao, Rascunho } from './Papeis';
+import { PrescricaoComCalculos } from './PrescricaoComCalculos';
 import { TrilhaDeSetas } from './TrilhaDeSetas';
 
 export type Direcao = 'avancar' | 'voltar';
@@ -11,12 +12,16 @@ export type Direcao = 'avancar' | 'voltar';
 /**
  * Tela "Passo a passo": trilha de setas + animação + explicação + folha/rascunho.
  * Avançar e voltar só mudam o número da etapa; todo o resto é calculado a partir dele.
+ * A última etapa (automática) mostra a prescrição inteira com os cálculos.
  */
 export function PassoAPasso({ roteiro }: { roteiro: Roteiro }) {
   const [indice, setIndice] = useState(0);
   const [direcao, setDirecao] = useState<Direcao>('avancar');
+  // Etapa cuja conta já mostrou o resultado (o rascunho só "escreve" a conta depois disso).
+  const [contaProntaDe, setContaProntaDe] = useState<string | null>(null);
   const total = roteiro.etapas.length;
   const etapa = roteiro.etapas[indice];
+  const ehFinal = etapa.cena.tipo === 'prescricao-final';
 
   const irPara = useCallback(
     (novo: number) => {
@@ -39,17 +44,24 @@ export function PassoAPasso({ roteiro }: { roteiro: Roteiro }) {
     return () => window.removeEventListener('keydown', aoTeclar);
   }, [indice, irPara]);
 
+  const aoMudarConta = useCallback((completa: boolean) => setContaProntaDe(completa ? etapa.id : null), [etapa.id]);
+
   const folha = useMemo(() => montarFolha(roteiro, indice), [roteiro, indice]);
   const rascunho = useMemo(() => montarRascunho(roteiro, indice), [roteiro, indice]);
+  const ocultarContaAtual = !!etapa.conta && contaProntaDe !== etapa.id;
 
   return (
     <div className="passo-a-passo">
       <TrilhaDeSetas etapas={roteiro.etapas} atual={indice} aoEscolher={irPara} />
 
-      <div className="palco">
-        <Cena etapa={etapa} direcao={direcao} />
-        <CartaoExplicacao etapa={etapa} direcao={direcao} numero={indice + 1} total={total} />
-      </div>
+      {ehFinal ? (
+        <PrescricaoComCalculos key={etapa.id} roteiro={roteiro} etapa={etapa} direcao={direcao} aoIrParaEtapa={irPara} />
+      ) : (
+        <div className="palco">
+          <Cena etapa={etapa} direcao={direcao} />
+          <CartaoExplicacao etapa={etapa} direcao={direcao} numero={indice + 1} total={total} aoMudarConta={aoMudarConta} />
+        </div>
+      )}
 
       <div className="navegacao">
         <button type="button" className="botao-nav voltar" onClick={() => irPara(indice - 1)} disabled={indice === 0}>
@@ -74,10 +86,12 @@ export function PassoAPasso({ roteiro }: { roteiro: Roteiro }) {
         </button>
       </div>
 
-      <div className="papeis">
-        <Rascunho linhas={rascunho} idEtapaAtual={etapa.id} />
-        <FolhaPrescricao roteiro={roteiro} folha={folha} secaoAtual={etapa.secao} />
-      </div>
+      {!ehFinal && (
+        <div className="papeis">
+          <Rascunho linhas={rascunho} idEtapaAtual={etapa.id} ocultarAtual={ocultarContaAtual} />
+          <FolhaPrescricao roteiro={roteiro} folha={folha} secaoAtual={etapa.secao} />
+        </div>
+      )}
     </div>
   );
 }

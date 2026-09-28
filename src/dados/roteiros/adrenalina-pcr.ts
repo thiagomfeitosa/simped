@@ -39,6 +39,7 @@ const linhaPreparo = `Diluir 1 ampola (1 mg/mL) + SF 0,9% ${fmt(sfDiluicao)} mL 
 
 export const roteiroAdrenalinaPcr: Roteiro = {
   id: 'adrenalina-pcr',
+  tema: 'Emergência',
   titulo: 'Diluição: adrenalina 1:10.000 na PCR',
   resumo: 'Por que diluir, como fazer a conta C1 × V1 = C2 × V2 e quanto aspirar.',
   paciente: {

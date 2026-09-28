@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import type { CenaPaciente as TipoCenaPaciente } from '../../../dados/roteiros/tipos';
 import { fmt } from '../../../logica/formatacao';
+import { useRitmo } from '../ritmo';
 import { useNumeroAnimado } from '../useNumeroAnimado';
 
 /** O paciente "desce" na balança e o visor conta até o peso. */
 export function CenaPaciente({ cena }: { cena: TipoCenaPaciente }) {
+  const fator = useRitmo();
   const [naBalanca, setNaBalanca] = useState(false);
   useEffect(() => {
-    const t = window.setTimeout(() => setNaBalanca(true), 500);
+    const t = window.setTimeout(() => setNaBalanca(true), 500 * fator);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [fator]);
   const ehRn = cena.perfil === 'rn';
   const alvo = ehRn ? cena.pesoKg * 1000 : cena.pesoKg;
-  const peso = useNumeroAnimado(naBalanca ? alvo : 0, 1200, 0);
+  const peso = useNumeroAnimado(naBalanca ? alvo : 0, 1400 * fator, 0);
 
   return (
     <div className="cena-paciente">
@@ -30,7 +32,7 @@ export function CenaPaciente({ cena }: { cena: TipoCenaPaciente }) {
 
       <dl className="paciente-dados">
         {cena.rotulos.map((r, i) => (
-          <div key={r.rotulo} className="paciente-dado" style={{ animationDelay: `${300 + i * 220}ms` }}>
+          <div key={r.rotulo} className="paciente-dado" style={{ animationDelay: `${(300 + i * 260) * fator}ms` }}>
             <dt>{r.rotulo}</dt>
             <dd>{r.valor}</dd>
           </div>
