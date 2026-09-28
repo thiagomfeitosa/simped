@@ -65,6 +65,11 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Escopo etário: neonatologia + pediatria + hebiatria.
 - Biblioteca de fontes em `referencias/`: `catalogo.md` (códigos das fontes), `publicas/` (vai para o GitHub), `privado/` (livros com direitos autorais; fica só no Mac, ignorado pelo git), `trechos/` (tabelas transcritas com página).
 
+## Como trabalhamos (economia de tokens)
+- Uma conversa por tarefa (ex.: "Validar penicilinas", "Casos clínicos", "Fase 1 – folha de prescrição"). Ao terminar, atualizar a seção "Estado atual" deste arquivo e abrir conversa nova para a próxima tarefa.
+- Decisões e resultados ficam gravados em arquivos do projeto, não só no chat: uma conversa nova deve conseguir continuar lendo apenas este arquivo e `docs/`.
+- Ler fontes pelo número de página; transcrever tabelas em `referencias/trechos/`.
+
 ## Estado atual
 - Fase 0 em andamento. Documentos em `docs/fase-0/`:
   - `medicacoes-mvp.md`: lista definida pelo usuário (inclui cortisona, hidrocortisona e metilprednisolona, manter todas); faltam as apresentações (usuário vai levantar).
