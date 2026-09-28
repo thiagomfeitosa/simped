@@ -44,6 +44,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - **Banco de medicações em arquivos de dados** (JSON/TS), não espalhado pelo código: nome, apresentações, concentração, faixas de dose por peso/idade, dose máxima, diluentes compatíveis, velocidade de infusão, fonte.
 - **Motor do paciente como estado + eventos** (medicação administrada, tempo passando, intervenção do professor), pensado desde já para permitir o modo online depois.
 - **Offline primeiro**: nada deve depender de internet na fase inicial.
+- **Variáveis do paciente obrigatórias** (detalhes em `docs/fase-0/variaveis-paciente.md`): todo paciente tem sempre peso, data/hora de nascimento, idade gestacional ao nascer, peso ao nascer etc. O programa guarda só os dados de origem e **calcula** a idade em horas, dias, semanas, meses e anos, a idade pós-menstrual, a idade corrigida e a superfície corporal; a idade avança com o relógio do caso. Toda regra de dose pode depender de qualquer uma dessas variáveis.
 
 ## Segurança clínica
 - Todo valor de dose/faixa deve registrar a **fonte** de referência no banco de dados.
@@ -78,5 +79,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
 - Decisão do usuário: seguir em frente com os dados "A VALIDAR" como estão; a validação será feita depois. Por isso, tudo que é dado clínico (doses, apresentações, casos) deve ficar em arquivos de dados isolados, para ser corrigido sem mexer no resto do código, e cada item continua marcado "A VALIDAR" até o usuário conferir.
   - `casos-clinicos.md`: 16 casos iniciais escritos pelo assistente, TUDO "A VALIDAR" (doses tiradas do `doses-rascunho.md`). Dolutegravir ainda sem caso.
+  - `medicacoes-ampliacao.md`: +50 medicações propostas (códigos A1–A50), sem doses; aguardando o usuário aprovar/cortar.
+  - `variaveis-paciente.md`: variáveis obrigatórias do paciente (regra fixa). Corte das faixas etárias A VALIDAR.
 - Fase 0 concluída em rascunho (validação clínica pendente com o usuário).
 - Próximo passo: iniciar a Fase 1, começando pelo esqueleto do app (Vite + React + TypeScript + Vitest), com medicações e casos em arquivos de dados separados.
