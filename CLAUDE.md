@@ -68,5 +68,6 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Fase 0 em andamento. Documentos em `docs/fase-0/`:
   - `medicacoes-mvp.md`: lista definida pelo usuário (inclui cortisona, hidrocortisona e metilprednisolona, manter todas); faltam as apresentações (usuário vai levantar).
   - `fontes.md`: fontes e regra de escolha.
+  - `doses-rascunho.md`: rascunho de apresentações e doses feito pelo assistente, TUDO "A VALIDAR" (usuário vai conferir nas fontes).
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
 - Próximo passo: receber as apresentações; depois, escrever os casos clínicos iniciais.
