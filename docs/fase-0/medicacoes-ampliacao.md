@@ -1,9 +1,9 @@
 # Ampliação do banco de medicações — 50 novas (proposta)
 
-> **Status:** lista **proposta pelo assistente**, aguardando o usuário aprovar, cortar ou trocar itens.
+> **Status:** lista proposta pelo assistente e **aprovada integralmente pelo usuário** (todas as 50 entram no banco).
 > **Sem doses de propósito.** As doses entram depois, uma a uma, **com fonte**, e marcadas "A VALIDAR" até a conferência (regra do `CLAUDE.md`: nunca inventar doses).
 > Códigos **A1–A50** para não confundir com a numeração da lista do MVP (`medicacoes-mvp.md`).
-> Sugestão: a lista do MVP (39 itens) continua sendo a da Fase 1; estas entram no banco à medida que os casos precisarem delas.
+> Total do banco: 39 (MVP) + 50 (A1–A50) = **89 medicações**. A ordem de preenchimento das doses acompanha os casos clínicos que precisarem de cada uma.
 
 ## A. Sedação, analgesia e anticonvulsivantes
 | Cód. | Medicação | Classe | Usos principais na emergência |
@@ -99,6 +99,6 @@
 Dopamina, cefepima, piperacilina + tazobactam, ácido tranexâmico, propofol, etomidato, terbutalina, albendazol, sulfato de zinco, vitamina D e sulfato ferroso profiláticos, omeprazol, heparina, soros antipeçonhentos (acidentes com animais peçonhentos, notificação no SINAN), imunoglobulina e vacina antirrábica, imunoglobulina antitetânica.
 
 ## Pendências com o usuário
-1. Aprovar, cortar ou trocar itens desta lista.
-2. Decidir quais entram na Fase 1 e quais ficam para depois.
-3. Apresentações da Santa Casa para os itens aprovados.
+1. ~~Aprovar a lista~~ — aprovada (todas as 50).
+2. Apresentações da Santa Casa para cada item.
+3. Doses com fonte (a preencher, marcadas "A VALIDAR").

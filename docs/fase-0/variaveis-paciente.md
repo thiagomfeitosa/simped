@@ -46,13 +46,15 @@ Classificação automática do RN:
 | Peso ideal / peso de dosagem | kg | Adolescente com obesidade; regra de uso A VALIDAR por medicação |
 
 ## 5. Faixa etária (calculada)
-- **RN:** 0–28 dias · **Lactente:** 29 dias a < 2 anos · **Pré-escolar:** 2 a < 7 anos · **Escolar:** 7 a < 10 anos · **Adolescente:** 10–19 anos (OMS) ou 12–18 anos (ECA).
-- ⚠️ O `doses-rascunho.md` usa "criança = lactente a 11 anos; adolescente = 12 a 18 anos". Qual corte usar: **A VALIDAR com o usuário**. As doses do banco sempre usam idade/peso em números, não o nome da faixa; o nome serve só para exibir.
+- Os pontos de corte **de cada sociedade** estão em [`faixas-etarias.md`](faixas-etarias.md). O nome exibido segue a fonte escolhida pelo usuário (padrão: SBP).
+- As doses do banco sempre usam idade/peso **em números**, não o nome da faixa. Cada dose guarda a faixa da fonte de onde veio (ex.: "criança" do PALS = 1 ano até a puberdade).
+- ⚠️ O `doses-rascunho.md` usa "criança = lactente a 11 anos; adolescente = 12 a 18 anos". Ao passar para o banco, cada dose será reescrita com os números da fonte dela.
 
 ## 6. Outras variáveis clínicas
 | Variável | Por que importa |
 |---|---|
 | Sexo | Curvas de crescimento, alguns valores de referência |
+| Puberdade iniciada (sim/não) / estadiamento de Tanner | O PALS define "criança" até a puberdade; depois, protocolo de adulto |
 | Alergias | Bloqueio/alerta de prescrição |
 | Função renal (creatinina, diurese, clearance estimado) | Ajuste de dose (gentamicina, vancomicina, aciclovir) |
 | Função hepática | Ajuste de dose |

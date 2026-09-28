@@ -79,7 +79,8 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
 - Decisão do usuário: seguir em frente com os dados "A VALIDAR" como estão; a validação será feita depois. Por isso, tudo que é dado clínico (doses, apresentações, casos) deve ficar em arquivos de dados isolados, para ser corrigido sem mexer no resto do código, e cada item continua marcado "A VALIDAR" até o usuário conferir.
   - `casos-clinicos.md`: 16 casos iniciais escritos pelo assistente, TUDO "A VALIDAR" (doses tiradas do `doses-rascunho.md`). Dolutegravir ainda sem caso.
-  - `medicacoes-ampliacao.md`: +50 medicações propostas (códigos A1–A50), sem doses; aguardando o usuário aprovar/cortar.
-  - `variaveis-paciente.md`: variáveis obrigatórias do paciente (regra fixa). Corte das faixas etárias A VALIDAR.
+  - `medicacoes-ampliacao.md`: +50 medicações (códigos A1–A50) **aprovadas pelo usuário**; ainda sem doses e sem apresentações. Banco total: 89.
+  - `variaveis-paciente.md`: variáveis obrigatórias do paciente (regra fixa), incluindo puberdade/Tanner.
+  - `faixas-etarias.md`: pontos de corte (RN/neonato, lactente, criança, adolescente, IG, peso ao nascer) **por sociedade**. O nome da faixa segue a fonte escolhida (padrão SBP); as doses usam sempre números. Tabela A VALIDAR.
 - Fase 0 concluída em rascunho (validação clínica pendente com o usuário).
 - Próximo passo: iniciar a Fase 1, começando pelo esqueleto do app (Vite + React + TypeScript + Vitest), com medicações e casos em arquivos de dados separados.
