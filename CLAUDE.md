@@ -60,8 +60,13 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - **Fase 6** — Web + iOS/Android.
 - **Fase 7** — Modo online professor–aluno.
 
+## Fontes de referência
+- Padrão: **SBP**. Opcionais e selecionáveis pelo usuário: **MS**, **AAP** e outras sociedades (neonatologia, AHA/PALS, NRP, GINA etc.). Detalhes em `docs/fase-0/fontes.md`.
+- Escopo etário: neonatologia + pediatria + hebiatria.
+
 ## Estado atual
 - Fase 0 em andamento. Documentos em `docs/fase-0/`:
-  - `medicacoes-mvp.md` — lista candidata (aguardando validação do usuário).
-  - `formulas.md` — fórmulas de cálculo (aguardando definição do fator de correção da BIC).
-- Próximo passo: usuário validar a lista de medicações, as fontes de referência e a regra do fator de correção da BIC.
+  - `medicacoes-mvp.md`: lista definida pelo usuário; faltam as apresentações (usuário vai levantar) e confirmar "cortisona".
+  - `fontes.md`: fontes e regra de escolha.
+  - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = 12, falta um exemplo real para saber como o 12 entra na conta.
+- Próximo passo: receber as apresentações e o exemplo do fator da BIC; depois, escrever os casos clínicos iniciais.

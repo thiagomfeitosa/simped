@@ -31,10 +31,10 @@ Estas são as contas que o aluno fará e que o programa conferirá. São **matem
 - Vazão (mL/h) = volume do dia ÷ 24
 - Cálculo de eletrólitos no soro (Na, K) e mistura de SG 5% + SG 50% para atingir a concentração desejada ficam no mesmo módulo. Os valores-alvo serão definidos com fonte (A VALIDAR).
 
-## 7. Fator de correção da BIC (A VALIDAR — precisa da sua definição)
-Cada hospital acrescenta um volume extra para compensar o que fica no equipo/extensão ou a perda da seringa. A forma exata varia, por isso o programa deixará isso **configurável**. Possibilidades que conhecemos:
-- **(a) Volume fixo acrescentado**: prepara-se volume da infusão + X mL (ex.: +20 mL para preencher o equipo), mantendo a mesma concentração.
-- **(b) Fator multiplicador**: volume preparado = volume necessário × fator (ex.: × 1,2).
-- **(c) Volume mínimo da seringa/frasco**: completa-se sempre até um volume padrão (ex.: seringa de 50 mL), recalculando a quantidade de droga.
-
-**Pergunta ao usuário:** como é feito no seu hospital? Qual é o valor? Com um exemplo real (droga, peso, vazão e o que é preparado) consigo escrever a fórmula exata.
+## 7. Fator de correção da BIC
+- **Valor da Santa Casa: 12** (informado pelo usuário). Ficará como padrão, e cada hospital poderá configurar o seu.
+- **A VALIDAR: como o 12 entra na conta.** Precisamos de um exemplo real para escrever a fórmula exata. Hipóteses:
+  - **(a)** +12 mL de volume para preencher o equipo, mantendo a concentração;
+  - **(b)** a solução é preparada para 12 horas (volume = vazão × 12);
+  - **(c)** outra regra usada no hospital.
+- **Pergunta ao usuário:** num exemplo real (droga, peso da criança, dose/vazão prescrita), como fica a conta com o fator 12 e o que vai na seringa ou no frasco?

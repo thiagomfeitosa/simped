@@ -1,34 +1,71 @@
-# Medicações candidatas para o MVP (Fase 0)
+# Medicações do MVP (Fase 0)
 
-> **Status: A VALIDAR pelo usuário.**
-> Esta lista contém **apenas nomes e o motivo de estarem no MVP**. Nenhuma dose, faixa ou concentração foi preenchida — isso só será feito a partir de fontes definidas pelo usuário (ver "Fontes" abaixo), com a referência registrada em cada item.
+> **Status:** lista **definida pelo usuário** (36 itens).
+> Doses, faixas e posologias **ainda não preenchidas**. Vão entrar com a fonte registrada ao lado de cada valor (ver [`fontes.md`](fontes.md)).
+> Apresentações comerciais: **aguardando o usuário**, que vai levantar as do hospital.
 
-Critério de escolha: cobrir as situações mais comuns de emergência pediátrica **e** os diferentes tipos de cálculo que o aluno precisa treinar (dose por peso em bolus, infusão contínua em mcg/kg/min, diluição/rediluição, dose máxima, soros).
+Faixas etárias: **neonatologia + pediatria + hebiatria** (RN, lactente, criança, adolescente). Cada medicação pode ter regras diferentes por faixa.
 
-| # | Medicação | Seção da prescrição | Cenários que cobre | Tipo de cálculo treinado |
-|---|-----------|--------------------|--------------------|--------------------------|
-| 1 | Soro fisiológico 0,9% | Reposição volêmica | Choque, desidratação | Expansão em mL/kg |
-| 2 | Ringer lactato | Reposição volêmica | Choque, desidratação | Expansão em mL/kg |
-| 3 | Soro glicosado (5%, 10%) e glicose hipertônica (25%, 50%) | Reposição volêmica e glicose | Hipoglicemia, soro de manutenção | Bolus em mL/kg, VIG, mistura de soros |
-| 4 | Adrenalina (epinefrina) | Demais medicações | PCR, anafilaxia, choque | Bolus diluído, IM, infusão contínua |
-| 5 | Atropina | Demais medicações | Bradicardia, pré-IOT | Bolus com dose mínima/máxima |
-| 6 | Amiodarona | Demais medicações | FV/TV sem pulso | Bolus, dose máxima |
-| 7 | Adenosina | Demais medicações | TSV | Bolus rápido, 1ª e 2ª dose |
-| 8 | Bicarbonato de sódio 8,4% | Demais medicações | Acidose metabólica grave, PCR | Diluição (concentração para RN) |
-| 9 | Gluconato de cálcio 10% | Demais medicações | Hipocalcemia, hipercalemia | Diluição, velocidade de infusão |
-| 10 | Midazolam | Demais medicações | Convulsão, sedação | Bolus, vias alternativas, infusão |
-| 11 | Diazepam | Demais medicações | Convulsão | Bolus EV/retal, dose máxima |
-| 12 | Fenobarbital | Demais medicações | Convulsão (principalmente RN) | Ataque + manutenção |
-| 13 | Fenitoína | Demais medicações | Estado de mal epiléptico | Ataque, diluente compatível, velocidade |
-| 14 | Salbutamol (inalatório) | Demais medicações | Asma/sibilância | Jatos por peso / gotas na nebulização |
-| 15 | Sulfato de magnésio | Demais medicações | Asma grave | Dose por peso, diluição, tempo de infusão |
-| 16 | Metilprednisolona / hidrocortisona | Demais medicações | Asma, anafilaxia, insuficiência adrenal | Dose por peso, dose máxima |
-| 17 | Ceftriaxona | Antibióticos | Sepse, meningite | Dose por peso, dose máxima, diluição |
-| 18 | Ampicilina + gentamicina | Antibióticos | Sepse neonatal | Posologia por idade gestacional/pós-natal |
-| 19 | Penicilina G cristalina | Antibióticos | Sífilis congênita (→ SINAN) | UI/kg, posologia por idade |
-| 20 | Dipirona | Demais medicações | Febre, dor | Dose por peso, dose máxima |
+## 4. Reposição volêmica, glicose e eletrólitos
+| # | Medicação | Observação |
+|---|-----------|-----------|
+| 1 | Soro fisiológico 0,9% | Expansão e base de soro |
+| 2 | Soro glicosado 5% | Soro de manutenção |
+| 3 | Soro glicosado 10% | Soro de manutenção (RN), hipoglicemia |
+| 4 | Glicose 25% | Hipoglicemia, ajuste de concentração do soro |
+| 5 | Glicose 50% | Ajuste de concentração do soro |
+| 6 | Gluconato de cálcio 10% | Manutenção (RN), hipocalcemia, hipercalemia |
+| 7 | Cloreto de potássio (KCl) | Manutenção, hipocalemia |
+| 8 | Cloreto de sódio (NaCl) concentrado | Manutenção e correção de hiponatremia. **Ver nota abaixo** |
 
-## Perguntas para o usuário
-1. Quer **tirar ou trocar** alguma medicação? (ex.: incluir cetamina/fentanil/rocurônio para sequência rápida de intubação, ondansetrona, aciclovir, noradrenalina)
-2. Quais **fontes** devemos usar como referência oficial das doses? Exemplos: Tratado de Pediatria SBP, Harriet Lane, Manual de Neonatologia (MS), PALS/AHA, Protocolo Clínico de Sífilis/HIV (MS), bulas ANVISA. Pode ser o protocolo do seu hospital.
-3. Quais **apresentações comerciais** (ampola/frasco com concentração) vocês usam no hospital? O ideal é espelhar a realidade de quem vai treinar.
+### Nota: o sódio é separado do soro fisiológico?
+**Sim, são itens diferentes na prescrição:**
+- **Soro fisiológico 0,9%** é uma solução pronta, usada em **expansão volêmica** ou como base de soro.
+- **NaCl concentrado (ampola, geralmente 20%)** é **acrescentado** ao soro de manutenção para atingir a oferta de sódio desejada.
+- **NaCl hipertônico (geralmente 3%, preparado a partir do 20%)** é usado na **correção** de hiponatremia grave e sintomática.
+
+No programa, o aluno vai calcular a oferta de sódio (mEq/kg/dia), converter em mL de ampola e juntar ao soro. As concentrações (mEq/mL) de cada apresentação ficam no banco, conferidas com as apresentações que você trouxer.
+
+## 5. Antibióticos / antiparasitários / ARV
+| # | Medicação | Cenários principais |
+|---|-----------|--------------------|
+| 9 | Ceftriaxona | Sepse, meningite |
+| 10 | Ampicilina | Sepse neonatal, meningite |
+| 11 | Gentamicina | Sepse neonatal |
+| 12 | Vancomicina | Sepse grave, estafilococo resistente |
+| 13 | Penicilina G cristalina | Sífilis congênita, neurossífilis |
+| 14 | Penicilina G procaína | Sífilis congênita |
+| 15 | Penicilina G benzatina | Sífilis (RN exposto / congênita conforme classificação, gestante, parceiro) |
+| 16 | Sulfadiazina | Toxoplasmose congênita |
+| 17 | Pirimetamina | Toxoplasmose congênita |
+| 18 | Ácido folínico | Toxoplasmose congênita (associado à pirimetamina) |
+| 19 | Zidovudina (AZT) | Profilaxia/tratamento do RN exposto ao HIV |
+| 20 | Lamivudina (3TC) | Profilaxia/tratamento do RN exposto ao HIV |
+| 21 | Raltegravir | Profilaxia/tratamento do RN exposto ao HIV |
+| 22 | Dolutegravir | Tratamento do HIV em crianças e adolescentes |
+
+## 6. Demais medicações
+| # | Medicação | Cenários principais |
+|---|-----------|--------------------|
+| 23 | Dipirona | Febre, dor |
+| 24 | Salbutamol | Crise de asma / sibilância |
+| 25 | Fenoterol | Crise de asma / sibilância |
+| 26 | Brometo de ipratrópio | Crise de asma moderada/grave |
+| 27 | Salmeterol | Manutenção da asma (**prescrição ambulatorial / alta**, não é de resgate) |
+| 28 | Hidrocortisona | Asma, anafilaxia, insuficiência adrenal |
+| 29 | Prednisona | Asma (VO), alta |
+| 30 | Prednisolona | Asma (VO, líquida), alta |
+| 31 | Dexametasona | Laringite/crupe, meningite, asma |
+| 32 | Cortisona | **A CONFIRMAR, ver pergunta abaixo** |
+| 33 | Adrenalina | PCR, anafilaxia, crupe (nebulização), choque |
+| 34 | Amiodarona | FV/TV sem pulso, taquiarritmias |
+| 35 | Adenosina | TSV |
+| 36 | Flumazenil | Reversão de benzodiazepínico |
+| 37 | Glucagon | Hipoglicemia sem acesso venoso |
+| 38 | Insulina (regular) | Cetoacidose diabética, hipercalemia |
+
+*(A numeração passa de 36 porque o sódio e as glicoses foram separados por apresentação.)*
+
+## Pendências com o usuário
+1. **Cortisona:** era isso mesmo (acetato de cortisona, usado por via oral na reposição de insuficiência adrenal) ou você quis dizer **hidrocortisona** ou **metilprednisolona**?
+2. **Apresentações:** o usuário vai levantar as apresentações comerciais da Santa Casa (ampola/frasco, concentração, volume).
