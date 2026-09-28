@@ -77,4 +77,6 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
   - `doses-rascunho.md`: rascunho de apresentações e doses feito pelo assistente, TUDO "A VALIDAR" (usuário vai conferir nas fontes).
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
 - Decisão do usuário: seguir em frente com os dados "A VALIDAR" como estão; a validação será feita depois. Por isso, tudo que é dado clínico (doses, apresentações, casos) deve ficar em arquivos de dados isolados, para ser corrigido sem mexer no resto do código, e cada item continua marcado "A VALIDAR" até o usuário conferir.
-- Próximo passo: escrever os casos clínicos iniciais (`docs/fase-0/casos-clinicos.md`); depois, iniciar a Fase 1 (esqueleto do app).
+  - `casos-clinicos.md`: 16 casos iniciais escritos pelo assistente, TUDO "A VALIDAR" (doses tiradas do `doses-rascunho.md`). Dolutegravir ainda sem caso.
+- Fase 0 concluída em rascunho (validação clínica pendente com o usuário).
+- Próximo passo: iniciar a Fase 1, começando pelo esqueleto do app (Vite + React + TypeScript + Vitest), com medicações e casos em arquivos de dados separados.
