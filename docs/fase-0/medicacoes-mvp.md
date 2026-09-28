@@ -1,6 +1,6 @@
 # Medicações do MVP (Fase 0)
 
-> **Status:** lista **definida pelo usuário** (36 itens).
+> **Status:** lista **definida pelo usuário** (39 itens).
 > Doses, faixas e posologias **ainda não preenchidas**. Vão entrar com a fonte registrada ao lado de cada valor (ver [`fontes.md`](fontes.md)).
 > Apresentações comerciais: **aguardando o usuário**, que vai levantar as do hospital.
 
@@ -56,7 +56,8 @@ No programa, o aluno vai calcular a oferta de sódio (mEq/kg/dia), converter em 
 | 29 | Prednisona | Asma (VO), alta |
 | 30 | Prednisolona | Asma (VO, líquida), alta |
 | 31 | Dexametasona | Laringite/crupe, meningite, asma |
-| 32 | Cortisona | **A CONFIRMAR, ver pergunta abaixo** |
+| 32 | Cortisona (acetato) | Reposição na insuficiência adrenal (VO) |
+| 32b | Metilprednisolona | Asma grave, anafilaxia, pulsoterapia |
 | 33 | Adrenalina | PCR, anafilaxia, crupe (nebulização), choque |
 | 34 | Amiodarona | FV/TV sem pulso, taquiarritmias |
 | 35 | Adenosina | TSV |
@@ -64,8 +65,7 @@ No programa, o aluno vai calcular a oferta de sódio (mEq/kg/dia), converter em 
 | 37 | Glucagon | Hipoglicemia sem acesso venoso |
 | 38 | Insulina (regular) | Cetoacidose diabética, hipercalemia |
 
-*(A numeração passa de 36 porque o sódio e as glicoses foram separados por apresentação.)*
+*(A numeração passa da lista original porque as glicoses foram separadas por apresentação.)*
 
 ## Pendências com o usuário
-1. **Cortisona:** era isso mesmo (acetato de cortisona, usado por via oral na reposição de insuficiência adrenal) ou você quis dizer **hidrocortisona** ou **metilprednisolona**?
-2. **Apresentações:** o usuário vai levantar as apresentações comerciais da Santa Casa (ampola/frasco, concentração, volume).
+1. **Apresentações:** o usuário vai levantar as apresentações comerciais da Santa Casa (ampola/frasco, concentração, volume).

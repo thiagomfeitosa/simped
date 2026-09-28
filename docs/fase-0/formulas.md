@@ -31,10 +31,13 @@ Estas são as contas que o aluno fará e que o programa conferirá. São **matem
 - Vazão (mL/h) = volume do dia ÷ 24
 - Cálculo de eletrólitos no soro (Na, K) e mistura de SG 5% + SG 50% para atingir a concentração desejada ficam no mesmo módulo. Os valores-alvo serão definidos com fonte (A VALIDAR).
 
-## 7. Fator de correção da BIC
-- **Valor da Santa Casa: 12** (informado pelo usuário). Ficará como padrão, e cada hospital poderá configurar o seu.
-- **A VALIDAR: como o 12 entra na conta.** Precisamos de um exemplo real para escrever a fórmula exata. Hipóteses:
-  - **(a)** +12 mL de volume para preencher o equipo, mantendo a concentração;
-  - **(b)** a solução é preparada para 12 horas (volume = vazão × 12);
-  - **(c)** outra regra usada no hospital.
-- **Pergunta ao usuário:** num exemplo real (droga, peso da criança, dose/vazão prescrita), como fica a conta com o fator 12 e o que vai na seringa ou no frasco?
+## 7. Fator de correção da BIC (rediluição para volume final fixo)
+- **Regra da Santa Casa (alojamento conjunto): volume final = 12 mL.** Cada hospital poderá configurar o seu valor.
+- O volume da medicação (já diluída/pronta) é **retirado de 12**, e o restante é completado com soro fisiológico:
+  - **Volume de SF (mL)** = 12 − volume da medicação (mL)
+  - **Concentração final** = quantidade de droga ÷ 12 mL
+- Exemplos do usuário:
+  - Gentamicina: 0,3 mL da medicação já diluída + **11,7 mL** de SF = 12 mL
+  - NaCl: 5 mL de NaCl + **7 mL** de SF = 12 mL
+- O programa confere: (1) volume da medicação, (2) volume de SF, (3) soma = volume final configurado, (4) concentração final.
+- Se o volume da medicação passar do volume final (ex.: 13 mL), o programa avisa que a regra não se aplica.
