@@ -170,4 +170,66 @@ export const ceftriaxona: Medicacao = {
   ],
 };
 
-export const MEDICACOES_EXEMPLO: readonly Medicacao[] = [adrenalina, dipirona, ceftriaxona];
+/** Exemplo de regra que muda com a idade em dias (12/12h até 7 dias de vida, 8/8h depois). */
+export const penicilinaCristalina: Medicacao = {
+  id: 'penicilina-cristalina',
+  nome: 'Penicilina G cristalina',
+  secao: 5,
+  apresentacoes: [
+    {
+      id: 'fa-1milhao',
+      descricao: 'Frasco-ampola 1.000.000 UI (pó)',
+      forma: 'frasco-ampola-po',
+      vias: ['EV', 'IM'],
+      quantidade: { valor: 1_000_000, unidade: 'UI' },
+      status: 'A_VALIDAR',
+    },
+    {
+      id: 'fa-5milhoes',
+      descricao: 'Frasco-ampola 5.000.000 UI (pó)',
+      forma: 'frasco-ampola-po',
+      vias: ['EV', 'IM'],
+      quantidade: { valor: 5_000_000, unidade: 'UI' },
+      status: 'A_VALIDAR',
+    },
+  ],
+  regras: [
+    {
+      id: 'sifilis-rn-ate-7d',
+      indicacao: 'Sífilis congênita / neurossífilis',
+      faixas: ['RN'],
+      condicoes: { idadeDias: { ate: 7 } },
+      vias: ['EV'],
+      dose: { tipo: 'porKg', min: 50_000, max: 50_000, unidade: 'UI', por: 'dose' },
+      intervalosHoras: [12],
+      observacoes: 'Por 10 dias.',
+      fonte: { codigo: 'MS' },
+      status: 'A_VALIDAR',
+    },
+    {
+      id: 'sifilis-rn-apos-7d',
+      indicacao: 'Sífilis congênita / neurossífilis',
+      faixas: ['RN'],
+      condicoes: { idadeDias: { de: 7 } },
+      vias: ['EV'],
+      dose: { tipo: 'porKg', min: 50_000, max: 50_000, unidade: 'UI', por: 'dose' },
+      intervalosHoras: [8],
+      observacoes: 'Completar 10 dias de tratamento.',
+      fonte: { codigo: 'MS' },
+      status: 'A_VALIDAR',
+    },
+    {
+      id: 'infeccao-grave-crianca',
+      indicacao: 'Infecção grave / meningite',
+      faixas: ['crianca', 'adolescente'],
+      vias: ['EV'],
+      dose: { tipo: 'porKg', min: 250_000, max: 400_000, unidade: 'UI', por: 'dia' },
+      doseMaxima: { valor: 24_000_000, unidade: 'UI', por: 'dia' },
+      intervalosHoras: [4, 6],
+      fonte: { codigo: 'SBP' },
+      status: 'A_VALIDAR',
+    },
+  ],
+};
+
+export const MEDICACOES_EXEMPLO: readonly Medicacao[] = [adrenalina, dipirona, ceftriaxona, penicilinaCristalina];

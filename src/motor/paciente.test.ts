@@ -1,7 +1,7 @@
 // Caso fictício só para testar o motor: os números não têm significado clínico.
 import { describe, expect, it } from 'vitest';
 import type { CasoClinico } from '../casos/tipos';
-import { aplicarEvento, iniciarPaciente, reproduzirEventos } from './paciente';
+import { acrescentarEvento, aplicarEvento, type EventoPaciente, iniciarPaciente, reproduzirEventos } from './paciente';
 
 const caso: CasoClinico = {
   id: 'teste',
@@ -100,5 +100,22 @@ describe('motor do paciente', () => {
     ] as const;
     expect(reproduzirEventos(caso, eventos)).toEqual(reproduzirEventos(caso, eventos));
     expect(reproduzirEventos(caso, eventos).tempoMin).toBe(55);
+  });
+});
+
+describe('acrescentarEvento', () => {
+  it('junta "tempo passou" seguidos sem mudar o paciente', () => {
+    let lista: EventoPaciente[] = [];
+    for (let i = 0; i < 30; i++) lista = acrescentarEvento(lista, { tipo: 'tempoPassou', minutos: 1 });
+    expect(lista).toEqual([{ tipo: 'tempoPassou', minutos: 30 }]);
+    const separado = Array.from({ length: 30 }, () => ({ tipo: 'tempoPassou', minutos: 1 }) as EventoPaciente);
+    expect(reproduzirEventos(caso, lista).sinais).toEqual(reproduzirEventos(caso, separado).sinais);
+  });
+  it('não junta eventos de outro tipo', () => {
+    let lista: EventoPaciente[] = [];
+    lista = acrescentarEvento(lista, { tipo: 'tempoPassou', minutos: 5 });
+    lista = acrescentarEvento(lista, { tipo: 'medicacaoAdministrada', medicacaoId: 'droga-x', descricao: 'X' });
+    lista = acrescentarEvento(lista, { tipo: 'tempoPassou', minutos: 5 });
+    expect(lista).toHaveLength(3);
   });
 });

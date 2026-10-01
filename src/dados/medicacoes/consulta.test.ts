@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { escolherRegras, podeCorrigirAluno, verificarBanco } from './consulta';
-import { adrenalina, MEDICACOES_EXEMPLO } from './exemplos-a-validar';
+import { escolherRegras, podeCorrigirAluno, regraValeParaPaciente, textoCondicoes, verificarBanco } from './consulta';
+import { adrenalina, MEDICACOES_EXEMPLO, penicilinaCristalina } from './exemplos-a-validar';
 import type { Medicacao, RegraDeDose } from './tipos';
 
 describe('integridade do banco de medicações', () => {
@@ -89,5 +89,45 @@ describe('escolha da fonte', () => {
   it('com dados A VALIDAR, avisa que não corrige o aluno', () => {
     const r = escolherRegras(adrenalina, 'Anafilaxia', 'crianca');
     expect(r.avisos.join(' ')).toContain('A VALIDAR');
+  });
+});
+
+describe('regras que dependem da idade em dias (condições)', () => {
+  const variaveis = (idadeDias: number) => ({
+    idadeHoras: idadeDias * 24,
+    idadeDias,
+    idadeMeses: 0,
+    idadeAnos: 0,
+    igNascerSemanas: 39,
+    idadePosMenstrualSemanas: 39 + idadeDias / 7,
+    pesoKg: 3,
+  });
+  const indicacao = 'Sífilis congênita / neurossífilis';
+
+  it('até 7 dias usa a regra 12/12h; a partir de 7 dias, a de 8/8h', () => {
+    const antes = escolherRegras(penicilinaCristalina, indicacao, 'RN', 'MS', variaveis(6));
+    expect(antes.regras.map((r) => r.id)).toEqual(['sifilis-rn-ate-7d']);
+    const depois = escolherRegras(penicilinaCristalina, indicacao, 'RN', 'MS', variaveis(7));
+    expect(depois.regras.map((r) => r.id)).toEqual(['sifilis-rn-apos-7d']);
+  });
+
+  it('sem variáveis, as duas regras aparecem (não dá para decidir)', () => {
+    expect(escolherRegras(penicilinaCristalina, indicacao, 'RN', 'MS').regras).toHaveLength(2);
+  });
+
+  it('regraValeParaPaciente respeita a faixa etária', () => {
+    const regra = penicilinaCristalina.regras[0]!;
+    expect(regraValeParaPaciente(regra, 'crianca', variaveis(3))).toBe(false);
+  });
+
+  it('texto das condições', () => {
+    expect(textoCondicoes({ idadeDias: { ate: 7 } })).toBe('idade < 7 dias de vida');
+    expect(textoCondicoes({ pesoKg: { de: 2, ate: 3 } })).toBe('peso 2 a < 3 kg');
+  });
+
+  it('verificador pega condição invertida', () => {
+    const regra = { ...penicilinaCristalina.regras[0]!, condicoes: { idadeDias: { de: 10, ate: 7 } } };
+    const med: Medicacao = { ...penicilinaCristalina, regras: [regra] };
+    expect(verificarBanco([med]).join(' ')).toMatch(/condição idadeDias/);
   });
 });

@@ -1,4 +1,6 @@
 import type { EstadoPaciente, EventoPaciente } from '../motor/paciente';
+import { formatarDataHora } from '../paciente/variaveis';
+import { useRelogio, VELOCIDADES } from './useRelogio';
 
 export function formatarTempo(minutos: number): string {
   const h = Math.floor(minutos / 60);
@@ -8,15 +10,40 @@ export function formatarTempo(minutos: number): string {
 
 interface Props {
   paciente: EstadoPaciente;
+  /** Data e hora atuais do caso (início + relógio). */
+  agora: Date;
   aoEvento: (evento: EventoPaciente) => void;
 }
 
-/** Relógio do caso, avanço do tempo e linha do tempo. A medicação é dada pelo botão "Administrar" da folha. */
-export function ControlesCaso({ paciente, aoEvento }: Props) {
+/** Relógio do caso (anda sozinho ou aos saltos) e linha do tempo. A medicação é dada pelo botão "Administrar" da folha. */
+export function ControlesCaso({ paciente, agora, aoEvento }: Props) {
+  const relogio = useRelogio((minutos) => aoEvento({ tipo: 'tempoPassou', minutos }));
+
   return (
     <div className="controles-caso">
       <div className="relogio" aria-label="Tempo do caso">
         ⏱ {formatarTempo(paciente.tempoMin)}
+        <span className="relogio-data">{formatarDataHora(agora)}</span>
+      </div>
+      <div className="linha-botoes">
+        <button
+          type="button"
+          className={relogio.rodando ? 'pausar' : 'iniciar'}
+          onClick={() => relogio.setRodando((v) => !v)}
+        >
+          {relogio.rodando ? '⏸ Pausar' : '▶ Iniciar'}
+        </button>
+        <select
+          aria-label="Velocidade do relógio"
+          value={relogio.fator}
+          onChange={(e) => relogio.setFator(Number(e.target.value))}
+        >
+          {VELOCIDADES.map((v) => (
+            <option key={v.fator} value={v.fator}>
+              {v.rotulo}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="linha-botoes">
         {[5, 15, 60].map((min) => (
@@ -24,10 +51,13 @@ export function ControlesCaso({ paciente, aoEvento }: Props) {
             +{min} min
           </button>
         ))}
+        <button type="button" onClick={() => aoEvento({ tipo: 'tempoPassou', minutos: 24 * 60 })}>
+          +1 dia
+        </button>
       </div>
       <p className="nota">
-        Para dar uma medicação, preencha o item na folha e clique em “Administrar”. Demonstração: os efeitos são
-        fictícios (A VALIDAR).
+        A idade do paciente avança com o relógio. Para dar uma medicação, preencha o item na folha e clique em
+        “Administrar”. Os efeitos são fictícios (A VALIDAR).
       </p>
 
       <h3>Linha do tempo</h3>

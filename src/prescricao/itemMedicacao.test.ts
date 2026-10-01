@@ -310,3 +310,48 @@ describe('referência CONFERIDA corrige o aluno (dados fictícios)', () => {
     expect(maxima).toMatchObject({ situacao: 'errado', texto: expect.stringContaining('1.200 mg/dia') });
   });
 });
+
+describe('regra que muda com a idade em dias (relógio do caso)', () => {
+  const rn = (idadeDias: number) => ({
+    faixa: 'RN' as const,
+    pesoKg: 3,
+    variaveis: {
+      idadeHoras: idadeDias * 24,
+      idadeDias,
+      idadeMeses: 0,
+      idadeAnos: 0,
+      igNascerSemanas: 39,
+      idadePosMenstrualSemanas: 39,
+      pesoKg: 3,
+    },
+  });
+  const item = campos({
+    medicacaoId: 'penicilina-cristalina',
+    apresentacaoId: 'fa-1milhao',
+    indicacao: 'Sífilis congênita / neurossífilis',
+    dose: '150000',
+    unidadeDose: 'UI',
+    reconstituicaoMl: '10',
+    volumeMl: '1,5',
+    via: 'EV',
+    intervalo: 12,
+  });
+  const conferirRn = (idadeDias: number) =>
+    conferirItemMedicacao({ campos: item, medicacoes: MEDICACOES_EXEMPLO, paciente: rn(idadeDias), secaoNumero: 5 });
+
+  it('com 6 dias, 12/12h bate com a referência', () => {
+    const r = conferirRn(6);
+    expect(r.regra?.id).toBe('sifilis-rn-ate-7d');
+    expect(doAssunto(r.verificacoes, 'intervalo')).toEqual([]);
+    expect(doAssunto(r.verificacoes, 'fonte').map((v) => v.texto).join(' ')).toMatch(/idade < 7 dias de vida/);
+    expect(doAssunto(r.verificacoes, 'volume')[0]?.situacao).toBe('certo');
+  });
+
+  it('com 7 dias, a regra passa a ser 8/8h e o 12/12h é apontado (A VALIDAR)', () => {
+    const r = conferirRn(7);
+    expect(r.regra?.id).toBe('sifilis-rn-apos-7d');
+    const intervalo = doAssunto(r.verificacoes, 'intervalo');
+    expect(intervalo[0]?.situacao).toBe('a-validar');
+    expect(intervalo[0]?.texto).toMatch(/8\/8h/);
+  });
+});

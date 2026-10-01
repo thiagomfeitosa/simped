@@ -464,3 +464,40 @@
 .painel-paciente .ficha {
   font-size: 0.9rem;
 }
+
+/* Relógio do caso */
+.relogio {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.relogio-data {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: var(--suave);
+}
+
+.linha-botoes {
+  flex-wrap: wrap;
+}
+
+.linha-botoes select {
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 2px 4px;
+  max-width: 100%;
+}
+
+:where(.modo-prescrever) button.iniciar {
+  background: var(--certo);
+  border-color: var(--certo);
+  color: #fff;
+}
+
+:where(.modo-prescrever) button.pausar {
+  background: var(--atencao-fundo);
+  border-color: var(--atencao);
+}

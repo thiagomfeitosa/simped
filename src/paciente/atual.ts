@@ -5,8 +5,8 @@
 
 import type { CasoClinico, Paciente } from '../casos/tipos';
 import type { FonteDeFaixa } from '../dados/faixas-etarias';
-import type { FaixaEtaria } from '../dados/medicacoes/tipos';
-import { calcularVariaveis, somarMinutos, type VariaveisCalculadas } from './variaveis';
+import type { FaixaEtaria, VariaveisParaRegra } from '../dados/medicacoes/tipos';
+import { calcularVariaveis, emDias, somarMinutos, type VariaveisCalculadas } from './variaveis';
 
 export interface PacienteAtual extends Paciente {
   /** Instante atual do caso (início + minutos do relógio). */
@@ -15,10 +15,22 @@ export interface PacienteAtual extends Paciente {
   /** Atalhos usados por várias telas. */
   faixa: FaixaEtaria;
   idadeTexto: string;
+  /** Números usados pelas condições das regras de dose (idade em dias, IG, peso...). */
+  paraRegra: VariaveisParaRegra;
 }
 
 export function pacienteNoMinuto(caso: CasoClinico, tempoMin: number, fonteDaFaixa: FonteDeFaixa = 'SBP'): PacienteAtual {
   const agora = somarMinutos(caso.inicio, tempoMin);
   const variaveis = calcularVariaveis(caso.paciente, agora, fonteDaFaixa);
-  return { ...caso.paciente, agora, variaveis, faixa: variaveis.faixa, idadeTexto: variaveis.idadeTexto };
+  const { idade, idadePosMenstrual } = variaveis;
+  const paraRegra: VariaveisParaRegra = {
+    idadeHoras: idade.horas,
+    idadeDias: idade.dias,
+    idadeMeses: idade.meses,
+    idadeAnos: idade.anos,
+    igNascerSemanas: emDias(caso.paciente.igNascer) / 7,
+    idadePosMenstrualSemanas: emDias(idadePosMenstrual) / 7,
+    pesoKg: caso.paciente.pesoKg,
+  };
+  return { ...caso.paciente, agora, variaveis, faixa: variaveis.faixa, idadeTexto: variaveis.idadeTexto, paraRegra };
 }

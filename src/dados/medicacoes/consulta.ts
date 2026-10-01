@@ -2,7 +2,15 @@
  * Funções que leem o banco: escolher a regra pela fonte preferida e verificar a integridade dos dados.
  */
 
-import type { CodigoFonte, FaixaEtaria, Medicacao, RegraDeDose } from './tipos';
+import type {
+  CodigoFonte,
+  CondicoesDaRegra,
+  FaixaEtaria,
+  FaixaNumerica,
+  Medicacao,
+  RegraDeDose,
+  VariaveisParaRegra,
+} from './tipos';
 
 export const FONTE_PADRAO: CodigoFonte = 'SBP';
 
@@ -26,9 +34,10 @@ export function escolherRegras(
   indicacao: string,
   faixa: FaixaEtaria,
   fontePreferida: CodigoFonte = FONTE_PADRAO,
+  variaveis?: VariaveisParaRegra,
 ): RegrasEscolhidas {
   const candidatas = medicacao.regras.filter(
-    (r) => r.indicacao === indicacao && r.faixas.includes(faixa),
+    (r) => r.indicacao === indicacao && regraValeParaPaciente(r, faixa, variaveis),
   );
   if (candidatas.length === 0) {
     return { regras: [], avisos: [`Sem regra de dose para ${medicacao.nome} — ${indicacao} (${faixa}).`] };
@@ -55,6 +64,51 @@ export function escolherRegras(
     avisos.push('Dose de referência A VALIDAR: não é usada para corrigir o aluno.');
   }
   return { regras, fonteUsada, avisos };
+}
+
+const NOME_CONDICAO: Record<keyof CondicoesDaRegra, [string, string]> = {
+  idadeHoras: ['idade', 'h de vida'],
+  idadeDias: ['idade', 'dias de vida'],
+  idadeMeses: ['idade', 'meses'],
+  idadeAnos: ['idade', 'anos'],
+  igNascerSemanas: ['IG ao nascer', 'semanas'],
+  idadePosMenstrualSemanas: ['idade pós-menstrual', 'semanas'],
+  pesoKg: ['peso', 'kg'],
+};
+
+function dentroDaFaixa(valor: number, faixa: FaixaNumerica): boolean {
+  return (faixa.de === undefined || valor >= faixa.de) && (faixa.ate === undefined || valor < faixa.ate);
+}
+
+/**
+ * A regra vale para este paciente? Confere a faixa etária e, se a regra tiver condições numéricas
+ * e as variáveis forem informadas, cada condição (idade em dias, IG, peso...).
+ */
+export function regraValeParaPaciente(
+  regra: RegraDeDose,
+  faixa: FaixaEtaria,
+  variaveis?: VariaveisParaRegra,
+): boolean {
+  if (!regra.faixas.includes(faixa)) return false;
+  if (!regra.condicoes || !variaveis) return true;
+  return (Object.entries(regra.condicoes) as [keyof CondicoesDaRegra, FaixaNumerica][]).every(([nome, f]) =>
+    dentroDaFaixa(variaveis[nome], f),
+  );
+}
+
+/** Ex.: "idade < 7 dias de vida", "peso 2 a < 3 kg". */
+export function textoCondicoes(condicoes: CondicoesDaRegra | undefined): string {
+  if (!condicoes) return '';
+  return (Object.entries(condicoes) as [keyof CondicoesDaRegra, FaixaNumerica][])
+    .map(([nome, f]) => {
+      const [rotulo, unidade] = NOME_CONDICAO[nome];
+      if (f.de !== undefined && f.ate !== undefined) return `${rotulo} ${f.de} a < ${f.ate} ${unidade}`;
+      if (f.de !== undefined) return `${rotulo} ≥ ${f.de} ${unidade}`;
+      if (f.ate !== undefined) return `${rotulo} < ${f.ate} ${unidade}`;
+      return '';
+    })
+    .filter(Boolean)
+    .join(' e ');
 }
 
 /** Só valores conferidos e estruturados (não 'texto') podem corrigir o aluno. */
@@ -105,6 +159,12 @@ export function verificarBanco(medicacoes: readonly Medicacao[]): string[] {
         }
         if (regra.dose.min > regra.dose.max) {
           problemas.push(`${onde}: dose mínima maior que a máxima.`);
+        }
+      }
+      for (const [nome, f] of Object.entries(regra.condicoes ?? {}) as [string, FaixaNumerica][]) {
+        if (f.de === undefined && f.ate === undefined) problemas.push(`${onde}: condição ${nome} vazia.`);
+        if (f.de !== undefined && f.ate !== undefined && f.de >= f.ate) {
+          problemas.push(`${onde}: condição ${nome} com "de" maior ou igual ao "até".`);
         }
       }
       if (regra.doseMaxima && regra.doseMaxima.valor <= 0) {

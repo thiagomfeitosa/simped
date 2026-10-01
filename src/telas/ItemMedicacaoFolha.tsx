@@ -38,15 +38,20 @@ interface Props {
 /** Item de medicação estruturado: medicação → apresentação → indicação → dose → volume → via → intervalo. */
 export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar }: Props) {
   const [mostrarConferencia, setMostrarConferencia] = useState(false);
-  const resultado = conferirItemMedicacao({ campos, medicacoes, paciente, secaoNumero: secao.numero });
+  const resultado = conferirItemMedicacao({
+    campos,
+    medicacoes,
+    paciente: { faixa: paciente.faixa, pesoKg: paciente.pesoKg, variaveis: paciente.paraRegra },
+    secaoNumero: secao.numero,
+  });
   const { medicacao, apresentacao } = resultado;
-  const indicacoes = medicacao ? indicacoesDisponiveis(medicacao, paciente.faixa) : [];
+  const indicacoes = medicacao ? indicacoesDisponiveis(medicacao, paciente.faixa, paciente.paraRegra) : [];
   const pede = camposDaApresentacao(apresentacao);
   const texto = textoDaFolha(campos, medicacoes);
   const rotulo = `Item ${numero ?? ''}`;
 
   const mudar = (mudanca: Partial<CamposMedicacao>) =>
-    aoMudar(atualizarCampos(campos, mudanca, medicacoes, paciente.faixa));
+    aoMudar(atualizarCampos(campos, mudanca, medicacoes, paciente.faixa, paciente.paraRegra));
 
   function administrar() {
     if (!medicacao || !campos.via) return;

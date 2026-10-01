@@ -80,11 +80,36 @@ export type ExpressaoDeDose =
 /** 'dose' = por dose; 'dia' = por dia (dividido nas tomadas); 'min'/'h' = infusão contínua. */
 export type Periodo = 'dose' | 'dia' | 'min' | 'h';
 
+/** Faixa numérica: `de` vale inclusive, `ate` é exclusive (ex.: idadeDias { ate: 7 } = 0 a 6 dias completos). */
+export interface FaixaNumerica {
+  de?: number;
+  ate?: number;
+}
+
+/**
+ * Condições da regra sobre as variáveis do paciente (docs/fase-0/variaveis-paciente.md).
+ * Todas as informadas precisam valer. Ex.: penicilina cristalina 12/12h até 7 dias de vida, 8/8h depois.
+ */
+export interface CondicoesDaRegra {
+  idadeHoras?: FaixaNumerica;
+  idadeDias?: FaixaNumerica;
+  idadeMeses?: FaixaNumerica;
+  idadeAnos?: FaixaNumerica;
+  igNascerSemanas?: FaixaNumerica;
+  idadePosMenstrualSemanas?: FaixaNumerica;
+  pesoKg?: FaixaNumerica;
+}
+
+/** Valores do paciente que as condições usam (calculados em src/paciente/). */
+export type VariaveisParaRegra = Record<keyof CondicoesDaRegra, number>;
+
 export interface RegraDeDose {
   id: string;
   /** Ex.: "Anafilaxia", "PCR", "Meningite". */
   indicacao: string;
   faixas: FaixaEtaria[];
+  /** Condições numéricas extras (idade em dias, IG, peso...). Vazio = vale para toda a faixa. */
+  condicoes?: CondicoesDaRegra;
   vias: Via[];
   dose: ExpressaoDeDose;
   doseMaxima?: { valor: number; unidade: UnidadeDroga; por: Periodo };

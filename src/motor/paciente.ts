@@ -151,3 +151,15 @@ export function aplicarEvento(
 export function reproduzirEventos(caso: CasoClinico, eventos: readonly EventoPaciente[]): EstadoPaciente {
   return eventos.reduce((estado, evento) => aplicarEvento(estado, evento, caso), iniciarPaciente(caso));
 }
+
+/**
+ * Acrescenta um evento à lista. "Tempo passou" seguido de "tempo passou" vira um só
+ * (5 min + 1 min = 6 min): o paciente sai igual, e a lista não cresce a cada minuto do relógio.
+ */
+export function acrescentarEvento(lista: readonly EventoPaciente[], evento: EventoPaciente): EventoPaciente[] {
+  const ultimo = lista[lista.length - 1];
+  if (evento.tipo === 'tempoPassou' && ultimo?.tipo === 'tempoPassou') {
+    return [...lista.slice(0, -1), { tipo: 'tempoPassou', minutos: ultimo.minutos + evento.minutos }];
+  }
+  return [...lista, evento];
+}

@@ -19,7 +19,13 @@ import {
   type UnidadeDeMassa,
   volumeAspirar,
 } from '../calculos';
-import { escolherRegras, FONTE_PADRAO, podeCorrigirAluno } from '../dados/medicacoes/consulta';
+import {
+  escolherRegras,
+  FONTE_PADRAO,
+  podeCorrigirAluno,
+  regraValeParaPaciente,
+  textoCondicoes,
+} from '../dados/medicacoes/consulta';
 import type {
   Apresentacao,
   CodigoFonte,
@@ -27,6 +33,7 @@ import type {
   Medicacao,
   RegraDeDose,
   UnidadeDroga,
+  VariaveisParaRegra,
   Via,
 } from '../dados/medicacoes/tipos';
 import { SECOES } from './secoes';
@@ -121,9 +128,15 @@ function converterDroga(valor: number, de: UnidadeDroga, para: UnidadeDroga): nu
   return null;
 }
 
-/** Indicações do banco com regra para a faixa etária do paciente. */
-export function indicacoesDisponiveis(medicacao: Medicacao, faixa: FaixaEtaria): string[] {
-  return [...new Set(medicacao.regras.filter((r) => r.faixas.includes(faixa)).map((r) => r.indicacao))];
+/** Indicações do banco com regra para a faixa etária (e, se informadas, as variáveis) do paciente. */
+export function indicacoesDisponiveis(
+  medicacao: Medicacao,
+  faixa: FaixaEtaria,
+  variaveis?: VariaveisParaRegra,
+): string[] {
+  return [
+    ...new Set(medicacao.regras.filter((r) => regraValeParaPaciente(r, faixa, variaveis)).map((r) => r.indicacao)),
+  ];
 }
 
 function unidadePadrao(ap: Apresentacao | undefined): UnidadeDroga | '' {
@@ -142,6 +155,7 @@ export function atualizarCampos(
   mudanca: Partial<CamposMedicacao>,
   medicacoes: readonly Medicacao[],
   faixa: FaixaEtaria,
+  variaveis?: VariaveisParaRegra,
 ): CamposMedicacao {
   let campos: CamposMedicacao = { ...anterior, ...mudanca };
   if (mudanca.medicacaoId !== undefined && mudanca.medicacaoId !== anterior.medicacaoId) {
@@ -159,7 +173,7 @@ export function atualizarCampos(
     : med.apresentacoes.length === 1
       ? (med.apresentacoes[0]?.id ?? '')
       : '';
-  const indicacoes = indicacoesDisponiveis(med, faixa);
+  const indicacoes = indicacoesDisponiveis(med, faixa, variaveis);
   const indicacao = indicacoes.includes(campos.indicacao)
     ? campos.indicacao
     : indicacoes.length === 1
@@ -368,7 +382,7 @@ function conferirDose(
 export function conferirItemMedicacao(entrada: {
   campos: CamposMedicacao;
   medicacoes: readonly Medicacao[];
-  paciente: { faixa: FaixaEtaria; pesoKg: number };
+  paciente: { faixa: FaixaEtaria; pesoKg: number; variaveis?: VariaveisParaRegra };
   /** Número da seção da folha onde o item foi escrito (4, 5 ou 6). */
   secaoNumero: number;
   fontePreferida?: CodigoFonte;
@@ -398,7 +412,7 @@ export function conferirItemMedicacao(entrada: {
   const apresentacao = medicacao.apresentacoes.find((a) => a.id === campos.apresentacaoId);
   if (!apresentacao) faltando.push('apresentação');
 
-  const indicacoes = indicacoesDisponiveis(medicacao, paciente.faixa);
+  const indicacoes = indicacoesDisponiveis(medicacao, paciente.faixa, paciente.variaveis);
   if (indicacoes.length === 0) {
     verificacoes.push({
       assunto: 'fonte',
@@ -506,9 +520,22 @@ export function conferirItemMedicacao(entrada: {
   // 4. dose, via e intervalo pela regra do banco
   let regra: RegraDeDose | undefined;
   if (campos.indicacao && indicacoes.includes(campos.indicacao)) {
-    const escolha = escolherRegras(medicacao, campos.indicacao, paciente.faixa, entrada.fontePreferida ?? FONTE_PADRAO);
+    const escolha = escolherRegras(
+      medicacao,
+      campos.indicacao,
+      paciente.faixa,
+      entrada.fontePreferida ?? FONTE_PADRAO,
+      paciente.variaveis,
+    );
     regra = escolha.regras.find((r) => campos.via !== '' && r.vias.includes(campos.via)) ?? escolha.regras[0];
     for (const aviso of escolha.avisos) verificacoes.push({ assunto: 'fonte', situacao: 'atencao', texto: aviso });
+    if (regra?.condicoes) {
+      verificacoes.push({
+        assunto: 'fonte',
+        situacao: 'atencao',
+        texto: `Regra usada para este paciente: ${textoCondicoes(regra.condicoes)} (muda sozinha com o relógio do caso).`,
+      });
+    }
 
     if (regra) {
       const conferida = regra.status === 'CONFERIDO';

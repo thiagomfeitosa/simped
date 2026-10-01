@@ -1,7 +1,7 @@
 import { useMemo, useReducer, useState } from 'react';
 import { casoDemonstracao } from '../casos/demonstracao';
 import { MEDICACOES_EXEMPLO } from '../dados/medicacoes/exemplos-a-validar';
-import { type EventoPaciente, reproduzirEventos } from '../motor/paciente';
+import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
 import { ControlesCaso } from './ControlesCaso';
@@ -20,7 +20,7 @@ export function Prescrever() {
   const paciente = useMemo(() => reproduzirEventos(caso, eventos), [caso, eventos]);
   // idade, faixa e superfície corporal no minuto atual do relógio do caso
   const pacienteAtual = useMemo(() => pacienteNoMinuto(caso, paciente.tempoMin), [caso, paciente.tempoMin]);
-  const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => [...lista, evento]);
+  const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => acrescentarEvento(lista, evento));
 
   return (
     <div className="prescrever">
@@ -38,7 +38,7 @@ export function Prescrever() {
       <main className={pacienteVisivel ? 'area com-paciente' : 'area'}>
         {pacienteVisivel && (
           <PainelPaciente caso={caso} paciente={pacienteAtual} sinais={paciente.sinais}>
-            <ControlesCaso paciente={paciente} aoEvento={registrarEvento} />
+            <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoEvento={registrarEvento} />
           </PainelPaciente>
         )}
         <FolhaPrescricao
