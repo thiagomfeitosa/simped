@@ -84,6 +84,16 @@ export function gerarAgenda(
       continue;
     }
     if (typeof item.intervalo !== 'number') continue;
+    if (item.intervalo > 24) {
+      // 36/36h, 48/48h: primeira dose na hora inicial do hospital, depois a cada N horas
+      const inicioDoDia = minutosDoDia(hospital.horaInicial);
+      let minuto = inicioDoDia - minutoDoDiaNoInicio;
+      if (minuto < 0) minuto += 24 * 60;
+      for (; minuto <= ateMinuto; minuto += item.intervalo * 60) {
+        agenda.push({ ...dadosDoItem(item), minuto, hora: textoHora((minutoDoDiaNoInicio + minuto) % (24 * 60)) });
+      }
+      continue;
+    }
     const horarios = horariosDoIntervalo(item.intervalo, hospital).map(minutosDoDia);
     // percorre os dias desde o início do caso
     for (let dia = 0; dia * 24 * 60 - minutoDoDiaNoInicio <= ateMinuto; dia++) {

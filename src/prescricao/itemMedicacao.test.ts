@@ -524,3 +524,45 @@ describe('alerta de concentração máxima EV (A VALIDAR)', () => {
     expect(r.verificacoes.some((v) => v.texto.includes('Concentração na veia'))).toBe(false);
   });
 });
+
+describe('dose por m² de superfície corporal', () => {
+  const comM2: Medicacao = {
+    id: 'droga-m2',
+    nome: 'Droga por m²',
+    secao: 6,
+    apresentacoes: [
+      { id: 'amp', descricao: 'Ampola 10 mg/mL', forma: 'ampola', vias: ['EV'], concentracaoPorMl: { valor: 10, unidade: 'mg' }, status: 'CONFERIDO', fonte: { codigo: 'BULA', documento: 'teste' } },
+    ],
+    regras: [
+      {
+        id: 'r',
+        indicacao: 'Teste',
+        faixas: ['crianca'],
+        vias: ['EV'],
+        dose: { tipo: 'porM2', min: 50, max: 100, unidade: 'mg', por: 'dia' },
+        intervalosHoras: [6],
+        fonte: { codigo: 'BULA', documento: 'teste (números ilustrativos)' },
+        status: 'CONFERIDO',
+      },
+    ],
+  };
+  const conferirM2 = (dose: string, superficieM2?: number) =>
+    conferirItemMedicacao({
+      campos: campos({ medicacaoId: 'droga-m2', apresentacaoId: 'amp', indicacao: 'Teste', dose, unidadeDose: 'mg', volumeMl: '1', via: 'EV', intervalo: 6 }),
+      medicacoes: [comM2],
+      paciente: { ...crianca16kg, ...(superficieM2 !== undefined && { superficieM2 }) },
+      secaoNumero: 6,
+    });
+
+  it('0,67 m²: 50–100 mg/m²/dia = 33,5–67 mg/dia; 10 mg 6/6h = 40 mg/dia (certo)', () => {
+    const dose = doAssunto(conferirM2('10', 0.67).verificacoes, 'dose')[0];
+    expect(dose?.situacao).toBe('certo');
+    expect(dose?.texto).toMatch(/para 0,67 m²: 33,5–67 mg\/dia/);
+  });
+  it('20 mg 6/6h = 80 mg/dia passa da faixa', () => {
+    expect(doAssunto(conferirM2('20', 0.67).verificacoes, 'dose')[0]?.situacao).toBe('errado');
+  });
+  it('sem superfície corporal, avisa', () => {
+    expect(doAssunto(conferirM2('10').verificacoes, 'dose')[0]?.texto).toMatch(/superfície corporal não foi informada/);
+  });
+});

@@ -24,8 +24,9 @@ describe('calcularSoro', () => {
     expect(r.vigMgKgMin).toBeCloseTo((21.4583 * 4.8544) / 60, 3);
     expect(r.sodioMEq).toBeCloseTo(34, 10);
     expect(r.sodioMEqKgDia).toBeCloseTo(3.4, 10);
-    expect(r.potassioMEqKgDia).toBeCloseTo(1.25, 10);
-    expect(r.osmolaridade).toBeCloseTo(269.7 + 180.6, 0);
+    expect(r.potassioMEqKgDia).toBeCloseTo(1.28, 10);
+    // glicose 48,54 g/L × 1000 ÷ 180 = 269,7; 2 × (34 + 12,8) mEq ÷ 0,515 L = 181,7
+    expect(r.osmolaridade).toBeCloseTo(269.7 + 181.7, 0);
     expect(r.hollidaySegarMlDia).toBe(1000);
   });
 
@@ -98,7 +99,7 @@ describe('conferirSoro', () => {
 
 describe('alertas de potássio no soro (A VALIDAR)', () => {
   it('concentração acima de 40 mEq/L e velocidade acima de 0,5 mEq/kg/h', () => {
-    // 100 mL de SF + 4 mL de KCl 19,1% (10 mEq) = 96 mEq/L; em 1 h para 10 kg = 1 mEq/kg/h
+    // 100 mL de SF + 4 mL de KCl 19,1% (10,24 mEq) = 98,5 mEq/L; em 1 h para 10 kg = 1,02 mEq/kg/h
     const r = conferirSoro(
       {
         ...soroVazio(),
@@ -113,7 +114,7 @@ describe('alertas de potássio no soro (A VALIDAR)', () => {
       TOLERANCIA_PADRAO,
     );
     const alertas = r.verificacoes.filter((v) => v.assunto === 'alerta').map((v) => v.texto);
-    expect(alertas.join(' ')).toMatch(/96,15 mEq\/L/);
-    expect(alertas.join(' ')).toMatch(/1 mEq\/kg\/h/);
+    expect(alertas.join(' ')).toMatch(/98,46 mEq\/L/);
+    expect(alertas.join(' ')).toMatch(/1,02 mEq\/kg\/h/);
   });
 });

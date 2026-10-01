@@ -82,7 +82,12 @@ export interface ResultadoReceita {
 export function conferirReceita(entrada: {
   campos: CamposReceita;
   medicacoes: readonly Medicacao[];
-  paciente: { faixa: Parameters<typeof indicacoesDisponiveis>[1]; pesoKg: number; variaveis?: VariaveisParaRegra };
+  paciente: {
+    faixa: Parameters<typeof indicacoesDisponiveis>[1];
+    pesoKg: number;
+    variaveis?: VariaveisParaRegra;
+    superficieM2?: number;
+  };
   fontePreferida?: CodigoFonte;
   tolerancia: Tolerancia;
 }): ResultadoReceita {

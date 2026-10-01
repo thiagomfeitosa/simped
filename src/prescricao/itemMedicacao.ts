@@ -90,8 +90,8 @@ export interface CamposMedicacao {
   infusao: InfusaoCampos | null;
 }
 
-export const INTERVALOS_HORAS = [4, 6, 8, 12, 24] as const;
-export const UNIDADES_DOSE: readonly UnidadeDroga[] = ['mg', 'mcg', 'g', 'UI', 'mEq'];
+export const INTERVALOS_HORAS = [4, 6, 8, 12, 24, 36, 48] as const;
+export const UNIDADES_DOSE: readonly UnidadeDroga[] = ['mg', 'mcg', 'g', 'UI', 'mEq', 'mL'];
 export const NOME_VIA: Record<Via, string> = {
   EV: 'EV',
   IM: 'IM',
@@ -145,8 +145,7 @@ export function indicacoesDisponiveis(
 }
 
 function unidadePadrao(ap: Apresentacao | undefined): UnidadeDroga | '' {
-  const unidade = ap?.concentracaoPorMl?.unidade ?? ap?.quantidade?.unidade;
-  return unidade && unidade !== 'mL' ? unidade : '';
+  return ap?.concentracaoPorMl?.unidade ?? ap?.quantidade?.unidade ?? '';
 }
 
 /**
@@ -299,7 +298,7 @@ function textoFaixaDeDose(regra: RegraDeDose): string {
   const d = regra.dose;
   if (d.tipo === 'texto') return d.descricao;
   const valores = d.min === d.max ? formatarNumero(d.min) : `${formatarNumero(d.min)}–${formatarNumero(d.max)}`;
-  return `${valores} ${d.unidade}${d.tipo === 'porKg' ? '/kg' : ''}/${d.por}`;
+  return `${valores} ${d.unidade}${d.tipo === 'porKg' ? '/kg' : d.tipo === 'porM2' ? '/m²' : ''}/${d.por}`;
 }
 
 /** Compara a dose do aluno com a regra do banco. */
@@ -310,6 +309,7 @@ function conferirDose(
   intervalo: Intervalo,
   pesoKg: number,
   tolerancia: Tolerancia,
+  superficieM2?: number,
 ): Verificacao[] {
   const corrige = podeCorrigirAluno(regra);
   const julgar = (ok: boolean): Situacao => (corrige ? (ok ? 'certo' : 'errado') : 'a-validar');
@@ -331,6 +331,9 @@ function conferirDose(
     ];
   }
 
+  if (d.tipo === 'porM2' && !(superficieM2 !== undefined && superficieM2 > 0)) {
+    return [{ assunto: 'dose', situacao: 'atencao', texto: `A referência ${fonte} é por m² (${textoFaixaDeDose(regra)}), mas a superfície corporal não foi informada.` }];
+  }
   const doseNaUnidade = converterDroga(dose, unidadeDose, d.unidade);
   if (doseNaUnidade === null) {
     return [
@@ -351,11 +354,13 @@ function conferirDose(
   const maxima = regra.doseMaxima;
   const maximaMesmoPeriodo =
     maxima && maxima.por === d.por ? (converterDroga(maxima.valor, maxima.unidade, d.unidade) ?? undefined) : undefined;
+  // por kg multiplica pelo peso; por m², pela superfície corporal (a mesma conta)
+  const base = d.tipo === 'porKg' ? pesoKg : d.tipo === 'porM2' ? (superficieM2 as number) : null;
   const [minimo, maximo] =
-    d.tipo === 'porKg'
+    base !== null
       ? [
-          doseTotal({ dosePorKg: d.min, pesoKg, doseMaxima: maximaMesmoPeriodo }).dose,
-          doseTotal({ dosePorKg: d.max, pesoKg, doseMaxima: maximaMesmoPeriodo }).dose,
+          doseTotal({ dosePorKg: d.min, pesoKg: base, doseMaxima: maximaMesmoPeriodo }).dose,
+          doseTotal({ dosePorKg: d.max, pesoKg: base, doseMaxima: maximaMesmoPeriodo }).dose,
         ]
       : [Math.min(d.min, maximaMesmoPeriodo ?? Infinity), Math.min(d.max, maximaMesmoPeriodo ?? Infinity)];
   const dentro =
@@ -368,12 +373,20 @@ function conferirDose(
       ? `Prescrito: ${formatarNumero(doseNaUnidade)} ${u} × ${formatarNumero(dosesPorDia ?? 1)} ` +
         `${dosesPorDia === 1 ? 'dose' : 'doses'}/dia = ${formatarNumero(doseNoPeriodo)} ${u}/dia`
       : `Prescrito: ${formatarNumero(doseNoPeriodo)} ${u}/dose`;
-  const porKg = d.tipo === 'porKg' ? ` = ${formatarNumero(doseNoPeriodo / pesoKg)} ${u}/kg/${d.por}` : '';
+  const porKg =
+    d.tipo === 'porKg'
+      ? ` = ${formatarNumero(doseNoPeriodo / pesoKg)} ${u}/kg/${d.por}`
+      : d.tipo === 'porM2' && base
+        ? ` = ${formatarNumero(doseNoPeriodo / base)} ${u}/m²/${d.por}`
+        : '';
   const textoMaxima = maxima ? ` (máx. ${formatarNumero(maxima.valor)} ${maxima.unidade}/${maxima.por})` : '';
+  const faixaTexto = `${minimo === maximo ? formatarNumero(minimo) : `${formatarNumero(minimo)}–${formatarNumero(maximo)}`} ${u}/${d.por}`;
   const faixaPaciente =
     d.tipo === 'porKg'
-      ? ` → para ${formatarNumero(pesoKg)} kg: ${minimo === maximo ? formatarNumero(minimo) : `${formatarNumero(minimo)}–${formatarNumero(maximo)}`} ${u}/${d.por}`
-      : '';
+      ? ` → para ${formatarNumero(pesoKg)} kg: ${faixaTexto}`
+      : d.tipo === 'porM2' && base
+        ? ` → para ${formatarNumero(base)} m²: ${faixaTexto}`
+        : '';
   const veredito = !corrige ? '' : dentro ? 'Dose dentro da faixa. ' : doseNoPeriodo < minimo ? 'Dose abaixo da faixa. ' : 'Dose acima da faixa. ';
 
   const verificacoes: Verificacao[] = [
@@ -457,7 +470,7 @@ function conferirDoseInfusao(regra: RegraDeDose, infusao: InfusaoCampos, toleran
 export function conferirItemMedicacao(entrada: {
   campos: CamposMedicacao;
   medicacoes: readonly Medicacao[];
-  paciente: { faixa: FaixaEtaria; pesoKg: number; variaveis?: VariaveisParaRegra };
+  paciente: { faixa: FaixaEtaria; pesoKg: number; variaveis?: VariaveisParaRegra; superficieM2?: number };
   /** Número da seção da folha onde o item foi escrito (4, 5 ou 6). */
   secaoNumero: number;
   fontePreferida?: CodigoFonte;
@@ -696,7 +709,9 @@ export function conferirItemMedicacao(entrada: {
         }
       }
       if (dose !== null && campos.unidadeDose) {
-        verificacoes.push(...conferirDose(regra, dose, campos.unidadeDose, campos.intervalo, paciente.pesoKg, tolerancia));
+        verificacoes.push(
+          ...conferirDose(regra, dose, campos.unidadeDose, campos.intervalo, paciente.pesoKg, tolerancia, paciente.superficieM2),
+        );
       }
       if (continua && campos.infusao) {
         verificacoes.push(...conferirDoseInfusao(regra, campos.infusao, tolerancia));

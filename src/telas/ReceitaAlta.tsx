@@ -106,7 +106,12 @@ function LinhaReceita({
   const resultado = conferirReceita({
     campos,
     medicacoes,
-    paciente: { faixa: paciente.faixa, pesoKg: paciente.pesoKg, variaveis: paciente.paraRegra },
+    paciente: {
+      faixa: paciente.faixa,
+      pesoKg: paciente.pesoKg,
+      variaveis: paciente.paraRegra,
+      superficieM2: paciente.variaveis.superficieCorporal.m2,
+    },
     fontePreferida: config.fonteDose,
     tolerancia: toleranciaDe(config),
   });

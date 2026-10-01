@@ -71,11 +71,13 @@ export interface Apresentacao {
 /**
  * Como a dose está expressa:
  * - porKg: faixa por kg (ex.: 10–25 mg/kg/dose);
+ * - porM2: faixa por m² de superfície corporal (ex.: 50–100 mg/m²/dia);
  * - fixa: faixa fixa (ex.: 500–1000 mg/dose);
  * - texto: regra ainda não estruturada (tabelas por IG, por superfície corporal...). Nunca corrige o aluno.
  */
 export type ExpressaoDeDose =
   | { tipo: 'porKg'; min: number; max: number; unidade: UnidadeDroga; por: Periodo }
+  | { tipo: 'porM2'; min: number; max: number; unidade: UnidadeDroga; por: Periodo }
   | { tipo: 'fixa'; min: number; max: number; unidade: UnidadeDroga; por: Periodo }
   | { tipo: 'texto'; descricao: string };
 

@@ -97,3 +97,21 @@ describe('itens da folha que entram no quadro', () => {
     expect(itens).toEqual([{ itemId: 1, medicacaoId: 'dipirona', descricao: 'Dipirona 240 mg EV', intervalo: 6 }]);
   });
 });
+
+describe('intervalos maiores que 24 h', () => {
+  it('48/48h começa na hora inicial do hospital e pula 2 dias', () => {
+    const inicio = lerDataHora('2026-10-01T08:00');
+    const agenda = gerarAgenda([{ itemId: 1, medicacaoId: 'x', descricao: 'X', intervalo: 48 }], inicio, 5 * 24 * 60, santaCasa);
+    // hora inicial da Santa Casa = 06:00 → primeira dose no dia seguinte às 06:00 (1320 min)
+    expect(agenda.map((d) => [d.minuto, d.hora])).toEqual([
+      [1320, '06:00'],
+      [1320 + 2880, '06:00'],
+      [1320 + 2 * 2880, '06:00'],
+    ]);
+  });
+  it('36/36h alterna o horário', () => {
+    const inicio = lerDataHora('2026-10-01T06:00');
+    const agenda = gerarAgenda([{ itemId: 1, medicacaoId: 'x', descricao: 'X', intervalo: 36 }], inicio, 3 * 24 * 60, santaCasa);
+    expect(agenda.map((d) => d.hora)).toEqual(['06:00', '18:00', '06:00']);
+  });
+});
