@@ -2,9 +2,11 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { TelaPassoAPasso } from './componentes/passo-a-passo/TelaPassoAPasso';
 import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
+import { Calculadoras } from './telas/Calculadoras';
 import { Configuracoes } from './telas/Configuracoes';
 import { EditorCasos } from './telas/EditorCasos';
 import { Prescrever } from './telas/Prescrever';
+import { TreinoContas } from './telas/TreinoContas';
 
 interface DefinicaoModo {
   id: string;
@@ -32,6 +34,20 @@ const MODOS: readonly DefinicaoModo[] = [
     principal: true,
     classe: 'modo-prescrever',
     tela: () => <Prescrever />,
+  },
+  {
+    id: 'treino',
+    rotulo: '🧮 Treino',
+    descricao: 'Contas sem fim com números inventados',
+    classe: 'modo-prescrever',
+    tela: () => <TreinoContas />,
+  },
+  {
+    id: 'calculadoras',
+    rotulo: '📐 Calculadoras',
+    descricao: 'SC, Holliday, VIG, infusão, diluição, gotejamento, sódio',
+    classe: 'modo-prescrever',
+    tela: () => <Calculadoras />,
   },
   {
     id: 'casos',

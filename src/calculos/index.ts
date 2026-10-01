@@ -13,3 +13,5 @@ export * from './glicose';
 export * from './hidratacao';
 export * from './bic';
 export * from './conferencia';
+export * from './gotejamento';
+export * from './eletrolitos';

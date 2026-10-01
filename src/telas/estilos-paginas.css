@@ -105,3 +105,58 @@
   background: transparent;
   padding: 0 4px;
 }
+
+/* Treino de contas */
+.exercicio .enunciado {
+  font-size: 1.15rem;
+  margin: 6px 0 10px !important;
+}
+
+.exercicio input {
+  font: inherit;
+  font-size: 1.1rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.exercicio .conferencia {
+  margin-left: 0;
+}
+
+.dica {
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+.opcao-check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.9rem;
+  margin: 3px 0;
+}
+
+/* Calculadoras */
+.campo-calc span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--suave);
+}
+
+.campo-calc input {
+  width: 6em;
+}
+
+.resultado-calc {
+  margin: 6px 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--certo-fundo);
+  font-size: 0.92rem;
+}
+
+.calculadoras .linha-botoes {
+  align-items: flex-end;
+}
