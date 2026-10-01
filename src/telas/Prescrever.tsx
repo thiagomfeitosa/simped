@@ -4,7 +4,7 @@ import { CASOS, casosPorGrupo } from '../casos/index';
 import type { CasoClinico } from '../casos/tipos';
 import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
-import { BANCO_MEDICACOES } from '../dados/medicacoes';
+import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
@@ -72,6 +72,8 @@ interface PropsSessao {
 /** Uma sessão de um caso: folha de prescrição, rascunho e paciente que reage às medicações administradas. */
 function SessaoCaso({ caso, casos, aoTrocarCaso }: PropsSessao) {
   const { config } = useConfiguracoes();
+  // banco do projeto + apresentações do hospital importadas (aba Banco)
+  const { banco: BANCO_MEDICACOES } = useBanco();
   const [itensReceita, setItensReceita] = useState<ItemReceita[]>([]);
   const [relatorioAberto, setRelatorioAberto] = useState(false);
   const [prescricao, despachar] = useReducer(reduzirPrescricao, undefined, prescricaoVazia);
@@ -90,7 +92,7 @@ function SessaoCaso({ caso, casos, aoTrocarCaso }: PropsSessao) {
   const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => acrescentarEvento(lista, evento));
   // doses checadas pela enfermagem no quadro de horários
   const [checagens, setChecagens] = useState<Checagem[]>([]);
-  const aprazaveis = useMemo(() => itensParaAprazar(prescricao, BANCO_MEDICACOES), [prescricao]);
+  const aprazaveis = useMemo(() => itensParaAprazar(prescricao, BANCO_MEDICACOES), [prescricao, BANCO_MEDICACOES]);
   // balanço hídrico: soros/infusões instalados e registros manuais
   const [infusoes, setInfusoes] = useState<Infusao[]>([]);
   const [registrosBalanco, setRegistrosBalanco] = useState<RegistroManual[]>([]);

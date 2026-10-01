@@ -160,3 +160,66 @@
 .calculadoras .linha-botoes {
   align-items: flex-end;
 }
+
+/* Banco de medicações */
+.lista-banco {
+  margin: 0 12px;
+}
+
+.lista-banco input {
+  font: inherit;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 4px 8px;
+  min-width: 16em;
+}
+
+.med-banco {
+  border-top: 1px solid var(--borda);
+  padding: 6px 0;
+}
+
+.med-banco summary {
+  cursor: pointer;
+}
+
+.med-banco h4 {
+  margin: 8px 0 2px;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+.med-banco ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+
+.selo-pequeno {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--a-validar);
+  background: var(--a-validar-fundo);
+  border-radius: 4px;
+  padding: 0 5px;
+}
+
+.selo-hospital {
+  color: var(--certo);
+  background: var(--certo-fundo);
+  margin-left: 4px;
+}
+
+.tabela-importacao td {
+  vertical-align: top;
+  border-top: 1px solid var(--borda);
+  font-size: 0.85rem;
+}
+
+.aviso-erro {
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--errado);
+  background: var(--errado-fundo);
+}

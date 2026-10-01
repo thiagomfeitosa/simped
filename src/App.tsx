@@ -2,6 +2,8 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { TelaPassoAPasso } from './componentes/passo-a-passo/TelaPassoAPasso';
 import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
+import { ProvedorBanco } from './dados/medicacoes/ContextoBanco';
+import { Banco } from './telas/Banco';
 import { Calculadoras } from './telas/Calculadoras';
 import { Configuracoes } from './telas/Configuracoes';
 import { EditorCasos } from './telas/EditorCasos';
@@ -57,6 +59,13 @@ const MODOS: readonly DefinicaoModo[] = [
     tela: () => <EditorCasos />,
   },
   {
+    id: 'banco',
+    rotulo: '💊 Banco',
+    descricao: 'Medicações, o que falta validar e importar a planilha',
+    classe: 'modo-prescrever',
+    tela: () => <Banco />,
+  },
+  {
     id: 'configuracoes',
     rotulo: '⚙ Configurações',
     descricao: 'Fonte, hospital, modo prova, margem',
@@ -82,32 +91,34 @@ export function App() {
 
   return (
     <ProvedorConfiguracoes>
-      <ProvedorCasos>
-        <nav className="modos" aria-label="Modo do SimPed">
-          <span className="modos-marca" aria-hidden="true">
-            Sim<b>Ped</b>
-          </span>
-          {MODOS.map((m) => (
-            <a
-              key={m.id}
-              href={`#${m.id}`}
-              className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
-              title={m.descricao}
-              aria-current={m.id === modo ? 'page' : undefined}
-            >
-              {m.rotulo}
-              {m.principal && <small>{m.descricao}</small>}
-            </a>
-          ))}
-        </nav>
+      <ProvedorBanco>
+        <ProvedorCasos>
+          <nav className="modos" aria-label="Modo do SimPed">
+            <span className="modos-marca" aria-hidden="true">
+              Sim<b>Ped</b>
+            </span>
+            {MODOS.map((m) => (
+              <a
+                key={m.id}
+                href={`#${m.id}`}
+                className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
+                title={m.descricao}
+                aria-current={m.id === modo ? 'page' : undefined}
+              >
+                {m.rotulo}
+                {m.principal && <small>{m.descricao}</small>}
+              </a>
+            ))}
+          </nav>
 
-        {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
-        {MODOS.map((m) => (
-          <div key={m.id} hidden={modo !== m.id} className={m.classe}>
-            {m.tela()}
-          </div>
-        ))}
-      </ProvedorCasos>
+          {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
+          {MODOS.map((m) => (
+            <div key={m.id} hidden={modo !== m.id} className={m.classe}>
+              {m.tela()}
+            </div>
+          ))}
+        </ProvedorCasos>
+      </ProvedorBanco>
     </ProvedorConfiguracoes>
   );
 }

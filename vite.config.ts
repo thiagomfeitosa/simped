@@ -5,4 +5,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   base: './',
   plugins: [react()],
+  // planilhas .xlsx podem ser importadas como arquivo (usado nos testes do importador)
+  assetsInclude: ['**/*.xlsx'],
 });

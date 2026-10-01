@@ -68,6 +68,8 @@ export interface Apresentacao {
   concentracaoPorMl?: { valor: number; unidade: UnidadeDroga };
   /** Gotas: quantas gotas tem 1 mL deste frasco (depende do conta-gotas; A VALIDAR com a bula). */
   gotasPorMl?: number;
+  /** Rotina do hospital (reconstituição, diluição, diluente, BIC) e outras notas. */
+  observacao?: string;
   status: StatusValidacao;
   fonte?: Fonte;
 }
