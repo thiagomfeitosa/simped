@@ -28,4 +28,16 @@ export const casoDemonstracao: CasoClinico = {
     temperaturaC: 38.6,
     glicemiaMgDl: 92,
   },
+  evolucaoNatural: [{ sinal: 'temperaturaC', alvo: 39.2, atrasoMin: 0, duracaoMin: 120 }],
+  respostas: [
+    {
+      medicacaoId: 'dipirona',
+      mudancas: [
+        { sinal: 'temperaturaC', alvo: 37.3, atrasoMin: 30, duracaoMin: 60 },
+        { sinal: 'fc', alvo: 105, atrasoMin: 30, duracaoMin: 60 },
+      ],
+      status: 'A_VALIDAR',
+      observacao: 'Números de demonstração, só para testar o motor.',
+    },
+  ],
 };

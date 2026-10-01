@@ -1,4 +1,4 @@
-import type { FaixaEtaria } from '../dados/medicacoes/tipos';
+import type { FaixaEtaria, StatusValidacao } from '../dados/medicacoes/tipos';
 
 export interface SinaisVitais {
   /** Frequência cardíaca (bpm). */
@@ -33,4 +33,27 @@ export interface CasoClinico {
   historia: string;
   exameFisico: string;
   sinaisIniciais: SinaisVitais;
+  /** Como o paciente evolui sozinho, desde o minuto 0 (ex.: febre subindo). */
+  evolucaoNatural?: MudancaDeSinal[];
+  /** Como o paciente responde a cada medicação neste caso. */
+  respostas?: RespostaAMedicacao[];
+}
+
+export type NomeSinal = keyof SinaisVitais;
+
+/** Um sinal vai do valor atual até o alvo em linha reta, começando após o atraso. */
+export interface MudancaDeSinal {
+  sinal: NomeSinal;
+  alvo: number;
+  /** Minutos entre o evento e o início da mudança. */
+  atrasoMin: number;
+  /** Minutos para ir do valor atual até o alvo (0 = imediato). */
+  duracaoMin: number;
+}
+
+export interface RespostaAMedicacao {
+  medicacaoId: string;
+  mudancas: MudancaDeSinal[];
+  status: StatusValidacao;
+  observacao?: string;
 }

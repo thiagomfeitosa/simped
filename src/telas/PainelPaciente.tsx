@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { CasoClinico, SinaisVitais } from '../casos/tipos';
 
 const NOME_FAIXA = { RN: 'Recém-nascido', crianca: 'Criança', adolescente: 'Adolescente' } as const;
@@ -6,7 +7,13 @@ function formatar(valor: number, casas = 0): string {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
 }
 
-export function PainelPaciente({ caso, sinais }: { caso: CasoClinico; sinais: SinaisVitais }) {
+interface Props {
+  caso: CasoClinico;
+  sinais: SinaisVitais;
+  children?: ReactNode;
+}
+
+export function PainelPaciente({ caso, sinais, children }: Props) {
   const { paciente } = caso;
   const vitais: [string, string, string][] = [
     ['FC', formatar(sinais.fc), 'bpm'],
@@ -43,6 +50,8 @@ export function PainelPaciente({ caso, sinais }: { caso: CasoClinico; sinais: Si
           </div>
         ))}
       </div>
+
+      {children}
 
       <h3>Queixa</h3>
       <p>{caso.queixa}</p>
