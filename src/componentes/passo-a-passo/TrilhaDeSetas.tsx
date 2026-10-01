@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Etapa, SecaoPrescricao } from '../../dados/roteiros/tipos';
-import { SECOES } from '../../dados/secoes';
+import { INFO_SECAO } from '../../dados/secoes';
 
 interface Grupo {
   secao: SecaoPrescricao;
@@ -33,7 +33,7 @@ export function TrilhaDeSetas({ etapas, atual, aoEscolher }: { etapas: Etapa[]; 
   return (
     <nav ref={refTrilha} className="trilha" aria-label="Etapas">
       {agrupar(etapas).map((grupo) => {
-        const info = SECOES[grupo.secao];
+        const info = INFO_SECAO[grupo.secao];
         return (
           <div key={`${grupo.secao}-${grupo.itens[0]?.indice}`} className="trilha-grupo" style={{ ['--cor-secao' as string]: info.cor }}>
             <span className="trilha-secao" title={info.nome}>

@@ -21,7 +21,7 @@ import {
   VIAS,
 } from '../prescricao/itemMedicacao';
 import { PreparoItem } from './PreparoItem';
-import type { DefinicaoSecao } from '../prescricao/secoes';
+import type { DefinicaoSecao } from '../dados/secoes';
 
 const SELO: Record<Situacao, string> = {
   certo: '✔ certo',

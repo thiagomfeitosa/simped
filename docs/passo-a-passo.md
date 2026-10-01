@@ -42,11 +42,11 @@ Primeira tela do app (antecipa parte da Fase 1).
 
 ## Como criar um roteiro novo (para o assistente)
 - Criar `src/dados/roteiros/<nome>.ts` exportando um `Roteiro` (formato em `src/dados/roteiros/tipos.ts`) e incluí-lo em `src/dados/roteiros/index.ts`.
-- Os números devem ser **calculados** com as funções de `src/logica/calculos.ts`, nunca digitados à mão.
+- Os números devem ser **calculados** com as funções do motor único `src/calculos/` (o mesmo do Prescrever), nunca digitados à mão. Seções: lista única em `src/dados/secoes.ts`.
 - Cada roteiro tem um `tema` (agrupa o menu: Neonatologia, Distúrbios hidroeletrolíticos, Emergência).
 - Cada etapa: `secao`, `curto` (nome na seta), `titulo`, `explicacao`, e opcionalmente `conta` (com `passos` intermediários, se a conta tiver mais de um tempo), `dica`, `aValidar` + `fonte`, `cena`, `linha` (linha da folha; o mesmo `id` reescreve a linha) e `linhaDaConta` (quando a conta deve aparecer embaixo de outra linha na prescrição final).
 - Cenas disponíveis: `paciente`, `multiplicacao` (com `faixas` opcionais), `cartoes`, `bancada`, `conclusao`, `regua`, `barras`, `mistura`, `ictericia`. A etapa final (`prescricao-final`) é acrescentada sozinha — não escrever.
-- Eletrólitos: usar `meqPorMl(%, MG_POR_MEQ.NaCl | KCl)`, `meqPorLitro`, `volumeMinimoDiluicao`, `volumeDoConcentrado`, `deficitSodio`, `subidaEstimadaSodio`, `meqPorKgPorHora`, `dividirEmProporcao` (todas em `src/logica/calculos.ts`, com testes).
+- Eletrólitos: usar `meqPorMl(%, MG_POR_MEQ.NaCl | KCl)`, `meqPorLitro`, `volumeMinimoDiluicao`, `volumeParaConcentracaoDesejada`, `deficitDeSodio`, `subidaEstimadaSodio`, `meqPorKgPorHora`, `dividirEmProporcao`, `vazaoDoVolume` (todas em `src/calculos/`, com testes). Para mostrar números nos desenhos, arredondar com `arredondar(x, casas)`.
 - Na cena `bancada`, `estadoInicial` é como a bancada aparece ao chegar avançando; a animação vai dele até `estado`.
 - Rodar `npm test` (os testes conferem a integridade dos roteiros).
 

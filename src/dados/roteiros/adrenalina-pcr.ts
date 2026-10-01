@@ -3,7 +3,12 @@
  *
  * CASO DIDÁTICO. Doses do docs/fase-0/doses-rascunho.md (PALS), todas "A VALIDAR".
  */
-import { concentracaoFinalDiluicao, dosePorPeso, volumeAAspirar } from '../../logica/calculos';
+import {
+  concentracao,
+  diluir,
+  doseTotal,
+  volumeAspirar,
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -14,11 +19,11 @@ const AMPOLA_MG_ML = 1; // 1:1.000
 const AMPOLA_ML = 1;
 const VOLUME_DILUICAO_ML = 10;
 
-const dose = dosePorPeso(DOSE_MG_KG, PESO_KG, DOSE_MAXIMA_MG).doseTotal;
-const volumeSemDiluir = volumeAAspirar(dose, AMPOLA_MG_ML);
-const concDiluida = concentracaoFinalDiluicao(AMPOLA_MG_ML, AMPOLA_ML, VOLUME_DILUICAO_ML);
+const dose = doseTotal({ dosePorKg: DOSE_MG_KG, pesoKg: PESO_KG, doseMaxima: DOSE_MAXIMA_MG }).dose;
+const volumeSemDiluir = volumeAspirar({ dose: dose, concentracao: AMPOLA_MG_ML });
+const concDiluida = diluir({ concentracaoInicial: AMPOLA_MG_ML, volumeAspiradoMl: AMPOLA_ML, volumeFinalMl: VOLUME_DILUICAO_ML }).concentracaoFinal;
 const sfDiluicao = VOLUME_DILUICAO_ML - AMPOLA_ML;
-const volumeDose = volumeAAspirar(dose, concDiluida);
+const volumeDose = volumeAspirar({ dose: dose, concentracao: concDiluida });
 
 const ampolaCheia = { modelo: 'ampola' as const, rotulo: 'Adrenalina 1 mg/mL', sublinha: '1:1.000 · ampola 1 mL', nivel: 0.85, cor: 'adrenalina' as const };
 const ampolaVazia = { ...ampolaCheia, nivel: 0 };
@@ -71,7 +76,7 @@ export const roteiroAdrenalinaPcr: Roteiro = {
     },
     {
       id: 'dose',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Dose',
       titulo: 'Quanto de adrenalina?',
       explicacao: [
@@ -94,11 +99,11 @@ export const roteiroAdrenalinaPcr: Roteiro = {
         total: dose,
         rotuloTotal: `${fmt(dose)} mg`,
       },
-      linha: { id: 'adr', secao: 'demais', texto: `Adrenalina — ${fmt(dose)} mg EV/IO` },
+      linha: { id: 'adr', secao: 'medicacoes', texto: `Adrenalina — ${fmt(dose)} mg EV/IO` },
     },
     {
       id: 'problema',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'O problema',
       titulo: 'Por que não usar a ampola direto?',
       explicacao: [
@@ -131,7 +136,7 @@ export const roteiroAdrenalinaPcr: Roteiro = {
     },
     {
       id: 'aspirar-ampola',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Aspirar 1 mL',
       titulo: 'Diluição, passo 1: aspirar a ampola inteira',
       explicacao: [
@@ -154,7 +159,7 @@ export const roteiroAdrenalinaPcr: Roteiro = {
     },
     {
       id: 'completar',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Completar 10 mL',
       titulo: 'Diluição, passo 2: completar com soro até 10 mL',
       explicacao: [
@@ -189,11 +194,11 @@ export const roteiroAdrenalinaPcr: Roteiro = {
           balao: `1 mg em ${VOLUME_DILUICAO_ML} mL = ${fmt(concDiluida)} mg/mL`,
         },
       },
-      linha: { id: 'adr', secao: 'demais', texto: `Adrenalina — ${fmt(dose)} mg EV/IO`, detalhe: linhaPreparo },
+      linha: { id: 'adr', secao: 'medicacoes', texto: `Adrenalina — ${fmt(dose)} mg EV/IO`, detalhe: linhaPreparo },
     },
     {
       id: 'volume',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Quanto dar',
       titulo: 'Quantos mL da solução diluída?',
       explicacao: [
@@ -219,11 +224,11 @@ export const roteiroAdrenalinaPcr: Roteiro = {
           balao: `${fmt(volumeDose)} mL = ${fmt(dose)} mg`,
         },
       },
-      linha: { id: 'adr', secao: 'demais', texto: linhaTexto, detalhe: linhaPreparo },
+      linha: { id: 'adr', secao: 'medicacoes', texto: linhaTexto, detalhe: linhaPreparo },
     },
     {
       id: 'repetir',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Flush e repetir',
       titulo: 'Depois da dose: flush e repetição',
       explicacao: [
@@ -242,7 +247,7 @@ export const roteiroAdrenalinaPcr: Roteiro = {
       },
       linha: {
         id: 'adr',
-        secao: 'demais',
+        secao: 'medicacoes',
         texto: linhaTexto,
         detalhe: `${linhaPreparo} · flush de SF após cada dose · repetir a cada 3–5 min`,
       },

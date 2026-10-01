@@ -55,7 +55,7 @@ import {
   textoInfusao,
   textoSeringa,
 } from './preparo';
-import { SECOES } from './secoes';
+import { SECOES } from '../dados/secoes';
 
 export { converterDroga, formatarNumero, lerNumero, type Situacao, type Verificacao } from './comum';
 

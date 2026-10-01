@@ -41,11 +41,11 @@ describe('folha de prescrição passo a passo', () => {
       'identificacao',
       'oxigenoterapia',
       'dieta',
-      'hidratacao',
+      'volemia',
       'antimicrobianos',
-      'demais',
+      'medicacoes',
       'exames',
-      'orientacoes',
+      'cuidados',
       'sinan',
     ]);
   });
@@ -75,7 +75,7 @@ describe('integridade dos roteiros', () => {
   it('adrenalina: 0,1 mg → diluída a 0,1 mg/mL → 1 mL', () => {
     const adr = ROTEIROS.find((r) => r.id === 'adrenalina-pcr')!;
     const ultima = montarFolha(adr, adr.etapas.length - 1);
-    const linha = ultima.secoes.find((s) => s.secao === 'demais')!.linhas[0]!;
+    const linha = ultima.secoes.find((s) => s.secao === 'medicacoes')!.linhas[0]!;
     expect(linha.texto).toBe('Adrenalina 1:10.000 — 1 mL (0,1 mg) EV/IO');
     expect(linha.detalhe).toContain('SF 0,9% 9 mL = 10 mL (0,1 mg/mL)');
   });
@@ -107,13 +107,13 @@ describe('etapa final: prescrição com os cálculos', () => {
     const adr = ROTEIROS.find((r) => r.id === 'adrenalina-pcr')!;
     const { secoes, contasSoltas } = montarPrescricaoComCalculos(adr);
     expect(contasSoltas).toHaveLength(0);
-    const linha = secoes.find((s) => s.secao === 'demais')!.linhas[0]!;
+    const linha = secoes.find((s) => s.secao === 'medicacoes')!.linhas[0]!;
     expect(linha.contas.map((c) => c.idEtapa)).toContain('problema');
   });
 
   it('icterícia: a conta do limiar vai para a linha da fototerapia (linhaDaConta)', () => {
     const { secoes } = montarPrescricaoComCalculos(roteiroIctericiaNeonatal);
-    const foto = secoes.find((s) => s.secao === 'demais')!.linhas.find((l) => l.linha.id === 'fototerapia')!;
+    const foto = secoes.find((s) => s.secao === 'medicacoes')!.linhas.find((l) => l.linha.id === 'fototerapia')!;
     expect(foto.contas.map((c) => c.idEtapa)).toEqual(['indicacao']);
   });
 });

@@ -3,16 +3,17 @@
  *
  * CASO DIDÁTICO. Todas as doses, tempos e condutas vêm de docs/fase-0/doses-rascunho.md
  * e estão marcados "A VALIDAR" até o usuário conferir nas fontes.
- * Os números são calculados pelas funções de src/logica/calculos.ts (não digitados à mão).
+ * Os números são calculados pelas funções de o motor de cálculo src/calculos/ (o mesmo do Prescrever) (não digitados à mão).
  */
 import {
   concentracao,
-  dosePorPeso,
-  fatorCorrecaoBic,
-  vazaoMlPorHora,
+  diluir,
+  doseTotal,
+  prepararSeringaBic,
+  vazaoDoVolume,
   vig,
-  volumeAAspirar,
-} from '../../logica/calculos';
+  volumeAspirar,
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -37,20 +38,30 @@ const GENTA_AMPOLA_ML = 2;
 const GENTA_TEMPO_MIN = 30;
 
 // ---- Contas ----------------------------------------------------------------
-const hidricoDia = dosePorPeso(HIDRICO_ML_KG_DIA, PESO_KG).doseTotal;
-const vazaoSoro = vazaoMlPorHora(hidricoDia, 24 * 60);
-const vigSoro = vig(vazaoSoro, GLICOSE_PERCENT, PESO_KG);
+/** Fator de correção da BIC: medicação + SF até o volume final; a concentração final é dose ÷ volume final. */
+function seringaBic(volumeMedicacaoMl: number, doseMg: number) {
+  const r = prepararSeringaBic({ volumeMedicacaoMl, volumeFinalMl: VOLUME_FINAL_BIC_ML });
+  if (!r.aplicavel) throw new Error(r.motivo);
+  return {
+    volumeSF: r.volumeSoroMl,
+    concentracaoFinal: concentracao({ quantidade: doseMg, volumeMl: VOLUME_FINAL_BIC_ML }),
+  };
+}
 
-const ampiDose = dosePorPeso(AMPI_MG_KG, PESO_KG).doseTotal;
-const ampiConc = concentracao(AMPI_FRASCO_MG, AMPI_DILUENTE_ML);
-const ampiVolume = volumeAAspirar(ampiDose, ampiConc);
-const ampiBic = fatorCorrecaoBic(ampiVolume, ampiDose, VOLUME_FINAL_BIC_ML);
-const ampiVazao = vazaoMlPorHora(VOLUME_FINAL_BIC_ML, AMPI_TEMPO_MIN);
+const hidricoDia = doseTotal({ dosePorKg: HIDRICO_ML_KG_DIA, pesoKg: PESO_KG }).dose;
+const vazaoSoro = vazaoDoVolume(hidricoDia, 24 * 60);
+const vigSoro = vig({ vazaoMlPorHora: vazaoSoro, concentracaoGlicosePct: GLICOSE_PERCENT, pesoKg: PESO_KG });
 
-const gentaDose = dosePorPeso(GENTA_MG_KG, PESO_KG).doseTotal;
-const gentaVolume = volumeAAspirar(gentaDose, GENTA_AMPOLA_MG_ML);
-const gentaBic = fatorCorrecaoBic(gentaVolume, gentaDose, VOLUME_FINAL_BIC_ML);
-const gentaVazao = vazaoMlPorHora(VOLUME_FINAL_BIC_ML, GENTA_TEMPO_MIN);
+const ampiDose = doseTotal({ dosePorKg: AMPI_MG_KG, pesoKg: PESO_KG }).dose;
+const ampiConc = concentracao({ quantidade: AMPI_FRASCO_MG, volumeMl: AMPI_DILUENTE_ML });
+const ampiVolume = volumeAspirar({ dose: ampiDose, concentracao: ampiConc });
+const ampiBic = seringaBic(ampiVolume, ampiDose);
+const ampiVazao = vazaoDoVolume(VOLUME_FINAL_BIC_ML, AMPI_TEMPO_MIN);
+
+const gentaDose = doseTotal({ dosePorKg: GENTA_MG_KG, pesoKg: PESO_KG }).dose;
+const gentaVolume = volumeAspirar({ dose: gentaDose, concentracao: GENTA_AMPOLA_MG_ML });
+const gentaBic = seringaBic(gentaVolume, gentaDose);
+const gentaVazao = vazaoDoVolume(VOLUME_FINAL_BIC_ML, GENTA_TEMPO_MIN);
 
 // Nível do líquido no frasco da ampicilina (desenho): cheio = 0,6
 const AMPI_NIVEL_CHEIO = 0.6;
@@ -175,7 +186,7 @@ export const roteiroSepseNeonatal: Roteiro = {
     // 4. HIDRATAÇÃO ----------------------------------------------------------
     {
       id: 'soro-volume',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Volume/dia',
       titulo: 'Quanto líquido por dia?',
       explicacao: [
@@ -198,11 +209,11 @@ export const roteiroSepseNeonatal: Roteiro = {
         total: hidricoDia,
         rotuloTotal: `${fmt(hidricoDia)} mL em 24 h`,
       },
-      linha: { id: 'soro', secao: 'hidratacao', texto: `SG ${GLICOSE_PERCENT}% — ${fmt(hidricoDia)} mL/dia, EV` },
+      linha: { id: 'soro', secao: 'volemia', texto: `SG ${GLICOSE_PERCENT}% — ${fmt(hidricoDia)} mL/dia, EV` },
     },
     {
       id: 'soro-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Vazão',
       titulo: 'Quantos mL por hora?',
       explicacao: [
@@ -227,11 +238,11 @@ export const roteiroSepseNeonatal: Roteiro = {
           fluxos: ['bolsa-bic', 'bic-paciente'],
         },
       },
-      linha: { id: 'soro', secao: 'hidratacao', texto: soroTexto },
+      linha: { id: 'soro', secao: 'volemia', texto: soroTexto },
     },
     {
       id: 'soro-vig',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'VIG',
       titulo: 'Quanta glicose isso dá? (VIG)',
       explicacao: [
@@ -266,7 +277,7 @@ export const roteiroSepseNeonatal: Roteiro = {
       },
       linha: {
         id: 'soro',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: soroTexto,
         detalhe: `VIG ≈ ${fmt(vigSoro, 1)} mg/kg/min`,
       },
@@ -590,7 +601,7 @@ export const roteiroSepseNeonatal: Roteiro = {
     // 6. DEMAIS MEDICAÇÕES ---------------------------------------------------
     {
       id: 'demais',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Demais',
       titulo: 'Demais medicações',
       explicacao: [
@@ -605,7 +616,7 @@ export const roteiroSepseNeonatal: Roteiro = {
           { icone: 'check', titulo: 'Nenhuma no momento', estado: 'sim' },
         ],
       },
-      linha: { id: 'demais', secao: 'demais', texto: 'Nenhuma no momento' },
+      linha: { id: 'demais', secao: 'medicacoes', texto: 'Nenhuma no momento' },
     },
 
     // 7. EXAMES --------------------------------------------------------------
@@ -639,7 +650,7 @@ export const roteiroSepseNeonatal: Roteiro = {
     // 8. ORIENTAÇÕES ---------------------------------------------------------
     {
       id: 'orientacoes',
-      secao: 'orientacoes',
+      secao: 'cuidados',
       curto: 'Cuidados',
       titulo: 'Orientações e cuidados',
       explicacao: [
@@ -658,7 +669,7 @@ export const roteiroSepseNeonatal: Roteiro = {
       },
       linha: {
         id: 'orientacoes',
-        secao: 'orientacoes',
+        secao: 'cuidados',
         texto: 'SSVV + SpO₂ de 4/4 h · Glicemia capilar de 6/6 h · Balanço hídrico e peso diário',
         detalhe: 'Comunicar: febre, hipotermia, apneia, gemência ou má perfusão',
       },

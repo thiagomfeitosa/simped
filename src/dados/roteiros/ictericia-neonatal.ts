@@ -5,9 +5,13 @@
  *
  * CASO DIDÁTICO. Limiares, faixas e condutas estão TODOS "A VALIDAR" até o usuário
  * conferir nas fontes (SBP — Icterícia no RN ≥ 35 semanas; AAP 2022).
- * Os números são calculados pelas funções de src/logica/calculos.ts (não digitados à mão).
+ * Os números são calculados pelas funções de o motor de cálculo src/calculos/ (o mesmo do Prescrever) (não digitados à mão).
  */
-import { arredondar, horasDeVida, percentualPerdaPeso } from '../../logica/calculos';
+import {
+  arredondar,
+  horasDeVida,
+  percentualPerdaPeso,
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -245,7 +249,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
     // 4. HIDRATAÇÃO ----------------------------------------------------------
     {
       id: 'hidratacao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Soro?',
       titulo: 'Precisa de soro?',
       explicacao: [
@@ -264,7 +268,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
       },
       linha: {
         id: 'hidratacao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: 'Não se aplica (hidratação pelo seio materno)',
         detalhe: 'Reavaliar se perda de peso > 10% ou sinais de desidratação',
       },
@@ -273,7 +277,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
     // 6. DEMAIS (TERAPIAS) ------------------------------------------------------
     {
       id: 'fototerapia',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Fototerapia',
       titulo: 'Prescrevendo a fototerapia',
       explicacao: [
@@ -285,7 +289,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
       cena: { tipo: 'ictericia', zona: 4, fototerapia: true },
       linha: {
         id: 'fototerapia',
-        secao: 'demais',
+        secao: 'medicacoes',
         texto: 'Fototerapia contínua (LED) — irradiância ≥ 30 µW/cm²/nm',
         detalhe: 'Expor o máximo de pele (só fralda) · Proteção ocular · Pausas só para mamar',
       },
@@ -323,7 +327,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
     // 8. ORIENTAÇÕES -------------------------------------------------------------
     {
       id: 'orientacoes',
-      secao: 'orientacoes',
+      secao: 'cuidados',
       curto: 'Cuidados',
       titulo: 'Orientações e cuidados',
       explicacao: [
@@ -342,7 +346,7 @@ export const roteiroIctericiaNeonatal: Roteiro = {
       },
       linha: {
         id: 'orientacoes',
-        secao: 'orientacoes',
+        secao: 'cuidados',
         texto: 'Protetor ocular com a luz ligada · Temperatura de 3/3 h · Peso diário · Anotar diurese e evacuações',
         detalhe: 'Comunicar: sonolência, recusa das mamadas, choro agudo, hipertonia ou arqueamento do corpo, febre',
       },

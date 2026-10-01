@@ -5,9 +5,9 @@
 
 import { type CamposMedicacao, camposVazios } from './itemMedicacao';
 import { type CamposSoro, soroVazio } from './soro';
-import { SECOES, type SecaoId } from './secoes';
+import { SECOES, type SecaoId } from '../dados/secoes';
 
-export { type DefinicaoSecao, SECOES, type SecaoId } from './secoes';
+export { type DefinicaoSecao, SECOES, type SecaoId } from '../dados/secoes';
 
 /** Item escrito à mão (texto livre). */
 export interface ItemTexto {

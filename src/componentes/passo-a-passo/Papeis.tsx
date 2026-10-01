@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { Roteiro, SecaoPrescricao } from '../../dados/roteiros/tipos';
-import { SECOES } from '../../dados/secoes';
+import { INFO_SECAO } from '../../dados/secoes';
 import type { EstadoFolha, LinhaRascunho } from '../../logica/progresso';
 
 /**
@@ -45,7 +45,7 @@ export function FolhaPrescricao({ roteiro, folha, secaoAtual }: { roteiro: Rotei
         <span>Treinamento · {roteiro.paciente.nome}</span>
       </header>
       {folha.secoes.map(({ secao, linhas }) => {
-        const info = SECOES[secao];
+        const info = INFO_SECAO[secao];
         const ativa = secao === secaoAtual;
         return (
           <div

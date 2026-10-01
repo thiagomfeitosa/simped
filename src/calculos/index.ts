@@ -15,3 +15,4 @@ export * from './bic';
 export * from './conferencia';
 export * from './gotejamento';
 export * from './eletrolitos';
+export * from './neonatal';

@@ -5,7 +5,7 @@
  * é decisão clínica, que fica no banco de dados/casos, com fonte.
  */
 
-import { exigirPositivo } from './validacao';
+import { ErroDeCalculo, exigirPositivo } from './validacao';
 
 /**
  * Volume em 24 h (mL/dia):
@@ -24,4 +24,26 @@ export function hollidaySegarMlDia(pesoKg: number): number {
 export function vazaoEm24h(volumeMl: number): number {
   exigirPositivo(volumeMl, 'Volume');
   return volumeMl / 24;
+}
+
+/** Vazão (mL/h) para correr um volume num tempo em minutos. Ex.: 12 mL em 30 min = 24 mL/h. */
+export function vazaoDoVolume(volumeMl: number, tempoMinutos: number): number {
+  exigirPositivo(volumeMl, 'Volume');
+  exigirPositivo(tempoMinutos, 'Tempo');
+  return (volumeMl * 60) / tempoMinutos;
+}
+
+/**
+ * Divide um volume numa proporção (ex.: soro 4:1 → [4, 1]).
+ * Devolve uma parte para cada número da proporção ([4, 1] → [SG, SF]), na mesma ordem.
+ */
+export function dividirEmProporcao<const T extends readonly number[]>(
+  volumeTotalMl: number,
+  partes: T,
+): { -readonly [K in keyof T]: number } {
+  exigirPositivo(volumeTotalMl, 'Volume total');
+  if (partes.length === 0) throw new ErroDeCalculo('Informe ao menos uma parte da proporção.');
+  partes.forEach((p) => exigirPositivo(p, 'Parte da proporção'));
+  const soma = partes.reduce((s, p) => s + p, 0);
+  return partes.map((p) => (volumeTotalMl * p) / soma) as { -readonly [K in keyof T]: number };
 }

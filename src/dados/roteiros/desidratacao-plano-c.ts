@@ -4,18 +4,18 @@
  *
  * CASO DIDÁTICO. Volumes, proporções e condutas vêm do docs/fase-0/doses-rascunho.md
  * e do esquema do MS para diarreia — TUDO "A VALIDAR" até o usuário conferir nas fontes.
- * Os números são calculados pelas funções de src/logica/calculos.ts (não digitados à mão).
+ * Os números são calculados pelas funções de o motor de cálculo src/calculos/ (o mesmo do Prescrever) (não digitados à mão).
  */
 import {
   arredondar,
   dividirEmProporcao,
-  dosePorPeso,
-  hollidaySegar,
-  MG_POR_MEQ,
+  doseTotal,
+  hollidaySegarMlDia,
   meqPorLitro,
   meqPorMl,
-  vazaoMlPorHora,
-} from '../../logica/calculos';
+  MG_POR_MEQ,
+  vazaoDoVolume,
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -40,10 +40,10 @@ const KCL10_MEQ_ML = meqPorMl(10, MG_POR_MEQ.KCl); // ≈ 1,34
 const SF_MEQ_ML = meqPorMl(0.9, MG_POR_MEQ.NaCl); // ≈ 0,154
 
 // ---- Contas ----------------------------------------------------------------
-const expansaoMl = dosePorPeso(EXPANSAO_ML_KG, PESO_KG).doseTotal;
-const expansaoVazao = vazaoMlPorHora(expansaoMl, EXPANSAO_TEMPO_MIN);
+const expansaoMl = doseTotal({ dosePorKg: EXPANSAO_ML_KG, pesoKg: PESO_KG }).dose;
+const expansaoVazao = vazaoDoVolume(expansaoMl, EXPANSAO_TEMPO_MIN);
 
-const holliday = hollidaySegar(PESO_KG);
+const holliday = hollidaySegarMlDia(PESO_KG);
 const hollidayAte10 = 10 * 100;
 const hollidayAcima10 = holliday - hollidayAte10;
 const [manutSG, manutSF] = dividirEmProporcao(holliday, PROPORCAO_MANUTENCAO);
@@ -53,12 +53,12 @@ const kMeq = arredondar(kclMl * KCL10_MEQ_ML, 1);
 const kMeqL = meqPorLitro(kMeq, manutTotal);
 const naMeq = arredondar(manutSF * SF_MEQ_ML, 1);
 const naMeqL = meqPorLitro(naMeq, manutTotal);
-const vazaoManut = vazaoMlPorHora(manutTotal, 24 * 60);
+const vazaoManut = vazaoDoVolume(manutTotal, 24 * 60);
 
-const reposicaoMl = dosePorPeso(REPOSICAO_ML_KG_DIA, PESO_KG).doseTotal;
+const reposicaoMl = doseTotal({ dosePorKg: REPOSICAO_ML_KG_DIA, pesoKg: PESO_KG }).dose;
 const [repSG, repSF] = dividirEmProporcao(reposicaoMl, PROPORCAO_REPOSICAO);
 const repNaMeqL = meqPorLitro(arredondar(repSF * SF_MEQ_ML, 1), reposicaoMl);
-const vazaoRep = vazaoMlPorHora(reposicaoMl, 24 * 60);
+const vazaoRep = vazaoDoVolume(reposicaoMl, 24 * 60);
 
 // ---- Textos da folha ---------------------------------------------------------
 const idTexto = `Ana · 2 anos · Peso ${fmt(PESO_KG)} kg`;
@@ -228,7 +228,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
     // 4. HIDRATAÇÃO — FASE RÁPIDA --------------------------------------------
     {
       id: 'expansao-volume',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Expansão',
       titulo: 'Fase rápida: quanto soro fisiológico?',
       explicacao: [
@@ -251,11 +251,11 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
         total: expansaoMl,
         rotuloTotal: `${fmt(expansaoMl)} mL de SF 0,9%`,
       },
-      linha: { id: 'expansao', secao: 'hidratacao', texto: `SF 0,9% — ${fmt(expansaoMl)} mL (${EXPANSAO_ML_KG} mL/kg) EV — fase rápida` },
+      linha: { id: 'expansao', secao: 'volemia', texto: `SF 0,9% — ${fmt(expansaoMl)} mL (${EXPANSAO_ML_KG} mL/kg) EV — fase rápida` },
     },
     {
       id: 'expansao-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Exp.: vazão',
       titulo: 'Em quanto tempo? (vazão da expansão)',
       explicacao: [
@@ -284,14 +284,14 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
       },
       linha: {
         id: 'expansao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: expansaoTexto,
         detalhe: 'Fase rápida. Reavaliar ao fim; repetir 20 mL/kg até a criança estar hidratada.',
       },
     },
     {
       id: 'reavaliar',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Reavaliar',
       titulo: 'Acabou a expansão: e agora?',
       explicacao: [
@@ -315,7 +315,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
     // 4. HIDRATAÇÃO — MANUTENÇÃO ----------------------------------------------
     {
       id: 'manutencao-volume',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Holliday',
       titulo: 'Soro de manutenção: quanto por dia? (Holliday-Segar)',
       explicacao: [
@@ -342,11 +342,11 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
         total: holliday,
         rotuloTotal: `${fmt(holliday)} mL em 24 h`,
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `Soro de manutenção — ${fmt(holliday)} mL/dia (Holliday-Segar), EV` },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `Soro de manutenção — ${fmt(holliday)} mL/dia (Holliday-Segar), EV` },
     },
     {
       id: 'manutencao-4-1',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Soro 4:1',
       titulo: 'Montando o soro: proporção 4:1',
       explicacao: [
@@ -370,11 +370,11 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
           { rotulo: `SF 0,9% — ${fmt(manutSF)} mL`, volumeMl: manutSF, cor: 'sf' },
         ],
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `Soro de manutenção: ${manutComposicao} — EV em 24 h` },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `Soro de manutenção: ${manutComposicao} — EV em 24 h` },
     },
     {
       id: 'manutencao-kcl',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'KCl',
       titulo: 'Acrescentando o potássio (KCl 10%)',
       explicacao: [
@@ -400,11 +400,11 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
           { rotulo: `KCl 10% — ${fmt(kclMl)} mL`, volumeMl: kclMl, cor: 'medicacao' },
         ],
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `Soro de manutenção: ${manutComKcl} — EV em 24 h`, detalhe: 'Acrescentar o KCl só com diurese presente' },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `Soro de manutenção: ${manutComKcl} — EV em 24 h`, detalhe: 'Acrescentar o KCl só com diurese presente' },
     },
     {
       id: 'manutencao-composicao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Na e K do soro',
       titulo: 'Quanto sódio e potássio tem esse soro?',
       explicacao: [
@@ -456,14 +456,14 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
       },
       linha: {
         id: 'manutencao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `Soro de manutenção: ${manutComKcl} — EV em 24 h`,
         detalhe: `Acrescentar o KCl só com diurese presente · ${manutDetalhe}`,
       },
     },
     {
       id: 'manutencao-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Manut.: vazão',
       titulo: 'Soro de manutenção: quantos mL por hora?',
       explicacao: [
@@ -490,14 +490,14 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
       },
       linha: {
         id: 'manutencao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `Soro de manutenção: ${manutComKcl} — EV em 24 h, BIC ${fmt(vazaoManut, 1)} mL/h`,
         detalhe: `Iniciar após a fase rápida · KCl só com diurese presente · ${manutDetalhe}`,
       },
     },
     {
       id: 'reposicao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Reposição',
       titulo: 'Soro de reposição: para as perdas que continuam',
       explicacao: [
@@ -527,7 +527,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
       },
       linha: {
         id: 'reposicao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `Soro de reposição: SG 5% ${fmt(repSG)} mL + SF 0,9% ${fmt(repSF)} mL — EV em 24 h, BIC ${fmt(vazaoRep, 1)} mL/h`,
         detalhe: `${REPOSICAO_ML_KG_DIA} mL/kg/dia — reajustar conforme as perdas (evacuações e vômitos)`,
       },
@@ -559,7 +559,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
     // 6. DEMAIS MEDICAÇÕES -----------------------------------------------------
     {
       id: 'zinco',
-      secao: 'demais',
+      secao: 'medicacoes',
       curto: 'Zinco',
       titulo: 'Zinco',
       explicacao: [
@@ -576,7 +576,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
           { icone: 'documento', titulo: 'Duração', texto: '10 a 14 dias', estado: 'sim' },
         ],
       },
-      linha: { id: 'zinco', secao: 'demais', texto: 'Zinco — 20 mg VO 1 vez ao dia, por 10 a 14 dias', detalhe: 'Iniciar quando aceitar a via oral' },
+      linha: { id: 'zinco', secao: 'medicacoes', texto: 'Zinco — 20 mg VO 1 vez ao dia, por 10 a 14 dias', detalhe: 'Iniciar quando aceitar a via oral' },
     },
 
     // 7. EXAMES ----------------------------------------------------------------
@@ -611,7 +611,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
     // 8. ORIENTAÇÕES -------------------------------------------------------------
     {
       id: 'orientacoes',
-      secao: 'orientacoes',
+      secao: 'cuidados',
       curto: 'Cuidados',
       titulo: 'Orientações e cuidados',
       explicacao: [
@@ -630,7 +630,7 @@ export const roteiroDesidratacaoPlanoC: Roteiro = {
       },
       linha: {
         id: 'orientacoes',
-        secao: 'orientacoes',
+        secao: 'cuidados',
         texto: 'Peso na admissão e diário · Balanço hídrico (diurese, evacuações, vômitos) · Reavaliar a hidratação ao fim de cada expansão',
         detalhe: 'Comunicar: ausência de diurese, piora do estado geral, convulsão ou sinais de sobrecarga (edema, estertores, fígado aumentado)',
       },

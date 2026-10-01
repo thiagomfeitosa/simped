@@ -6,7 +6,7 @@
 import { EXAMES } from '../dados/exames';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import { verificarDadosDeOrigem } from '../paciente/variaveis';
-import { SECOES } from '../prescricao/secoes';
+import { SECOES } from '../dados/secoes';
 import { caso01 } from './clinicos/caso01-hipoglicemia-rn';
 import { caso02 } from './clinicos/caso02-sepse-neonatal';
 import { caso03 } from './clinicos/caso03-sifilis-congenita';

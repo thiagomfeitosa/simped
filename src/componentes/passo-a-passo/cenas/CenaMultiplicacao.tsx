@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import type { CenaMultiplicacao as TipoCenaMultiplicacao } from '../../../dados/roteiros/tipos';
-import { arredondar } from '../../../logica/calculos';
+import { arredondar } from '../../../calculos';
 import { fmt } from '../../../logica/formatacao';
 import { useRitmo } from '../ritmo';
 import { prefereMenosMovimento, useNumeroAnimado } from '../useNumeroAnimado';

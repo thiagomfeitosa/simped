@@ -5,7 +5,7 @@ import { CASOS, verificarCaso } from '../casos/index';
 import type { CasoClinico, CondutaEsperada, MudancaDeSinal, NomeSinal, SinaisVitais } from '../casos/tipos';
 import { EXAMES } from '../dados/exames';
 import { BANCO_MEDICACOES } from '../dados/medicacoes';
-import { SECOES } from '../prescricao/secoes';
+import { SECOES } from '../dados/secoes';
 
 const SINAIS: { id: NomeSinal; nome: string }[] = [
   { id: 'fc', nome: 'FC (bpm)' },

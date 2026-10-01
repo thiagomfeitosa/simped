@@ -1,5 +1,5 @@
 import type { Etapa } from '../../dados/roteiros/tipos';
-import { SECOES } from '../../dados/secoes';
+import { INFO_SECAO } from '../../dados/secoes';
 import { ContaAnimada } from './ContaAnimada';
 import type { Direcao } from './PassoAPasso';
 import { useRitmo } from './ritmo';
@@ -16,7 +16,7 @@ interface Props {
 /** Texto da etapa + conta em tempos (fórmula → números → resultado), com desfazer/refazer. */
 export function CartaoExplicacao({ etapa, direcao, numero, total, aoMudarConta }: Props) {
   const fator = useRitmo();
-  const secao = SECOES[etapa.secao];
+  const secao = INFO_SECAO[etapa.secao];
   return (
     <article key={etapa.id} className={`explicacao entrar-${direcao}`} style={{ ['--cor-secao' as string]: secao.cor }}>
       <header className="explicacao-topo">

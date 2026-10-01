@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { Etapa, Roteiro } from '../../dados/roteiros/tipos';
-import { SECOES } from '../../dados/secoes';
+import { INFO_SECAO } from '../../dados/secoes';
 import { montarPrescricaoComCalculos, type ContaDaLinha } from '../../logica/progresso';
 import type { Direcao } from './PassoAPasso';
 import { useRitmo } from './ritmo';
@@ -20,7 +20,7 @@ export function PrescricaoComCalculos({ roteiro, etapa, direcao, aoIrParaEtapa }
   const fator = useRitmo();
   const [mostrarContas, setMostrarContas] = useState(true);
   const { secoes, contasSoltas } = useMemo(() => montarPrescricaoComCalculos(roteiro), [roteiro]);
-  const info = SECOES[etapa.secao];
+  const info = INFO_SECAO[etapa.secao];
 
   let numeroItem = 0;
   let ordem = 0; // ordem de entrada na tela (animação escalonada)
@@ -56,7 +56,7 @@ export function PrescricaoComCalculos({ roteiro, etapa, direcao, aoIrParaEtapa }
         </header>
 
         {secoes.map(({ secao, linhas }) => {
-          const infoSecao = SECOES[secao];
+          const infoSecao = INFO_SECAO[secao];
           return (
             <div key={secao} className="folha-secao preenchida" style={{ ['--cor-secao' as string]: infoSecao.cor }}>
               <h4>

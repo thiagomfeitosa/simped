@@ -4,21 +4,21 @@
  * e soro de manutenção isotônico com potássio.
  *
  * CASO DIDÁTICO. Doses e limites do docs/fase-0/doses-rascunho.md — TUDO "A VALIDAR".
- * Os números são calculados pelas funções de src/logica/calculos.ts (não digitados à mão).
+ * Os números são calculados pelas funções de o motor de cálculo src/calculos/ (o mesmo do Prescrever) (não digitados à mão).
  */
 import {
   arredondar,
-  deficitSodio,
-  dosePorPeso,
+  deficitDeSodio,
+  doseTotal,
   FRACAO_AGUA_CORPORAL_PADRAO,
-  hollidaySegar,
-  MG_POR_MEQ,
+  hollidaySegarMlDia,
   meqPorLitro,
   meqPorMl,
+  MG_POR_MEQ,
   subidaEstimadaSodio,
-  vazaoMlPorHora,
-  volumeDoConcentrado,
-} from '../../logica/calculos';
+  vazaoDoVolume,
+  volumeParaConcentracaoDesejada,
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -45,23 +45,23 @@ const NACL20_MEQ_ML = meqPorMl(NACL_CONCENTRADO_PCT, MG_POR_MEQ.NaCl);
 const KCL_MEQ_ML = meqPorMl(KCL_PCT, MG_POR_MEQ.KCl);
 
 // ---- Contas ----------------------------------------------------------------
-const volumeNaCl3 = dosePorPeso(NACL3_ML_KG, PESO_KG).doseTotal;
-const volumeNaCl20 = volumeDoConcentrado(NACL_CONCENTRADO_PCT, NACL_HIPERTONICO_PCT, volumeNaCl3);
-const volumeAD = arredondar(volumeNaCl3 - volumeNaCl20);
-const vazaoBolus = vazaoMlPorHora(volumeNaCl3, NACL3_TEMPO_MIN);
+const volumeNaCl3 = doseTotal({ dosePorKg: NACL3_ML_KG, pesoKg: PESO_KG }).dose;
+const volumeNaCl20 = volumeParaConcentracaoDesejada({ concentracaoInicial: NACL_CONCENTRADO_PCT, concentracaoDesejada: NACL_HIPERTONICO_PCT, volumeFinalMl: volumeNaCl3 }).volumeAspiradoMl;
+const volumeAD = arredondar(volumeNaCl3 - volumeNaCl20, 4);
+const vazaoBolus = vazaoDoVolume(volumeNaCl3, NACL3_TEMPO_MIN);
 const meqBolus = arredondar(volumeNaCl3 * NACL3_MEQ_ML, 1);
 const subida = subidaEstimadaSodio(meqBolus, PESO_KG);
 const naDepois = arredondar(NA_ATUAL + subida, 1);
 const tetoNa = NA_ATUAL + LIMITE_SUBIDA_24H;
-const meqTeto = deficitSodio(tetoNa, NA_ATUAL, PESO_KG);
+const meqTeto = deficitDeSodio({ sodioDesejado: tetoNa, sodioAtual: NA_ATUAL, pesoKg: PESO_KG });
 const aguaCorporal = arredondar(FRACAO_AGUA_CORPORAL_PADRAO * PESO_KG, 2);
 
-const holliday = hollidaySegar(PESO_KG);
+const holliday = hollidaySegarMlDia(PESO_KG);
 const kMeqDia = arredondar((holliday / 100) * K_MEQ_POR_100ML, 1);
 const kclMl = arredondar(kMeqDia / KCL_MEQ_ML, 1);
 const manutTotal = arredondar(holliday + kclMl, 1);
 const kMeqL = meqPorLitro(kMeqDia, manutTotal);
-const vazaoManut = vazaoMlPorHora(manutTotal, 24 * 60);
+const vazaoManut = vazaoDoVolume(manutTotal, 24 * 60);
 
 // ---- Textos da folha ---------------------------------------------------------
 const idTexto = `Pedro · 11 meses · Peso ${fmt(PESO_KG)} kg`;
@@ -203,7 +203,7 @@ export const roteiroHiponatremia: Roteiro = {
     // 4. HIDRATAÇÃO E ELETRÓLITOS — NaCl 3% --------------------------------------
     {
       id: 'concentracoes',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Qual NaCl?',
       titulo: 'Qual solução de sódio usar?',
       explicacao: [
@@ -228,11 +228,11 @@ export const roteiroHiponatremia: Roteiro = {
           { rotulo: 'NaCl 20%', detalhe: 'ampola — não vai direto', valor: NACL20_MEQ_ML, tom: 'perigo' },
         ],
       },
-      linha: { id: 'nacl3', secao: 'hidratacao', texto: `NaCl 3% (${fmt(NACL3_MEQ_ML, 3)} mEq/mL) — correção da hiponatremia sintomática` },
+      linha: { id: 'nacl3', secao: 'volemia', texto: `NaCl 3% (${fmt(NACL3_MEQ_ML, 3)} mEq/mL) — correção da hiponatremia sintomática` },
     },
     {
       id: 'nacl3-dose',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Dose NaCl 3%',
       titulo: 'Quanto NaCl 3%?',
       explicacao: [
@@ -255,11 +255,11 @@ export const roteiroHiponatremia: Roteiro = {
         total: volumeNaCl3,
         rotuloTotal: `${fmt(volumeNaCl3)} mL de NaCl 3%`,
       },
-      linha: { id: 'nacl3', secao: 'hidratacao', texto: nacl3Texto },
+      linha: { id: 'nacl3', secao: 'volemia', texto: nacl3Texto },
     },
     {
       id: 'nacl3-aspirar',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Preparo: 20%',
       titulo: 'Preparando o NaCl 3%: quanto de NaCl 20%?',
       explicacao: [
@@ -290,11 +290,11 @@ export const roteiroHiponatremia: Roteiro = {
           balao: `${fmt(volumeNaCl20)} mL de NaCl 20%`,
         },
       },
-      linha: { id: 'nacl3', secao: 'hidratacao', texto: nacl3Texto, detalhe: `Preparo: NaCl 20% ${fmt(volumeNaCl20)} mL + …` },
+      linha: { id: 'nacl3', secao: 'volemia', texto: nacl3Texto, detalhe: `Preparo: NaCl 20% ${fmt(volumeNaCl20)} mL + …` },
     },
     {
       id: 'nacl3-completar',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Preparo: AD',
       titulo: 'Completando com água destilada',
       explicacao: [
@@ -332,11 +332,11 @@ export const roteiroHiponatremia: Roteiro = {
           balao: `${fmt(volumeNaCl20)} + ${fmt(volumeAD)} = ${fmt(volumeNaCl3)} mL a 3%`,
         },
       },
-      linha: { id: 'nacl3', secao: 'hidratacao', texto: nacl3Texto, detalhe: nacl3Preparo },
+      linha: { id: 'nacl3', secao: 'volemia', texto: nacl3Texto, detalhe: nacl3Preparo },
     },
     {
       id: 'nacl3-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'NaCl 3%: BIC',
       titulo: `Correndo em ${NACL3_TEMPO_MIN} minutos`,
       explicacao: [
@@ -372,11 +372,11 @@ export const roteiroHiponatremia: Roteiro = {
           balao: `${fmt(volumeNaCl3)} mL em ${NACL3_TEMPO_MIN} min`,
         },
       },
-      linha: { id: 'nacl3', secao: 'hidratacao', texto: nacl3Final, detalhe: `${nacl3Preparo} · Pode repetir se a crise continuar (máx. 2 a 3 doses)` },
+      linha: { id: 'nacl3', secao: 'volemia', texto: nacl3Final, detalhe: `${nacl3Preparo} · Pode repetir se a crise continuar (máx. 2 a 3 doses)` },
     },
     {
       id: 'quanto-sobe',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Quanto sobe?',
       titulo: 'Quanto o sódio deve subir?',
       explicacao: [
@@ -401,7 +401,7 @@ export const roteiroHiponatremia: Roteiro = {
     },
     {
       id: 'teto-24h',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Teto 24 h',
       titulo: 'Até onde o sódio pode subir em 24 horas?',
       explicacao: [
@@ -432,7 +432,7 @@ export const roteiroHiponatremia: Roteiro = {
       },
       linha: {
         id: 'nacl3',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: nacl3Final,
         detalhe: `${nacl3Preparo} · Pode repetir se a crise continuar (máx. 2 a 3 doses) · Meta: parar a crise; não subir o Na mais que ${LIMITE_SUBIDA_24H} mEq/L em 24 h (teto ${tetoNa})`,
       },
@@ -441,7 +441,7 @@ export const roteiroHiponatremia: Roteiro = {
     // 4. HIDRATAÇÃO — MANUTENÇÃO ISOTÔNICA ------------------------------------------
     {
       id: 'manutencao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Manutenção',
       titulo: 'Depois da crise: soro de manutenção ISOTÔNICO',
       explicacao: [
@@ -464,11 +464,11 @@ export const roteiroHiponatremia: Roteiro = {
         total: holliday,
         rotuloTotal: `${fmt(holliday)} mL em 24 h`,
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `Soro glicofisiológico (SG 5% + NaCl 0,9%) — ${fmt(holliday)} mL/dia, EV` },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `Soro glicofisiológico (SG 5% + NaCl 0,9%) — ${fmt(holliday)} mL/dia, EV` },
     },
     {
       id: 'manutencao-k',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'KCl',
       titulo: 'Potássio de manutenção: mEq → mL de ampola',
       explicacao: [
@@ -498,11 +498,11 @@ export const roteiroHiponatremia: Roteiro = {
           { rotulo: 'K⁺', valor: `≈ ${fmt(kMeqL, 0)} mEq/L`, tom: 'normal' },
         ],
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `${manutComposicao} — EV em 24 h`, detalhe: 'Iniciar após a crise, com diurese presente' },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `${manutComposicao} — EV em 24 h`, detalhe: 'Iniciar após a crise, com diurese presente' },
     },
     {
       id: 'manutencao-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Manut.: vazão',
       titulo: 'Soro de manutenção: quantos mL por hora?',
       explicacao: [`O soro todo (${fmt(holliday)} + ${fmt(kclMl)} = ${fmt(manutTotal)} mL) corre em 24 horas na BIC.`],
@@ -526,7 +526,7 @@ export const roteiroHiponatremia: Roteiro = {
       },
       linha: {
         id: 'manutencao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `${manutComposicao} — EV em 24 h, BIC ${fmt(vazaoManut, 1)} mL/h`,
         detalhe: `Iniciar após a crise, com diurese presente · Na⁺ 154 · K⁺ ≈ ${fmt(kMeqL, 0)} mEq/L`,
       },
@@ -564,7 +564,7 @@ export const roteiroHiponatremia: Roteiro = {
     // 8. ORIENTAÇÕES -------------------------------------------------------------
     {
       id: 'orientacoes',
-      secao: 'orientacoes',
+      secao: 'cuidados',
       curto: 'Cuidados',
       titulo: 'Orientações e cuidados',
       explicacao: [
@@ -583,7 +583,7 @@ export const roteiroHiponatremia: Roteiro = {
       },
       linha: {
         id: 'orientacoes',
-        secao: 'orientacoes',
+        secao: 'cuidados',
         texto: 'Monitor cardíaco e SpO₂ contínuos · Diurese de 1/1 h · Balanço hídrico',
         detalhe: 'Comunicar: nova crise, sonolência, diurese muito aumentada (risco de subir o Na rápido demais)',
       },

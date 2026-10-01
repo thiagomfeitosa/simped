@@ -3,7 +3,7 @@
  * Funções puras: dado o roteiro e o número da etapa, devolvem o que deve estar escrito.
  * Assim, avançar e voltar é só mudar o número da etapa.
  */
-import { SECOES_DA_FOLHA } from '../dados/secoes';
+import { ORDEM_DA_FOLHA } from '../dados/secoes';
 import type { Conta, LinhaPrescricao, Roteiro, SecaoPrescricao } from '../dados/roteiros/tipos';
 
 export interface SecaoDaFolha {
@@ -20,7 +20,7 @@ export interface EstadoFolha {
 /** Seções que o roteiro usa (as outras nem aparecem na folha). */
 export function secoesUsadas(roteiro: Roteiro): SecaoPrescricao[] {
   const usadas = new Set(roteiro.etapas.flatMap((e) => (e.linha ? [e.linha.secao] : [])));
-  return SECOES_DA_FOLHA.filter((s) => usadas.has(s));
+  return ORDEM_DA_FOLHA.filter((s) => usadas.has(s));
 }
 
 export function montarFolha(roteiro: Roteiro, indiceEtapa: number): EstadoFolha {

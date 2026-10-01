@@ -4,20 +4,10 @@
  * que animação exibir e o que acrescentar à folha de prescrição e ao rascunho.
  */
 
-/** Seções da folha de prescrição, na ordem oficial (ver CLAUDE.md). */
-export type SecaoPrescricao =
-  | 'identificacao'
-  | 'oxigenoterapia'
-  | 'dieta'
-  | 'hidratacao'
-  | 'antimicrobianos'
-  | 'demais'
-  | 'exames'
-  | 'orientacoes'
-  | 'sinan'
-  | 'revisao'
-  /** Etapa final automática: a prescrição inteira com os cálculos (ver prescricao-final.ts). */
-  | 'final';
+import type { SecaoPrescricao } from '../secoes';
+
+/** Seções da folha (lista única em src/dados/secoes.ts) + as etapas extras 'revisao' e 'final'. */
+export type { SecaoPrescricao };
 
 /**
  * Uma conta mostrada em tempos, ligados por setas: fórmula → números → (passos) → resultado.

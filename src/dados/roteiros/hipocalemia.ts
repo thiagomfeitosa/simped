@@ -4,19 +4,20 @@
  * de 12 mL (fator BIC) NÃO serve para o potássio.
  *
  * CASO DIDÁTICO. Doses e limites do docs/fase-0/doses-rascunho.md — TUDO "A VALIDAR".
- * Os números são calculados pelas funções de src/logica/calculos.ts (não digitados à mão).
+ * Os números são calculados pelas funções de o motor de cálculo src/calculos/ (o mesmo do Prescrever) (não digitados à mão).
  */
 import {
   arredondar,
-  dosePorPeso,
-  hollidaySegar,
-  MG_POR_MEQ,
+  diluir,
+  doseTotal,
+  hollidaySegarMlDia,
   meqPorKgPorHora,
   meqPorLitro,
   meqPorMl,
-  vazaoMlPorHora,
+  MG_POR_MEQ,
+  vazaoDoVolume,
   volumeMinimoDiluicao,
-} from '../../logica/calculos';
+} from '../../calculos';
 import { fmt } from '../../logica/formatacao';
 import type { Roteiro } from './tipos';
 
@@ -41,21 +42,21 @@ const VOLUME_FINAL_BIC_ML = 12; // Santa Casa (regra da seringa de 12 mL)
 const KCL_MEQ_ML = meqPorMl(KCL_PCT, MG_POR_MEQ.KCl); // ≈ 2,56
 
 // ---- Contas ----------------------------------------------------------------
-const holliday = hollidaySegar(PESO_KG);
+const holliday = hollidaySegarMlDia(PESO_KG);
 const hollidayAcima10 = holliday - 1000;
 const kManutMeq = arredondar((holliday / 100) * K_MEQ_POR_100ML, 1);
 const kclManutMl = arredondar(kManutMeq / KCL_MEQ_ML, 1);
 const manutTotal = arredondar(holliday + kclManutMl, 1);
 const kManutMeqL = meqPorLitro(kManutMeq, manutTotal);
-const vazaoManut = vazaoMlPorHora(manutTotal, 24 * 60);
+const vazaoManut = vazaoDoVolume(manutTotal, 24 * 60);
 
-const correcaoMeq = dosePorPeso(CORRECAO_MEQ_KG, PESO_KG, CORRECAO_MAX_MEQ).doseTotal;
+const correcaoMeq = doseTotal({ dosePorKg: CORRECAO_MEQ_KG, pesoKg: PESO_KG, doseMaxima: CORRECAO_MAX_MEQ }).dose;
 const kclCorrMl = arredondar(correcaoMeq / KCL_MEQ_ML, 1);
 const concNaSeringa12 = meqPorLitro(correcaoMeq, VOLUME_FINAL_BIC_ML);
 const vezesAcimaDoLimite = Math.floor(concNaSeringa12 / K_MAXIMO_PERIFERICO_MEQ_L);
 const volumeCorrecao = volumeMinimoDiluicao(correcaoMeq, K_MAXIMO_PERIFERICO_MEQ_L);
 const sfCorrecao = arredondar(volumeCorrecao - kclCorrMl, 1);
-const vazaoCorrecao = vazaoMlPorHora(volumeCorrecao, CORRECAO_TEMPO_H * 60);
+const vazaoCorrecao = vazaoDoVolume(volumeCorrecao, CORRECAO_TEMPO_H * 60);
 const velocidade = meqPorKgPorHora(correcaoMeq, CORRECAO_TEMPO_H, PESO_KG);
 
 // ---- Textos da folha ---------------------------------------------------------
@@ -176,7 +177,7 @@ export const roteiroHipocalemia: Roteiro = {
     // 4. MANUTENÇÃO --------------------------------------------------------------
     {
       id: 'manutencao-volume',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Holliday',
       titulo: 'Soro de manutenção: quanto por dia?',
       explicacao: [
@@ -203,11 +204,11 @@ export const roteiroHipocalemia: Roteiro = {
         total: holliday,
         rotuloTotal: `${fmt(holliday)} mL em 24 h`,
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `Soro glicofisiológico (SG 5% + NaCl 0,9%) — ${fmt(holliday)} mL/dia, EV` },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `Soro glicofisiológico (SG 5% + NaCl 0,9%) — ${fmt(holliday)} mL/dia, EV` },
     },
     {
       id: 'manutencao-k',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'K⁺ no soro',
       titulo: 'Potássio de manutenção: mEq → mL de ampola',
       explicacao: [
@@ -236,11 +237,11 @@ export const roteiroHipocalemia: Roteiro = {
           { rotulo: 'Na⁺', valor: '≈ 154 mEq/L (isotônico)', tom: 'normal' },
         ],
       },
-      linha: { id: 'manutencao', secao: 'hidratacao', texto: `${manutComposicao} — EV em 24 h` },
+      linha: { id: 'manutencao', secao: 'volemia', texto: `${manutComposicao} — EV em 24 h` },
     },
     {
       id: 'manutencao-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Manut.: vazão',
       titulo: 'Soro de manutenção: quantos mL por hora?',
       explicacao: [`O soro todo (${fmt(holliday)} + ${fmt(kclManutMl)} = ${fmt(manutTotal)} mL) corre em 24 horas na BIC.`],
@@ -264,7 +265,7 @@ export const roteiroHipocalemia: Roteiro = {
       },
       linha: {
         id: 'manutencao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `${manutComposicao} — EV em 24 h, BIC ${fmt(vazaoManut, 1)} mL/h`,
         detalhe: `K⁺ ≈ ${fmt(kManutMeqL, 0)} mEq/L · só com diurese presente`,
       },
@@ -273,7 +274,7 @@ export const roteiroHipocalemia: Roteiro = {
     // 4. CORREÇÃO DO POTÁSSIO ------------------------------------------------------
     {
       id: 'correcao-dose',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Correção: mEq',
       titulo: 'Correção: quantos mEq de potássio?',
       explicacao: [
@@ -296,11 +297,11 @@ export const roteiroHipocalemia: Roteiro = {
         total: correcaoMeq,
         rotuloTotal: `${fmt(correcaoMeq)} mEq de potássio`,
       },
-      linha: { id: 'correcao', secao: 'hidratacao', texto: correcaoTexto },
+      linha: { id: 'correcao', secao: 'volemia', texto: correcaoTexto },
     },
     {
       id: 'correcao-ml',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Correção: mL',
       titulo: 'Quantos mL de KCl 19,1%?',
       explicacao: [
@@ -332,11 +333,11 @@ export const roteiroHipocalemia: Roteiro = {
           balao: `${fmt(kclCorrMl)} mL = ${fmt(correcaoMeq)} mEq`,
         },
       },
-      linha: { id: 'correcao', secao: 'hidratacao', texto: correcaoTexto, detalhe: `KCl 19,1% ${fmt(kclCorrMl)} mL + …` },
+      linha: { id: 'correcao', secao: 'volemia', texto: correcaoTexto, detalhe: `KCl 19,1% ${fmt(kclCorrMl)} mL + …` },
     },
     {
       id: 'correcao-armadilha',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Seringa 12 mL?',
       titulo: `Pegadinha: posso usar a seringa de ${VOLUME_FINAL_BIC_ML} mL?`,
       explicacao: [
@@ -365,7 +366,7 @@ export const roteiroHipocalemia: Roteiro = {
     },
     {
       id: 'correcao-diluir',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Correção: diluir',
       titulo: 'Diluindo o potássio do jeito seguro',
       explicacao: [
@@ -394,11 +395,11 @@ export const roteiroHipocalemia: Roteiro = {
           { rotulo: 'Total', valor: `${fmt(correcaoMeq)} mEq em ${fmt(volumeCorrecao)} mL`, tom: 'info' },
         ],
       },
-      linha: { id: 'correcao', secao: 'hidratacao', texto: correcaoTexto, detalhe: correcaoPreparo },
+      linha: { id: 'correcao', secao: 'volemia', texto: correcaoTexto, detalhe: correcaoPreparo },
     },
     {
       id: 'correcao-vazao',
-      secao: 'hidratacao',
+      secao: 'volemia',
       curto: 'Correção: BIC',
       titulo: 'Velocidade: nem rápido demais',
       explicacao: [
@@ -430,7 +431,7 @@ export const roteiroHipocalemia: Roteiro = {
       },
       linha: {
         id: 'correcao',
-        secao: 'hidratacao',
+        secao: 'volemia',
         texto: `Correção de K⁺: KCl 19,1% ${fmt(kclCorrMl)} mL (${fmt(correcaoMeq)} mEq = ${fmt(CORRECAO_MEQ_KG)} mEq/kg) + SF 0,9% ${fmt(sfCorrecao)} mL — EV em ${CORRECAO_TEMPO_H} h, BIC ${fmt(vazaoCorrecao)} mL/h`,
         detalhe: `K⁺ ${K_MAXIMO_PERIFERICO_MEQ_L} mEq/L · ${fmt(velocidade)} mEq/kg/h · com monitor cardíaco · NUNCA em bolus`,
       },
@@ -468,7 +469,7 @@ export const roteiroHipocalemia: Roteiro = {
     // 8. ORIENTAÇÕES -------------------------------------------------------------
     {
       id: 'orientacoes',
-      secao: 'orientacoes',
+      secao: 'cuidados',
       curto: 'Cuidados',
       titulo: 'Orientações e cuidados',
       explicacao: [
@@ -487,7 +488,7 @@ export const roteiroHipocalemia: Roteiro = {
       },
       linha: {
         id: 'orientacoes',
-        secao: 'orientacoes',
+        secao: 'cuidados',
         texto: 'Monitor cardíaco contínuo durante a correção · Observar o acesso venoso · Balanço hídrico',
         detalhe: 'Comunicar: arritmia, dor ou vermelhidão no acesso, diurese baixa, piora da fraqueza',
       },
