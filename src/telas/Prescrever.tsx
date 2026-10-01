@@ -1,13 +1,17 @@
 import { useMemo, useReducer, useState } from 'react';
 import { casoDemonstracao } from '../casos/demonstracao';
+import { hospitalAtual } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { MEDICACOES_EXEMPLO } from '../dados/medicacoes/exemplos-a-validar';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
+import { lerDataHora } from '../paciente/variaveis';
+import { type Checagem, itensParaAprazar } from '../prescricao/aprazamento';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
 import { ControlesCaso } from './ControlesCaso';
 import { FolhaPrescricao } from './FolhaPrescricao';
 import { PainelPaciente } from './PainelPaciente';
+import { QuadroHorarios } from './QuadroHorarios';
 import { RascunhoCalculos } from './RascunhoCalculos';
 
 /** Modo "Prescrever": folha de prescrição, rascunho e paciente que reage às medicações administradas. */
@@ -26,6 +30,9 @@ export function Prescrever() {
     [caso, paciente.tempoMin, config.fonteFaixa],
   );
   const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => acrescentarEvento(lista, evento));
+  // doses checadas pela enfermagem no quadro de horários
+  const [checagens, setChecagens] = useState<Checagem[]>([]);
+  const aprazaveis = useMemo(() => itensParaAprazar(prescricao, MEDICACOES_EXEMPLO), [prescricao]);
 
   return (
     <div className="prescrever">
@@ -55,7 +62,27 @@ export function Prescrever() {
             registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao })
           }
         />
-        <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
+        <div className="coluna-direita">
+          <QuadroHorarios
+            itens={aprazaveis}
+            inicio={lerDataHora(caso.inicio)}
+            agoraMin={paciente.tempoMin}
+            hospital={hospitalAtual(config)}
+            checagens={checagens}
+            aoChecar={(dose) => {
+              setChecagens((lista) => [
+                ...lista,
+                { itemId: dose.itemId, minutoMarcado: dose.minuto, feitaNoMinuto: paciente.tempoMin },
+              ]);
+              registrarEvento({
+                tipo: 'medicacaoAdministrada',
+                medicacaoId: dose.medicacaoId,
+                descricao: `${dose.descricao} (horário das ${dose.hora})`,
+              });
+            }}
+          />
+          <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
+        </div>
       </main>
     </div>
   );

@@ -553,3 +553,72 @@
   flex: none;
   width: 5em;
 }
+
+/* Coluna da direita: horários + rascunho */
+.coluna-direita {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.coluna-direita .rascunho-calculos {
+  flex: 1;
+}
+
+/* Quadro de horários (aprazamento) */
+.horarios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.dose {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  padding: 4px 6px;
+  border-left: 4px solid var(--borda);
+  border-radius: 4px;
+  margin: 3px 0;
+}
+
+.dose button {
+  grid-column: 3;
+  font-size: 0.8rem;
+  padding: 1px 8px;
+}
+
+.dose-hora {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.dose-hora small {
+  font-weight: normal;
+  color: var(--suave);
+}
+
+.dose-situacao {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.dose-feita {
+  border-left-color: var(--certo);
+  background: var(--certo-fundo);
+}
+
+.dose-atrasada {
+  border-left-color: var(--errado);
+  background: var(--errado-fundo);
+}
+
+.dose-agora {
+  border-left-color: var(--atencao);
+  background: var(--atencao-fundo);
+}
