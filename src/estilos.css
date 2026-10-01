@@ -73,3 +73,9 @@
   font-weight: 800;
   color: var(--primaria-escura);
 }
+
+/* Abas secundárias (configurações, calculadoras...): só o nome, a descrição aparece ao passar o mouse */
+.modo-aba.secundaria {
+  font-size: 0.9rem;
+  padding: 6px 10px;
+}

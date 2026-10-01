@@ -9,6 +9,7 @@ import {
   formatarNumero,
   lerNumero,
   textoDaFolha,
+  textoParaModo,
   type Verificacao,
 } from './itemMedicacao';
 
@@ -353,5 +354,21 @@ describe('regra que muda com a idade em dias (relógio do caso)', () => {
     const intervalo = doAssunto(r.verificacoes, 'intervalo');
     expect(intervalo[0]?.situacao).toBe('a-validar');
     expect(intervalo[0]?.texto).toMatch(/8\/8h/);
+  });
+});
+
+describe('modo prova esconde o gabarito', () => {
+  it('volume errado não mostra a conta certa', () => {
+    const v: Verificacao = { assunto: 'volume', situacao: 'errado', texto: 'Volume não confere: 240 mg ÷ 500 mg/mL = 0,48 mL' };
+    expect(textoParaModo(v, 'prova')).toBe('Volume não confere.');
+    expect(textoParaModo(v, 'treino')).toBe(v.texto);
+  });
+  it('dose A VALIDAR não mostra a faixa', () => {
+    const v: Verificacao = { assunto: 'dose', situacao: 'a-validar', texto: 'Referência SBP: 10–25 mg/kg/dose' };
+    expect(textoParaModo(v, 'prova')).not.toMatch(/mg/);
+  });
+  it('alertas continuam visíveis', () => {
+    const v: Verificacao = { assunto: 'alerta', situacao: 'atencao', texto: 'NUNCA em bolus' };
+    expect(textoParaModo(v, 'prova')).toBe('NUNCA em bolus');
   });
 });

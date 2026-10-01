@@ -1,5 +1,6 @@
 import { useMemo, useReducer, useState } from 'react';
 import { casoDemonstracao } from '../casos/demonstracao';
+import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { MEDICACOES_EXEMPLO } from '../dados/medicacoes/exemplos-a-validar';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
@@ -12,6 +13,7 @@ import { RascunhoCalculos } from './RascunhoCalculos';
 /** Modo "Prescrever": folha de prescrição, rascunho e paciente que reage às medicações administradas. */
 export function Prescrever() {
   const caso = casoDemonstracao;
+  const { config } = useConfiguracoes();
   const [prescricao, despachar] = useReducer(reduzirPrescricao, undefined, prescricaoVazia);
   const [pacienteVisivel, setPacienteVisivel] = useState(true);
   const [rascunho, setRascunho] = useState('');
@@ -19,7 +21,10 @@ export function Prescrever() {
   const [eventos, setEventos] = useState<EventoPaciente[]>([]);
   const paciente = useMemo(() => reproduzirEventos(caso, eventos), [caso, eventos]);
   // idade, faixa e superfície corporal no minuto atual do relógio do caso
-  const pacienteAtual = useMemo(() => pacienteNoMinuto(caso, paciente.tempoMin), [caso, paciente.tempoMin]);
+  const pacienteAtual = useMemo(
+    () => pacienteNoMinuto(caso, paciente.tempoMin, config.fonteFaixa),
+    [caso, paciente.tempoMin, config.fonteFaixa],
+  );
   const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => acrescentarEvento(lista, evento));
 
   return (
@@ -37,7 +42,7 @@ export function Prescrever() {
 
       <main className={pacienteVisivel ? 'area com-paciente' : 'area'}>
         {pacienteVisivel && (
-          <PainelPaciente caso={caso} paciente={pacienteAtual} sinais={paciente.sinais}>
+          <PainelPaciente caso={caso} paciente={pacienteAtual} sinais={paciente.sinais} fonteDaFaixa={config.fonteFaixa}>
             <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoEvento={registrarEvento} />
           </PainelPaciente>
         )}

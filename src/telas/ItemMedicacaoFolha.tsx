@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { toleranciaDe } from '../configuracoes/configuracoes';
+import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import type { PacienteAtual } from '../paciente/atual';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import {
@@ -12,6 +14,7 @@ import {
   type Situacao,
   textoDaFolha,
   textoIntervalo,
+  textoParaModo,
   UNIDADES_DOSE,
   VIAS,
 } from '../prescricao/itemMedicacao';
@@ -38,11 +41,14 @@ interface Props {
 /** Item de medicação estruturado: medicação → apresentação → indicação → dose → volume → via → intervalo. */
 export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar }: Props) {
   const [mostrarConferencia, setMostrarConferencia] = useState(false);
+  const { config } = useConfiguracoes();
   const resultado = conferirItemMedicacao({
     campos,
     medicacoes,
     paciente: { faixa: paciente.faixa, pesoKg: paciente.pesoKg, variaveis: paciente.paraRegra },
     secaoNumero: secao.numero,
+    fontePreferida: config.fonteDose,
+    tolerancia: toleranciaDe(config),
   });
   const { medicacao, apresentacao } = resultado;
   const indicacoes = medicacao ? indicacoesDisponiveis(medicacao, paciente.faixa, paciente.paraRegra) : [];
@@ -209,6 +215,11 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
 
       {mostrarConferencia && medicacao && (
         <ul className="conferencia" aria-label={`Conferência do ${rotulo.toLowerCase()}`}>
+          {config.modo === 'prova' && (
+            <li className="sit-a-validar">
+              <span className="selo">modo prova</span> gabarito escondido (mude em Configurações).
+            </li>
+          )}
           {resultado.faltando.length > 0 && (
             <li className="sit-atencao">
               <span className="selo">falta</span> {resultado.faltando.join(', ')}.
@@ -216,7 +227,7 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
           )}
           {resultado.verificacoes.map((v, i) => (
             <li key={i} className={`sit-${v.situacao}`}>
-              <span className="selo">{SELO[v.situacao]}</span> {v.texto}
+              <span className="selo">{SELO[v.situacao]}</span> {textoParaModo(v, config.modo)}
             </li>
           ))}
         </ul>

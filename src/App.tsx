@@ -1,21 +1,53 @@
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { TelaPassoAPasso } from './componentes/passo-a-passo/TelaPassoAPasso';
+import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
+import { Configuracoes } from './telas/Configuracoes';
 import { Prescrever } from './telas/Prescrever';
 
-type Modo = 'passo-a-passo' | 'prescrever';
+interface DefinicaoModo {
+  id: string;
+  rotulo: string;
+  descricao: string;
+  /** Abas principais mostram a descrição embaixo do nome; as outras, só ao passar o mouse. */
+  principal?: boolean;
+  /** Estilos do modo "Prescrever" (cores, botões, painéis) valem também para as telas simples. */
+  classe?: string;
+  tela: () => ReactNode;
+}
 
-const MODOS: readonly { id: Modo; rotulo: string; descricao: string }[] = [
-  { id: 'passo-a-passo', rotulo: 'Passo a passo', descricao: 'Aprender vendo as contas animadas' },
-  { id: 'prescrever', rotulo: 'Prescrever', descricao: 'Praticar na folha, com o paciente reagindo' },
+const MODOS: readonly DefinicaoModo[] = [
+  {
+    id: 'passo-a-passo',
+    rotulo: 'Passo a passo',
+    descricao: 'Aprender vendo as contas animadas',
+    principal: true,
+    tela: () => <TelaPassoAPasso />,
+  },
+  {
+    id: 'prescrever',
+    rotulo: 'Prescrever',
+    descricao: 'Praticar na folha, com o paciente reagindo',
+    principal: true,
+    classe: 'modo-prescrever',
+    tela: () => <Prescrever />,
+  },
+  {
+    id: 'configuracoes',
+    rotulo: '⚙ Configurações',
+    descricao: 'Fonte, hospital, modo prova, margem',
+    classe: 'modo-prescrever',
+    tela: () => <Configuracoes />,
+  },
 ];
 
 /** O modo fica no endereço (#prescrever), então recarregar a página mantém a aba escolhida. */
-function modoDoEndereco(): Modo {
-  return window.location.hash === '#prescrever' ? 'prescrever' : 'passo-a-passo';
+function modoDoEndereco(): string {
+  const id = window.location.hash.slice(1);
+  return MODOS.some((m) => m.id === id) ? id : 'passo-a-passo';
 }
 
 export function App() {
-  const [modo, setModo] = useState<Modo>(modoDoEndereco);
+  const [modo, setModo] = useState<string>(modoDoEndereco);
 
   useEffect(() => {
     const aoMudar = () => setModo(modoDoEndereco());
@@ -24,26 +56,31 @@ export function App() {
   }, []);
 
   return (
-    <>
+    <ProvedorConfiguracoes>
       <nav className="modos" aria-label="Modo do SimPed">
         <span className="modos-marca" aria-hidden="true">
           Sim<b>Ped</b>
         </span>
         {MODOS.map((m) => (
-          <a key={m.id} href={`#${m.id}`} className="modo-aba" aria-current={m.id === modo ? 'page' : undefined}>
+          <a
+            key={m.id}
+            href={`#${m.id}`}
+            className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
+            title={m.descricao}
+            aria-current={m.id === modo ? 'page' : undefined}
+          >
             {m.rotulo}
-            <small>{m.descricao}</small>
+            {m.principal && <small>{m.descricao}</small>}
           </a>
         ))}
       </nav>
 
-      {/* As duas telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
-      <div hidden={modo !== 'passo-a-passo'}>
-        <TelaPassoAPasso />
-      </div>
-      <div hidden={modo !== 'prescrever'} className="modo-prescrever">
-        <Prescrever />
-      </div>
-    </>
+      {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
+      {MODOS.map((m) => (
+        <div key={m.id} hidden={modo !== m.id} className={m.classe}>
+          {m.tela()}
+        </div>
+      ))}
+    </ProvedorConfiguracoes>
   );
 }

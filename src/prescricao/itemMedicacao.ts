@@ -584,3 +584,29 @@ export function conferirItemMedicacao(entrada: {
     completo: faltando.length === 0 && numerosValidos,
   };
 }
+
+const RESUMO_PROVA: Partial<Record<Verificacao['assunto'], Partial<Record<Situacao, string>>>> = {
+  secao: { errado: 'Seção da folha errada.' },
+  via: { certo: 'Via certa.', errado: 'Via não confere.', 'a-validar': 'Via: referência A VALIDAR (não corrige).' },
+  volume: { certo: 'Volume certo.', errado: 'Volume não confere.' },
+  dose: {
+    certo: 'Dose dentro da faixa.',
+    errado: 'Dose fora da faixa.',
+    'a-validar': 'Dose: referência A VALIDAR (não corrige).',
+    atencao: 'Infusão contínua: confira na seção de diluição/BIC.',
+  },
+  intervalo: {
+    certo: 'Intervalo certo.',
+    errado: 'Intervalo não confere.',
+    'a-validar': 'Intervalo: referência A VALIDAR (não corrige).',
+  },
+};
+
+/**
+ * Modo prova: esconde o gabarito (a conta certa, a faixa de dose, o intervalo da referência)
+ * e deixa só o veredito. No modo treino o texto vai inteiro.
+ */
+export function textoParaModo(v: Verificacao, modo: 'treino' | 'prova'): string {
+  if (modo === 'treino') return v.texto;
+  return RESUMO_PROVA[v.assunto]?.[v.situacao] ?? v.texto;
+}
