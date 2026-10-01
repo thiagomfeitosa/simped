@@ -44,6 +44,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - **Banco de medicações em arquivos de dados** (JSON/TS), não espalhado pelo código: nome, apresentações, concentração, faixas de dose por peso/idade, dose máxima, diluentes compatíveis, velocidade de infusão, fonte.
 - **Motor do paciente como estado + eventos** (medicação administrada, tempo passando, intervenção do professor), pensado desde já para permitir o modo online depois.
 - **Offline primeiro**: nada deve depender de internet na fase inicial.
+- **Variáveis do paciente obrigatórias** (detalhes em `docs/fase-0/variaveis-paciente.md`): todo paciente tem sempre peso, data/hora de nascimento, idade gestacional ao nascer, peso ao nascer etc. O programa guarda só os dados de origem e **calcula** a idade em horas, dias, semanas, meses e anos, a idade pós-menstrual, a idade corrigida e a superfície corporal; a idade avança com o relógio do caso. Toda regra de dose pode depender de qualquer uma dessas variáveis.
 
 ## Segurança clínica
 - Todo valor de dose/faixa deve registrar a **fonte** de referência no banco de dados.
@@ -71,12 +72,17 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Ler fontes pelo número de página; transcrever tabelas em `referencias/trechos/`.
 
 ## Estado atual
-- Fase 0 em andamento. Documentos em `docs/fase-0/`:
+- Fase 0 concluída em rascunho (validação clínica pendente com o usuário). Documentos em `docs/fase-0/`:
   - `medicacoes-mvp.md`: lista definida pelo usuário (inclui cortisona, hidrocortisona e metilprednisolona, manter todas); faltam as apresentações (usuário vai levantar).
   - `fontes.md`: fontes e regra de escolha.
   - `doses-rascunho.md`: rascunho de apresentações e doses feito pelo assistente, TUDO "A VALIDAR" (usuário vai conferir nas fontes).
   - `formulas.md`: fórmulas; fator de correção da BIC da Santa Casa = volume final de 12 mL (medicação + SF completando até 12).
   - `apresentacoes-formulario.xlsx`: planilha para o usuário levantar as apresentações da Santa Casa (pré-preenchida com nome, seção e o rascunho do assistente como referência).
+  - `casos-clinicos.md`: 16 casos iniciais escritos pelo assistente, TUDO "A VALIDAR" (doses tiradas do `doses-rascunho.md`). Dolutegravir ainda sem caso.
+  - `medicacoes-ampliacao.md`: +50 medicações (códigos A1–A50) **aprovadas pelo usuário**; ainda sem doses e sem apresentações. Banco total: 89.
+  - `variaveis-paciente.md`: variáveis obrigatórias do paciente (regra fixa), incluindo puberdade/Tanner.
+  - `faixas-etarias.md`: pontos de corte (RN/neonato, lactente, criança, adolescente, IG, peso ao nascer) **por sociedade**. O nome da faixa segue a fonte escolhida (padrão SBP); as doses usam sempre números. Tabela A VALIDAR.
+- Decisão do usuário: seguir em frente com os dados "A VALIDAR" como estão; a validação será feita depois. Por isso, tudo que é dado clínico (doses, apresentações, casos) deve ficar em arquivos de dados isolados, para ser corrigido sem mexer no resto do código, e cada item continua marcado "A VALIDAR" até o usuário conferir.
 - **Motor de cálculo pronto** em `src/calculos/` (TypeScript + Vitest, `npm test`): dose por peso com dose máxima, volume a aspirar, reconstituição, diluição/rediluição em etapas, infusão contínua (por min ou por h), VIG, mistura de duas soluções, Holliday-Segar, seringa da BIC com volume final configurável (`src/dados/hospitais.ts`) e conferência da resposta do aluno. Testes usam números ilustrativos, não doses.
 - **Banco de medicações (molde)** em `src/dados/medicacoes/`: `tipos.ts` (formato), `consulta.ts` (escolha da fonte com queda para SBP, verificador de integridade; só valor CONFERIDO corrige o aluno), `exemplos-a-validar.ts` (adrenalina, dipirona, ceftriaxona copiadas do rascunho, TUDO A VALIDAR).
 - **App (Fase 1)** React + Vite (`npm run dev`): painel do paciente removível com sinais vitais, folha de prescrição nas 9 seções (itens em texto livre ou de medicação, numerados pela ordem da folha; estado em `src/prescricao/estado.ts`), rascunho de cálculos, aviso de treinamento.
@@ -86,4 +92,3 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Pendente com o usuário: margem de arredondamento aceita na correção (provisório: 1%), ver `formulas.md` item 8.
 - Pendente com o usuário (item de medicação): deslocamento do pó na reconstituição, conversão gotas ↔ mL, mostrar ou esconder o gabarito ("modo prova").
 - Próximo passo (código): diluição, rediluição e BIC dentro do item de medicação (etapas C1×V1 = C2×V2, infusão contínua em mL/h e seringa com volume final do hospital), conferidas pelo motor de cálculo. Depois: casos clínicos reais e preenchimento do banco.
-- Atenção: existem ramos paralelos no GitHub ainda não unificados com este (ex.: `claude/nifty-goldberg-4u8aoq` com 16 casos clínicos e +50 medicações em `docs/fase-0/`; `claude/wizardly-cannon-wisith` com o passo a passo animado). Unificar antes de escrever os casos clínicos.
