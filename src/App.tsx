@@ -3,6 +3,7 @@ import { TelaPassoAPasso } from './componentes/passo-a-passo/TelaPassoAPasso';
 import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
 import { Configuracoes } from './telas/Configuracoes';
+import { EditorCasos } from './telas/EditorCasos';
 import { Prescrever } from './telas/Prescrever';
 
 interface DefinicaoModo {
@@ -31,6 +32,13 @@ const MODOS: readonly DefinicaoModo[] = [
     principal: true,
     classe: 'modo-prescrever',
     tela: () => <Prescrever />,
+  },
+  {
+    id: 'casos',
+    rotulo: '✎ Casos',
+    descricao: 'Criar ou copiar casos clínicos (editor)',
+    classe: 'modo-prescrever',
+    tela: () => <EditorCasos />,
   },
   {
     id: 'configuracoes',

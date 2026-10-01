@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { useCasos } from '../casos/ContextoCasos';
 import { CASOS, casosPorGrupo } from '../casos/index';
 import type { CasoClinico } from '../casos/tipos';
@@ -51,6 +51,15 @@ export function Prescrever() {
       // sem armazenamento: só não lembra o caso na próxima vez
     }
   };
+  // o editor de casos pede para abrir um caso ("Jogar este caso")
+  useEffect(() => {
+    const abrir = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (typeof id === 'string') trocar(id);
+    };
+    window.addEventListener('simped:abrir-caso', abrir);
+    return () => window.removeEventListener('simped:abrir-caso', abrir);
+  });
   return <SessaoCaso key={caso.id} caso={caso} casos={casos} aoTrocarCaso={trocar} />;
 }
 

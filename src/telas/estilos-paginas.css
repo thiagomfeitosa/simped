@@ -46,3 +46,62 @@
 .rodape-config {
   padding: 0 12px;
 }
+
+/* Editor de casos */
+.barra-editor {
+  margin: 0 12px;
+}
+
+.editor-casos .campo input,
+.editor-casos .campo textarea,
+.editor-casos .campo select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.editor-casos .linha-botoes .campo {
+  flex: 1;
+  min-width: 90px;
+}
+
+.editor-casos .linha-botoes input[type='number'] {
+  width: 6em;
+}
+
+.grade-sinais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0 8px;
+}
+
+.bloco-editor {
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin: 6px 0;
+}
+
+.mudancas .linha-botoes {
+  font-size: 0.85rem;
+  align-items: center;
+}
+
+.mudancas input {
+  width: 5em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--a-validar-fundo);
+  border-radius: 999px;
+  padding: 1px 4px 1px 10px;
+  font-size: 0.82rem;
+}
+
+.chip button {
+  border: none;
+  background: transparent;
+  padding: 0 4px;
+}
