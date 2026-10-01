@@ -19,3 +19,16 @@
 | Fórmulas de sódio | `src/calculos/eletrolitos.ts` | Sódio corrigido (fator 1,6) e déficit (0,6 × peso), como nos casos 10 e 15. |
 | 16 casos clínicos | `src/casos/clinicos/` (um arquivo por caso) | Sinais, evolução sem tratamento, reação a cada medicação, resultados de exames, diurese e condutas esperadas com prazo. Nascimento, peso ao nascer e estatura que o texto do caso não traz são fictícios. |
 | Caso de demonstração | `src/casos/demonstracao.ts` | Alergia a penicilinas e resultados de exames colocados só para mostrar os alertas e a tela de exames. |
+
+## Dados novos das ideias B1–B15 (out/2026)
+
+| Assunto | Arquivo | O que conferir |
+|---|---|---|
+| Catálogo de fontes (B6) | `src/dados/fontes/catalogo.ts` (aba **Banco → Catálogo de fontes**) | Título, edição, ano e link de cada documento (SBP Tratado 5ª ed. 2022, PCDT IST 2022, Red Book 2024–2027, PALS 2020, NRP 8ª ed. 2021, GINA 2024, ISPAD 2022, SSC 2020...) e qual é o documento **padrão** de cada sociedade (o "documento provável" das doses que só citam a sociedade). |
+| TEC, Glasgow, ritmo e respiração dos 16 casos (B10) | `src/casos/clinicos/` (linha "B10: ... PROVISÓRIOS" em cada caso) | Valores iniciais e como mudam com cada medicação (ex.: adenosina → sinusal; amiodarona tira da FV; FV vira assistolia em 30 min sem tratamento; flumazenil com rebote em 60 min). |
+| Valores padrão de TEC e Glasgow (B10) | `src/casos/tipos.ts` (`SINAIS_PADRAO`) | TEC 2 s e Glasgow 15 quando o caso não informa. |
+| Peso pelo balanço (B10) | `src/motor/balanco.ts` (`pesoPeloBalanco`) | 1 mL ≈ 1 g, sem perdas insensíveis. As doses continuam usando o peso da admissão. |
+| Resposta pela dose (B9) | `src/motor/avaliarDose.ts` (`FOLGA_DOSE`) | Folga de 10% antes de chamar de subdose/sobredose; efeito parcial proporcional (dose ÷ mínima, entre 10% e 90%). A faixa usada é a do caso (`faixaDose`) ou, sem ela, a regra do banco — mesmo A VALIDAR (serve só para o paciente reagir; **não corrige o aluno**). |
+| Efeitos de sobredose (B9) | `src/dados/efeitos-sobredose.ts` | Efeito adverso de cada medicação acima da faixa (beta-2: taquicardia; adenosina: assistolia transitória; KCl: TV; insulina: hipoglicemia; corticoide: hiperglicemia; soro: congestão...). |
+| Complicações do professor (B14) | `src/dados/complicacoes.ts` | Convulsão, dessaturação, apneia, choque, febre, hipoglicemia, bradicardia, TSV, PCR em FV/assistolia, anafilaxia: quanto cada sinal muda e as mensagens sugeridas. |
+| Traçados do monitor (B11) | `src/monitor/monitor.ts` | Desenhos didáticos de cada ritmo (não são sinais reais). |

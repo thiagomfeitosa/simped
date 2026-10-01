@@ -24,6 +24,22 @@ Abra o app (`npm run dev`, ou `SimPed.html`, ou `npm run desktop` — ver README
 - **Banco** (I20): situação da validação, lista .csv do que falta validar, detalhes de cada medicação; importar a planilha (I19).
 - **Configurações** (I11): fonte das doses, nome da faixa etária, hospital (volume final da BIC, hora da 1ª dose), modo treino × prova, margem de arredondamento.
 
+## Novidades das bases (B1–B15, out/2026)
+Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do professor: `docs/fase-1/sessao-e-professor.md`.
+
+- **B3 — "Algo deu errado"**: em **Configurações**, clique em **Testar a tela de erro** → aparece a mensagem amigável só naquela aba (as outras continuam). **📋 Copiar relato do problema** copia aba, caso, erro e navegador; **↻ Tentar de novo** volta. No topo, **🐞 Relatar problema** faz o mesmo a qualquer hora (escreva o que estava fazendo e copie).
+- **B2 — Unificação**: nada muda na tela. O Passo a passo e o Prescrever usam o mesmo motor de contas (`src/calculos/`) e a mesma lista de seções (`src/dados/secoes.ts`).
+- **B1 — Testes de tela**: `npm run teste-tela` abre o app num navegador automático e clica como o aluno (todas as abas, roteiros, prescrever/administrar, exames, todos os casos, tela de erro, validação, rever o caso, continuar, professor, duas janelas, arquivo único). Na 1ª vez no seu computador: `npx playwright install chromium`. `npm run conferir-tudo` roda tudo. No GitHub, cada envio roda essa conferência sozinho (aba **Actions** → "Conferência"; ✔ verde = tudo certo).
+- **B6 — Catálogo de fontes**: aba **Banco** → **Catálogo de fontes**: lista de documentos (A VALIDAR); **Editar** corrige edição/ano/link; **+ Novo documento** cadastra. Em cada dose aparece "fonte: SBP (documento provável: Tratado de Pediatria...)"; no Prescrever, a **Conferir** do item mostra "De onde vem a dose de referência".
+- **B5 — Modo validação**: aba **Banco** → busque uma medicação → abra → **Conferir** ao lado da dose/apresentação → escolha o documento, escreva a **página** (obrigatória para CONFERIDO), corrija o valor se precisar → **✔ Conferido — marcar CONFERIDO**. O contador "regras conferidas" sobe e, no Prescrever, aquela dose passa a dar ✔/✘. **⬇ Baixar conferências (.json)** gera o arquivo para entrar no projeto (mande na conversa); **📂 Carregar** traz de outro computador. "Só o que falta conferir" filtra a lista.
+- **B12 — Rever o caso**: no Prescrever, faça algumas coisas e clique **⏪ Rever o caso**: a lista mostra tudo com o horário do caso e o real; clique num ponto (ou ◀ ▶ / ▶ Reproduzir) para ver a folha, os sinais e o rascunho daquele momento. **⬇ Baixar registro (.json)** guarda a sessão. **↺ Recomeçar** zera o caso.
+- **B13 — Continuar depois**: escreva algo num caso, feche a aba do navegador e abra o app de novo → aparece **"Continuar de onde parou?"** → **▶ Continuar o caso** volta com folha, relógio, exames e rascunho; **Começar do zero** apaga.
+- **B10 — Paciente mais completo**: no painel do paciente, bloco **Beira do leito** (TEC, Glasgow, respiração; alterado em vermelho) e "pelo balanço: X kg" ao lado do peso quando há soro/registros. Casos bons para ver: 12 (PCR), 11 (TSV), 14 (benzodiazepínico), 10 (Kussmaul).
+- **B11 — Traçados por ritmo**: caso 12 → monitor em **FV** (ondas caóticas, FC/SpO₂/PA "---", alarme "FV — SEM PULSO"); caso 11 → **TSV**. No modo **prova** (Configurações) o nome do ritmo some ("reconheça pelo traçado").
+- **B9 — Reação pela dose**: caso de demonstração (16 kg) → dipirona com indicação "Febre/dor": 80 mg (5 mg/kg) → linha do tempo "dose abaixo da faixa: efeito parcial"; 800 mg (50 mg/kg) → "dose acima da faixa: efeito adverso — Hipotensão". No caso 11, adenosina em subdose não reverte a TSV.
+- **B14 — Painel do professor**: aba **👩‍🏫 Professor**: monitor do paciente, **Alterar sinais agora** (mude só o que quiser, inclusive ritmo e respiração), **+1/+5/+15 min**, **Complicações** (um clique: convulsão, PCR em FV...), **Mensagem para o aluno**, **Folha do aluno (ao vivo)** e **Últimas ações**. Volte ao Prescrever: a mensagem aparece em roxo no topo e a linha do tempo mostra o que o professor fez.
+- **B15 — Duas janelas**: no painel do professor, **🪟 Abrir janela do professor** abre outra janela (faixa roxa "Janela do professor", "● Conectado à janela do aluno"). Deixe as duas lado a lado: o que o aluno escreve aparece na do professor; complicações e mensagens do professor aparecem na do aluno. Funciona no navegador, no `SimPed.html` e no programa de computador.
+
 ## Onde fica no código
 | Assunto | Lógica (sem tela, com testes) | Tela |
 |---|---|---|
@@ -44,3 +60,13 @@ Abra o app (`npm run dev`, ou `SimPed.html`, ou `npm run desktop` — ver README
 | Calculadoras | `src/calculos/` | `src/telas/Calculadoras.tsx` |
 | Importação da planilha | `src/importacao/` | `src/telas/Banco.tsx` |
 | Desktop | `electron/main.cjs`, `scripts/arquivo-unico.mjs` | — |
+| Seções da folha (lista única) | `src/dados/secoes.ts` | Passo a passo e Prescrever |
+| "Algo deu errado" / relatar problema (B3) | `src/diagnostico/relato.ts` | `src/diagnostico/ProtecaoDeErro.tsx` |
+| Testes de tela (B1) | `testes-tela/`, `playwright.config.ts` | `.github/workflows/conferencia.yml` |
+| Catálogo de fontes (B6) | `src/dados/fontes/` | `src/telas/banco/CatalogoFontes.tsx` |
+| Modo validação (B5) | `src/dados/medicacoes/validacoes.ts`, `validacoes-conferidas.json` | `src/telas/banco/ConferirItem.tsx`, `src/telas/Banco.tsx` |
+| Registro da sessão, continuar (B12/B13) | `src/sessao/sessao.ts` | `src/sessao/ContextoSessao.tsx`, `PerguntaContinuar.tsx`, `src/telas/RevisaoSessao.tsx` |
+| Ritmo, TEC, Glasgow, respiração (B10) | `src/casos/tipos.ts`, `src/motor/paciente.ts` | `src/telas/PainelPaciente.tsx` |
+| Traçados por ritmo (B11) | `src/monitor/monitor.ts` | `src/telas/Monitor.tsx` |
+| Reação pela dose (B9) | `src/motor/avaliarDose.ts`, `src/dados/efeitos-sobredose.ts` | `src/telas/Prescrever.tsx` |
+| Professor e duas janelas (B14/B15) | `src/dados/complicacoes.ts`, `src/sessao/canal.ts` | `src/telas/Professor.tsx` |

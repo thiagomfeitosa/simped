@@ -29,11 +29,18 @@ Abas do topo:
 - **Calculadoras** — idade/IPM, superfície corporal, Holliday-Segar, VIG, infusão, diluição, gotejamento, sódio.
 - **Casos** — editor para criar ou copiar casos clínicos sem programar.
 - **Banco** — medicações, o que falta validar (lista em .csv) e importação da planilha de apresentações.
+- **Professor** — mudar sinais e ritmo, disparar complicações, mandar mensagem e ver a folha do aluno ao vivo (mesma janela ou "Abrir janela do professor").
 - **Configurações** — fonte das doses, hospital (volume final da BIC, horários), modo treino/prova, margem de arredondamento.
+
+No topo, **🐞 Relatar problema** copia o que aconteceu para colar na conversa.
 
 Outros comandos:
 - `npm test` — roda os testes automáticos das contas; tudo verde = conferido.
+- `npm run teste-tela` — abre o app num navegador automático e clica como o aluno (na 1ª vez: `npx playwright install chromium`).
+- `npm run conferir-tudo` — tipos + testes + arquivo único + testes de tela.
 - `npm run build` — gera a versão final em `dist/`.
+
+No GitHub, cada envio roda a **Conferência** sozinho (aba Actions): ✔ verde = nada quebrou.
 
 ## Abrir com dois cliques (sem Terminal)
 

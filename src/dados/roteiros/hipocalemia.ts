@@ -8,7 +8,6 @@
  */
 import {
   arredondar,
-  diluir,
   doseTotal,
   hollidaySegarMlDia,
   meqPorKgPorHora,

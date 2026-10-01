@@ -29,6 +29,11 @@ function useTracado(canvas: React.RefObject<HTMLCanvasElement | null>, tracos: (
     if (!el || !ctx) return;
     let quadro = 0;
     const desenhar = (agoraMs: number) => {
+      // aba escondida (todas as abas ficam abertas): não desenha, só espera o próximo quadro
+      if (el.offsetParent === null) {
+        quadro = requestAnimationFrame(desenhar);
+        return;
+      }
       const largura = (el.width = el.clientWidth || 270);
       const altura = el.height;
       const lista = tracosRef.current();
