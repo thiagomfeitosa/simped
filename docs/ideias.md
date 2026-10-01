@@ -1,6 +1,7 @@
 # Ideias para implementar (banco de ideias)
 
-> Lista sugerida pelo assistente em out/2026. **Nada aqui foi decidido ainda**: o usuário escolhe quais fazer (pode responder só com os códigos, ex.: "faz I1 e I16").
+> Lista sugerida pelo assistente em out/2026. **Situação: TODAS (I1–I21) implementadas** a pedido do usuário, com testes.
+> Como testar cada uma: `docs/fase-1/guia-das-funcionalidades.md`. Dados provisórios criados: `docs/a-validar-dados-novos.md`.
 > Regra para todas: onde precisar de dado clínico (dose, apresentação, valor normal, limite de alarme), usar **valor fictício marcado "A VALIDAR"**, num arquivo de dados separado, para o usuário trocar depois sem mexer no resto.
 
 Legenda da coluna "Dado do usuário": **nenhum** = só contas/tela, dá para fazer completo agora; **depois** = funciona já com valor fictício e o usuário corrige quando mandar os dados.
@@ -51,7 +52,10 @@ Legenda da coluna "Dado do usuário": **nenhum** = só contas/tela, dá para faz
 | I20 | Tela "Banco de medicações" | Lista das 89 medicações com status (A VALIDAR / CONFERIDO), fonte e o que falta: vira o checklist da validação. | nenhum |
 | I21 | Abrir com dois cliques (Electron) | App no Mac/Windows sem Terminal e sem `npm run dev`. | nenhum |
 
-## Ordem sugerida pelo assistente
+## Ordem em que foram feitas
+I1 → I2 → I11 → I5 → I6 → I7 → I8 → I9 → I10 → I12 → I13/I14 → I15 → (banco do rascunho) → I3/I18 → I4 → I16/I17 → I19/I20 → I21.
+
+## Ordem sugerida originalmente
 1. **I1 + I2** — base que as regras de dose precisam (idade em horas/dias, IG); não depende de dado do usuário.
 2. **I5** — coração do objetivo (diluição, rediluição, BIC).
 3. **I19 + I20** — deixam tudo pronto para quando os dados chegarem.
