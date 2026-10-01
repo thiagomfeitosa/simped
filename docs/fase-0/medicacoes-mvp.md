@@ -68,4 +68,4 @@ No programa, o aluno vai calcular a oferta de sódio (mEq/kg/dia), converter em 
 *(A numeração passa da lista original porque as glicoses foram separadas por apresentação.)*
 
 ## Pendências com o usuário
-1. **Apresentações:** o usuário vai levantar as apresentações comerciais da Santa Casa (ampola/frasco, concentração, volume).
+1. **Apresentações:** o usuário vai levantar as apresentações comerciais da Santa Casa (ampola/frasco, concentração, volume), preenchendo a planilha [`apresentacoes-formulario.xlsx`](apresentacoes-formulario.xlsx).
