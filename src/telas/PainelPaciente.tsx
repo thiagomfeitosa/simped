@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { CasoClinico, SinaisVitais } from '../casos/tipos';
 import type { PacienteAtual } from '../paciente/atual';
 import { formatarDataHora, lerDataHora, textoSemanasEDias } from '../paciente/variaveis';
+import { Monitor } from './Monitor';
 
 function formatar(valor: number, casas = 0): string {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
@@ -18,14 +19,6 @@ interface Props {
 
 export function PainelPaciente({ caso, paciente, sinais, fonteDaFaixa = 'SBP', children }: Props) {
   const v = paciente.variaveis;
-  const vitais: [string, string, string][] = [
-    ['FC', formatar(sinais.fc), 'bpm'],
-    ['FR', formatar(sinais.fr), 'irpm'],
-    ['SpO₂', formatar(sinais.spo2), '%'],
-    ['PA', `${formatar(sinais.paSistolica)} × ${formatar(sinais.paDiastolica)}`, 'mmHg'],
-    ['Temp. axilar', formatar(sinais.temperaturaC, 1), '°C'],
-    ['Glicemia capilar', formatar(sinais.glicemiaMgDl), 'mg/dL'],
-  ];
   const menorDeUmAno = v.idade.anos < 1;
 
   return (
@@ -94,16 +87,8 @@ export function PainelPaciente({ caso, paciente, sinais, fonteDaFaixa = 'SBP', c
         <p className="nota">Faixa usada nas regras de dose: {paciente.faixa} (provisório, A VALIDAR).</p>
       </details>
 
-      <h3>Sinais vitais</h3>
-      <div className="vitais">
-        {vitais.map(([rotulo, valor, unidade]) => (
-          <div className="vital" key={rotulo}>
-            <span className="vital-rotulo">{rotulo}</span>
-            <span className="vital-valor">{valor}</span>
-            <span className="vital-unidade">{unidade}</span>
-          </div>
-        ))}
-      </div>
+      <h3>Monitor</h3>
+      <Monitor sinais={sinais} idadeDias={v.idade.dias} />
 
       {children}
 
