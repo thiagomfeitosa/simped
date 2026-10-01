@@ -100,4 +100,5 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Pendente com o usuário (item de medicação): deslocamento do pó na reconstituição, conversão gotas ↔ mL, mostrar ou esconder o gabarito ("modo prova").
 - Duplicações a resolver (vieram de duas linhas de trabalho paralelas): fórmulas em `src/logica/calculos.ts` (passo a passo) e em `src/calculos/` (prescrever); lista de seções da folha em `src/dados/secoes.ts` e em `src/prescricao/secoes.ts`. Unificar numa tarefa própria, com os testes das duas.
 - **Tudo unificado no ramo principal** (casos clínicos + passo a passo + prescrever), em out/2026. O ramo `claude/stoic-hamilton-t3fhgb` (primeiro esqueleto do app) ficou de fora: foi substituído.
+- **Banco de ideias** em `docs/ideias.md` (códigos I1–I21, com ordem sugerida); o usuário escolhe quais fazer.
 - Próximo passo (código): diluição, rediluição e BIC dentro do item de medicação (etapas C1×V1 = C2×V2, infusão contínua em mL/h e seringa com volume final do hospital), conferidas pelo motor de cálculo. Depois: casos clínicos reais e preenchimento do banco.
