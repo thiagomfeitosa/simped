@@ -40,6 +40,9 @@ export function ReceitaAlta({ paciente, medicacoes }: Props) {
   return (
     <section className="painel prancheta" aria-label="Receita de alta">
       <div className="folha-papel receita">
+        <p className="so-impressao aviso-impressao">
+          SimPed — documento de TREINAMENTO. Não é uma receita real. Valores marcados A VALIDAR não foram conferidos.
+        </p>
         <h2 className="folha-titulo">Receita médica</h2>
         <p className="identificacao">
           Paciente: {paciente.nome} · {paciente.idadeTexto} · Peso: {paciente.pesoKg.toLocaleString('pt-BR')} kg
@@ -242,6 +245,7 @@ function LinhaReceita({
 
       {texto.cabecalho && (
         <p className="item-med-texto">
+          <span className="so-impressao">{numero}. </span>
           {texto.cabecalho}
           {texto.instrucao && (
             <>

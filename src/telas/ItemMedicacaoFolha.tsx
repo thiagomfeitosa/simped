@@ -218,7 +218,12 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
         />
       )}
 
-      {texto && <p className="item-med-texto">{texto}</p>}
+      {texto && (
+        <p className="item-med-texto">
+          <span className="so-impressao">{numero}. </span>
+          {texto}
+        </p>
+      )}
 
       {medicacao && (
         <div className="item-med-acoes">

@@ -706,3 +706,74 @@
   font-size: 0.85rem;
   color: var(--suave);
 }
+
+/* Impressão / PDF: só o documento escolhido (folha ou receita), com as linhas escritas */
+.so-impressao {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  .modo-prescrever {
+    background: #fff;
+  }
+
+  .modo-prescrever .cabecalho,
+  .modo-prescrever .aviso-treino,
+  .modo-prescrever .painel-paciente,
+  .modo-prescrever .coluna-direita,
+  .modo-prescrever .item-med-linha,
+  .modo-prescrever .preparo,
+  .modo-prescrever .item-med-acoes,
+  .modo-prescrever .conferencia,
+  .modo-prescrever .adicionar,
+  .modo-prescrever .remover,
+  .modo-prescrever .rodape-folha {
+    display: none !important;
+  }
+
+  .modo-prescrever .so-impressao {
+    display: inline;
+  }
+
+  .modo-prescrever .aviso-impressao {
+    display: block;
+    margin: 0 0 8px;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    font-size: 9pt;
+  }
+
+  .modo-prescrever .area,
+  .modo-prescrever .area.com-paciente {
+    display: block;
+    padding: 0;
+  }
+
+  .modo-prescrever .prancheta {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .modo-prescrever .folha-papel {
+    background: #fff;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .modo-prescrever .item-med-texto {
+    margin-left: 0 !important;
+  }
+
+  .modo-prescrever .itens input {
+    border: none;
+  }
+
+  .modo-prescrever .itens li.item-med {
+    border-bottom: none;
+  }
+}

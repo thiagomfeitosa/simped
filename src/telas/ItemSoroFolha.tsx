@@ -109,7 +109,12 @@ export function ItemSoroFolha({ numero, campos, pesoKg, aoMudar, aoRemover, aoAd
         {campoNumero('potassioMEqKgDia', 'K', 'mEq/kg/dia', 4)}
       </div>
 
-      {texto && <p className="item-med-texto">{texto}</p>}
+      {texto && (
+        <p className="item-med-texto">
+          <span className="so-impressao">{numero}. </span>
+          {texto}
+        </p>
+      )}
 
       <div className="item-med-acoes">
         <button type="button" onClick={() => setMostrar((v) => !v)}>

@@ -50,6 +50,9 @@ export function Prescrever() {
             Receita de alta
           </button>
         </div>
+        <button type="button" onClick={() => window.print()} title="Na janela de impressão, escolha “Salvar como PDF” para gerar o arquivo">
+          🖨 Imprimir / PDF
+        </button>
         <button type="button" onClick={() => setPacienteVisivel((v) => !v)}>
           {pacienteVisivel ? 'Ocultar paciente' : 'Mostrar paciente'}
         </button>

@@ -22,6 +22,10 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
   return (
     <section className="painel prancheta" aria-label="Folha de prescrição">
       <div className="folha-papel">
+        <p className="so-impressao aviso-impressao">
+          SimPed — documento de TREINAMENTO. Não é uma prescrição real. Doses, apresentações e horários marcados A VALIDAR
+          ainda não foram conferidos.
+        </p>
         <h2 className="folha-titulo">Prescrição médica</h2>
 
         <div className="secao">
