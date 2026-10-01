@@ -8,10 +8,12 @@ import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
 import { EXAMES } from '../dados/exames';
 import type { PedidoExame } from '../exames/exames';
+import type { Infusao, RegistroManual } from '../motor/balanco';
 import { type Checagem, itensParaAprazar } from '../prescricao/aprazamento';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
 import { ControlesCaso } from './ControlesCaso';
 import { FolhaPrescricao } from './FolhaPrescricao';
+import { PainelBalanco } from './PainelBalanco';
 import { PainelExames } from './PainelExames';
 import { PainelPaciente } from './PainelPaciente';
 import { QuadroHorarios } from './QuadroHorarios';
@@ -39,6 +41,9 @@ export function Prescrever() {
   // doses checadas pela enfermagem no quadro de horários
   const [checagens, setChecagens] = useState<Checagem[]>([]);
   const aprazaveis = useMemo(() => itensParaAprazar(prescricao, MEDICACOES_EXEMPLO), [prescricao]);
+  // balanço hídrico: soros/infusões instalados e registros manuais
+  const [infusoes, setInfusoes] = useState<Infusao[]>([]);
+  const [registrosBalanco, setRegistrosBalanco] = useState<RegistroManual[]>([]);
   // exames pedidos (o resultado sai depois, pelo relógio do caso)
   const [pedidos, setPedidos] = useState<PedidoExame[]>([]);
   const pedirExame = (exameId: string) => {
@@ -89,9 +94,15 @@ export function Prescrever() {
               estado={prescricao}
               despachar={despachar}
               medicacoes={MEDICACOES_EXEMPLO}
-              aoAdministrar={(medicacaoId, descricao) =>
-                registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao })
-              }
+              aoAdministrar={(medicacaoId, descricao, vazaoMlH) => {
+                registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao });
+                if (vazaoMlH !== undefined && vazaoMlH > 0) {
+                  setInfusoes((lista) => [
+                    ...lista,
+                    { id: lista.length + 1, descricao: descricao.slice(0, 60), inicioMin: paciente.tempoMin, vazaoMlH },
+                  ]);
+                }
+              }}
             />
           </div>
         </div>
@@ -115,6 +126,16 @@ export function Prescrever() {
             }}
           />
           <PainelExames caso={caso} agoraMin={paciente.tempoMin} pedidos={pedidos} aoPedir={pedirExame} />
+          <PainelBalanco
+            agoraMin={paciente.tempoMin}
+            pesoKg={pacienteAtual.pesoKg}
+            diureseMlKgH={caso.diureseMlKgH ?? 1}
+            infusoes={infusoes}
+            registros={registrosBalanco}
+            aoRegistrar={(r) =>
+              setRegistrosBalanco((lista) => [...lista, { ...r, id: lista.length + 1, minuto: paciente.tempoMin }])
+            }
+          />
           <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
         </div>
       </main>

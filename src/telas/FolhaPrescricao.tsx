@@ -12,7 +12,8 @@ interface Props {
   estado: EstadoPrescricao;
   despachar: Dispatch<AcaoPrescricao>;
   medicacoes: readonly Medicacao[];
-  aoAdministrar: (medicacaoId: string, descricao: string) => void;
+  /** vazaoMlH: só para soro e infusão contínua (entra no balanço hídrico). */
+  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
 }
 
 export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdministrar }: Props) {
@@ -85,7 +86,7 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
                     pesoKg={paciente.pesoKg}
                     aoMudar={(campos) => despachar({ tipo: 'editarSoro', secao: secao.id, id: item.id, campos })}
                     aoRemover={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
-                    aoAdministrar={(descricao) => aoAdministrar('soro', descricao)}
+                    aoAdministrar={(descricao, vazaoMlH) => aoAdministrar('soro', descricao, vazaoMlH)}
                   />
                 ) : (
                   <li key={item.id}>

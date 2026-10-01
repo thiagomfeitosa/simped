@@ -937,3 +937,42 @@
   background: var(--certo-fundo);
   border-radius: 4px;
 }
+
+/* Balanço hídrico */
+.painel-balanco th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--suave);
+  padding-top: 4px;
+}
+
+.campo-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.campo-linha small {
+  color: var(--suave);
+}
+
+.painel-balanco input,
+.painel-balanco select {
+  font: inherit;
+  font-size: 0.85rem;
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.painel-balanco label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.painel-balanco .conferencia {
+  margin-left: 0;
+}

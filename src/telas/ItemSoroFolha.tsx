@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { SOLUCOES } from '../dados/solucoes';
-import { formatarNumero, type Situacao } from '../prescricao/comum';
+import { formatarNumero, lerNumero, type Situacao } from '../prescricao/comum';
 import { textoParaModo } from '../prescricao/itemMedicacao';
 import { type CamposSoro, conferirSoro, textoDoSoro } from '../prescricao/soro';
 
@@ -19,7 +19,7 @@ interface Props {
   pesoKg: number;
   aoMudar: (campos: CamposSoro) => void;
   aoRemover: () => void;
-  aoAdministrar: (descricao: string) => void;
+  aoAdministrar: (descricao: string, vazaoMlH?: number) => void;
 }
 
 /** Montador de soro: soluções + tempo; o aluno escreve vazão, VIG, Na e K e o programa confere. */
@@ -125,7 +125,7 @@ export function ItemSoroFolha({ numero, campos, pesoKg, aoMudar, aoRemover, aoAd
           className="administrar"
           disabled={!resultado.completo}
           title={resultado.completo ? 'Instalar este soro' : `Falta: ${resultado.faltando.join(', ')}`}
-          onClick={() => aoAdministrar(`Soro: ${texto}`)}
+          onClick={() => aoAdministrar(`Soro: ${texto}`, lerNumero(campos.vazaoMlH) ?? undefined)}
         >
           Administrar
         </button>

@@ -14,6 +14,7 @@ import {
   type Situacao,
   textoDaFolha,
   textoIntervalo,
+  lerNumero,
   textoParaModo,
   UNIDADES_DOSE,
   unidadeDaConcentracao,
@@ -37,7 +38,7 @@ interface Props {
   paciente: PacienteAtual;
   aoMudar: (campos: CamposMedicacao) => void;
   aoRemover: () => void;
-  aoAdministrar: (medicacaoId: string, descricao: string) => void;
+  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
 }
 
 /** Item de medicação estruturado: medicação → apresentação → indicação → dose → volume → via → intervalo. */
@@ -69,7 +70,8 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
     const descricao = continua
       ? `${medicacao.nome} ${campos.infusao?.dose ?? ''} ${campos.infusao?.unidade ?? ''}/kg/${campos.infusao?.por ?? 'min'} em infusão contínua`
       : `${medicacao.nome} ${campos.dose} ${campos.unidadeDose} ${NOME_VIA[campos.via]}`;
-    aoAdministrar(medicacao.id, descricao);
+    const vazao = continua ? lerNumero(campos.infusao?.vazaoMlH ?? '') : null;
+    aoAdministrar(medicacao.id, descricao, vazao ?? undefined);
   }
 
   return (
