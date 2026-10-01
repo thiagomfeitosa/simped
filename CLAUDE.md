@@ -68,6 +68,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 
 ## Como trabalhamos (economia de tokens)
 - Uma conversa por tarefa (ex.: "Validar penicilinas", "Casos clínicos", "Fase 1 – folha de prescrição"). Ao terminar, atualizar a seção "Estado atual" deste arquivo e abrir conversa nova para a próxima tarefa.
+- **Ao terminar a tarefa, juntar o ramo da conversa no ramo principal do GitHub** (`claude/busy-lamport-34608n`, o padrão do repositório), com testes passando. Autorizado pelo usuário: assim a próxima conversa já começa com tudo. Sem isso, o trabalho fica espalhado em ramos que as conversas novas não veem.
 - Decisões e resultados ficam gravados em arquivos do projeto, não só no chat: uma conversa nova deve conseguir continuar lendo apenas este arquivo e `docs/`.
 - Ler fontes pelo número de página; transcrever tabelas em `referencias/trechos/`.
 
@@ -98,5 +99,5 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Pendente com o usuário: margem de arredondamento aceita na correção (provisório: 1%), ver `formulas.md` item 8.
 - Pendente com o usuário (item de medicação): deslocamento do pó na reconstituição, conversão gotas ↔ mL, mostrar ou esconder o gabarito ("modo prova").
 - Duplicações a resolver (vieram de duas linhas de trabalho paralelas): fórmulas em `src/logica/calculos.ts` (passo a passo) e em `src/calculos/` (prescrever); lista de seções da folha em `src/dados/secoes.ts` e em `src/prescricao/secoes.ts`. Unificar numa tarefa própria, com os testes das duas.
-- **Tudo unificado no ramo `claude/trusting-mendel-98imqv`** (casos clínicos + passo a passo + prescrever). Nova conversa deve partir dele. O ramo `claude/stoic-hamilton-t3fhgb` (primeiro esqueleto do app) ficou de fora: foi substituído por este.
+- **Tudo unificado no ramo principal** (casos clínicos + passo a passo + prescrever), em out/2026. O ramo `claude/stoic-hamilton-t3fhgb` (primeiro esqueleto do app) ficou de fora: foi substituído.
 - Próximo passo (código): diluição, rediluição e BIC dentro do item de medicação (etapas C1×V1 = C2×V2, infusão contínua em mL/h e seringa com volume final do hospital), conferidas pelo motor de cálculo. Depois: casos clínicos reais e preenchimento do banco.
