@@ -22,6 +22,8 @@ export interface Configuracoes {
   modo: ModoConferencia;
   /** Margem de arredondamento aceita, em % do valor certo (PROVISÓRIO: 1%, formulas.md item 8). */
   margemPct: number;
+  /** B16: ao abrir um caso, sortear outro peso/idade/apresentação (dentro dos limites do caso). */
+  variarCasos: boolean;
 }
 
 export const FONTES_DE_DOSE: readonly CodigoFonte[] = [
@@ -46,6 +48,7 @@ export const CONFIGURACOES_PADRAO: Configuracoes = {
   ajustesHospital: {},
   modo: 'treino',
   margemPct: 1,
+  variarCasos: false,
 };
 
 /** Hospital escolhido já com os ajustes do usuário. */
@@ -91,6 +94,7 @@ export function lerConfiguracoes(texto: string | null | undefined): Configuracoe
     },
     modo: b.modo === 'prova' ? 'prova' : 'treino',
     margemPct: typeof margem === 'number' && margem >= 0 && margem <= 20 ? margem : p.margemPct,
+    variarCasos: b.variarCasos === true,
   };
 }
 

@@ -22,7 +22,8 @@ export function PerguntaContinuar() {
       <div className="relatar-caixa">
         <h2>▶ Continuar de onde parou?</h2>
         <p>
-          Você estava no caso <strong>{guardada.casoTitulo}</strong>, com o relógio do caso em <strong>{formatarTempo(minuto)}</strong> e{' '}
+          Você estava no caso <strong>{guardada.casoTitulo}</strong>
+          {guardada.variacao && ' (🎲 variado)'}, com o relógio do caso em <strong>{formatarTempo(minuto)}</strong> e{' '}
           {guardada.registros.length} ação(ões) registrada(s). Salvo em {new Date(guardada.salvaEm).toLocaleString('pt-BR')}.
         </p>
         <div className="tela-erro-botoes">

@@ -182,3 +182,78 @@
   color: #fff;
   font-weight: 700;
 }
+
+/* ---- B18: app instalável (src/pwa/) ---------------------------------------- */
+.botao-instalar {
+  padding: 6px 10px;
+  border: 1px solid var(--primaria);
+  border-radius: 10px;
+  background: var(--primaria);
+  color: #fff;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* a barra do topo empurra o "Relatar problema" para a direita; o "Instalar" vai junto */
+.modos .botao-instalar {
+  margin-left: auto;
+}
+
+.modos .botao-instalar + .botao-relatar {
+  margin-left: 0;
+}
+
+.aviso-versao {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  z-index: 70;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 14px;
+  border: 2px solid var(--primaria);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 25%);
+  color: var(--texto);
+  font-family: var(--fonte);
+}
+
+.aviso-versao span {
+  flex: 1 1 260px;
+}
+
+.aviso-versao button {
+  padding: 8px 14px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--superficie-2);
+  font: inherit;
+  cursor: pointer;
+}
+
+.aviso-versao .botao-principal {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+  font-weight: 700;
+}
+
+.situacao-offline {
+  margin-top: 8px !important;
+  font-weight: 600;
+}
+
+@media print {
+  .botao-instalar,
+  .aviso-versao {
+    display: none;
+  }
+}

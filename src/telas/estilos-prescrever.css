@@ -1227,3 +1227,50 @@
   color: #b5452b;
   font-weight: 700;
 }
+
+/* B16: faixa "caso variado" (peso, idade e apresentação sorteados) */
+.faixa-variacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 8px 16px 0;
+  padding: 8px 12px;
+  border: 2px dashed #2f7d5b;
+  border-radius: 8px;
+  background: #ecf8f1;
+}
+
+.faixa-variacao p {
+  flex: 1 1 320px;
+  margin: 0;
+}
+
+.faixa-variacao small {
+  color: var(--suave);
+}
+
+.variacao-do-relatorio {
+  font-weight: 600;
+}
+
+.opcao-caixa {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+.opcao-caixa input {
+  margin-top: 3px;
+}
+
+/* Botão de destaque das telas simples (ex.: "📲 Instalar o SimPed", B18) */
+.modo-prescrever .botao-principal {
+  border-color: var(--destaque);
+  background: var(--destaque);
+  color: #fff;
+  font-weight: 700;
+  padding: 6px 14px;
+}

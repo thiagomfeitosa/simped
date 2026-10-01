@@ -18,6 +18,16 @@ Para uma conversa nova continuar daqui (Fase 7 — modo online). Implementado em
 - `src/sessao/ContextoSessao.tsx` (`ProvedorSessao`, no `App.tsx`): caso atual + sessão, para o Prescrever,
   o painel do professor e a outra janela. `geracao` muda a cada sessão nova (as telas usam como `key`).
 
+## Variação do caso (B16)
+- `src/casos/variacao.ts` (sem tela, com testes): `sortearVariacao(caso, banco, semente)` → `VariacaoCaso`
+  (peso, estatura, peso ao nascer, dias a mais/menos de idade e apresentações disponíveis na farmácia).
+  A variação guarda os **valores** sorteados (não só a semente).
+- A variação é da **sessão**, não dos registros: `ContextoSessao` guarda `variacao` ao lado do caso;
+  `caso` já vem com o paciente variado (`aplicarVariacao`) e `bancoDoCaso` só com as apresentações do dia
+  (`bancoComVariacao`). O relatório usa o banco inteiro para dizer a versão do banco (B7).
+- Vai junto em: sessão guardada (`SessaoGuardada.variacao`), mensagem `estado` do canal e relatório.
+  O professor pede `trocarCaso` com `variacao: 'variar' | 'original' | 'manter'`.
+
 ## Continuar depois (B13)
 - A cada ação (com trabalho de verdade), a sessão é gravada em `localStorage['simped.sessao-em-andamento']`
   (`guardarSessao` / `lerSessaoGuardada`, versão 1).
@@ -30,8 +40,8 @@ Para uma conversa nova continuar daqui (Fase 7 — modo online). Implementado em
 
 ## Duas janelas (B15) — prova de conceito do online
 - `src/sessao/canal.ts`: BroadcastChannel + evento `storage` (para funcionar também no `SimPed.html` de dois cliques).
-- Mensagens (`MensagemCanal`): `ola` (professor chegou), `estado` (aluno → professor: caso + registros inteiros),
-  `acao` (professor → aluno), `trocarCaso`.
+- Mensagens (`MensagemCanal`): `ola` (professor chegou), `estado` (aluno → professor: caso + variação + registros inteiros),
+  `acao` (professor → aluno), `trocarCaso` (com `variacao` opcional, B16).
 - A janela do **aluno é a dona** da sessão: aplica as ações do professor e devolve o estado. A janela do professor
   (`?papel=professor#professor`) só espelha e manda ações; não grava a sessão no computador.
 - Electron: `electron/main.cjs` permite abrir a janela com `papel=professor`.

@@ -13,6 +13,7 @@
  */
 
 import { type EstadoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal, type SinaisVitais } from '../casos/tipos';
+import { ehVariacao, type VariacaoCaso } from '../casos/variacao';
 import type { PedidoExame } from '../exames/exames';
 import type { Infusao, RegistroManual } from '../motor/balanco';
 import { acrescentarEvento, type AvaliacaoDoseEvento, type EventoPaciente } from '../motor/paciente';
@@ -338,9 +339,17 @@ export interface SessaoGuardada {
   iniciadaEm: string;
   salvaEm: string;
   registros: RegistroSessao[];
+  /** B16: peso/idade/apresentação sorteados (sem isso: o caso original). */
+  variacao?: VariacaoCaso;
 }
 
-export function guardarSessao(casoId: string, casoTitulo: string, registros: readonly RegistroSessao[], agora: Date): SessaoGuardada {
+export function guardarSessao(
+  casoId: string,
+  casoTitulo: string,
+  registros: readonly RegistroSessao[],
+  agora: Date,
+  variacao?: VariacaoCaso | null,
+): SessaoGuardada {
   return {
     versao: 1,
     casoId,
@@ -348,6 +357,7 @@ export function guardarSessao(casoId: string, casoTitulo: string, registros: rea
     iniciadaEm: registros[0]?.horaReal ?? agora.toISOString(),
     salvaEm: agora.toISOString(),
     registros: [...registros],
+    ...(variacao && { variacao }),
   };
 }
 
@@ -374,6 +384,8 @@ export function lerSessaoGuardada(texto: string | null): SessaoGuardada | null {
     const registros = s.registros.filter(ehRegistro);
     // testa se a lista reproduz sem erro (ex.: arquivo de versão antiga)
     reproduzirSessao(registros);
+    // variação estragada: a sessão não é confiável (os pesos das contas mudariam)
+    if (s.variacao !== undefined && !ehVariacao(s.variacao)) return null;
     return { ...s, registros };
   } catch {
     return null;

@@ -1,0 +1,41 @@
+# B18: publica o SimPed como site (GitHub Pages), para instalar no celular, tablet ou computador como app.
+# Só roda quando alguém clica em "Run workflow" na aba Actions (nada é publicado sozinho).
+# Antes, uma vez só: no GitHub, Settings → Pages → em "Source", escolher "GitHub Actions".
+# O endereço fica assim: https://<usuário>.github.io/<repositório>/
+name: Site (GitHub Pages, app instalável)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Testes das contas e dos dados
+        run: npm test
+      - name: Gerar o site (tipos + build + service worker)
+        run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: publicacao
+        uses: actions/deploy-pages@v4

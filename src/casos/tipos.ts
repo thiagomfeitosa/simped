@@ -150,6 +150,23 @@ export interface CasoClinico {
   resultadosExames?: Record<string, ResultadoExame>;
   /** Diurese do paciente (mL/kg/h), usada no balanço hídrico. A VALIDAR. */
   diureseMlKgH?: number;
+  /**
+   * B16: limites para "variar o caso" (peso e idade sorteados). Os casos do app têm os limites em
+   * src/casos/variacoes-a-validar.ts; este campo serve para os casos criados no editor.
+   */
+  variacao?: LimitesVariacao;
+}
+
+/** B16: até onde o peso e a idade podem ir quando o caso é sorteado de novo. */
+export interface LimitesVariacao {
+  /** Peso atual sorteado entre min e max (kg). */
+  pesoKg: { min: number; max: number };
+  /** O nascimento pode andar até `maisNovo` dias para depois e até `maisVelho` dias para antes. Sem isso: idade fixa. */
+  idadeDias?: { maisNovo: number; maisVelho: number };
+  /** Sortear qual apresentação a farmácia tem hoje (padrão: sim). */
+  apresentacoes?: boolean;
+  status: StatusValidacao;
+  observacao?: string;
 }
 
 export interface ResultadoExame {

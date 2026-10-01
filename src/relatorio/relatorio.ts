@@ -56,6 +56,8 @@ export interface Relatorio {
   alertasDeSeguranca: number;
   /** Com qual banco de medicações o aluno treinou (B7): "versão 2 de 01/10/2026" ou "+ mudanças deste computador". */
   banco: { texto: string; versao: number; codigo: string; local: boolean };
+  /** B16: variação sorteada (peso, idade, apresentação), se o caso foi variado. */
+  variacao?: string;
 }
 
 export const NOME_TIPO_ERRO: Partial<Record<Verificacao['assunto'], string>> = {
@@ -87,6 +89,10 @@ export function gerarRelatorio(entrada: {
   fontePreferida?: CodigoFonte;
   tolerancia?: Tolerancia;
   volumeFinalBicMl?: number;
+  /** B16: texto da variação sorteada. */
+  variacao?: string;
+  /** B16: banco inteiro (sem o filtro da farmácia do dia), para dizer a versão do banco. Sem isso: `medicacoes`. */
+  bancoCompleto?: readonly Medicacao[];
 }): Relatorio {
   const { caso, prescricao, receita, eventos, pedidos, medicacoes, paciente } = entrada;
   const doses = administracoes(eventos);
@@ -189,7 +195,8 @@ export function gerarRelatorio(entrada: {
     acertosPorTipo,
     itensDeMedicacao,
     alertasDeSeguranca: alertasDaFolha(prescricao, medicacoes, paciente).length,
-    banco: (({ texto, versao, codigo, local }) => ({ texto, versao: versao.versao, codigo, local }))(descreverBancoEmUso(medicacoes)),
+    banco: (({ texto, versao, codigo, local }) => ({ texto, versao: versao.versao, codigo, local }))(descreverBancoEmUso(entrada.bancoCompleto ?? medicacoes)),
+    ...(entrada.variacao && { variacao: entrada.variacao }),
   };
 }
 
@@ -209,7 +216,7 @@ export interface ResumoHistorico {
 export function resumoParaHistorico(r: Relatorio, quando: Date): ResumoHistorico {
   return {
     casoId: r.caso.id,
-    titulo: r.caso.titulo,
+    titulo: r.variacao ? `${r.caso.titulo} (🎲 variado)` : r.caso.titulo,
     quando: quando.toISOString(),
     aproveitamento: r.aproveitamento,
     erros: Object.values(r.errosPorTipo).reduce((s, n) => s + (n ?? 0), 0),

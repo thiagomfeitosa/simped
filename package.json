@@ -8,6 +8,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "site": "vite build && vite preview --open",
+    "gerar-icones": "node scripts/gerar-icones.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "teste-tela": "playwright test",

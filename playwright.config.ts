@@ -32,10 +32,19 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 }, ...(chromiumLocal && { launchOptions: { executablePath: chromiumLocal } }) },
     },
   ],
-  webServer: {
-    command: 'npx vite --port 5179 --strictPort',
-    url: 'http://localhost:5179/',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: 'npx vite --port 5179 --strictPort',
+      url: 'http://localhost:5179/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+    // B18: versão de site (build de verdade, com service worker), para os testes do app instalável (pwa.spec.ts)
+    {
+      command: 'npx vite build --outDir dist-site-teste --emptyOutDir --logLevel warn && npx vite preview --outDir dist-site-teste --port 5180 --strictPort',
+      url: 'http://localhost:5180/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+    },
+  ],
 });

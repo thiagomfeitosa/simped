@@ -54,6 +54,11 @@ export function RelatorioCaso({ relatorio: r, aoFechar }: Props) {
         <p className="nota">
           Condutas esperadas, prazos e reações do caso: A VALIDAR. Tempo de caso: {formatarTempo(r.duracaoMin)}.
         </p>
+        {r.variacao && (
+          <p className="nota variacao-do-relatorio">
+            🎲 Caso variado: {r.variacao}.
+          </p>
+        )}
         <p className="nota banco-do-relatorio">
           Banco de medicações: {r.banco.texto}
           {r.banco.local && ' — com conferências ou apresentações deste computador que ainda não entraram no projeto'}.

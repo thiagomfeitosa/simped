@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect, test } from '@playwright/test';
@@ -26,4 +26,13 @@ test('B15 no arquivo único: professor e aluno em duas janelas', async ({ page, 
   await expect(prof.getByText('Conectado à janela do aluno')).toBeVisible();
   await prof.locator('#raiz > div:not([hidden])').getByRole('button', { name: /TSV/ }).click();
   await expect(page.locator('#raiz > div:not([hidden])').getByLabel('Ritmo no monitor')).toContainText('Taquicardia supraventricular');
+});
+
+test('B18: o arquivo único não leva as peças do app instalável (só servem no site)', async ({ page }) => {
+  test.skip(!existsSync(arquivo), 'Gere antes com "npm run arquivo-unico".');
+  const html = readFileSync(arquivo, 'utf8');
+  expect(html).not.toContain('manifest.webmanifest');
+  expect(html).not.toContain('data-pwa');
+  await page.goto(`${pathToFileURL(arquivo).href}#configuracoes`);
+  await expect(page.locator('#raiz > div:not([hidden])').getByRole('region', { name: 'Instalar como app' })).toContainText('versão de arquivo único');
 });

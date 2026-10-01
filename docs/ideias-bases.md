@@ -3,8 +3,9 @@
 > Sugeridas pelo assistente em out/2026, depois de concluídas as ideias I1–I21 (`docs/ideias.md`).
 > **Feitas em out/2026 (pedido do usuário: "faça todas as opções que você me deu")**: B1, B2, B3, B5, B6, B9, B10, B11, B12, B13, B14 e B15 (✅ na tabela).
 > **Feitas em out/2026 (pedido "faz B4, B7 e B8")**: B4, B7 e B8.
+> **Feitas em out/2026 (pedido "faz B16, B17 e B18")**: B16, B17 e B18.
 > Como testar cada uma: `docs/fase-1/guia-das-funcionalidades.md` ("Novidades das bases"). Dados provisórios: `docs/a-validar-dados-novos.md`.
-> Ainda livres para escolher: B16, B17, B18, B19, B20.
+> Ainda livres para escolher: B19, B20.
 > Regra de sempre: dado clínico novo entra como valor fictício **"A VALIDAR"**, em arquivo de dados separado.
 
 Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com valor fictício e o usuário corrige quando puder.
@@ -43,16 +44,16 @@ Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com 
 |---|---|---|---|
 | ✅ B14 | Painel do professor (mesmo computador) | Uma aba para o professor mudar sinais vitais, disparar uma complicação ("convulsão", "dessatura") e ver a folha do aluno ao vivo. O motor já aceita "professor alterou sinais"; falta a tela. | nenhum |
 | ✅ B15 | Professor e aluno em duas janelas | Prova de conceito do modo online usando duas janelas do mesmo computador (o que o professor faz aparece na janela do aluno). Valida a arquitetura de eventos antes de gastar com servidor. | nenhum |
-| B16 | Variações automáticas dos casos | Cada caso pode ser jogado com outro peso/idade/apresentação sorteados (dentro de limites do caso), para treinar as contas sem decorar o gabarito. | depois (limites por caso) |
+| ✅ B16 | Variações automáticas dos casos | Cada caso pode ser jogado com outro peso/idade/apresentação sorteados (dentro de limites do caso), para treinar as contas sem decorar o gabarito. | depois (limites por caso) |
 
 ## E. Plataformas (preparar as fases 5 e 6)
 
 | Código | Ideia | O que muda | Dado do usuário |
 |---|---|---|---|
-| B17 | Layout para tablet e celular | Telas que se reorganizam em iPad/celular (painéis em abas, botões maiores). Base da Fase 6. | nenhum |
-| B18 | "Instalar" pelo navegador (PWA) | O site vira um app instalável no celular/tablet/computador, funcionando sem internet, antes do Capacitor. | nenhum |
+| ✅ B17 | Layout para tablet e celular | Telas que se reorganizam em iPad/celular (painéis em abas, botões maiores). Base da Fase 6. | nenhum |
+| ✅ B18 | "Instalar" pelo navegador (PWA) | O site vira um app instalável no celular/tablet/computador, funcionando sem internet, antes do Capacitor. | nenhum |
 | B19 | Peças visuais padronizadas | Um só conjunto de botões, campos, painéis e cores para todas as abas (hoje há dois estilos). Acelera telas novas e prepara o tema escuro. | nenhum |
-| B20 | Carregar as abas sob demanda | O app abre mais rápido (hoje é um arquivo de 610 KB): cada aba só carrega quando é aberta. Importante para celular e para o 3D. | nenhum |
+| B20 | Carregar as abas sob demanda | O app abre mais rápido (hoje é um arquivo de ~800 KB): cada aba só carrega quando é aberta. Importante para celular e para o 3D. | nenhum |
 
 ## Ordem sugerida pelo assistente
 1. **B1 + B2 + B3** — rede de segurança: tudo o que vier depois anda mais rápido e com menos risco.

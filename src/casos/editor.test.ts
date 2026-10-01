@@ -16,6 +16,8 @@ describe('editor de casos', () => {
 
   it('cópia de um caso do app vira caso do usuário, sem mexer no original', () => {
     const copia = copiarCaso(caso06);
+    // B16: a cópia leva os limites da variação do caso original
+    expect(copia.variacao?.pesoKg).toEqual({ min: 18, max: 27 });
     expect(copia.id).toBe('meu-crise-de-asma-grave-copia');
     expect(copia.grupo).toBe('Meus casos');
     copia.paciente.pesoKg = 99;

@@ -7,6 +7,7 @@ import type { Medicacao } from '../dados/medicacoes/tipos';
 import { INICIO_PADRAO } from './ajuda';
 import { verificarCaso } from './index';
 import type { CasoClinico } from './tipos';
+import { limitesDoCaso } from './variacao';
 
 /** Prefixo dos casos criados pelo usuário (não colide com os casos do app). */
 export const PREFIXO_PERSONALIZADO = 'meu-';
@@ -57,7 +58,9 @@ export function idDoTitulo(titulo: string): string {
 /** Cópia de um caso do app para virar caso do usuário (id e grupo próprios). */
 export function copiarCaso(caso: CasoClinico): CasoClinico {
   const copia = JSON.parse(JSON.stringify(caso)) as CasoClinico;
-  return { ...copia, id: idDoTitulo(`${caso.titulo} copia`), titulo: `${caso.titulo} (cópia)`, grupo: 'Meus casos' };
+  // B16: a cópia leva os limites da variação do caso original (o id muda, então não acharia no arquivo de limites)
+  const variacao = JSON.parse(JSON.stringify(limitesDoCaso(caso))) as CasoClinico['variacao'];
+  return { ...copia, id: idDoTitulo(`${caso.titulo} copia`), titulo: `${caso.titulo} (cópia)`, grupo: 'Meus casos', ...(variacao && { variacao }) };
 }
 
 /**

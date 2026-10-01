@@ -22,6 +22,14 @@ html = html.replace(/<link\b[^>]*\brel="stylesheet"[^>]*\bhref="\.\/([^"]+\.css)
   return `<style>${readFileSync(join(dist, caminho), 'utf8')}</style>`;
 });
 
+// B18: peças do app instalável (manifesto, ícones, service worker) só servem no site; aqui sairiam com erro
+html = html.replace(/[ \t]*<!--[^>]*B18[^>]*-->\n?/g, '').replace(/[ \t]*<(link|meta)\b[^>]*\bdata-pwa\b[^>]*>\n?/g, '');
+
+if (/\bdata-pwa\b|manifest\.webmanifest/.test(html)) {
+  console.error('Sobrou alguma peça do app instalável (data-pwa) no arquivo único.');
+  process.exit(1);
+}
+
 if (/\b(src|href)="\.\/assets\//.test(html)) {
   console.error('Sobrou algum arquivo em ./assets que não foi embutido. Confira o dist/index.html.');
   process.exit(1);

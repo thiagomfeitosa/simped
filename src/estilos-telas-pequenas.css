@@ -1,0 +1,237 @@
+/* B17 — Tablet e celular. Vem por último (src/main.tsx), por cima dos estilos de cada tela.
+   - até 1100 px (tablet): a barra do topo perde as descrições e cabe em menos linhas;
+   - até 1000 px: o Prescrever mostra um painel por vez (barra "Painéis do caso");
+   - até 760 px (celular): barra do topo numa linha só, que rola de lado; tabelas largas rolam dentro delas;
+   - tela de toque (dedo, não mouse): botões e campos maiores e letra de 16 px nos campos
+     (o iPhone dá zoom sozinho em campo com letra menor).
+   Regra de ouro (testada em testes-tela/telas-pequenas.spec.ts): a página nunca rola de lado. */
+
+/* Grades de cartões nunca ficam mais largas que a tela */
+.cartoes {
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+}
+
+.professor-grade {
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+}
+
+/* Animação de entrada do passo a passo (desliza da direita): não pode alargar a página */
+.palco {
+  overflow-x: clip;
+}
+
+/* Barra de painéis do Prescrever: só aparece em tela estreita */
+.abas-paineis {
+  display: none;
+}
+
+@media screen and (max-width: 1100px) {
+  .modo-aba small {
+    display: none;
+  }
+
+  .modo-aba {
+    padding: 6px 12px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .modo-prescrever .abas-paineis {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 12px;
+    background: var(--fundo);
+    border-bottom: 1px solid var(--borda);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+  }
+
+  /* os botões ficam numa linha só; se não couberem, a linha rola de lado */
+  .abas-paineis-botoes {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .abas-paineis-botoes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .modo-prescrever .abas-paineis button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .modo-prescrever .abas-paineis button[aria-pressed='true'] {
+    border-color: var(--destaque);
+    background: var(--destaque);
+    color: #fff;
+  }
+
+  .sinais-resumo {
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--suave);
+  }
+
+  /* um painel por vez (os outros continuam abertos, só escondidos: nada se perde) */
+  .area[data-painel='paciente'] > :not(.painel-paciente),
+  .area[data-painel='folha'] > :not(.coluna-documento),
+  .area[data-painel='enfermagem'] > :not(.coluna-direita),
+  .area[data-painel='rascunho'] > :not(.coluna-direita),
+  .area[data-painel='enfermagem'] .coluna-direita > .rascunho-calculos,
+  .area[data-painel='rascunho'] .coluna-direita > :not(.rascunho-calculos) {
+    display: none;
+  }
+
+  .area {
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  /* barra do topo: uma linha só, rolando de lado */
+  .modos {
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 6px 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .modos::-webkit-scrollbar {
+    display: none;
+  }
+
+  .modos-marca {
+    flex: 0 0 auto;
+    margin-right: 4px;
+    font-size: 20px;
+  }
+
+  .modo-aba,
+  .modo-aba.secundaria {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+
+  .botao-relatar,
+  .modos .botao-instalar {
+    flex: 0 0 auto;
+    margin-left: 0;
+    white-space: nowrap;
+  }
+
+  /* cabeçalho das telas: título menor, escolha do caso na largura toda */
+  .modo-prescrever .cabecalho {
+    gap: 6px;
+    padding: 10px 10px 6px;
+  }
+
+  .modo-prescrever .cabecalho h1 {
+    flex: 1 1 100%;
+    font-size: 19px;
+  }
+
+  .modo-prescrever .cabecalho .subtitulo {
+    flex: 1 1 100%;
+  }
+
+  .escolha-caso {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .escolha-caso select {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .modo-prescrever .aviso-treino,
+  .faixa-variacao,
+  .mensagem-professor {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+  /* tabela larga rola dentro dela, não a página */
+  .modo-prescrever table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .cartoes,
+  .professor-grade {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .relatorio-fundo,
+  .relatar-fundo {
+    padding: 8px 4px;
+  }
+
+  /* botão de texto comprido quebra a linha em vez de passar da tela */
+  .modo-prescrever .linha-botoes button {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  /* passo a passo: controle de velocidade das animações sem o rótulo */
+  .ritmo {
+    max-width: 100%;
+  }
+
+  .ritmo-rotulo {
+    display: none;
+  }
+}
+
+/* Tela de toque: alvos maiores para o dedo */
+@media (pointer: coarse) {
+  /* sem teclado: a dica das setas não serve */
+  .dica-teclado {
+    display: none;
+  }
+
+  .modo-aba {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .modo-prescrever button,
+  .modo-prescrever select,
+  .modo-prescrever input:not([type='checkbox'], [type='radio'], [type='range']),
+  .passo-a-passo button,
+  .botao-relatar,
+  .botao-instalar,
+  .aviso-versao button,
+  .tela-erro-botoes button {
+    min-height: 40px;
+  }
+
+  .modo-prescrever input:not([type='checkbox'], [type='radio'], [type='range']),
+  .modo-prescrever select,
+  .modo-prescrever textarea,
+  .passo-a-passo input,
+  .passo-a-passo textarea,
+  .relatar-caixa textarea {
+    font-size: max(16px, 1em);
+  }
+
+  .modo-prescrever input[type='checkbox'],
+  .modo-prescrever input[type='radio'] {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -4,6 +4,7 @@ import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
 import { ProvedorBanco } from './dados/medicacoes/ContextoBanco';
 import { ProtecaoDeErro, RelatarProblema } from './diagnostico/ProtecaoDeErro';
+import { AvisoNovaVersao, BotaoInstalar } from './pwa/ComponentesPwa';
 import { papelDaJanela, ProvedorSessao } from './sessao/ContextoSessao';
 import { PerguntaContinuar } from './sessao/PerguntaContinuar';
 import { Banco } from './telas/Banco';
@@ -103,6 +104,11 @@ export function App() {
     return () => window.removeEventListener('hashchange', aoMudar);
   }, []);
 
+  // B17: no celular a barra do topo rola de lado; a aba escolhida fica sempre à vista
+  useEffect(() => {
+    document.querySelector('.modo-aba[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+  }, [modo]);
+
   return (
     <ProvedorConfiguracoes>
       <ProvedorBanco>
@@ -124,6 +130,7 @@ export function App() {
                   {m.principal && <small>{m.descricao}</small>}
                 </a>
               ))}
+              <BotaoInstalar />
               <RelatarProblema />
             </nav>
             {JANELA_DO_PROFESSOR && (
@@ -141,6 +148,8 @@ export function App() {
             ))}
             {/* B13: continuar de onde parou (só na janela do aluno) */}
             {!JANELA_DO_PROFESSOR && <PerguntaContinuar />}
+            {/* B18: versão nova do site */}
+            <AvisoNovaVersao />
           </ProvedorSessao>
         </ProvedorCasos>
       </ProvedorBanco>

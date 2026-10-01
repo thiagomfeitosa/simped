@@ -44,7 +44,7 @@ function arredondar(v: number, casas = 0): string {
  * para a janela do aluno pelo canal entre janelas.
  */
 export function Professor() {
-  const { papel, conexao, caso, casos, sessao, fazer, trocarCaso, geracao } = useSessao();
+  const { papel, conexao, caso, casos, sessao, fazer, trocarCaso, geracao, variacao, textoVariacao, variarCaso, voltarAoOriginal } = useSessao();
   const { config } = useConfiguracoes();
   const { banco } = useBanco();
   const { estado, registros } = sessao;
@@ -111,6 +111,28 @@ export function Professor() {
               ))}
             </select>
           </label>
+          <div className="linha-botoes">
+            <button
+              type="button"
+              title="Mesmo caso com outro peso, idade e apresentação da farmácia (a sessão do aluno começa do zero)"
+              onClick={() => {
+                if (window.confirm('Sortear outra variação para o aluno? A sessão dele começa do zero.')) variarCaso();
+              }}
+            >
+              🎲 Variar o caso do aluno
+            </button>
+            {variacao && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm('Voltar ao caso original? A sessão do aluno começa do zero.')) voltarAoOriginal();
+                }}
+              >
+                Caso original
+              </button>
+            )}
+          </div>
+          {variacao && <p className="nota">🎲 Variação: {textoVariacao.join(' · ')}.</p>}
           <p>
             <strong>⏱ {formatarTempo(paciente.tempoMin)}</strong> · {atual.nome}, {atual.idadeTexto}, {atual.pesoKg.toLocaleString('pt-BR')} kg
           </p>

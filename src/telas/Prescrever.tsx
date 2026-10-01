@@ -27,6 +27,16 @@ import { ReceitaAlta } from './ReceitaAlta';
 import { RelatorioCaso } from './RelatorioCaso';
 import { RevisaoSessao } from './RevisaoSessao';
 
+type PainelTelaEstreita = 'paciente' | 'folha' | 'enfermagem' | 'rascunho';
+
+/** B17: painéis da barra que aparece só em tablet e celular (src/telas/estilos-prescrever.css). */
+const PAINEIS: readonly { id: PainelTelaEstreita; rotulo: string }[] = [
+  { id: 'paciente', rotulo: '👤 Paciente' },
+  { id: 'folha', rotulo: '📝 Folha' },
+  { id: 'enfermagem', rotulo: '🕒 Horários e exames' },
+  { id: 'rascunho', rotulo: '✏️ Rascunho' },
+];
+
 /**
  * Modo "Prescrever": o caso e a sessão vêm do ProvedorSessao (src/sessao/ContextoSessao.tsx).
  * Tudo o que o aluno faz passa pelo registro da sessão (B12): dá para rever o caso, continuar depois (B13)
@@ -40,16 +50,20 @@ export function Prescrever() {
 
 /** Uma sessão de um caso: folha de prescrição, rascunho e paciente que reage às medicações administradas. */
 function SessaoCaso() {
-  const { caso, casos, sessao, fazer, trocarCaso, recomecar } = useSessao();
+  const { caso, casos, sessao, fazer, trocarCaso, recomecar, variacao, textoVariacao, variarCaso, voltarAoOriginal, bancoDoCaso } = useSessao();
   const { estado, registros } = sessao;
   const { config } = useConfiguracoes();
-  // banco do projeto + apresentações do hospital importadas (aba Banco)
-  const { banco: BANCO_MEDICACOES } = useBanco();
+  // banco do projeto + apresentações do hospital importadas (aba Banco), só com o que a farmácia tem hoje (B16)
+  const BANCO_MEDICACOES = bancoDoCaso;
+  const { banco: bancoCompleto } = useBanco();
   const [relatorioAberto, setRelatorioAberto] = useState(false);
   const [revendo, setRevendo] = useState(false);
   const [pacienteVisivel, setPacienteVisivel] = useState(true);
   // folha hospitalar ou receita de alta (as duas ficam abertas: trocar não apaga nada)
   const [documento, setDocumento] = useState<'folha' | 'receita'>('folha');
+  // B17: em tablet/celular, um painel por vez (todos continuam abertos; só ficam escondidos)
+  const [painel, setPainel] = useState<PainelTelaEstreita>('paciente');
+  const painelAtivo = !pacienteVisivel && painel === 'paciente' ? 'folha' : painel;
   const { prescricao, receita: itensReceita, rascunho, checagens, infusoes, registrosBalanco, pedidos } = estado;
   const despachar = (acao: AcaoPrescricao) => fazer({ tipo: 'prescricao', acao });
   // o paciente é sempre recalculado a partir da lista de eventos (motor estado + eventos)
@@ -117,6 +131,8 @@ function SessaoCaso() {
         fontePreferida: config.fonteDose,
         tolerancia: toleranciaDe(config),
         volumeFinalBicMl: hospitalAtual(config).volumeFinalBicMl,
+        bancoCompleto,
+        ...(variacao && { variacao: textoVariacao.join(' · ') }),
       })
     : null;
 
@@ -181,6 +197,15 @@ function SessaoCaso() {
         >
           ↺ Recomeçar
         </button>
+        <button
+          type="button"
+          title="Mesmo caso com outro peso, idade e apresentação da farmácia, sorteados dentro dos limites do caso"
+          onClick={() => {
+            if (!houveTrabalho || window.confirm('Sortear outra variação começa o caso do zero (folha, relógio, exames). Continuar?')) variarCaso();
+          }}
+        >
+          🎲 Variar o caso
+        </button>
         <button type="button" onClick={() => setPacienteVisivel((v) => !v)}>
           {pacienteVisivel ? 'Ocultar paciente' : 'Mostrar paciente'}
         </button>
@@ -188,13 +213,44 @@ function SessaoCaso() {
       <p className="aviso-treino" role="note">
         ⚠️ Ferramenta de treinamento. Não substitui protocolos institucionais nem o julgamento clínico.
       </p>
+      {variacao && (
+        <div className="faixa-variacao" role="note" aria-label="Variação do caso">
+          <p>
+            <strong>🎲 Caso variado:</strong> {textoVariacao.join(' · ')}.{' '}
+            <small>Limites da variação: provisórios (A VALIDAR). Sinais, exames e reações do caso não mudam.</small>
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              if (!houveTrabalho || window.confirm('Voltar ao caso original começa do zero (folha, relógio, exames). Continuar?')) voltarAoOriginal();
+            }}
+          >
+            Voltar ao caso original
+          </button>
+        </div>
+      )}
       {ultimaMensagem && (
         <p className="mensagem-professor" role="status" aria-label="Mensagem do professor">
           👩‍🏫 <strong>Professor ({formatarTempo(ultimaMensagem.minutoCaso)}):</strong> {ultimaMensagem.texto}
         </p>
       )}
 
-      <main className={pacienteVisivel ? 'area com-paciente' : 'area'}>
+      <nav className="abas-paineis" aria-label="Painéis do caso">
+        <div className="abas-paineis-botoes">
+          {PAINEIS.filter((p) => pacienteVisivel || p.id !== 'paciente').map((p) => (
+            <button key={p.id} type="button" aria-pressed={painelAtivo === p.id} onClick={() => setPainel(p.id)}>
+              {p.id === 'folha' && documento === 'receita' ? '📝 Receita' : p.rotulo}
+            </button>
+          ))}
+        </div>
+        {/* o paciente reagindo, mesmo com outro painel aberto */}
+        <span className="sinais-resumo" aria-label="Sinais agora">
+          ⏱ {formatarTempo(paciente.tempoMin)} · FC {Math.round(paciente.sinais.fc)} · SpO₂ {Math.round(paciente.sinais.spo2)}% · FR{' '}
+          {Math.round(paciente.sinais.fr)} · PA {Math.round(paciente.sinais.paSistolica)}×{Math.round(paciente.sinais.paDiastolica)}
+        </span>
+      </nav>
+
+      <main className={pacienteVisivel ? 'area com-paciente' : 'area'} data-painel={painelAtivo}>
         {pacienteVisivel && (
           <PainelPaciente
             caso={caso}

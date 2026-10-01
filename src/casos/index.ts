@@ -25,6 +25,7 @@ import { caso15 } from './clinicos/caso15-hiponatremia';
 import { caso16 } from './clinicos/caso16-crise-adrenal';
 import { casoDemonstracao } from './demonstracao';
 import { type CasoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal } from './tipos';
+import { verificarLimites } from './variacao';
 
 export const CASOS: readonly CasoClinico[] = [
   casoDemonstracao,
@@ -108,6 +109,8 @@ export function verificarCaso(caso: CasoClinico, medicacoes: readonly Medicacao[
     if (c.tipo !== 'soro' && c.alvos.length === 0) p.push(`${onde}: conduta "${c.id}" sem alvo.`);
     if (c.antesDaMedicacao && !idsMed.has(c.antesDaMedicacao)) p.push(`${onde}: conduta "${c.id}" com medicação desconhecida.`);
   }
+  // B16: limites da variação (peso e idade sorteados)
+  p.push(...verificarLimites(caso));
   return p;
 }
 

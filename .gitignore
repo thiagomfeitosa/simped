@@ -10,6 +10,7 @@ node_modules/
 dist/
 *.tsbuildinfo
 dist-arquivo
+dist-site-teste
 instaladores
 
 # Resultados dos testes de tela (npm run teste-tela)

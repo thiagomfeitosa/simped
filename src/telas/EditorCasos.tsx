@@ -2,6 +2,7 @@ import { type ReactNode, useRef, useState } from 'react';
 import { useCasos } from '../casos/ContextoCasos';
 import { casoVazio, copiarCaso, idDoTitulo, lerCasoDeJson, PREFIXO_PERSONALIZADO } from '../casos/editor';
 import { CASOS, verificarCaso } from '../casos/index';
+import { limitesDoCaso } from '../casos/variacao';
 import {
   type CasoClinico,
   type CondutaEsperada,
@@ -290,6 +291,40 @@ export function EditorCasos() {
           <Campo rotulo="Dados maternos (RN)">
             <input value={caso.paciente.dadosMaternos ?? ''} onChange={(e) => mp({ dadosMaternos: e.target.value })} />
           </Campo>
+        </section>
+
+        <section className="painel" aria-label="Variações do caso">
+          <h2>🎲 Variações (B16)</h2>
+          <p className="nota">Até onde o peso e a idade podem ir quando o aluno clica em “Variar o caso”.</p>
+          {(() => {
+            const l = limitesDoCaso(caso);
+            const idade = l.idadeDias ?? { maisNovo: 0, maisVelho: 0 };
+            const mv = (mudanca: Partial<typeof l>) => m({ variacao: { ...l, ...mudanca } });
+            return (
+              <>
+                <div className="linha-botoes">
+                  <Campo rotulo="Peso mínimo (kg)">
+                    <input type="number" min={0} step="any" value={l.pesoKg.min} onChange={(e) => mv({ pesoKg: { ...l.pesoKg, min: num(e.target.value) } })} />
+                  </Campo>
+                  <Campo rotulo="Peso máximo (kg)">
+                    <input type="number" min={0} step="any" value={l.pesoKg.max} onChange={(e) => mv({ pesoKg: { ...l.pesoKg, max: num(e.target.value) } })} />
+                  </Campo>
+                </div>
+                <div className="linha-botoes">
+                  <Campo rotulo="Até quantos dias mais novo">
+                    <input type="number" min={0} step={1} value={idade.maisNovo} onChange={(e) => mv({ idadeDias: { ...idade, maisNovo: num(e.target.value) } })} />
+                  </Campo>
+                  <Campo rotulo="Até quantos dias mais velho">
+                    <input type="number" min={0} step={1} value={idade.maisVelho} onChange={(e) => mv({ idadeDias: { ...idade, maisVelho: num(e.target.value) } })} />
+                  </Campo>
+                </div>
+                <label className="opcao-caixa">
+                  <input type="checkbox" checked={l.apresentacoes !== false} onChange={(e) => mv({ apresentacoes: e.target.checked })} />
+                  <span>Sortear a apresentação que a farmácia tem (ex.: ampola de 10 ou de 40 mg/mL)</span>
+                </label>
+              </>
+            );
+          })()}
         </section>
 
         <section className="painel">

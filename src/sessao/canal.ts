@@ -6,17 +6,21 @@
  * No modo online (Fase 7), este mesmo formato de mensagem vai pela rede (WebSocket).
  */
 
+import type { VariacaoCaso } from '../casos/variacao';
 import type { AcaoSessao, RegistroSessao } from './sessao';
 
 export type MensagemCanal =
   /** Janela do professor acabou de abrir: pede o estado atual. */
   | { tipo: 'ola' }
   /** Janela do aluno manda a sessão inteira (caso + registros). */
-  | { tipo: 'estado'; casoId: string; geracao: number; registros: RegistroSessao[] }
+  | { tipo: 'estado'; casoId: string; geracao: number; registros: RegistroSessao[]; variacao?: VariacaoCaso | null }
   /** Janela do professor manda uma ação (alterar sinais, complicação, mensagem, tempo). */
   | { tipo: 'acao'; acao: AcaoSessao }
-  /** Professor troca o caso do aluno. */
-  | { tipo: 'trocarCaso'; casoId: string };
+  /**
+   * Professor troca o caso do aluno (ou recomeça). B16: 'variar' sorteia outro peso/idade/apresentação,
+   * 'original' tira a variação, 'manter' recomeça com a mesma; sem isso, vale a Configuração da janela do aluno.
+   */
+  | { tipo: 'trocarCaso'; casoId: string; variacao?: 'variar' | 'original' | 'manter' };
 
 interface Envelope {
   id: string;

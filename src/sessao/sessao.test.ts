@@ -119,6 +119,16 @@ describe('registro da sessão', () => {
     expect(lerSessaoGuardada(null)).toBeNull();
   });
 
+  it('B16: a variação sorteada vai junto com a sessão guardada', () => {
+    const registros = jogar([{ tipo: 'rascunho', texto: '20 kg x 2' }]);
+    const variacao = { semente: 5, pesoKg: 20.3, pesoNascerG: 3300, idadeDias: -12, apresentacoes: { gentamicina: ['a'] } };
+    const lida = lerSessaoGuardada(JSON.stringify(guardarSessao('caso06-asma-grave', 'Asma', registros, T0, variacao)));
+    expect(lida?.variacao).toEqual(variacao);
+    expect(lerSessaoGuardada(JSON.stringify(guardarSessao('caso06-asma-grave', 'Asma', registros, T0)))?.variacao).toBeUndefined();
+    // variação estragada: não continua (as contas mudariam de peso)
+    expect(lerSessaoGuardada(JSON.stringify({ ...guardarSessao('x', 'x', registros, T0), variacao: { pesoKg: 'muito' } }))).toBeNull();
+  });
+
   it('fazer passo a passo dá o mesmo estado que reproduzir a lista inteira', () => {
     const acoes: AcaoSessao[] = [
       { tipo: 'prescricao', acao: { tipo: 'adicionar', secao: 'dieta' } },

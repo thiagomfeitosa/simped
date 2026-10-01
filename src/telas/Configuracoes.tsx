@@ -4,6 +4,7 @@ import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { FAIXAS_POR_FONTE, FONTES_DE_FAIXA, type FonteDeFaixa } from '../dados/faixas-etarias';
 import { hospitalPorId, LISTA_HOSPITAIS } from '../dados/hospitais';
 import type { CodigoFonte } from '../dados/medicacoes/tipos';
+import { PainelInstalar } from '../pwa/ComponentesPwa';
 import { PainelBackup } from './PainelBackup';
 
 /** Tela de configurações: tudo fica guardado no próprio computador. */
@@ -135,9 +136,18 @@ export function Configuracoes() {
             />
           </label>
           <p className="nota">Provisório: 1% (pendente com o usuário, formulas.md item 8).</p>
+          <label className="opcao-caixa">
+            <input type="checkbox" checked={config.variarCasos} onChange={(e) => mudar({ variarCasos: e.target.checked })} />
+            <span>
+              <b>🎲 Variar os casos sempre</b> — ao abrir um caso, sortear outro peso, idade e apresentação da farmácia (dentro dos
+              limites do caso), para treinar as contas sem decorar o gabarito.
+            </span>
+          </label>
+          <p className="nota">Limites de cada caso: provisórios (A VALIDAR), em src/casos/variacoes-a-validar.ts.</p>
         </section>
 
         <PainelBackup />
+        <PainelInstalar />
       </div>
 
       <p className="rodape-config">

@@ -79,7 +79,8 @@ export function PassoAPasso({ roteiro }: { roteiro: Roteiro }) {
             <div className="progresso-barra" style={{ width: `${((indice + 1) / total) * 100}%` }} />
           </div>
           <span className="progresso-texto">
-            Etapa <b>{indice + 1}</b> de {total} · dica: use as setas ← → do teclado
+            Etapa <b>{indice + 1}</b> de {total}
+            <span className="dica-teclado"> · dica: use as setas ← → do teclado</span>
           </span>
         </div>
         <button type="button" className="botao-nav avancar" onClick={() => irPara(indice + 1)} disabled={indice === total - 1}>

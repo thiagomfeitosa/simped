@@ -49,3 +49,16 @@ Arquivo único: `src/dados/medicacoes/ampliacao-a-validar.ts` (49 medicações; 
 | Alertas novos | Anfotericina B: "desoxicolato e lipossomal têm doses diferentes". Surfactante: "poractanto e beractanto têm concentrações diferentes". Prometazina: restrição por idade a conferir. |
 | Vias novas | `intranasal` (midazolam) e `ocular` (profilaxia ocular). A importação da planilha entende "IN/intranasal/nasal" e "ocular/oftálmica". |
 | Códigos (Nº da planilha) | Cada medicação tem `codigo`: nº do MVP (1…38, 32b) ou da ampliação (A1…A50). O NaCl 3% preparado ganhou o **8b** (antes dividia o nº 8 com o NaCl 20%). |
+
+## Dados novos de B16 — variações dos casos (out/2026)
+
+Arquivo único: `src/casos/variacoes-a-validar.ts`. Tudo A VALIDAR, escrito pelo assistente.
+
+| Assunto | O que conferir |
+|---|---|
+| **Limites de peso por caso** | Ex.: caso 6 (asma, 22 kg) sorteia de 18 a 27 kg; caso 2 (sepse neonatal, 3 kg) de 2,6 a 3,4 kg. Escolhidos para não mudar a história: caso 1 continua GIG (≥ 4 kg); caso 13 continua ≥ 25 kg (dose do glucagon na conduta); caso 16 fica entre 3 e 12 anos (hidrocortisona). Confira se cada faixa é plausível para a idade. |
+| **Limites de idade** | RN (casos 1 a 5): idade **fixa** (a queixa fala em "2 h de vida", "18 h de vida"; a penicilina muda depois de 7 dias). Lactentes: ± 30 dias (casos 11 e 15); crupe ± 90 dias; intoxicação ± 120 dias; os demais ± 180 dias. |
+| Casos sem limites próprios | Casos criados no editor: peso ± 10%, idade fixa (ou os limites escritos no painel **🎲 Variações** do editor). |
+| Estatura e peso ao nascer | Regra do assistente (não é dado clínico de dose): a estatura acompanha o peso pela raiz cúbica (criança proporcional); o peso ao nascer acompanha o peso só no período neonatal (mesma % de perda). Sinais vitais, exames e reações do caso **não mudam** com a variação. |
+| Apresentação da farmácia | Para cada medicação do caso, sorteia **uma** apresentação entre as de mesma forma e mesmas vias (ex.: gentamicina 10, 20 ou 40 mg/mL; KCl 19,1% ou 10%; prednisolona 1 ou 3 mg/mL). Comprimidos, soros, sprays e nebulização ficam fora. As apresentações continuam as do rascunho (A VALIDAR). |
+
