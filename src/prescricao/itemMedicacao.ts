@@ -55,6 +55,7 @@ import {
   textoInfusao,
   textoSeringa,
 } from './preparo';
+import { descreverFonte, type DocumentoFonte } from '../dados/fontes/fontes';
 import { SECOES } from '../dados/secoes';
 
 export { converterDroga, formatarNumero, lerNumero, type Situacao, type Verificacao } from './comum';
@@ -477,6 +478,8 @@ export function conferirItemMedicacao(entrada: {
   tolerancia?: Tolerancia;
   /** Volume final da seringa da BIC do hospital (padrão: Santa Casa, 12 mL). */
   volumeFinalBicMl?: number;
+  /** Catálogo de fontes (com os documentos cadastrados no app); padrão: o do projeto. */
+  catalogo?: readonly DocumentoFonte[];
 }): ResultadoItem {
   const { campos, medicacoes, paciente, secaoNumero } = entrada;
   const tolerancia = entrada.tolerancia ?? TOLERANCIA_PADRAO;
@@ -686,6 +689,13 @@ export function conferirItemMedicacao(entrada: {
     );
     regra = escolha.regras.find((r) => campos.via !== '' && r.vias.includes(campos.via)) ?? escolha.regras[0];
     for (const aviso of escolha.avisos) verificacoes.push({ assunto: 'fonte', situacao: 'atencao', texto: aviso });
+    if (regra) {
+      verificacoes.push({
+        assunto: 'fonte',
+        situacao: regra.status === 'CONFERIDO' ? 'certo' : 'a-validar',
+        texto: `De onde vem a dose de referência: ${descreverFonte(regra.fonte, entrada.catalogo)}.`,
+      });
+    }
     if (regra?.condicoes) {
       verificacoes.push({
         assunto: 'fonte',

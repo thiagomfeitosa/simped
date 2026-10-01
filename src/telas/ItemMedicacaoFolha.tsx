@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
+import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import type { PacienteAtual } from '../paciente/atual';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import {
@@ -45,6 +46,7 @@ interface Props {
 export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar }: Props) {
   const [mostrarConferencia, setMostrarConferencia] = useState(false);
   const { config } = useConfiguracoes();
+  const { catalogo } = useBanco();
   const volumeFinalBicMl = hospitalAtual(config).volumeFinalBicMl;
   const resultado = conferirItemMedicacao({
     campos,
@@ -59,6 +61,7 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
     fontePreferida: config.fonteDose,
     tolerancia: toleranciaDe(config),
     volumeFinalBicMl,
+    catalogo,
   });
   const { medicacao, apresentacao } = resultado;
   const indicacoes = medicacao ? indicacoesDisponiveis(medicacao, paciente.faixa, paciente.paraRegra) : [];

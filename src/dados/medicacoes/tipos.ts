@@ -28,7 +28,9 @@ export type CodigoFonte =
 
 export interface Fonte {
   codigo: CodigoFonte;
-  /** Documento, edição e ano (obrigatório para status CONFERIDO). */
+  /** Documento do catálogo de fontes (src/dados/fontes/catalogo.ts), ex.: 'SBP-TRATADO'. */
+  documentoId?: string;
+  /** Documento, edição e ano em texto livre (vale quando o documento não está no catálogo). */
   documento?: string;
   /** Página, tabela ou seção. */
   pagina?: string;

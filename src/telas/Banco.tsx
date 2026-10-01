@@ -1,10 +1,14 @@
 import { useRef, useState } from 'react';
+import { descreverFonte, verificarFontesDoBanco } from '../dados/fontes/fontes';
 import { textoCondicoes, verificarBanco } from '../dados/medicacoes/consulta';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import { listaAValidarCsv, resumirBanco, textoDaRegra } from '../dados/medicacoes/resumo';
 import type { Apresentacao, StatusValidacao } from '../dados/medicacoes/tipos';
+import { acharAlvo, type AlvoValidacao, arquivoDeValidacoes, chaveDoAlvo, lerValidacoes, ultimasPorAlvo } from '../dados/medicacoes/validacoes';
 import { importarApresentacoes, type ResultadoImportacao } from '../importacao/apresentacoes';
 import { lerXlsx } from '../importacao/xlsx';
+import { CatalogoFontes } from './banco/CatalogoFontes';
+import { ConferirItem } from './banco/ConferirItem';
 
 const SELO: Record<StatusValidacao, string> = { A_VALIDAR: 'A VALIDAR', CONFERIDO: '✔ CONFERIDO' };
 
@@ -21,21 +25,62 @@ function baixar(nome: string, conteudo: string, tipo: string) {
 
 /** Banco de medicações: o que existe, o que já foi conferido e a importação da planilha do hospital. */
 export function Banco() {
-  const { banco, importadas, usarImportadas, descartarImportadas } = useBanco();
+  const { banco, importadas, usarImportadas, descartarImportadas, validacoes, carregarValidacoes, apagarValidacoes, catalogo } = useBanco();
   const [busca, setBusca] = useState('');
   const [secao, setSecao] = useState<'' | '4' | '5' | '6'>('');
+  const [soFalta, setSoFalta] = useState(false);
+  const [conferindo, setConferindo] = useState<string | null>(null);
   const [importacao, setImportacao] = useState<ResultadoImportacao | null>(null);
   const [erro, setErro] = useState('');
+  const [avisoValidacoes, setAvisoValidacoes] = useState('');
   const arquivo = useRef<HTMLInputElement>(null);
+  const arquivoValidacoes = useRef<HTMLInputElement>(null);
   const resumo = resumirBanco(banco);
-  const problemas = verificarBanco(banco);
+  const ultimas = ultimasPorAlvo(validacoes);
+  const semAlvo = [...ultimas.values()].filter((v) => !acharAlvo(banco, v.alvo));
+  const problemas = [
+    ...verificarBanco(banco),
+    ...verificarFontesDoBanco(banco, catalogo),
+    ...semAlvo.map((v) => `Conferência de ${chaveDoAlvo(v.alvo)} aponta para item que não existe mais.`),
+  ];
   const qtdImportadas = Object.values(importadas).reduce((s, l) => s + l.length, 0);
 
   const normal = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const falta = (m: (typeof banco)[number]) => m.apresentacoes.some((a) => a.status !== 'CONFERIDO') || m.regras.some((r) => r.status !== 'CONFERIDO');
   const visiveis = banco
     .filter((m) => (secao ? String(m.secao) === secao : true))
     .filter((m) => normal(m.nome).includes(normal(busca)))
+    .filter((m) => (soFalta ? falta(m) : true))
     .sort((a, b) => a.secao - b.secao || a.nome.localeCompare(b.nome, 'pt-BR'));
+
+  async function abrirValidacoes(f: File | undefined) {
+    if (!f) return;
+    const lista = lerValidacoes(await f.text());
+    carregarValidacoes(lista);
+    setAvisoValidacoes(lista.length > 0 ? `${lista.length} conferência(s) carregada(s).` : 'O arquivo não tem conferências do SimPed.');
+  }
+
+  /** Botão "Conferir" e, se aberto, o formulário (B5). */
+  function botaoConferir(alvo: AlvoValidacao, item: { regra?: (typeof banco)[number]['regras'][number]; apresentacao?: Apresentacao }) {
+    const chave = chaveDoAlvo(alvo);
+    const ultima = ultimas.get(chave);
+    return (
+      <>
+        {' '}
+        <button type="button" className="botao-conferir" onClick={() => setConferindo(conferindo === chave ? null : chave)}>
+          {conferindo === chave ? 'Fechar' : 'Conferir'}
+        </button>
+        {ultima && (
+          <span className="nota">
+            {' '}
+            · conferido no app em {new Date(ultima.quando).toLocaleDateString('pt-BR')}
+            {ultima.quem ? ` por ${ultima.quem}` : ''}
+          </span>
+        )}
+        {conferindo === chave && <ConferirItem key={chave} alvo={alvo} {...item} aoFechar={() => setConferindo(null)} />}
+      </>
+    );
+  }
 
   async function abrirPlanilha(f: File | undefined) {
     if (!f) return;
@@ -93,6 +138,47 @@ export function Banco() {
               ))
             )}
           </ul>
+        </section>
+
+        <section className="painel" aria-label="Modo validação">
+          <h2>Modo validação</h2>
+          <p className="nota">
+            Abra uma medicação na lista abaixo e clique em <strong>Conferir</strong> ao lado de cada dose ou apresentação: diga o documento e a
+            página, corrija o valor se precisar e marque CONFERIDO. Só o que estiver CONFERIDO corrige o aluno.
+          </p>
+          <p>
+            <strong>{validacoes.length}</strong> conferência(s) feitas neste computador ({[...ultimas.values()].filter((v) => v.status === 'CONFERIDO').length}{' '}
+            item(ns) CONFERIDO(s)).
+          </p>
+          <div className="linha-botoes">
+            <button
+              type="button"
+              disabled={validacoes.length === 0}
+              onClick={() => baixar('validacoes-conferidas.json', arquivoDeValidacoes(validacoes, new Date()), 'application/json')}
+              title="Mande este arquivo na conversa (ou coloque em src/dados/medicacoes/) para valer em todos os computadores"
+            >
+              ⬇ Baixar conferências (.json)
+            </button>
+            <button type="button" onClick={() => arquivoValidacoes.current?.click()}>
+              📂 Carregar conferências (.json)
+            </button>
+            <input ref={arquivoValidacoes} type="file" accept=".json,application/json" hidden onChange={(e) => void abrirValidacoes(e.target.files?.[0])} />
+            {validacoes.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm('Apagar as conferências feitas neste computador? (Baixe o .json antes, se quiser guardar.)')) apagarValidacoes();
+                }}
+              >
+                Apagar deste computador
+              </button>
+            )}
+          </div>
+          {avisoValidacoes && <p className="nota">{avisoValidacoes}</p>}
+          <p className="nota">
+            Para valer em todos os computadores: baixe o .json e mande na conversa (o assistente grava em{' '}
+            <code>src/dados/medicacoes/validacoes-conferidas.json</code>).
+          </p>
         </section>
 
         <section className="painel">
@@ -188,15 +274,22 @@ export function Banco() {
         </section>
       </div>
 
+      <div className="cartoes">
+        <CatalogoFontes aoBaixar={(nome, conteudo) => baixar(nome, conteudo, 'application/json')} />
+      </div>
+
       <section className="painel lista-banco">
         <div className="linha-botoes">
           <input aria-label="Buscar medicação" placeholder="Buscar medicação…" value={busca} onChange={(e) => setBusca(e.target.value)} />
           <select aria-label="Seção" value={secao} onChange={(e) => setSecao(e.target.value as typeof secao)}>
             <option value="">Todas as seções</option>
-            <option value="4">4. Reposição volêmica e glicose</option>
+            <option value="4">4. Reposição volêmica, glicose e eletrólitos</option>
             <option value="5">5. Antibióticos / antiparasitários / ARV</option>
             <option value="6">6. Demais medicações</option>
           </select>
+          <label>
+            <input type="checkbox" checked={soFalta} onChange={(e) => setSoFalta(e.target.checked)} /> só o que falta conferir
+          </label>
           <span className="nota">{visiveis.length} medicação(ões)</span>
         </div>
         {visiveis.map((m) => (
@@ -214,8 +307,9 @@ export function Banco() {
               {m.apresentacoes.map((a: Apresentacao) => (
                 <li key={a.id}>
                   {a.descricao} — {a.vias.join('/') || 'via?'} <span className="selo-pequeno">{SELO[a.status]}</span>
-                  {a.fonte?.documento && <span className="nota"> · {a.fonte.documento}</span>}
+                  {a.fonte && <span className="nota"> · fonte: {descreverFonte(a.fonte, catalogo)}</span>}
                   {a.observacao && <div className="nota">{a.observacao}</div>}
+                  {botaoConferir({ tipo: 'apresentacao', medicacaoId: m.id, itemId: a.id }, { apresentacao: a })}
                 </li>
               ))}
             </ul>
@@ -228,9 +322,11 @@ export function Banco() {
                   <li key={r.id}>
                     <strong>{r.indicacao}</strong> ({r.faixas.join(', ')}
                     {r.condicoes ? `; ${textoCondicoes(r.condicoes)}` : ''}) — {r.vias.join('/')} — {textoDaRegra(r)}
-                    {r.intervalosHoras ? ` · ${r.intervalosHoras.map((h) => `${h}/${h}h`).join(' ou ')}` : ''} · fonte {r.fonte.codigo}{' '}
+                    {r.intervalosHoras ? ` · ${r.intervalosHoras.map((h) => `${h}/${h}h`).join(' ou ')}` : ''}{' '}
                     <span className="selo-pequeno">{SELO[r.status]}</span>
+                    <div className="nota">fonte: {descreverFonte(r.fonte, catalogo)}</div>
                     {r.observacoes && <div className="nota">{r.observacoes}</div>}
+                    {botaoConferir({ tipo: 'regra', medicacaoId: m.id, itemId: r.id }, { regra: r })}
                   </li>
                 ))}
               </ul>

@@ -140,7 +140,7 @@ export function verificarBanco(medicacoes: readonly Medicacao[]): string[] {
     }
 
     for (const ap of med.apresentacoes) {
-      if (ap.status === 'CONFERIDO' && !ap.fonte?.documento) {
+      if (ap.status === 'CONFERIDO' && !ap.fonte?.documento && !ap.fonte?.documentoId) {
         problemas.push(`${med.id}/${ap.id}: apresentação CONFERIDA sem documento de fonte.`);
       }
       if (ap.concentracaoPorMl && ap.concentracaoPorMl.valor <= 0) {
@@ -153,7 +153,7 @@ export function verificarBanco(medicacoes: readonly Medicacao[]): string[] {
 
     for (const regra of med.regras) {
       const onde = `${med.id}/${regra.id}`;
-      if (regra.status === 'CONFERIDO' && !regra.fonte.documento) {
+      if (regra.status === 'CONFERIDO' && !regra.fonte.documento && !regra.fonte.documentoId) {
         problemas.push(`${onde}: regra CONFERIDA sem documento de fonte.`);
       }
       if (regra.faixas.length === 0) problemas.push(`${onde}: sem faixa etária.`);

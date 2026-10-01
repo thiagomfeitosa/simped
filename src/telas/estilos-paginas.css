@@ -166,7 +166,7 @@
   margin: 0 12px;
 }
 
-.lista-banco input {
+.lista-banco > .linha-botoes input:not([type='checkbox']) {
   font: inherit;
   border: 1px solid var(--borda);
   border-radius: 6px;
@@ -222,4 +222,54 @@
   border-radius: 6px;
   color: var(--errado);
   background: var(--errado-fundo);
+}
+
+/* Modo validação (B5) e catálogo de fontes (B6) */
+.conferir-item {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border: 2px solid var(--destaque);
+  border-radius: 10px;
+  background: var(--painel);
+}
+
+.conferir-item fieldset {
+  margin: 8px 0;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+
+.conferir-item legend {
+  font-weight: 700;
+  color: var(--destaque);
+}
+
+.conferir-item .campo-largo {
+  flex: 1 1 18em;
+}
+
+.conferir-item .campo-largo input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vias-conferir label {
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.botao-conferir {
+  font-size: 0.8rem !important;
+  padding: 1px 8px !important;
+}
+
+.catalogo-fontes {
+  grid-column: 1 / -1;
+}
+
+.catalogo-fontes td {
+  vertical-align: top;
+  border-top: 1px solid var(--borda);
+  padding: 4px 6px;
+  font-size: 0.88rem;
 }
