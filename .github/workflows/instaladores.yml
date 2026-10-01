@@ -1,0 +1,56 @@
+# Gera os instaladores do SimPed (Mac e Windows) e o arquivo único SimPed.html.
+# Só roda quando alguém clica em "Run workflow" na aba Actions do GitHub (nada roda sozinho).
+# Os arquivos ficam para baixar no fim da execução, em "Artifacts".
+name: Instaladores (Mac, Windows e arquivo único)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  arquivo-unico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run arquivo-unico
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SimPed-arquivo-unico
+          path: dist-arquivo/SimPed.html
+
+  instaladores:
+    needs: arquivo-unico
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            alvo: --mac
+            arquivos: instaladores/*.dmg
+          - os: windows-latest
+            alvo: --win
+            arquivos: instaladores/*.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # garante o Electron baixado (o npm mais novo pode não rodar o script de instalação)
+      - run: node node_modules/electron/install.js
+      - run: npm run arquivo-unico
+      # sem certificado de assinatura: no Mac, abrir a 1ª vez com botão direito → Abrir
+      - run: npx electron-builder ${{ matrix.alvo }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SimPed-${{ matrix.os }}
+          path: ${{ matrix.arquivos }}

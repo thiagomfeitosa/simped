@@ -21,8 +21,31 @@ npm run dev     # abre o app
 ```
 
 Depois abra no navegador o endereço que aparecer (normalmente http://localhost:5173).
-No topo há duas abas: **Passo a passo** (aprender vendo as contas animadas) e **Prescrever** (praticar na folha, com o paciente reagindo).
+
+Abas do topo:
+- **Passo a passo** — aprender vendo as contas animadas.
+- **Prescrever** — escolher um caso clínico e praticar na folha (ou na receita de alta), com o paciente reagindo, monitor, exames, horários da enfermagem, balanço hídrico e relatório final.
+- **Treino** — contas sem fim com números inventados.
+- **Calculadoras** — idade/IPM, superfície corporal, Holliday-Segar, VIG, infusão, diluição, gotejamento, sódio.
+- **Casos** — editor para criar ou copiar casos clínicos sem programar.
+- **Banco** — medicações, o que falta validar (lista em .csv) e importação da planilha de apresentações.
+- **Configurações** — fonte das doses, hospital (volume final da BIC, horários), modo treino/prova, margem de arredondamento.
 
 Outros comandos:
 - `npm test` — roda os testes automáticos das contas; tudo verde = conferido.
 - `npm run build` — gera a versão final em `dist/`.
+
+## Abrir com dois cliques (sem Terminal)
+
+Há três jeitos. Os dados guardados (configurações, casos criados, histórico) ficam separados em cada jeito.
+
+1. **Arquivo único `SimPed.html`** (qualquer navegador, sem internet, sem instalar nada):
+   - no Terminal, `npm run arquivo-unico` gera `dist-arquivo/SimPed.html`;
+   - ou baixe pronto no GitHub (jeito 3, item "SimPed-arquivo-unico");
+   - depois é só dar dois cliques no arquivo.
+2. **Programa de computador (Electron)**: `npm run desktop` abre o SimPed numa janela própria.
+3. **Instaladores para Mac e Windows, feitos pelo GitHub** (não precisa de Terminal):
+   1. no site do GitHub, abra o repositório → aba **Actions** → **"Instaladores (Mac, Windows e arquivo único)"**;
+   2. clique em **Run workflow** (botão à direita) → **Run workflow**;
+   3. espere terminar (alguns minutos) e, embaixo, em **Artifacts**, baixe `SimPed-macos-latest` (.dmg) ou `SimPed-windows-latest` (.exe);
+   4. no Mac, o programa não tem assinatura da Apple: na **primeira vez**, clique com o **botão direito** no SimPed → **Abrir** → **Abrir**. Depois, abre com dois cliques normalmente.

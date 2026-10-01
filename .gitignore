@@ -9,3 +9,5 @@ referencias/privado/*
 node_modules/
 dist/
 *.tsbuildinfo
+dist-arquivo
+instaladores
