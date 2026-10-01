@@ -4,6 +4,14 @@
 - O dono do projeto é médico/estudante de medicina e **não sabe programar**.
 - Explique tudo em **português**, com linguagem simples, sem jargão técnico desnecessário.
 - Antes de mudanças grandes, explique o plano em poucas linhas. Depois de cada entrega, diga **como testar** (o que clicar, o que deve aparecer).
+- **Sempre que o código mudar**, terminar a resposta com os comandos para o usuário abrir o app no Mac (a pasta é `~/simped`, baixada com git clone):
+  ```
+  cd simped
+  git pull origin claude/busy-lamport-34608n
+  npm install
+  npm run dev
+  ```
+  e lembrar de abrir http://localhost:5173 no navegador.
 - Trabalhe em passos pequenos e testáveis. Nunca deixe o app quebrado ao final de uma tarefa.
 
 ## Objetivo do software
