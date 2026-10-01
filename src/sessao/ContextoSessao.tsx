@@ -8,6 +8,7 @@ import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import { definirContexto } from '../diagnostico/relato';
 import { abrirCanal, type Canal, type MensagemCanal } from './canal';
+import { papelDaJanela, type Papel } from './papel';
 import {
   type AcaoSessao,
   type Autor,
@@ -51,16 +52,7 @@ export function apagarSessaoGuardada(): void {
   gravar(CHAVE_SESSAO, null);
 }
 
-/** B15: esta janela é a do aluno (dona da sessão) ou a do professor (espelho que manda ações)? */
-export type Papel = 'aluno' | 'professor';
-
-export function papelDaJanela(): Papel {
-  try {
-    return new URLSearchParams(window.location.search).get('papel') === 'professor' ? 'professor' : 'aluno';
-  } catch {
-    return 'aluno';
-  }
-}
+export { papelDaJanela, type Papel } from './papel';
 
 /** Abre a janela do professor (mesmo app, com ?papel=professor). */
 export function abrirJanelaProfessor(): void {

@@ -15,7 +15,7 @@
     "teste-tela": "playwright test",
     "conferir-tudo": "npm run typecheck && npm test && npm run arquivo-unico && npm run teste-tela",
     "typecheck": "tsc --noEmit",
-    "arquivo-unico": "vite build && node scripts/arquivo-unico.mjs",
+    "arquivo-unico": "vite build --mode arquivo-unico && node scripts/arquivo-unico.mjs",
     "nova-versao-banco": "node scripts/nova-versao-banco.mjs",
     "gerar-planilha": "node scripts/gerar-planilha.mjs",
     "desktop": "node node_modules/electron/install.js && npm run arquivo-unico && electron .",

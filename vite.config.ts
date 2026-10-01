@@ -36,8 +36,11 @@ function serviceWorker(): Plugin {
 
 // base relativa: o app abre direto do arquivo, sem servidor (offline e, depois, Electron),
 // e também numa subpasta de um site (ex.: GitHub Pages, B18)
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: './',
+  // B20: no site, cada aba é um pedaço separado (carrega sob demanda). O arquivo único (npm run arquivo-unico)
+  // abre sem servidor, onde o navegador não deixa buscar pedaços: lá tudo vai num arquivo só.
+  ...(mode === 'arquivo-unico' && { build: { rolldownOptions: { output: { codeSplitting: false } } } }),
   plugins: [react(), serviceWorker()],
   // planilhas .xlsx podem ser importadas como arquivo (usado nos testes do importador)
   assetsInclude: ['**/*.xlsx'],
@@ -49,4 +52,4 @@ export default defineConfig({
     // os testes de tela (Playwright) ficam em testes-tela/ e rodam com "npm run teste-tela"
     exclude: ['**/node_modules/**', 'testes-tela/**'],
   },
-});
+}));

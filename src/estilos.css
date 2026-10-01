@@ -257,3 +257,11 @@
     display: none;
   }
 }
+
+/* B20: enquanto o pedaço de uma aba é baixado (quase sempre imperceptível) */
+.carregando-aba {
+  margin: 48px auto;
+  text-align: center;
+  color: var(--texto-suave, #5b6b80);
+  font-size: 15px;
+}

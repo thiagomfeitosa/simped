@@ -14,12 +14,19 @@ export async function abrir(page: Page, aba = ''): Promise<string[]> {
   await page.evaluate(() => window.localStorage.clear());
   await page.reload();
   await expect(page.getByRole('navigation', { name: 'Modo do SimPed' })).toBeVisible();
+  await esperarAba(page);
   return erros;
+}
+
+/** B20: cada aba é baixada na primeira vez que abre; espera o conteúdo dela chegar. */
+export async function esperarAba(page: Page): Promise<void> {
+  await expect(page.locator('#raiz > div:not([hidden]) > :not(.carregando-aba)').first()).toBeVisible();
 }
 
 /** Troca de aba pela barra do topo. */
 export async function irPara(page: Page, rotulo: string | RegExp): Promise<void> {
   await page.getByRole('navigation', { name: 'Modo do SimPed' }).getByRole('link', { name: rotulo }).click();
+  await esperarAba(page);
 }
 
 /** A aba visível (as outras ficam escondidas, mas abertas: procurar nelas confunde os testes). */
