@@ -501,3 +501,34 @@
   background: var(--atencao-fundo);
   border-color: var(--atencao);
 }
+
+/* Preparo do item: diluição, seringa da BIC, infusão contínua */
+.preparo {
+  margin: 4px 0 0 calc(2em + 6px);
+  font-size: 0.86rem;
+}
+
+.preparo-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 3px 0;
+  padding: 3px 6px;
+  background: #f4f7fb;
+  border-radius: 6px;
+}
+
+.preparo-rotulo {
+  font-weight: 700;
+  color: var(--destaque);
+}
+
+.preparo-botoes .adicionar + .adicionar {
+  margin-left: 14px;
+}
+
+.preparo input {
+  flex: none;
+  width: auto;
+}

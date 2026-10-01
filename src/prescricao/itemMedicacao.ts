@@ -12,11 +12,9 @@
 import {
   concentracao as calcularConcentracao,
   conferirValor,
-  converterMassa,
   doseTotal,
   TOLERANCIA_PADRAO,
   type Tolerancia,
-  type UnidadeDeMassa,
   volumeAspirar,
 } from '../calculos';
 import {
@@ -36,10 +34,39 @@ import type {
   VariaveisParaRegra,
   Via,
 } from '../dados/medicacoes/tipos';
+import {
+  converterDroga,
+  formatarNumero,
+  lerNumero,
+  RUIDO_NUMERICO,
+  type Situacao,
+  type Verificacao,
+} from './comum';
+import {
+  conferirEtapas,
+  conferirInfusao,
+  conferirSeringaDose,
+  type Concentracao,
+  type EtapaDiluicaoCampos,
+  type InfusaoCampos,
+  infusaoVazia,
+  type SeringaBicCampos,
+  textoEtapas,
+  textoInfusao,
+  textoSeringa,
+} from './preparo';
 import { SECOES } from './secoes';
 
-/** '' = ainda não escolhido; 'dose-unica' = dose única (agora); número = intervalo em horas (6 = 6/6h). */
-export type Intervalo = '' | 'dose-unica' | number;
+export { converterDroga, formatarNumero, lerNumero, type Situacao, type Verificacao } from './comum';
+
+/**
+ * '' = ainda não escolhido; 'dose-unica' = dose única (agora); 'continua' = infusão contínua na BIC;
+ * número = intervalo em horas (6 = 6/6h).
+ */
+export type Intervalo = '' | 'dose-unica' | 'continua' | number;
+
+/** Volume final da seringa da BIC quando ninguém informa outro (Santa Casa, src/dados/hospitais.ts). */
+export const VOLUME_FINAL_BIC_PADRAO = 12;
 
 /** O que o aluno preenche. Números ficam como texto, do jeito que foram digitados (aceita vírgula). */
 export interface CamposMedicacao {
@@ -55,6 +82,12 @@ export interface CamposMedicacao {
   volumeMl: string;
   via: Via | '';
   intervalo: Intervalo;
+  /** Diluição/rediluição antes de aspirar a dose (vazio = usa a apresentação como está). */
+  etapas: EtapaDiluicaoCampos[];
+  /** Dose intermitente correndo na BIC com o volume final do hospital (null = sem BIC). */
+  seringaBic: SeringaBicCampos | null;
+  /** Só quando o intervalo é 'continua'. */
+  infusao: InfusaoCampos | null;
 }
 
 export const INTERVALOS_HORAS = [4, 6, 8, 12, 24] as const;
@@ -82,50 +115,22 @@ export function camposVazios(medicacaoId = ''): CamposMedicacao {
     volumeMl: '',
     via: '',
     intervalo: '',
+    etapas: [],
+    seringaBic: null,
+    infusao: null,
   };
-}
-
-/**
- * Lê um número digitado em português: "0,48", "0.48", "1.000,5".
- * Com vírgula, os pontos são separadores de milhar; sem vírgula, o ponto é a casa decimal.
- * Devolve null se o texto estiver vazio ou não for um número.
- */
-export function lerNumero(texto: string): number | null {
-  const limpo = texto.trim().replace(/\s/g, '');
-  if (limpo === '') return null;
-  const normalizado = limpo.includes(',') ? limpo.replace(/\./g, '').replace(',', '.') : limpo;
-  if (!/^-?\d*\.?\d+$|^-?\d+\.$/.test(normalizado)) return null;
-  const valor = Number(normalizado);
-  return Number.isFinite(valor) ? valor : null;
-}
-
-/** Número para mostrar ao aluno (0,48 · 15,5 · 4.000). */
-export function formatarNumero(valor: number): string {
-  const abs = Math.abs(valor);
-  const casas = abs < 1 ? 4 : abs < 100 ? 2 : 1;
-  return valor.toLocaleString('pt-BR', { maximumFractionDigits: casas });
 }
 
 export function textoIntervalo(intervalo: Intervalo): string {
   if (intervalo === '') return '';
   if (intervalo === 'dose-unica') return 'dose única';
+  if (intervalo === 'continua') return 'infusão contínua';
   return `${intervalo}/${intervalo}h`;
 }
 
 function listaOu(itens: readonly string[]): string {
   if (itens.length <= 1) return itens.join('');
   return `${itens.slice(0, -1).join(', ')} ou ${itens[itens.length - 1]}`;
-}
-
-const MASSAS: readonly string[] = ['g', 'mg', 'mcg'];
-
-/** Converte entre unidades de droga quando possível (mesma unidade ou g/mg/mcg). Senão, null. */
-function converterDroga(valor: number, de: UnidadeDroga, para: UnidadeDroga): number | null {
-  if (de === para) return valor;
-  if (MASSAS.includes(de) && MASSAS.includes(para)) {
-    return converterMassa(valor, de as UnidadeDeMassa, para as UnidadeDeMassa);
-  }
-  return null;
 }
 
 /** Indicações do banco com regra para a faixa etária (e, se informadas, as variáveis) do paciente. */
@@ -180,11 +185,26 @@ export function atualizarCampos(
       ? (indicacoes[0] ?? '')
       : '';
   const ap = med.apresentacoes.find((a) => a.id === apresentacaoId);
-  return { ...campos, apresentacaoId, indicacao, unidadeDose: campos.unidadeDose || unidadePadrao(ap) };
+  // infusão contínua tem campos próprios (dose/kg/min, seringa, vazão); a seringa de dose intermitente não se aplica
+  const continua = campos.intervalo === 'continua';
+  const infusao = continua ? (campos.infusao ?? infusaoVazia()) : null;
+  const seringaBic = continua ? null : campos.seringaBic;
+  return {
+    ...campos,
+    apresentacaoId,
+    indicacao,
+    unidadeDose: campos.unidadeDose || unidadePadrao(ap),
+    infusao,
+    seringaBic,
+  };
 }
 
 /** Linha da folha, ex.: "Dipirona — Ampola 500 mg/mL, 2 mL — 240 mg (0,48 mL) EV 6/6h". */
-export function textoDaFolha(campos: CamposMedicacao, medicacoes: readonly Medicacao[]): string {
+export function textoDaFolha(
+  campos: CamposMedicacao,
+  medicacoes: readonly Medicacao[],
+  volumeFinalBicMl: number = VOLUME_FINAL_BIC_PADRAO,
+): string {
   const med = medicacoes.find((m) => m.id === campos.medicacaoId);
   if (!med) return '';
   const ap = med.apresentacoes.find((a) => a.id === campos.apresentacaoId);
@@ -197,6 +217,16 @@ export function textoDaFolha(campos: CamposMedicacao, medicacoes: readonly Medic
         : ap.descricao,
     );
   }
+  const diluicao = textoEtapas(campos.etapas, unidadeDaConcentracao(ap));
+  if (diluicao) partes.push(diluicao);
+  if (campos.intervalo === 'continua') {
+    partes.push(
+      [textoInfusao(campos.infusao ?? infusaoVazia(), volumeFinalBicMl), campos.via ? NOME_VIA[campos.via] : '']
+        .filter(Boolean)
+        .join(' '),
+    );
+    return partes.join(' — ');
+  }
   const dose = lerNumero(campos.dose);
   const volume = lerNumero(campos.volumeMl);
   const posologia = [
@@ -208,16 +238,16 @@ export function textoDaFolha(campos: CamposMedicacao, medicacoes: readonly Medic
     .filter(Boolean)
     .join(' ');
   if (posologia) partes.push(posologia);
+  if (campos.seringaBic) {
+    const seringa = textoSeringa(campos.seringaBic, volume, volumeFinalBicMl);
+    if (seringa) partes.push(seringa);
+  }
   return partes.join(' — ');
 }
 
-/** 'atencao' = aviso que não é erro; 'a-validar' = referência ainda não conferida (não corrige). */
-export type Situacao = 'certo' | 'errado' | 'atencao' | 'a-validar';
-
-export interface Verificacao {
-  assunto: 'secao' | 'via' | 'volume' | 'unidades' | 'dose' | 'intervalo' | 'fonte' | 'alerta' | 'preenchimento';
-  situacao: Situacao;
-  texto: string;
+/** Unidade da concentração da apresentação (ou do pó reconstituído), para os textos da diluição. */
+export function unidadeDaConcentracao(ap: Apresentacao | undefined): UnidadeDroga | undefined {
+  return ap?.concentracaoPorMl?.unidade ?? (ap?.forma === 'frasco-ampola-po' ? ap.quantidade?.unidade : undefined);
 }
 
 export interface ResultadoItem {
@@ -230,8 +260,6 @@ export interface ResultadoItem {
   /** Tudo preenchido com números válidos: pode ir para a folha e ser administrado. */
   completo: boolean;
 }
-
-const RUIDO_NUMERICO = 1e-9;
 
 /**
  * Campos que a apresentação pede:
@@ -297,8 +325,8 @@ function conferirDose(
         assunto: 'dose',
         situacao: 'atencao',
         texto:
-          `Pela referência ${fonte}, esta indicação é infusão contínua (${textoFaixaDeDose(regra)}). ` +
-          'A conferência de infusão na BIC ainda não está pronta.',
+          `Pela referência ${fonte}, esta indicação é infusão contínua (${textoFaixaDeDose(regra)}): ` +
+          'escolha "infusão contínua" no intervalo.',
       },
     ];
   }
@@ -375,6 +403,53 @@ function conferirDose(
   return verificacoes;
 }
 
+/** Dose da infusão contínua (por kg por min/h) comparada com a regra do banco. */
+function conferirDoseInfusao(regra: RegraDeDose, infusao: InfusaoCampos, tolerancia: Tolerancia): Verificacao[] {
+  const d = regra.dose;
+  const fonte = regra.fonte.codigo;
+  const valor = lerNumero(infusao.dose);
+  if (valor === null || valor <= 0 || !infusao.unidade) return [];
+  if (d.tipo === 'texto') {
+    return [{ assunto: 'dose', situacao: 'a-validar', texto: `Referência ${fonte} ainda em texto: ${d.descricao}` }];
+  }
+  if (d.por !== 'min' && d.por !== 'h') {
+    return [
+      {
+        assunto: 'dose',
+        situacao: 'atencao',
+        texto: `Pela referência ${fonte}, esta indicação é ${textoFaixaDeDose(regra)}, não infusão contínua.`,
+      },
+    ];
+  }
+  if (d.tipo !== 'porKg') {
+    return [{ assunto: 'dose', situacao: 'a-validar', texto: `Referência ${fonte}: ${textoFaixaDeDose(regra)}.` }];
+  }
+  const convertida = converterDroga(valor, infusao.unidade, d.unidade);
+  const corrige = podeCorrigirAluno(regra);
+  if (convertida === null) {
+    return [
+      {
+        assunto: 'dose',
+        situacao: corrige ? 'errado' : 'a-validar',
+        texto: `A referência ${fonte} está em ${d.unidade} e a infusão em ${infusao.unidade}: não dá para comparar.`,
+      },
+    ];
+  }
+  // mesma base de tempo da referência (por min × 60 = por h)
+  const naBaseDaRegra = infusao.por === d.por ? convertida : infusao.por === 'min' ? convertida * 60 : convertida / 60;
+  const dentro =
+    naBaseDaRegra >= d.min * (1 - tolerancia.relativa) - RUIDO_NUMERICO &&
+    naBaseDaRegra <= d.max * (1 + tolerancia.relativa) + RUIDO_NUMERICO;
+  const veredito = !corrige ? '' : dentro ? 'Dose da infusão dentro da faixa. ' : 'Dose da infusão fora da faixa. ';
+  return [
+    {
+      assunto: 'dose',
+      situacao: corrige ? (dentro ? 'certo' : 'errado') : 'a-validar',
+      texto: `${veredito}Prescrito: ${formatarNumero(naBaseDaRegra)} ${d.unidade}/kg/${d.por}. Referência ${fonte}: ${textoFaixaDeDose(regra)}.`,
+    },
+  ];
+}
+
 /**
  * Confere um item de medicação da folha.
  * Devolve o que falta preencher e a lista de verificações (seção, via, conta do volume, dose, intervalo).
@@ -387,6 +462,8 @@ export function conferirItemMedicacao(entrada: {
   secaoNumero: number;
   fontePreferida?: CodigoFonte;
   tolerancia?: Tolerancia;
+  /** Volume final da seringa da BIC do hospital (padrão: Santa Casa, 12 mL). */
+  volumeFinalBicMl?: number;
 }): ResultadoItem {
   const { campos, medicacoes, paciente, secaoNumero } = entrada;
   const tolerancia = entrada.tolerancia ?? TOLERANCIA_PADRAO;
@@ -442,18 +519,42 @@ export function conferirItemMedicacao(entrada: {
     return valor;
   };
 
-  const dose = lerCampo(campos.dose, 'dose');
-  if (!campos.unidadeDose) faltando.push('unidade da dose');
+  const continua = campos.intervalo === 'continua';
+  // na infusão contínua a dose é por kg por minuto/hora (campos da infusão), não "por dose"
+  const dose = continua ? null : lerCampo(campos.dose, 'dose');
+  if (!continua && !campos.unidadeDose) faltando.push('unidade da dose');
 
-  let concentracao: ReturnType<typeof concentracaoUsada> = null;
+  let concentracaoBase: ReturnType<typeof concentracaoUsada> = null;
   if (apresentacao) {
     const reconstituicao = camposDaApresentacao(apresentacao).reconstituicao
       ? lerCampo(campos.reconstituicaoMl, 'volume de reconstituição')
       : null;
-    concentracao = concentracaoUsada(apresentacao, reconstituicao);
+    concentracaoBase = concentracaoUsada(apresentacao, reconstituicao);
   }
-  const temVolume = concentracao !== null;
-  const volume = temVolume ? lerCampo(campos.volumeMl, 'volume (mL)') : null;
+
+  // diluição/rediluição: a solução de trabalho passa a ser a da última etapa
+  let concentracaoTrabalho: Concentracao | null =
+    concentracaoBase !== null && concentracaoBase !== 'falta-reconstituicao' ? concentracaoBase : null;
+  const juntar = (r: { verificacoes: Verificacao[]; faltando: string[]; numerosValidos: boolean }) => {
+    verificacoes.push(...r.verificacoes);
+    faltando.push(...r.faltando);
+    if (!r.numerosValidos) numerosValidos = false;
+  };
+  if (campos.etapas.length > 0 && concentracaoTrabalho !== null) {
+    const etapas = conferirEtapas(campos.etapas, concentracaoTrabalho, tolerancia);
+    juntar(etapas);
+    concentracaoTrabalho = etapas.concentracaoFinal;
+  } else if (campos.etapas.length > 0 && apresentacao && concentracaoBase === null) {
+    verificacoes.push({
+      assunto: 'diluicao',
+      situacao: 'atencao',
+      texto: `Esta apresentação (${apresentacao.forma}) não tem concentração por mL para diluir.`,
+    });
+  }
+
+  const temVolume = concentracaoBase !== null;
+  const nomeVolume = campos.etapas.length > 0 ? 'volume a administrar (mL)' : 'volume (mL)';
+  const volume = temVolume && !continua ? lerCampo(campos.volumeMl, nomeVolume) : null;
   if (!campos.via) faltando.push('via');
   if (campos.intervalo === '') faltando.push('intervalo');
 
@@ -466,21 +567,22 @@ export function conferirItemMedicacao(entrada: {
     });
   }
 
-  // 3. conta do volume (matemática: sempre conferida)
-  if (apresentacao && concentracao !== null && concentracao !== 'falta-reconstituicao' && dose !== null && campos.unidadeDose) {
-    const doseNaUnidade = converterDroga(dose, campos.unidadeDose, concentracao.unidade);
+  // 3. conta do volume (matemática: sempre conferida), sobre a solução de trabalho
+  const c = concentracaoTrabalho;
+  if (!continua && apresentacao && c !== null && dose !== null && campos.unidadeDose) {
+    const doseNaUnidade = converterDroga(dose, campos.unidadeDose, c.unidade);
     if (doseNaUnidade === null) {
       verificacoes.push({
         assunto: 'unidades',
         situacao: 'errado',
-        texto: `A dose está em ${campos.unidadeDose} e a apresentação em ${concentracao.unidade}/mL: não dá para converter.`,
+        texto: `A dose está em ${campos.unidadeDose} e a apresentação em ${c.unidade}/mL: não dá para converter.`,
       });
     } else {
-      const esperado = volumeAspirar({ dose: doseNaUnidade, concentracao: concentracao.valor });
+      const esperado = volumeAspirar({ dose: doseNaUnidade, concentracao: c.valor });
       const conta =
         `${formatarNumero(dose)} ${campos.unidadeDose}` +
-        (campos.unidadeDose !== concentracao.unidade ? ` (= ${formatarNumero(doseNaUnidade)} ${concentracao.unidade})` : '') +
-        ` ÷ ${formatarNumero(concentracao.valor)} ${concentracao.unidade}/mL = ${formatarNumero(esperado)} mL`;
+        (campos.unidadeDose !== c.unidade ? ` (= ${formatarNumero(doseNaUnidade)} ${c.unidade})` : '') +
+        ` ÷ ${formatarNumero(c.valor)} ${c.unidade}/mL = ${formatarNumero(esperado)} mL`;
       if (volume !== null) {
         const resultado = conferirValor(volume, esperado, tolerancia);
         verificacoes.push({
@@ -492,14 +594,16 @@ export function conferirItemMedicacao(entrada: {
         });
       }
 
-      // quantas unidades (ampolas, frascos) serão abertas
+      // quantas unidades (ampolas, frascos) serão abertas (pela concentração da apresentação, sem diluição)
+      const base = concentracaoBase !== null && concentracaoBase !== 'falta-reconstituicao' ? concentracaoBase : c;
+      const doseNaUnidadeBase = converterDroga(dose, campos.unidadeDose, base.unidade) ?? doseNaUnidade;
       const porUnidade = apresentacao.quantidade
-        ? converterDroga(apresentacao.quantidade.valor, apresentacao.quantidade.unidade, concentracao.unidade)
+        ? converterDroga(apresentacao.quantidade.valor, apresentacao.quantidade.unidade, base.unidade)
         : apresentacao.volumeMl !== undefined
-          ? apresentacao.volumeMl * concentracao.valor
+          ? apresentacao.volumeMl * base.valor
           : null;
       if (porUnidade !== null && porUnidade > 0) {
-        const unidades = Math.ceil(doseNaUnidade / porUnidade - RUIDO_NUMERICO);
+        const unidades = Math.ceil(doseNaUnidadeBase / porUnidade - RUIDO_NUMERICO);
         if (unidades > 1) {
           verificacoes.push({
             assunto: 'volume',
@@ -508,6 +612,20 @@ export function conferirItemMedicacao(entrada: {
           });
         }
       }
+
+      // seringa da BIC com o volume final do hospital (dose intermitente)
+      if (campos.seringaBic) {
+        juntar(
+          conferirSeringaDose({
+            campos: campos.seringaBic,
+            volumeDoseMl: esperado,
+            dose,
+            unidade: campos.unidadeDose,
+            volumeFinalMl: entrada.volumeFinalBicMl ?? VOLUME_FINAL_BIC_PADRAO,
+            tolerancia,
+          }),
+        );
+      }
     }
   } else if (apresentacao && !temVolume) {
     verificacoes.push({
@@ -515,6 +633,24 @@ export function conferirItemMedicacao(entrada: {
       situacao: 'atencao',
       texto: `A conferência de volume ainda não está pronta para esta forma (${apresentacao.forma}).`,
     });
+  }
+
+  // 3b. infusão contínua: seringa da BIC e vazão
+  if (continua) {
+    const infusao = campos.infusao ?? infusaoVazia();
+    if (c !== null) {
+      juntar(
+        conferirInfusao({
+          campos: infusao,
+          concentracaoTrabalho: c,
+          pesoKg: paciente.pesoKg,
+          volumeFinalMl: entrada.volumeFinalBicMl ?? VOLUME_FINAL_BIC_PADRAO,
+          tolerancia,
+        }),
+      );
+    } else if (apresentacao) {
+      faltando.push('solução de trabalho (concentração) para a infusão');
+    }
   }
 
   // 4. dose, via e intervalo pela regra do banco
@@ -553,6 +689,9 @@ export function conferirItemMedicacao(entrada: {
       }
       if (dose !== null && campos.unidadeDose) {
         verificacoes.push(...conferirDose(regra, dose, campos.unidadeDose, campos.intervalo, paciente.pesoKg, tolerancia));
+      }
+      if (continua && campos.infusao) {
+        verificacoes.push(...conferirDoseInfusao(regra, campos.infusao, tolerancia));
       }
       // dose única não é comparada com o intervalo da referência (ex.: antitérmico "agora")
       const intervalos = regra.intervalosHoras;

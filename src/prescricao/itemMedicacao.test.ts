@@ -372,3 +372,125 @@ describe('modo prova esconde o gabarito', () => {
     expect(textoParaModo(v, 'prova')).toBe('NUNCA em bolus');
   });
 });
+
+describe('preparo dentro do item: diluição, BIC e infusão contínua', () => {
+  it('adrenalina diluída 1:10.000: o volume é conferido na solução diluída', () => {
+    const r = conferir(
+      {
+        medicacaoId: 'adrenalina',
+        apresentacaoId: 'ampola-1mg-ml',
+        indicacao: 'PCR',
+        dose: '0,16',
+        unidadeDose: 'mg',
+        etapas: [{ aspirarMl: '1', completarAteMl: '10', diluente: 'SF 0,9%', concentracao: '0,1' }],
+        volumeMl: '1,6',
+        via: 'EV',
+        intervalo: 'dose-unica',
+      },
+      { secao: 6 },
+    );
+    expect(doAssunto(r.verificacoes, 'diluicao')[0]?.situacao).toBe('certo');
+    const volume = doAssunto(r.verificacoes, 'volume')[0];
+    expect(volume?.situacao).toBe('certo');
+    expect(volume?.texto).toMatch(/÷ 0,1 mg\/mL = 1,6 mL/);
+    expect(r.completo).toBe(true);
+  });
+
+  it('esquecer a concentração da etapa deixa o item incompleto', () => {
+    const r = conferir({
+      medicacaoId: 'adrenalina',
+      apresentacaoId: 'ampola-1mg-ml',
+      indicacao: 'PCR',
+      dose: '0,16',
+      unidadeDose: 'mg',
+      etapas: [{ aspirarMl: '1', completarAteMl: '10', diluente: 'SF 0,9%', concentracao: '' }],
+      volumeMl: '1,6',
+      via: 'EV',
+      intervalo: 'dose-unica',
+    });
+    expect(r.faltando).toContain('concentração da etapa 1 (diluição)');
+    expect(r.completo).toBe(false);
+  });
+
+  it('dipirona na seringa da BIC: 0,48 mL + 11,52 mL de SF = 12 mL', () => {
+    const c = campos({
+      medicacaoId: 'dipirona',
+      apresentacaoId: 'ampola-500mg-ml',
+      indicacao: 'Febre/dor',
+      dose: '240',
+      unidadeDose: 'mg',
+      volumeMl: '0,48',
+      via: 'EV',
+      intervalo: 6,
+      seringaBic: { soroMl: '11,52', concentracao: '20', tempoMin: '30', vazaoMlH: '24' },
+    });
+    const r = conferirItemMedicacao({ campos: c, medicacoes: MEDICACOES_EXEMPLO, paciente: crianca16kg, secaoNumero: 6, volumeFinalBicMl: 12 });
+    expect(doAssunto(r.verificacoes, 'bic').map((v) => v.situacao)).toEqual(['certo', 'certo', 'certo']);
+    expect(textoDaFolha(c, MEDICACOES_EXEMPLO, 12)).toBe(
+      'Dipirona — Ampola 500 mg/mL, 2 mL — 240 mg (0,48 mL) EV 6/6h — em BIC: 0,48 mL + 11,52 mL de SF 0,9% = 12 mL, correr em 30 min (24 mL/h)',
+    );
+  });
+
+  it('o volume final vem do hospital (20 mL muda o SF)', () => {
+    const c = campos({
+      medicacaoId: 'dipirona',
+      apresentacaoId: 'ampola-500mg-ml',
+      indicacao: 'Febre/dor',
+      dose: '240',
+      unidadeDose: 'mg',
+      volumeMl: '0,48',
+      via: 'EV',
+      intervalo: 6,
+      seringaBic: { soroMl: '11,52', concentracao: '12', tempoMin: '', vazaoMlH: '' },
+    });
+    const r = conferirItemMedicacao({ campos: c, medicacoes: MEDICACOES_EXEMPLO, paciente: crianca16kg, secaoNumero: 6, volumeFinalBicMl: 20 });
+    expect(doAssunto(r.verificacoes, 'bic').map((v) => v.situacao)).toEqual(['errado', 'certo']);
+  });
+
+  it('adrenalina em infusão contínua (choque): dose, seringa e vazão', () => {
+    // 1 mg/mL; 0,96 mL na seringa de 12 mL = 960 mcg ÷ 12 = 80 mcg/mL
+    // 0,1 mcg/kg/min × 16 kg × 60 ÷ 80 = 1,2 mL/h
+    const anterior = campos({ medicacaoId: 'adrenalina', apresentacaoId: 'ampola-1mg-ml', indicacao: 'Choque', via: 'EV' });
+    const atualizado = atualizarCampos(anterior, { intervalo: 'continua' }, MEDICACOES_EXEMPLO, 'crianca');
+    expect(atualizado.infusao).not.toBeNull();
+    const c: CamposMedicacao = {
+      ...atualizado,
+      infusao: {
+        dose: '0,1',
+        unidade: 'mcg',
+        por: 'min',
+        volumeNaSeringaMl: '0,96',
+        soroMl: '11,04',
+        concentracao: '80',
+        vazaoMlH: '1,2',
+      },
+    };
+    const r = conferirItemMedicacao({ campos: c, medicacoes: MEDICACOES_EXEMPLO, paciente: crianca16kg, secaoNumero: 6, volumeFinalBicMl: 12 });
+    expect(doAssunto(r.verificacoes, 'infusao').filter((v) => v.situacao === 'certo')).toHaveLength(3);
+    expect(doAssunto(r.verificacoes, 'dose')[0]?.situacao).toBe('a-validar');
+    expect(r.faltando).toEqual([]);
+    expect(r.completo).toBe(true);
+    expect(textoDaFolha(c, MEDICACOES_EXEMPLO, 12)).toBe(
+      'Adrenalina — Ampola 1 mg/mL (1:1.000), 1 mL — 0,1 mcg/kg/min em BIC: 0,96 mL + 11,04 mL de SF 0,9% = 12 mL (80 mcg/mL) a 1,2 mL/h — infusão contínua EV',
+    );
+  });
+
+  it('regra de infusão com intervalo intermitente pede "infusão contínua"', () => {
+    const r = conferir({
+      medicacaoId: 'adrenalina',
+      apresentacaoId: 'ampola-1mg-ml',
+      indicacao: 'Choque',
+      dose: '0,1',
+      unidadeDose: 'mg',
+      volumeMl: '0,1',
+      via: 'EV',
+      intervalo: 6,
+    });
+    expect(doAssunto(r.verificacoes, 'dose')[0]?.texto).toMatch(/escolha "infusão contínua"/);
+  });
+
+  it('sair da infusão contínua apaga os campos da infusão', () => {
+    const c = atualizarCampos(campos({ medicacaoId: 'adrenalina' }), { intervalo: 'continua' }, MEDICACOES_EXEMPLO, 'crianca');
+    expect(atualizarCampos(c, { intervalo: 6 }, MEDICACOES_EXEMPLO, 'crianca').infusao).toBeNull();
+  });
+});

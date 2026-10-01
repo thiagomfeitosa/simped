@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toleranciaDe } from '../configuracoes/configuracoes';
+import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import type { PacienteAtual } from '../paciente/atual';
 import type { Medicacao } from '../dados/medicacoes/tipos';
@@ -16,8 +16,10 @@ import {
   textoIntervalo,
   textoParaModo,
   UNIDADES_DOSE,
+  unidadeDaConcentracao,
   VIAS,
 } from '../prescricao/itemMedicacao';
+import { PreparoItem } from './PreparoItem';
 import type { DefinicaoSecao } from '../prescricao/secoes';
 
 const SELO: Record<Situacao, string> = {
@@ -42,6 +44,7 @@ interface Props {
 export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar }: Props) {
   const [mostrarConferencia, setMostrarConferencia] = useState(false);
   const { config } = useConfiguracoes();
+  const volumeFinalBicMl = hospitalAtual(config).volumeFinalBicMl;
   const resultado = conferirItemMedicacao({
     campos,
     medicacoes,
@@ -49,11 +52,13 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
     secaoNumero: secao.numero,
     fontePreferida: config.fonteDose,
     tolerancia: toleranciaDe(config),
+    volumeFinalBicMl,
   });
   const { medicacao, apresentacao } = resultado;
   const indicacoes = medicacao ? indicacoesDisponiveis(medicacao, paciente.faixa, paciente.paraRegra) : [];
   const pede = camposDaApresentacao(apresentacao);
-  const texto = textoDaFolha(campos, medicacoes);
+  const texto = textoDaFolha(campos, medicacoes, volumeFinalBicMl);
+  const continua = campos.intervalo === 'continua';
   const rotulo = `Item ${numero ?? ''}`;
 
   const mudar = (mudanca: Partial<CamposMedicacao>) =>
@@ -61,7 +66,10 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
 
   function administrar() {
     if (!medicacao || !campos.via) return;
-    aoAdministrar(medicacao.id, `${medicacao.nome} ${campos.dose} ${campos.unidadeDose} ${NOME_VIA[campos.via]}`);
+    const descricao = continua
+      ? `${medicacao.nome} ${campos.infusao?.dose ?? ''} ${campos.infusao?.unidade ?? ''}/kg/${campos.infusao?.por ?? 'min'} em infusão contínua`
+      : `${medicacao.nome} ${campos.dose} ${campos.unidadeDose} ${NOME_VIA[campos.via]}`;
+    aoAdministrar(medicacao.id, descricao);
   }
 
   return (
@@ -115,28 +123,32 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
 
       {medicacao && (
         <div className="item-med-linha item-med-campos">
-          <label>
-            Dose
-            <input
-              aria-label={`${rotulo} — dose`}
-              inputMode="decimal"
-              size={6}
-              value={campos.dose}
-              onChange={(e) => mudar({ dose: e.target.value })}
-            />
-          </label>
-          <select
-            aria-label={`${rotulo} — unidade da dose`}
-            value={campos.unidadeDose}
-            onChange={(e) => mudar({ unidadeDose: e.target.value as CamposMedicacao['unidadeDose'] })}
-          >
-            <option value="">unid.</option>
-            {UNIDADES_DOSE.map((u) => (
-              <option key={u} value={u}>
-                {u}
-              </option>
-            ))}
-          </select>
+          {!continua && (
+            <>
+              <label>
+                Dose
+                <input
+                  aria-label={`${rotulo} — dose`}
+                  inputMode="decimal"
+                  size={6}
+                  value={campos.dose}
+                  onChange={(e) => mudar({ dose: e.target.value })}
+                />
+              </label>
+              <select
+                aria-label={`${rotulo} — unidade da dose`}
+                value={campos.unidadeDose}
+                onChange={(e) => mudar({ unidadeDose: e.target.value as CamposMedicacao['unidadeDose'] })}
+              >
+                <option value="">unid.</option>
+                {UNIDADES_DOSE.map((u) => (
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           {pede.reconstituicao && (
             <label>
               Reconstituir em
@@ -150,9 +162,9 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
               mL
             </label>
           )}
-          {pede.volume && (
+          {pede.volume && !continua && (
             <label>
-              Volume
+              {campos.etapas.length > 0 ? 'Volume a administrar' : 'Volume'}
               <input
               aria-label={`${rotulo} — volume (mL)`}
                 inputMode="decimal"
@@ -180,11 +192,12 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
             value={String(campos.intervalo)}
             onChange={(e) => {
               const valor = e.target.value;
-              mudar({ intervalo: valor === '' || valor === 'dose-unica' ? valor : Number(valor) });
+              mudar({ intervalo: valor === '' || valor === 'dose-unica' || valor === 'continua' ? valor : Number(valor) });
             }}
           >
             <option value="">Intervalo…</option>
             <option value="dose-unica">{textoIntervalo('dose-unica')}</option>
+            <option value="continua">{textoIntervalo('continua')}</option>
             {INTERVALOS_HORAS.map((h) => (
               <option key={h} value={h}>
                 {textoIntervalo(h)}
@@ -192,6 +205,17 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
             ))}
           </select>
         </div>
+      )}
+
+      {medicacao && (
+        <PreparoItem
+          rotulo={rotulo}
+          campos={campos}
+          unidade={unidadeDaConcentracao(apresentacao)}
+          volumeFinalBicMl={volumeFinalBicMl}
+          podeDiluir={apresentacao !== undefined && pede.volume}
+          mudar={mudar}
+        />
       )}
 
       {texto && <p className="item-med-texto">{texto}</p>}
