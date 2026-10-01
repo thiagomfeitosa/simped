@@ -1,4 +1,4 @@
-# Valores "A VALIDAR" dos roteiros de distúrbios hidroeletrolíticos e icterícia
+# Valores "A VALIDAR" dos roteiros do Passo a passo
 
 > Tudo abaixo foi escrito pelo assistente a partir do `docs/fase-0/doses-rascunho.md` e de conhecimento geral, **sem consulta direta às fontes**.
 > Nenhum desses valores pode ser usado para corrigir o aluno antes de ser conferido na fonte indicada (documento, edição, ano, página).
@@ -57,6 +57,54 @@ Legenda: ☐ = conferir · Fonte = fonte prevista.
 | ☐ | BT de controle em até 12 h do início da fototerapia | SBP / AAP 2022 |
 | ☐ | Temperatura de 3/3 h | Protocolo do serviço |
 | ☐ | Local do item "fototerapia" na folha (seção 6) | Modelo de folha do serviço |
+
+## Rediluição + seringa da BIC — penicilina (`rediluicao-penicilina.ts`)
+| ☐ | Valor usado | Fonte |
+|---|---|---|
+| ☐ | Penicilina G cristalina **50.000 UI/kg/dose EV 12/12 h** (até 7 dias de vida), **10 dias** | MS — PCDT Sífilis |
+| ☐ | Frasco de 5.000.000 UI reconstituído com **10 mL** (pó sem deslocamento) | Bula |
+| ☐ | Rediluição 1 mL + 9 mL de AD (50.000 UI/mL); regra "redilua se < 0,1 mL" | Protocolo do serviço |
+| ☐ | Penicilina na regra dos **12 mL** da BIC; tempo de infusão **30 min** (exemplo, sem fonte) | Rotina da Santa Casa / bula |
+| ☐ | Exames da sífilis congênita (hemograma, função hepática, RX de ossos longos, fundo de olho, audição, VDRL seriado) | MS — PCDT Sífilis |
+| ☐ | Interrupção > 1 dia → reiniciar o esquema | MS — PCDT Sífilis |
+| ☐ | Sífilis congênita: notificação compulsória | MS |
+
+## Infusão contínua — adrenalina (`infusao-continua-adrenalina.ts`)
+| ☐ | Valor usado | Fonte |
+|---|---|---|
+| ☐ | Faixa **0,05 a 1 mcg/kg/min**; dose inicial **0,1 mcg/kg/min** | PALS |
+| ☐ | Solução padrão **1 mg em 50 mL de SF 0,9%** (20 mcg/mL); diluente SF ou SG 5% | Protocolo do serviço |
+| ☐ | Concentrar a solução em doses altas; via exclusiva; acesso central preferencial | Protocolo do serviço |
+
+## Hipercalemia (`hipercalemia.ts`)
+| ☐ | Valor usado | Fonte |
+|---|---|---|
+| ☐ | Faixas: 5,5–6,5 alto; > 6,5 grave (com ECG alterado = grave) | PALS / SBP |
+| ☐ | Gluconato de cálcio 10% **100 mg/kg** (rascunho: 60–100; máx. 2 g), **diluído 1:1 em SF**, em **15 min** | PALS / protocolo |
+| ☐ | Glicose **0,5 g/kg** (glicose 25%) em **30 min** + insulina regular **0,1 UI/kg** (máx. 10 UI) | PALS |
+| ☐ | Rediluição da insulina **50 UI em 50 mL de SF (1 UI/mL)** | Rascunho (ISPAD) / protocolo |
+| ☐ | Salbutamol nebulização **2,5 mg (< 25 kg)** / 5 mg (≥ 25 kg) + **3 mL de SF** | PALS |
+| ☐ | K de controle em 1–2 h; glicemia capilar de 30/30 min nas primeiras horas | PALS / protocolo |
+
+## Hipocalcemia no RN (`hipocalcemia-rn.ts`)
+| ☐ | Valor usado | Fonte |
+|---|---|---|
+| ☐ | Ca total < 8 mg/dL (< 7 muito baixo); Ca iônico < 1,0 mmol/L | SBP — Neonatologia |
+| ☐ | Ataque **100 mg/kg (1 mL/kg)** em **15 min** — valor do PALS; **conferir a dose neonatal** | SBP-Neonatologia / Neofax |
+| ☐ | Ca elementar **9,3 mg/mL** e **0,45 mEq/mL** no gluconato 10% | Bula |
+| ☐ | Cálcio na regra dos 12 mL da BIC, diluído em SF | Protocolo do serviço |
+| ☐ | Manutenção **4 mL/kg/dia** no soro (rascunho: 2–4); hídrico 80 mL/kg/dia de SG 10%; VIG 4–6 | SBP — Neonatologia |
+| ☐ | Ca iônico de controle em 6–8 h; glicemia capilar de 3/3 h | SBP — Neonatologia |
+
+## Hipernatremia (`hipernatremia.ts`)
+| ☐ | Valor usado | Fonte |
+|---|---|---|
+| ☐ | Faixas: 145–155 alto; > 155 muito alto | SBP / Nelson |
+| ☐ | Queda máxima **10 mEq/L em 24 h** (≈ 0,5 mEq/L/h) | SBP / Nelson / PALS |
+| ☐ | Déficit de água livre = 0,6 × peso × (Na/Na meta − 1); regra de **4 mL/kg por mEq/L** | Nelson / SBP |
+| ☐ | Repor o déficit em **48 h** junto com a manutenção | Nelson / SBP |
+| ☐ | Soro **SG 5% + SF 0,9% 1:1** (Na ≈ 77 mEq/L) + KCl 2 mEq/100 mL após diurese | Nelson / SBP |
+| ☐ | Na de controle de **4/4 h** e condutas de ajuste | Nelson / SBP |
 
 ## Constantes químicas (não precisam de validação clínica)
 - 1 mEq de NaCl = 58,5 mg; 1 mEq de KCl = 74,5 mg → NaCl 0,9% ≈ 0,154 · 3% ≈ 0,513 · 20% ≈ 3,42 mEq/mL; KCl 10% ≈ 1,34 · 19,1% ≈ 2,56 mEq/mL.

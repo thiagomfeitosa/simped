@@ -51,7 +51,7 @@ export function TelaPassoAPasso() {
         </header>
 
         <nav className="escolha-roteiro" aria-label="Escolha o caso">
-          {TEMAS.map((tema) => (
+          {TEMAS.filter((tema) => ROTEIROS.some((r) => r.tema === tema)).map((tema) => (
             <div key={tema} className="tema-grupo">
               <span className="tema-titulo">{tema}</span>
               <div className="tema-botoes">

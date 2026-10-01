@@ -91,3 +91,23 @@ export function subidaEstimadaSodio(meqInfundidos: number, pesoKg: number, fraca
   exigirPositivo(fracaoAgua, 'Fração de água corporal');
   return meqInfundidos / (fracaoAgua * pesoKg);
 }
+
+/**
+ * Déficit de água livre (mL): quanta água SEM sódio faria o Na cair do atual ao desejado.
+ * = fração de água (0,6) × peso × (Na atual ÷ Na desejado − 1) × 1000.
+ * Usado na hipernatremia (roteiro do Passo a passo). A VALIDAR com a fonte (fração 0,6).
+ */
+export function deficitDeAguaLivre(entrada: {
+  sodioAtual: number;
+  sodioDesejado: number;
+  pesoKg: number;
+  fracaoAgua?: number;
+}): number {
+  const { sodioAtual, sodioDesejado, pesoKg, fracaoAgua = FRACAO_AGUA_CORPORAL_PADRAO } = entrada;
+  exigirPositivo(sodioAtual, 'Na atual');
+  exigirPositivo(sodioDesejado, 'Na desejado');
+  exigirPositivo(pesoKg, 'Peso');
+  exigirPositivo(fracaoAgua, 'Fração de água corporal');
+  if (sodioDesejado >= sodioAtual) throw new ErroDeCalculo('Para baixar o sódio, o Na desejado deve ser menor que o Na atual.');
+  return fracaoAgua * pesoKg * (sodioAtual / sodioDesejado - 1) * 1000;
+}

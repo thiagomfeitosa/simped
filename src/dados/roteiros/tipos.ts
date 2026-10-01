@@ -106,7 +106,11 @@ export type CorLiquido = 'medicacao' | 'medicacao2' | 'sf' | 'agua' | 'glicose' 
 
 export interface EstadoBancada {
   frasco?: {
-    modelo: 'ampola' | 'frasco-po';
+    /**
+     * 'seringa' = seringa "de reserva" com uma solução já preparada (ex.: a 1ª diluição,
+     * de onde se aspira a rediluição). Fica no lugar do frasco.
+     */
+    modelo: 'ampola' | 'frasco-po' | 'seringa';
     rotulo: string;
     sublinha: string;
     /** 0 a 1 */
@@ -264,7 +268,7 @@ export interface Etapa {
 }
 
 /** Tema do roteiro (agrupa os botões do menu). */
-export type TemaRoteiro = 'Neonatologia' | 'Distúrbios hidroeletrolíticos' | 'Emergência';
+export type TemaRoteiro = 'Preparo: diluição, BIC e infusão' | 'Neonatologia' | 'Distúrbios hidroeletrolíticos' | 'Emergência';
 
 export interface Roteiro {
   id: string;

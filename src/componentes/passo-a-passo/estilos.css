@@ -738,6 +738,8 @@ button {
 }
 .rascunho li > span {
   display: inline-block;
+  /* conta longa que quebra a linha: o número fica na 1ª linha, não na última */
+  vertical-align: top;
 }
 .rascunho ol {
   margin: 0;

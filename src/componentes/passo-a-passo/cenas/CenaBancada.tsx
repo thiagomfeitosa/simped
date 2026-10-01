@@ -98,6 +98,7 @@ function Balao({ texto }: { texto: string }) {
 
 function Frasco(props: NonNullable<EstadoBancada['frasco']>) {
   const { modelo, rotulo, sublinha, nivel, cor, po } = props;
+  if (modelo === 'seringa') return <SeringaDeReserva {...props} />;
   const ehAmpola = modelo === 'ampola';
   // Área interna onde o líquido aparece
   const interno = ehAmpola ? { x: 84, y: 194, w: 42, h: 108 } : { x: 64, y: 180, w: 82, h: 122 };
@@ -157,6 +158,60 @@ function Frasco(props: NonNullable<EstadoBancada['frasco']>) {
   );
 }
 
+/**
+ * Seringa "de reserva" no lugar do frasco: guarda uma solução já preparada
+ * (ex.: a 1ª diluição, de onde sai a rediluição). O êmbolo desce quando se aspira dela.
+ */
+function SeringaDeReserva({ rotulo, sublinha, nivel, cor }: NonNullable<EstadoBancada['frasco']>) {
+  const corpo = { x: 84, y: 168, largura: 42, altura: 136 };
+  const n = Math.max(0, Math.min(1, nivel));
+  const topoLiquido = corpo.y + corpo.altura * (1 - n);
+  const hasteAltura = 186;
+  return (
+    <g className="surgir">
+      <defs>
+        <clipPath id="clip-seringa-reserva">
+          <rect x={corpo.x + 1} y={corpo.y} width={corpo.largura - 2} height={corpo.altura} />
+        </clipPath>
+      </defs>
+      <rect
+        className="embolo-haste"
+        x={99}
+        y={118}
+        width={12}
+        height={hasteAltura}
+        style={{ transform: `scaleY(${Math.max(0.05, (topoLiquido - 8 - 118) / hasteAltura)})` }}
+      />
+      <rect className="embolo-cabo" x={80} y={110} width={50} height={8} rx={3} />
+      <g clipPath="url(#clip-seringa-reserva)">
+        <rect
+          className="liquido"
+          x={corpo.x + 1}
+          y={corpo.y}
+          width={corpo.largura - 2}
+          height={corpo.altura}
+          fill={CORES_LIQUIDO[cor]}
+          style={{ transform: `scaleY(${n})` }}
+        />
+      </g>
+      <rect className="embolo-borracha" x={corpo.x + 1} y={0} width={corpo.largura - 2} height={8} rx={2} style={{ transform: `translateY(${topoLiquido - 8}px)` }} />
+      <rect className="vidro" x={corpo.x} y={corpo.y} width={corpo.largura} height={corpo.altura} rx={3} />
+      <rect className="vidro" x={corpo.x - 10} y={corpo.y - 4} width={corpo.largura + 20} height={6} rx={2} />
+      <path className="vidro" d="M97 304 L113 304 L109 316 L101 316 Z" />
+      {Array.from({ length: 9 }, (_, i) => {
+        const y = corpo.y + corpo.altura - ((i + 1) * corpo.altura) / 10;
+        return <line key={i} className="marca" x1={corpo.x + corpo.largura - (i % 2 === 1 ? 12 : 7)} x2={corpo.x + corpo.largura} y1={y} y2={y} />;
+      })}
+      <text className="rotulo-forte" x={105} y={336} textAnchor="middle">
+        {rotulo}
+      </text>
+      <text className="rotulo" x={105} y={354} textAnchor="middle">
+        {sublinha}
+      </text>
+    </g>
+  );
+}
+
 const SERINGA = { x: 296, topo: 90, base: 290, largura: 48, altura: 200 };
 const MAX_CAMADAS = 3;
 
@@ -168,8 +223,8 @@ function Seringa({ capacidadeMl, camadas, rotulo }: NonNullable<EstadoBancada['s
   const topoLiquido = SERINGA.base - alturaTotal;
   const totalAnimado = useNumeroAnimado(total, 1300 * useRitmo(), 0);
 
-  const menor = capacidadeMl <= 1 ? 0.1 : capacidadeMl <= 5 ? 0.5 : 1;
-  const rotuloCada = capacidadeMl <= 1 ? 0.5 : capacidadeMl <= 5 ? 1 : capacidadeMl <= 10 ? 2 : 5;
+  const menor = capacidadeMl <= 1 ? 0.1 : capacidadeMl <= 5 ? 0.5 : capacidadeMl <= 20 ? 1 : 2;
+  const rotuloCada = capacidadeMl <= 1 ? 0.5 : capacidadeMl <= 5 ? 1 : capacidadeMl <= 10 ? 2 : capacidadeMl <= 30 ? 5 : 10;
   const marcas: { v: number; grande: boolean }[] = [];
   for (let v = menor; v <= capacidadeMl + 1e-9; v += menor) {
     const vv = Math.round(v * 100) / 100;

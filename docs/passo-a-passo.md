@@ -35,6 +35,11 @@ Primeira tela do app (antecipa parte da Fase 1).
 | Hiponatremia com convulsão — NaCl 3% | `src/dados/roteiros/hiponatremia.ts` | 17 etapas: mEq/mL das soluções de NaCl, dose 2 mL/kg, preparo do NaCl 3% a partir do 20% (C1V1 = C2V2 + AD), vazão, quanto o Na sobe, teto de 24 h, manutenção isotônica com KCl |
 | Hipocalemia grave — correção com KCl | `src/dados/roteiros/hipocalemia.ts` | 14 etapas: K⁺ de manutenção (mEq → mL), correção 0,5 mEq/kg, mL de KCl 19,1%, por que a seringa de 12 mL NÃO serve (667 mEq/L), diluição até 40 mEq/L, velocidade em mEq/kg/h |
 | Diluição: adrenalina 1:10.000 na PCR | `src/dados/roteiros/adrenalina-pcr.ts` | 8 etapas: por que diluir, C1 × V1 = C2 × V2, volume a administrar |
+| Rediluição + seringa da BIC — penicilina no prematuro | `src/dados/roteiros/rediluicao-penicilina.ts` | 16 etapas: reconstituição (500.000 UI/mL), por que não aspirar 0,14 mL (erro de medida 7% × 0,7%), rediluição 1 mL + 9 mL (C1V1 = C2V2), aspirar 1,4 mL, seringa de 12 mL (+ 10,6 mL de SF), vazão, as 3 concentrações, exames, cuidados, SINAN |
+| Infusão contínua — adrenalina no choque | `src/dados/roteiros/infusao-continua-adrenalina.ts` | 13 etapas: por que contínua, faixa de dose (régua), mcg/kg/min → mcg/min → mcg/h, solução padrão 1 mg em 50 mL (20 mcg/mL), mL/h = dose × peso × 60 ÷ conc., conferência de volta, titulação (barras), duração da seringa |
+| Hipocalcemia no RN — gluconato de cálcio | `src/dados/roteiros/hipocalcemia-rn.ts` | 14 etapas: glicemia primeiro, Ca total/iônico, ataque 1 mL/kg na seringa de 12 mL, cálcio elementar × sal, cálcio no soro (SG 10% + gluconato), vazão e VIG, magnésio |
+| Hipernatremia — correção lenta da água livre | `src/dados/roteiros/hipernatremia.ts` | 15 etapas: Na 160 e perda de peso, choque primeiro, por que devagar (≤ 10 mEq/L/24 h), déficit de água livre (fórmula × regra de 4 mL/kg), déficit pelo peso, plano de 48 h, soro 1:1 + KCl, vazão, ajuste pelo Na de 4/4 h |
+| Hipercalemia grave — cálcio, glicose + insulina | `src/dados/roteiros/hipercalemia.ts` | 17 etapas: K 7,2 com T apiculada, plano em 4 tempos, gluconato 14 mL (não cabe na seringa de 12 mL → 1:1), glicose 25%, insulina 0,014 mL → rediluição a 1 UI/mL → 1,4 mL, salbutamol, diálise |
 
 (Cada roteiro tem ainda a etapa final automática "Prescrição com os cálculos".)
 
@@ -45,16 +50,16 @@ Primeira tela do app (antecipa parte da Fase 1).
 - Os números devem ser **calculados** com as funções do motor único `src/calculos/` (o mesmo do Prescrever), nunca digitados à mão. Seções: lista única em `src/dados/secoes.ts`.
 - Cada roteiro tem um `tema` (agrupa o menu: Neonatologia, Distúrbios hidroeletrolíticos, Emergência).
 - Cada etapa: `secao`, `curto` (nome na seta), `titulo`, `explicacao`, e opcionalmente `conta` (com `passos` intermediários, se a conta tiver mais de um tempo), `dica`, `aValidar` + `fonte`, `cena`, `linha` (linha da folha; o mesmo `id` reescreve a linha) e `linhaDaConta` (quando a conta deve aparecer embaixo de outra linha na prescrição final).
-- Cenas disponíveis: `paciente`, `multiplicacao` (com `faixas` opcionais), `cartoes`, `bancada`, `conclusao`, `regua`, `barras`, `mistura`, `ictericia`. A etapa final (`prescricao-final`) é acrescentada sozinha — não escrever.
+- Cenas disponíveis: `paciente`, `multiplicacao` (com `faixas` opcionais), `cartoes`, `bancada`, `conclusao`, `regua`, `barras`, `mistura`, `ictericia`. Na `bancada`, o `frasco` pode ter `modelo: 'seringa'` (seringa "de reserva" com uma solução já preparada — usada na rediluição). A etapa final (`prescricao-final`) é acrescentada sozinha — não escrever.
 - Eletrólitos: usar `meqPorMl(%, MG_POR_MEQ.NaCl | KCl)`, `meqPorLitro`, `volumeMinimoDiluicao`, `volumeParaConcentracaoDesejada`, `deficitDeSodio`, `subidaEstimadaSodio`, `meqPorKgPorHora`, `dividirEmProporcao`, `vazaoDoVolume` (todas em `src/calculos/`, com testes). Para mostrar números nos desenhos, arredondar com `arredondar(x, casas)`.
 - Na cena `bancada`, `estadoInicial` é como a bancada aparece ao chegar avançando; a animação vai dele até `estado`.
 - Rodar `npm test` (os testes conferem a integridade dos roteiros).
 
+Menu: os roteiros ficam agrupados por tema (Neonatologia · Preparo: diluição, BIC e infusão · Distúrbios hidroeletrolíticos · Emergência); um tema sem roteiro não aparece.
+
 ## Próximos roteiros sugeridos
-- Rediluição (depende das apresentações da Santa Casa).
-- Hipercalemia (gluconato de cálcio, glicose + insulina, salbutamol) e hipocalcemia no RN.
-- Hipernatremia (correção lenta da água livre).
 - Hipoglicemia no RN (bolus de SG 10% + VIG).
+- Cetoacidose diabética (insulina contínua em UI/kg/h, potássio no soro).
 - Exsanguineotransfusão (volume = 2 volemias) como continuação do roteiro de icterícia.
 - Infusão contínua (mcg/kg/min → mL/h).
 - Escolha da fonte (SBP × AAP 2022) nos limiares de fototerapia.
