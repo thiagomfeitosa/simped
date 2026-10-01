@@ -47,6 +47,19 @@ export interface CasoClinico {
   evolucaoNatural?: MudancaDeSinal[];
   /** Como o paciente responde a cada medicação neste caso. */
   respostas?: RespostaAMedicacao[];
+  /**
+   * Resultados dos exames deste paciente (id do exame em src/dados/exames.ts → valores por analito e/ou laudo).
+   * Exame pedido sem resultado aqui aparece como "não disponível neste caso".
+   */
+  resultadosExames?: Record<string, ResultadoExame>;
+  /** Diurese do paciente (mL/kg/h), usada no balanço hídrico. A VALIDAR. */
+  diureseMlKgH?: number;
+}
+
+export interface ResultadoExame {
+  valores?: Record<string, number>;
+  laudo?: string;
+  status: StatusValidacao;
 }
 
 export type NomeSinal = keyof SinaisVitais;

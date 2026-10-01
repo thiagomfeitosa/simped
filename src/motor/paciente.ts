@@ -11,7 +11,9 @@ import type { CasoClinico, MudancaDeSinal, NomeSinal, SinaisVitais } from '../ca
 export type EventoPaciente =
   | { tipo: 'tempoPassou'; minutos: number }
   | { tipo: 'medicacaoAdministrada'; medicacaoId: string; descricao: string }
-  | { tipo: 'professorAlterouSinais'; sinais: Partial<SinaisVitais> };
+  | { tipo: 'professorAlterouSinais'; sinais: Partial<SinaisVitais> }
+  /** Só registra na linha do tempo (ex.: exame pedido); não muda o paciente. */
+  | { tipo: 'anotacao'; descricao: string };
 
 /** Mudança agendada ou em andamento num sinal. */
 interface MudancaAtiva {
@@ -130,6 +132,9 @@ export function aplicarEvento(
         : estado.mudancas;
       return avancarUmMinuto({ ...estado, mudancas, registro }, estado.tempoMin);
     }
+
+    case 'anotacao':
+      return { ...estado, registro: [...estado.registro, { tempoMin: estado.tempoMin, descricao: evento.descricao }] };
 
     case 'professorAlterouSinais': {
       const alterados = Object.keys(evento.sinais) as NomeSinal[];

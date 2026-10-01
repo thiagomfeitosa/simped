@@ -6,10 +6,13 @@ import { MEDICACOES_EXEMPLO } from '../dados/medicacoes/exemplos-a-validar';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
+import { EXAMES } from '../dados/exames';
+import type { PedidoExame } from '../exames/exames';
 import { type Checagem, itensParaAprazar } from '../prescricao/aprazamento';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
 import { ControlesCaso } from './ControlesCaso';
 import { FolhaPrescricao } from './FolhaPrescricao';
+import { PainelExames } from './PainelExames';
 import { PainelPaciente } from './PainelPaciente';
 import { QuadroHorarios } from './QuadroHorarios';
 import { RascunhoCalculos } from './RascunhoCalculos';
@@ -36,6 +39,15 @@ export function Prescrever() {
   // doses checadas pela enfermagem no quadro de horários
   const [checagens, setChecagens] = useState<Checagem[]>([]);
   const aprazaveis = useMemo(() => itensParaAprazar(prescricao, MEDICACOES_EXEMPLO), [prescricao]);
+  // exames pedidos (o resultado sai depois, pelo relógio do caso)
+  const [pedidos, setPedidos] = useState<PedidoExame[]>([]);
+  const pedirExame = (exameId: string) => {
+    const exame = EXAMES.find((e) => e.id === exameId);
+    if (!exame) return;
+    setPedidos((lista) => [...lista, { id: lista.length + 1, exameId, pedidoNoMinuto: paciente.tempoMin }]);
+    despachar({ tipo: 'adicionar', secao: 'exames', texto: exame.nome });
+    registrarEvento({ tipo: 'anotacao', descricao: `Exame pedido: ${exame.nome}` });
+  };
 
   return (
     <div className="prescrever">
@@ -102,6 +114,7 @@ export function Prescrever() {
               });
             }}
           />
+          <PainelExames caso={caso} agoraMin={paciente.tempoMin} pedidos={pedidos} aoPedir={pedirExame} />
           <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
         </div>
       </main>

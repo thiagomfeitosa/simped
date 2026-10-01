@@ -119,3 +119,15 @@ describe('acrescentarEvento', () => {
     expect(lista).toHaveLength(3);
   });
 });
+
+describe('anotação', () => {
+  it('entra na linha do tempo e não muda os sinais', () => {
+    const antes = reproduzirEventos(caso, [{ tipo: 'tempoPassou', minutos: 10 }]);
+    const depois = reproduzirEventos(caso, [
+      { tipo: 'tempoPassou', minutos: 10 },
+      { tipo: 'anotacao', descricao: 'Pedido: hemograma' },
+    ]);
+    expect(depois.sinais).toEqual(antes.sinais);
+    expect(depois.registro.at(-1)).toEqual({ tempoMin: 10, descricao: 'Pedido: hemograma' });
+  });
+});

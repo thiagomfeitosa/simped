@@ -44,4 +44,16 @@ export const casoDemonstracao: CasoClinico = {
       observacao: 'Números de demonstração, só para testar o motor.',
     },
   ],
+  // resultados fictícios, só para demonstrar a tela de exames (A VALIDAR)
+  resultadosExames: {
+    hemograma: {
+      valores: { hb: 11.8, ht: 35, leucocitos: 18500, neutrofilos: 78, bastoes: 8, plaquetas: 310000 },
+      status: 'A_VALIDAR',
+    },
+    pcr: { valores: { pcr: 64 }, status: 'A_VALIDAR' },
+    eletrolitos: { valores: { na: 136, k: 4.1, cl: 104, cai: 1.2, mg: 2 }, status: 'A_VALIDAR' },
+    'gasometria-venosa': { valores: { ph: 7.3, pco2: 33, hco3: 16, be: -8, lactato: 2.8 }, status: 'A_VALIDAR' },
+    'rx-torax': { laudo: 'Exemplo: sem consolidações; seios costofrênicos livres.', status: 'A_VALIDAR' },
+  },
+  diureseMlKgH: 1.2,
 };
