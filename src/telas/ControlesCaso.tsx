@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import type { Medicacao } from '../dados/medicacoes/tipos';
 import type { EstadoPaciente, EventoPaciente } from '../motor/paciente';
 
 export function formatarTempo(minutos: number): string {
@@ -10,19 +8,11 @@ export function formatarTempo(minutos: number): string {
 
 interface Props {
   paciente: EstadoPaciente;
-  medicacoes: readonly Medicacao[];
   aoEvento: (evento: EventoPaciente) => void;
 }
 
-/** Relógio do caso, avanço do tempo, administração (demonstração) e linha do tempo. */
-export function ControlesCaso({ paciente, medicacoes, aoEvento }: Props) {
-  const [medicacaoId, setMedicacaoId] = useState(medicacoes[0]?.id ?? '');
-
-  function administrar() {
-    const med = medicacoes.find((m) => m.id === medicacaoId);
-    if (med) aoEvento({ tipo: 'medicacaoAdministrada', medicacaoId: med.id, descricao: med.nome });
-  }
-
+/** Relógio do caso, avanço do tempo e linha do tempo. A medicação é dada pelo botão "Administrar" da folha. */
+export function ControlesCaso({ paciente, aoEvento }: Props) {
   return (
     <div className="controles-caso">
       <div className="relogio" aria-label="Tempo do caso">
@@ -35,19 +25,10 @@ export function ControlesCaso({ paciente, medicacoes, aoEvento }: Props) {
           </button>
         ))}
       </div>
-      <div className="linha-botoes">
-        <select aria-label="Medicação a administrar" value={medicacaoId} onChange={(e) => setMedicacaoId(e.target.value)}>
-          {medicacoes.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.nome}
-            </option>
-          ))}
-        </select>
-        <button type="button" onClick={administrar}>
-          Administrar
-        </button>
-      </div>
-      <p className="nota">Demonstração: os efeitos são fictícios (A VALIDAR).</p>
+      <p className="nota">
+        Para dar uma medicação, preencha o item na folha e clique em “Administrar”. Demonstração: os efeitos são
+        fictícios (A VALIDAR).
+      </p>
 
       <h3>Linha do tempo</h3>
       <ol className="linha-do-tempo">

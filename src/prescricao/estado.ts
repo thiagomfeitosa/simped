@@ -3,40 +3,26 @@
  * Funções puras: recebem o estado e uma ação, devolvem o novo estado.
  */
 
-export type SecaoId =
-  | 'oxigenoterapia'
-  | 'dieta'
-  | 'volemia'
-  | 'antimicrobianos'
-  | 'medicacoes'
-  | 'exames'
-  | 'cuidados'
-  | 'sinan';
+import { type CamposMedicacao, camposVazios } from './itemMedicacao';
+import { SECOES, type SecaoId } from './secoes';
 
-export interface DefinicaoSecao {
-  id: SecaoId;
-  numero: number;
-  titulo: string;
-  /** Só entra quando se aplica ao caso. */
-  seAplicavel?: boolean;
-}
+export { type DefinicaoSecao, SECOES, type SecaoId } from './secoes';
 
-/** Seções 2 a 9 (a 1, identificação, vem do paciente). Ordem do CLAUDE.md. */
-export const SECOES: readonly DefinicaoSecao[] = [
-  { id: 'oxigenoterapia', numero: 2, titulo: 'Oxigenoterapia', seAplicavel: true },
-  { id: 'dieta', numero: 3, titulo: 'Dieta' },
-  { id: 'volemia', numero: 4, titulo: 'Reposição volêmica e glicose' },
-  { id: 'antimicrobianos', numero: 5, titulo: 'Antibióticos / antiparasitários / ARV' },
-  { id: 'medicacoes', numero: 6, titulo: 'Demais medicações' },
-  { id: 'exames', numero: 7, titulo: 'Exames solicitados' },
-  { id: 'cuidados', numero: 8, titulo: 'Orientações / cuidados' },
-  { id: 'sinan', numero: 9, titulo: 'Notificação SINAN', seAplicavel: true },
-];
-
-export interface ItemPrescricao {
+/** Item escrito à mão (texto livre). */
+export interface ItemTexto {
   id: number;
+  tipo: 'texto';
   texto: string;
 }
+
+/** Item de medicação estruturado (medicação → apresentação → dose → via → intervalo). */
+export interface ItemMedicacao {
+  id: number;
+  tipo: 'medicacao';
+  campos: CamposMedicacao;
+}
+
+export type ItemPrescricao = ItemTexto | ItemMedicacao;
 
 export interface EstadoPrescricao {
   itens: Record<SecaoId, ItemPrescricao[]>;
@@ -46,6 +32,8 @@ export interface EstadoPrescricao {
 export type AcaoPrescricao =
   | { tipo: 'adicionar'; secao: SecaoId; texto?: string }
   | { tipo: 'editar'; secao: SecaoId; id: number; texto: string }
+  | { tipo: 'adicionarMedicacao'; secao: SecaoId; campos?: CamposMedicacao }
+  | { tipo: 'editarMedicacao'; secao: SecaoId; id: number; campos: CamposMedicacao }
   | { tipo: 'remover'; secao: SecaoId; id: number }
   | { tipo: 'limpar' };
 
@@ -54,26 +42,39 @@ export function prescricaoVazia(): EstadoPrescricao {
   return { itens, proximoId: 1 };
 }
 
+function incluir(estado: EstadoPrescricao, secao: SecaoId, item: ItemPrescricao): EstadoPrescricao {
+  return {
+    itens: { ...estado.itens, [secao]: [...estado.itens[secao], item] },
+    proximoId: estado.proximoId + 1,
+  };
+}
+
+function trocar(
+  estado: EstadoPrescricao,
+  secao: SecaoId,
+  mudar: (item: ItemPrescricao) => ItemPrescricao,
+): EstadoPrescricao {
+  return { ...estado, itens: { ...estado.itens, [secao]: estado.itens[secao].map(mudar) } };
+}
+
 export function reduzirPrescricao(estado: EstadoPrescricao, acao: AcaoPrescricao): EstadoPrescricao {
   switch (acao.tipo) {
     case 'adicionar':
-      return {
-        itens: {
-          ...estado.itens,
-          [acao.secao]: [...estado.itens[acao.secao], { id: estado.proximoId, texto: acao.texto ?? '' }],
-        },
-        proximoId: estado.proximoId + 1,
-      };
+      return incluir(estado, acao.secao, { id: estado.proximoId, tipo: 'texto', texto: acao.texto ?? '' });
     case 'editar':
-      return {
-        ...estado,
-        itens: {
-          ...estado.itens,
-          [acao.secao]: estado.itens[acao.secao].map((item) =>
-            item.id === acao.id ? { ...item, texto: acao.texto } : item,
-          ),
-        },
-      };
+      return trocar(estado, acao.secao, (item) =>
+        item.id === acao.id && item.tipo === 'texto' ? { ...item, texto: acao.texto } : item,
+      );
+    case 'adicionarMedicacao':
+      return incluir(estado, acao.secao, {
+        id: estado.proximoId,
+        tipo: 'medicacao',
+        campos: acao.campos ?? camposVazios(),
+      });
+    case 'editarMedicacao':
+      return trocar(estado, acao.secao, (item) =>
+        item.id === acao.id && item.tipo === 'medicacao' ? { ...item, campos: acao.campos } : item,
+      );
     case 'remover':
       return {
         ...estado,

@@ -1,14 +1,18 @@
 import type { Dispatch } from 'react';
 import type { Paciente } from '../casos/tipos';
+import type { Medicacao } from '../dados/medicacoes/tipos';
 import { type AcaoPrescricao, type EstadoPrescricao, numerarItens, SECOES } from '../prescricao/estado';
+import { ItemMedicacaoFolha } from './ItemMedicacaoFolha';
 
 interface Props {
   paciente: Paciente;
   estado: EstadoPrescricao;
   despachar: Dispatch<AcaoPrescricao>;
+  medicacoes: readonly Medicacao[];
+  aoAdministrar: (medicacaoId: string, descricao: string) => void;
 }
 
-export function FolhaPrescricao({ paciente, estado, despachar }: Props) {
+export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdministrar }: Props) {
   const numeros = numerarItens(estado);
 
   return (
@@ -31,35 +35,58 @@ export function FolhaPrescricao({ paciente, estado, despachar }: Props) {
               {secao.seAplicavel && <span className="se-aplicavel"> (se aplicável)</span>}
             </h3>
             <ol className="itens">
-              {estado.itens[secao.id].map((item) => (
-                <li key={item.id}>
-                  <span className="numero-item">{numeros.get(item.id)}.</span>
-                  <input
-                    aria-label={`Item ${numeros.get(item.id)} — ${secao.titulo}`}
-                    value={item.texto}
-                    placeholder="Escreva o item da prescrição"
-                    onChange={(e) =>
-                      despachar({ tipo: 'editar', secao: secao.id, id: item.id, texto: e.target.value })
-                    }
+              {estado.itens[secao.id].map((item) =>
+                item.tipo === 'medicacao' ? (
+                  <ItemMedicacaoFolha
+                    key={item.id}
+                    numero={numeros.get(item.id)}
+                    secao={secao}
+                    campos={item.campos}
+                    medicacoes={medicacoes}
+                    paciente={paciente}
+                    aoMudar={(campos) => despachar({ tipo: 'editarMedicacao', secao: secao.id, id: item.id, campos })}
+                    aoRemover={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
+                    aoAdministrar={aoAdministrar}
                   />
-                  <button
-                    type="button"
-                    className="remover"
-                    aria-label="Remover item"
-                    onClick={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
+                ) : (
+                  <li key={item.id}>
+                    <span className="numero-item">{numeros.get(item.id)}.</span>
+                    <input
+                      aria-label={`Item ${numeros.get(item.id)} — ${secao.titulo}`}
+                      value={item.texto}
+                      placeholder="Escreva o item da prescrição"
+                      onChange={(e) =>
+                        despachar({ tipo: 'editar', secao: secao.id, id: item.id, texto: e.target.value })
+                      }
+                    />
+                    <button
+                      type="button"
+                      className="remover"
+                      aria-label="Remover item"
+                      onClick={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ),
+              )}
             </ol>
             <button
               type="button"
               className="adicionar"
               onClick={() => despachar({ tipo: 'adicionar', secao: secao.id })}
             >
-              + adicionar item
+              + item em texto
             </button>
+            {secao.aceitaMedicacao && (
+              <button
+                type="button"
+                className="adicionar"
+                onClick={() => despachar({ tipo: 'adicionarMedicacao', secao: secao.id })}
+              >
+                + medicação
+              </button>
+            )}
           </div>
         ))}
 

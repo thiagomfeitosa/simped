@@ -87,7 +87,7 @@ button:hover {
 @media (max-width: 1000px) {
   .area,
   .area.com-paciente {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -244,6 +244,139 @@ button:hover {
   font-size: 0.85rem;
 }
 
+.adicionar + .adicionar {
+  margin-left: 14px;
+}
+
+/* Item de medicação estruturado */
+:root {
+  --certo: #1e7a3c;
+  --certo-fundo: #e6f4ea;
+  --errado: #b3261e;
+  --errado-fundo: #fbe9e7;
+  --atencao: #8a5a00;
+  --atencao-fundo: #fff4d6;
+  --a-validar: #4a5a6e;
+  --a-validar-fundo: #e9eef4;
+}
+
+.itens li.item-med {
+  display: block;
+  margin: 6px 0;
+  padding: 4px 0 6px;
+  border-bottom: 1px dashed var(--linha-papel);
+}
+
+.item-med-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-med-linha .remover {
+  margin-left: auto;
+}
+
+.item-med-campos {
+  margin: 4px 0 0 calc(2em + 6px);
+  font-size: 0.9rem;
+}
+
+.item-med select,
+.item-med input {
+  font: inherit;
+  border: 1px solid var(--linha-papel);
+  border-radius: 4px;
+  background: #fff;
+  padding: 2px 4px;
+}
+
+.item-med select {
+  max-width: 100%;
+}
+
+.item-med label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-med input:focus,
+.item-med select:focus {
+  outline: 2px solid var(--destaque);
+  outline-offset: 0;
+}
+
+.item-med-texto {
+  margin: 6px 0 0 calc(2em + 6px) !important;
+  font-family: 'Bradley Hand', 'Segoe Print', 'Comic Sans MS', cursive;
+  font-size: 1.02rem;
+}
+
+.item-med-acoes {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 0 calc(2em + 6px);
+}
+
+.item-med-acoes button {
+  font-size: 0.85rem;
+}
+
+.administrar:not(:disabled) {
+  background: var(--destaque);
+  border-color: var(--destaque);
+  color: #fff;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.conferencia {
+  list-style: none;
+  margin: 6px 0 0 calc(2em + 6px);
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.conferencia li {
+  margin: 3px 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border-left: 4px solid;
+}
+
+.conferencia .selo {
+  display: inline-block;
+  min-width: 6.5em;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.conferencia .certo {
+  color: var(--certo);
+  background: var(--certo-fundo);
+}
+
+.conferencia .errado {
+  color: var(--errado);
+  background: var(--errado-fundo);
+}
+
+.conferencia .atencao {
+  color: var(--atencao);
+  background: var(--atencao-fundo);
+}
+
+.conferencia .a-validar {
+  color: var(--a-validar);
+  background: var(--a-validar-fundo);
+}
+
 .rodape-folha {
   border-top: 1px solid var(--linha-papel);
   padding-top: 10px;
@@ -288,11 +421,6 @@ button:hover {
 
 .linha-botoes button {
   white-space: nowrap;
-}
-
-.linha-botoes select {
-  flex: 1;
-  font: inherit;
 }
 
 .nota {

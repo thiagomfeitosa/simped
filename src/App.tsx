@@ -16,6 +16,7 @@ export function App() {
   // o paciente é sempre recalculado a partir da lista de eventos (motor estado + eventos)
   const [eventos, setEventos] = useState<EventoPaciente[]>([]);
   const paciente = useMemo(() => reproduzirEventos(caso, eventos), [caso, eventos]);
+  const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => [...lista, evento]);
 
   return (
     <div className="app">
@@ -33,14 +34,18 @@ export function App() {
       <main className={pacienteVisivel ? 'area com-paciente' : 'area'}>
         {pacienteVisivel && (
           <PainelPaciente caso={caso} sinais={paciente.sinais}>
-            <ControlesCaso
-              paciente={paciente}
-              medicacoes={MEDICACOES_EXEMPLO}
-              aoEvento={(evento) => setEventos((lista) => [...lista, evento])}
-            />
+            <ControlesCaso paciente={paciente} aoEvento={registrarEvento} />
           </PainelPaciente>
         )}
-        <FolhaPrescricao paciente={caso.paciente} estado={prescricao} despachar={despachar} />
+        <FolhaPrescricao
+          paciente={caso.paciente}
+          estado={prescricao}
+          despachar={despachar}
+          medicacoes={MEDICACOES_EXEMPLO}
+          aoAdministrar={(medicacaoId, descricao) =>
+            registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao })
+          }
+        />
         <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
       </main>
     </div>
