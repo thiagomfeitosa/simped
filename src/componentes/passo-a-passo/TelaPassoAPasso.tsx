@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { PassoAPasso } from './PassoAPasso';
 import { fatorDoRitmo, OPCOES_RITMO, RITMO_PADRAO, RitmoContexto, type Ritmo } from './ritmo';
 import { ROTEIROS, TEMAS } from '../../dados/roteiros';
+import { definirContexto } from '../../diagnostico/relato';
 
 const CHAVE_RITMO = 'simped.ritmo';
 // a lista de roteiros nunca é vazia: o primeiro é o que abre
@@ -30,6 +31,9 @@ export function TelaPassoAPasso() {
       // sem armazenamento (janela privada etc.): só não lembra a escolha
     }
   }, [ritmo]);
+
+  // o "Relatar problema" diz qual roteiro estava aberto
+  useEffect(() => definirContexto('Roteiro do passo a passo', roteiro.titulo), [roteiro.titulo]);
 
   return (
     <RitmoContexto.Provider value={fator}>

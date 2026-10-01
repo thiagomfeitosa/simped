@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FONTES_DE_DOSE, hospitalAtual } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { FAIXAS_POR_FONTE, FONTES_DE_FAIXA, type FonteDeFaixa } from '../dados/faixas-etarias';
@@ -9,6 +10,9 @@ export function Configuracoes() {
   const { config, mudar, restaurar } = useConfiguracoes();
   const hospital = hospitalAtual(config);
   const original = hospitalPorId(config.hospitalId);
+  // botão "Testar a tela de erro": mostra como fica quando algo dá errado (B3)
+  const [testarErro, setTestarErro] = useState(false);
+  if (testarErro) throw new Error('Erro de teste (botão “Testar a tela de erro” em Configurações).');
 
   return (
     <div className="pagina-simples">
@@ -136,6 +140,9 @@ export function Configuracoes() {
       <p className="rodape-config">
         <button type="button" onClick={restaurar}>
           Voltar ao padrão
+        </button>{' '}
+        <button type="button" onClick={() => setTestarErro(true)} title="Mostra a mensagem que aparece quando algo dá errado">
+          Testar a tela de erro
         </button>
       </p>
     </div>

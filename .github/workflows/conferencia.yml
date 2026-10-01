@@ -1,0 +1,40 @@
+# Conferência automática (B1): a cada envio para o GitHub, roda tipos, testes das contas,
+# geração do app e os testes de tela (navegador automático clicando como o aluno).
+# Se algo quebrar, o GitHub mostra um X vermelho no envio e manda aviso.
+name: Conferência (testes, tipos, build e telas)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tipos (TypeScript)
+        run: npm run typecheck
+      - name: Testes das contas e dos dados (Vitest)
+        run: npm test
+      - name: Gerar o app (build + arquivo único)
+        run: npm run arquivo-unico
+      - name: Instalar o navegador dos testes de tela
+        run: npx playwright install --with-deps chromium
+      - name: Testes de tela (Playwright)
+        run: npm run teste-tela
+      - name: Guardar o relatório dos testes de tela (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-teste-tela
+          path: |
+            relatorio-teste-tela/
+            test-results/
+          retention-days: 7

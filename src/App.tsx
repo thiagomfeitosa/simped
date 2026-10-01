@@ -3,6 +3,7 @@ import { TelaPassoAPasso } from './componentes/passo-a-passo/TelaPassoAPasso';
 import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
 import { ProvedorBanco } from './dados/medicacoes/ContextoBanco';
+import { ProtecaoDeErro, RelatarProblema } from './diagnostico/ProtecaoDeErro';
 import { Banco } from './telas/Banco';
 import { Calculadoras } from './telas/Calculadoras';
 import { Configuracoes } from './telas/Configuracoes';
@@ -109,12 +110,14 @@ export function App() {
                 {m.principal && <small>{m.descricao}</small>}
               </a>
             ))}
+            <RelatarProblema />
           </nav>
 
           {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
           {MODOS.map((m) => (
             <div key={m.id} hidden={modo !== m.id} className={m.classe}>
-              {m.tela()}
+              {/* erro numa aba mostra uma mensagem amigável só nela; as outras continuam funcionando */}
+              <ProtecaoDeErro onde={m.rotulo}>{m.tela()}</ProtecaoDeErro>
             </div>
           ))}
         </ProvedorCasos>

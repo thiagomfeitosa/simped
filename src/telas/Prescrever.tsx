@@ -5,6 +5,7 @@ import type { CasoClinico } from '../casos/tipos';
 import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
+import { definirContexto } from '../diagnostico/relato';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
@@ -60,6 +61,8 @@ export function Prescrever() {
     window.addEventListener('simped:abrir-caso', abrir);
     return () => window.removeEventListener('simped:abrir-caso', abrir);
   });
+  // o "Relatar problema" diz qual caso estava aberto
+  useEffect(() => definirContexto('Caso do Prescrever', `${caso.titulo} (${caso.id})`), [caso.titulo, caso.id]);
   return <SessaoCaso key={caso.id} caso={caso} casos={casos} aoTrocarCaso={trocar} />;
 }
 

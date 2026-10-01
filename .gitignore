@@ -11,3 +11,8 @@ dist/
 *.tsbuildinfo
 dist-arquivo
 instaladores
+
+# Resultados dos testes de tela (npm run teste-tela)
+test-results/
+relatorio-teste-tela/
+playwright-report/
