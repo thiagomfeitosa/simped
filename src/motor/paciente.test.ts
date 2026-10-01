@@ -6,7 +6,16 @@ import { aplicarEvento, iniciarPaciente, reproduzirEventos } from './paciente';
 const caso: CasoClinico = {
   id: 'teste',
   titulo: 'Teste',
-  paciente: { nome: 'X', idadeTexto: '1 ano', faixa: 'crianca', pesoKg: 10, sexo: 'M', leito: '1' },
+  inicio: '2026-10-01T08:00',
+  paciente: {
+    nome: 'X',
+    nascimento: '2025-09-01T08:00',
+    igNascer: { semanas: 39, dias: 0 },
+    pesoNascerG: 3200,
+    pesoKg: 10,
+    sexo: 'M',
+    leito: '1',
+  },
   queixa: '',
   historia: '',
   exameFisico: '',

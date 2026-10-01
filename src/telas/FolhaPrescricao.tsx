@@ -1,11 +1,12 @@
 import type { Dispatch } from 'react';
-import type { Paciente } from '../casos/tipos';
+import type { PacienteAtual } from '../paciente/atual';
+import { formatarDataHora, lerDataHora } from '../paciente/variaveis';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import { type AcaoPrescricao, type EstadoPrescricao, numerarItens, SECOES } from '../prescricao/estado';
 import { ItemMedicacaoFolha } from './ItemMedicacaoFolha';
 
 interface Props {
-  paciente: Paciente;
+  paciente: PacienteAtual;
   estado: EstadoPrescricao;
   despachar: Dispatch<AcaoPrescricao>;
   medicacoes: readonly Medicacao[];
@@ -23,8 +24,12 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
         <div className="secao">
           <h3>1. Identificação do paciente</h3>
           <p className="identificacao">
-            {paciente.nome} · {paciente.idadeTexto} · {paciente.sexo} · Peso: {paciente.pesoKg.toLocaleString('pt-BR')} kg ·
-            Leito {paciente.leito}
+            {paciente.nome} · {paciente.sexo} · DN {formatarDataHora(lerDataHora(paciente.nascimento)).slice(0, 10)} ·{' '}
+            {paciente.idadeTexto} · Peso: {paciente.pesoKg.toLocaleString('pt-BR')} kg · SC{' '}
+            {paciente.variaveis.superficieCorporal.m2.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} m² · Leito{' '}
+            {paciente.leito}
+            <br />
+            Alergias: {paciente.alergias && paciente.alergias.length > 0 ? paciente.alergias.join(', ') : 'nenhuma conhecida'}
           </p>
         </div>
 

@@ -438,3 +438,29 @@
   color: var(--suave);
   margin-right: 4px;
 }
+
+/* Ficha do paciente: variáveis calculadas */
+.ficha .faixa {
+  font-weight: normal;
+  font-size: 0.78rem;
+  color: var(--suave);
+  white-space: nowrap;
+}
+
+.ficha .alergia {
+  color: var(--errado, #b3261e);
+}
+
+.idade-detalhe {
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+
+.idade-detalhe summary {
+  cursor: pointer;
+  color: var(--destaque);
+}
+
+.painel-paciente .ficha {
+  font-size: 0.9rem;
+}

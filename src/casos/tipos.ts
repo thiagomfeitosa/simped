@@ -1,4 +1,5 @@
-import type { FaixaEtaria, StatusValidacao } from '../dados/medicacoes/tipos';
+import type { StatusValidacao } from '../dados/medicacoes/tipos';
+import type { DadosDeOrigem } from '../paciente/variaveis';
 
 export interface SinaisVitais {
   /** Frequência cardíaca (bpm). */
@@ -16,18 +17,27 @@ export interface SinaisVitais {
   glicemiaMgDl: number;
 }
 
-export interface Paciente {
+/**
+ * Paciente do caso: só DADOS DE ORIGEM (docs/fase-0/variaveis-paciente.md).
+ * Idade, faixa etária, idade corrigida e superfície corporal são calculadas (src/paciente/).
+ */
+export interface Paciente extends DadosDeOrigem {
   nome: string;
-  idadeTexto: string;
-  faixa: FaixaEtaria;
-  pesoKg: number;
   sexo: 'F' | 'M';
   leito: string;
+  perimetroCefalicoCm?: number;
+  alergias?: string[];
+  condicoesDeBase?: string[];
+  medicacoesEmUso?: string[];
+  /** RN: tipo sanguíneo, sorologias, bolsa rota etc. (texto livre). */
+  dadosMaternos?: string;
 }
 
 export interface CasoClinico {
   id: string;
   titulo: string;
+  /** Data e hora em que o caso começa ("AAAA-MM-DDTHH:MM"): o relógio do caso parte daqui. */
+  inicio: string;
   paciente: Paciente;
   queixa: string;
   historia: string;

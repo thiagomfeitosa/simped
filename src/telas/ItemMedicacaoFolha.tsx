@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Paciente } from '../casos/tipos';
+import type { PacienteAtual } from '../paciente/atual';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import {
   atualizarCampos,
@@ -29,7 +29,7 @@ interface Props {
   secao: DefinicaoSecao;
   campos: CamposMedicacao;
   medicacoes: readonly Medicacao[];
-  paciente: Paciente;
+  paciente: PacienteAtual;
   aoMudar: (campos: CamposMedicacao) => void;
   aoRemover: () => void;
   aoAdministrar: (medicacaoId: string, descricao: string) => void;
