@@ -8,11 +8,12 @@ Simulador de Prescrição em Emergências Pediátricas — software de treinamen
 - Documentos da Fase 0 (planejamento): [`docs/fase-0/`](docs/fase-0/)
 - Motor de cálculo (fórmulas de dose, diluição, BIC etc.): [`src/calculos/`](src/calculos/)
 
-## Rodar os testes automáticos
+## Abrir o app e rodar os testes
 
 Precisa do [Node.js](https://nodejs.org) instalado. No Terminal, dentro da pasta do projeto:
 
 ```
 npm install   # só na primeira vez
-npm test      # roda os testes; tudo verde = fórmulas conferidas
+npm run dev   # abre o app: copie o endereço que aparecer (http://localhost:5173) no navegador
+npm test      # roda os testes automáticos; tudo verde = conferido
 ```

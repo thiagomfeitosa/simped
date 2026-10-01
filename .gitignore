@@ -7,3 +7,4 @@ referencias/privado/*
 
 # Dependências instaladas pelo npm (recriadas com "npm install")
 node_modules/
+dist/

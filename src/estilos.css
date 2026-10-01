@@ -1,0 +1,270 @@
+:root {
+  --fundo: #eef1f4;
+  --painel: #ffffff;
+  --texto: #1d2733;
+  --suave: #5b6878;
+  --borda: #d5dbe2;
+  --destaque: #1f4e79;
+  --aviso-fundo: #fff4d6;
+  --aviso-borda: #e7c45a;
+  --papel: #fffdf6;
+  --linha-papel: #e5dfcc;
+  --prancheta: #8a6a45;
+  --monitor: #0e1418;
+  --monitor-verde: #3ee07a;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: var(--texto);
+  background: var(--fundo);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--borda);
+  background: var(--painel);
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+
+button:hover {
+  border-color: var(--destaque);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--destaque);
+  color: #fff;
+}
+
+.cabecalho h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.cabecalho .subtitulo {
+  flex: 1;
+  opacity: 0.85;
+}
+
+.aviso {
+  margin: 0;
+  padding: 6px 16px;
+  background: var(--aviso-fundo);
+  border-bottom: 1px solid var(--aviso-borda);
+  font-size: 0.9rem;
+}
+
+.area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 12px;
+  padding: 12px;
+}
+
+.area.com-paciente {
+  grid-template-columns: 300px minmax(0, 1fr) 320px;
+}
+
+@media (max-width: 1000px) {
+  .area,
+  .area.com-paciente {
+    grid-template-columns: 1fr;
+  }
+}
+
+.painel {
+  background: var(--painel);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.painel h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.painel h3 {
+  margin: 14px 0 4px;
+  font-size: 0.9rem;
+  color: var(--suave);
+}
+
+.painel p {
+  margin: 0;
+}
+
+/* Paciente */
+.ficha {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  margin: 0;
+}
+
+.ficha dt {
+  color: var(--suave);
+}
+
+.ficha dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.vitais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--monitor);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.vital {
+  display: flex;
+  flex-direction: column;
+  color: var(--monitor-verde);
+  font-variant-numeric: tabular-nums;
+}
+
+.vital-rotulo,
+.vital-unidade {
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+.vital-valor {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+/* Prancheta e folha */
+.prancheta {
+  background: var(--prancheta);
+  padding: 16px;
+}
+
+.folha {
+  background: var(--papel);
+  border-radius: 4px;
+  padding: 16px 20px;
+  min-height: 100%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.folha-titulo {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.secao {
+  border-top: 1px solid var(--linha-papel);
+  padding: 4px 0 8px;
+}
+
+.secao h3 {
+  color: var(--texto);
+}
+
+.se-aplicavel {
+  font-weight: normal;
+  color: var(--suave);
+}
+
+.identificacao {
+  font-size: 0.95rem;
+}
+
+.itens {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.itens li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0;
+}
+
+.numero-item {
+  min-width: 2em;
+  text-align: right;
+  font-weight: 600;
+}
+
+.itens input {
+  flex: 1;
+  font: inherit;
+  border: none;
+  border-bottom: 1px dashed var(--linha-papel);
+  background: transparent;
+  padding: 3px 2px;
+}
+
+.itens input:focus {
+  outline: none;
+  border-bottom-color: var(--destaque);
+}
+
+.remover {
+  border: none;
+  background: transparent;
+  color: var(--suave);
+  font-size: 1.1rem;
+  padding: 0 6px;
+}
+
+.adicionar {
+  border: none;
+  background: transparent;
+  color: var(--destaque);
+  padding: 2px 0;
+  font-size: 0.85rem;
+}
+
+.rodape-folha {
+  border-top: 1px solid var(--linha-papel);
+  padding-top: 10px;
+  text-align: right;
+}
+
+/* Rascunho */
+.rascunho {
+  display: flex;
+  flex-direction: column;
+}
+
+.rascunho textarea {
+  flex: 1;
+  min-height: 320px;
+  resize: vertical;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 8px;
+  background: repeating-linear-gradient(#fff, #fff 23px, #eef2f7 24px);
+  line-height: 24px;
+}
