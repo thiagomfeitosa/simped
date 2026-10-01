@@ -42,6 +42,8 @@ test('conferir uma dose no Banco faz o Prescrever corrigir com ela', async ({ pa
 
   // a conferência continua depois de recarregar (fica guardada no computador)
   await page.reload();
+  // (como havia um caso em andamento, o app pergunta se quer continuar — B13)
+  await page.getByRole('dialog', { name: 'Continuar o caso' }).getByRole('button', { name: 'Começar do zero' }).click();
   await irPara(page, /Banco/);
   await expect(abaVisivel(page).locator('.relatorio-numeros strong').nth(2)).toHaveText(/^1\//);
   expect(erros).toEqual([]);

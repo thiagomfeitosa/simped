@@ -1084,3 +1084,130 @@
     display: none;
   }
 }
+
+/* Rever o caso (B12) */
+.revisao {
+  width: min(1100px, 100%);
+}
+
+.revisao-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.revisao-controles input[type='range'] {
+  flex: 1 1 200px;
+}
+
+.revisao-atual {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--aviso-fundo);
+}
+
+.revisao-colunas {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.3fr);
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .revisao-colunas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.revisao-lista {
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.88rem;
+}
+
+.revisao-lista button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none !important;
+  border-bottom: 1px solid var(--borda) !important;
+  border-radius: 0 !important;
+  background: none !important;
+  padding: 4px 6px !important;
+}
+
+.revisao-lista .atual button {
+  background: var(--aviso-fundo) !important;
+  font-weight: 700;
+}
+
+.revisao-lista .futuro button {
+  color: var(--suave);
+  opacity: 0.6;
+}
+
+.revisao-lista .hora {
+  display: inline-block;
+  min-width: 3.2em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.revisao-lista .hora-real {
+  margin-right: 6px;
+  font-size: 0.75rem;
+  color: var(--suave);
+}
+
+.revisao-momento h3 {
+  margin: 8px 0 4px;
+  font-size: 1rem;
+}
+
+.revisao-sinais {
+  font-variant-numeric: tabular-nums;
+}
+
+.revisao-rascunho {
+  white-space: pre-wrap;
+  font-family: var(--fonte-mao, cursive);
+  background: var(--papel);
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.folha-leitura {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--papel);
+  font-size: 0.9rem;
+}
+
+.folha-leitura h4 {
+  margin: 6px 0 2px;
+  font-size: 0.85rem;
+  color: var(--destaque);
+}
+
+.folha-leitura ol {
+  margin: 0;
+  padding-left: 24px;
+}
+
+/* Mensagem do professor para o aluno (B14) */
+.mensagem-professor {
+  margin: 0 16px 8px;
+  padding: 8px 12px;
+  border: 2px solid #7b4fd6;
+  border-radius: 8px;
+  background: #f3edff;
+}
+
+@media print {
+  .mensagem-professor {
+    display: none;
+  }
+}

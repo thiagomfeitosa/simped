@@ -11,6 +11,12 @@ import type { Apresentacao, CodigoFonte, Medicacao, UnidadeDroga, VariaveisParaR
 import { converterDroga, formatarNumero, lerNumero, RUIDO_NUMERICO, type Verificacao } from './comum';
 import { conferirItemMedicacao, camposVazios, indicacoesDisponiveis } from './itemMedicacao';
 
+/** Um item da receita de alta (fica na sessão do caso e entra no relatório final). */
+export interface ItemReceita {
+  id: number;
+  campos: CamposReceita;
+}
+
 export interface CamposReceita {
   medicacaoId: string;
   apresentacaoId: string;

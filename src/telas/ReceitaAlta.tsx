@@ -9,6 +9,7 @@ import { indicacoesDisponiveis, textoParaModo, UNIDADES_DOSE } from '../prescric
 import {
   type CamposReceita,
   conferirReceita,
+  type ItemReceita,
   medicacoesOrais,
   receitaVazia,
   textoDaReceita,
@@ -19,25 +20,19 @@ import {
 const SELO: Record<Situacao, string> = { certo: '✔ certo', errado: '✘ errado', atencao: '⚠ atenção', 'a-validar': 'A VALIDAR' };
 const INTERVALOS = [4, 6, 8, 12, 24] as const;
 
-export interface ItemReceita {
-  id: number;
-  campos: CamposReceita;
-}
-
 interface Props {
   paciente: PacienteAtual;
   medicacoes: readonly Medicacao[];
   /** Os itens ficam na sessão do caso (entram no relatório final). */
   itens: readonly ItemReceita[];
-  aoMudarItens: (mudar: (itens: ItemReceita[]) => ItemReceita[]) => void;
+  aoAdicionar: () => void;
+  aoMudar: (id: number, campos: CamposReceita) => void;
+  aoRemover: (id: number) => void;
 }
 
 /** Receita de alta / ambulatorial: medicações orais, quanto dar por vez e quanto comprar. */
-export function ReceitaAlta({ paciente, medicacoes, itens, aoMudarItens: setItens }: Props) {
-  const proximo = itens.reduce((max, i) => Math.max(max, i.id), 0) + 1;
+export function ReceitaAlta({ paciente, medicacoes, itens, aoAdicionar, aoMudar: mudar, aoRemover }: Props) {
   const orais = medicacoesOrais(medicacoes);
-
-  const mudar = (id: number, campos: CamposReceita) => setItens((l) => l.map((i) => (i.id === id ? { ...i, campos } : i)));
 
   return (
     <section className="painel prancheta" aria-label="Receita de alta">
@@ -64,16 +59,14 @@ export function ReceitaAlta({ paciente, medicacoes, itens, aoMudarItens: setIten
               medicacoes={medicacoes}
               paciente={paciente}
               aoMudar={(c) => mudar(item.id, c)}
-              aoRemover={() => setItens((l) => l.filter((i) => i.id !== item.id))}
+              aoRemover={() => aoRemover(item.id)}
             />
           ))}
         </ol>
         <button
           type="button"
           className="adicionar"
-          onClick={() => {
-            setItens((l) => [...l, { id: proximo, campos: receitaVazia() }]);
-          }}
+          onClick={aoAdicionar}
         >
           + medicação oral
         </button>

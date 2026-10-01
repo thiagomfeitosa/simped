@@ -1,4 +1,4 @@
-import type { EstadoPaciente, EventoPaciente } from '../motor/paciente';
+import type { EstadoPaciente } from '../motor/paciente';
 import { formatarDataHora } from '../paciente/variaveis';
 import { useRelogio, VELOCIDADES } from './useRelogio';
 
@@ -12,12 +12,12 @@ interface Props {
   paciente: EstadoPaciente;
   /** Data e hora atuais do caso (início + relógio). */
   agora: Date;
-  aoEvento: (evento: EventoPaciente) => void;
+  aoPassarTempo: (minutos: number) => void;
 }
 
 /** Relógio do caso (anda sozinho ou aos saltos) e linha do tempo. A medicação é dada pelo botão "Administrar" da folha. */
-export function ControlesCaso({ paciente, agora, aoEvento }: Props) {
-  const relogio = useRelogio((minutos) => aoEvento({ tipo: 'tempoPassou', minutos }));
+export function ControlesCaso({ paciente, agora, aoPassarTempo }: Props) {
+  const relogio = useRelogio(aoPassarTempo);
 
   return (
     <div className="controles-caso">
@@ -47,11 +47,11 @@ export function ControlesCaso({ paciente, agora, aoEvento }: Props) {
       </div>
       <div className="linha-botoes">
         {[5, 15, 60].map((min) => (
-          <button key={min} type="button" onClick={() => aoEvento({ tipo: 'tempoPassou', minutos: min })}>
+          <button key={min} type="button" onClick={() => aoPassarTempo(min)}>
             +{min} min
           </button>
         ))}
-        <button type="button" onClick={() => aoEvento({ tipo: 'tempoPassou', minutos: 24 * 60 })}>
+        <button type="button" onClick={() => aoPassarTempo(24 * 60)}>
           +1 dia
         </button>
       </div>

@@ -12,6 +12,8 @@ export type EventoPaciente =
   | { tipo: 'tempoPassou'; minutos: number }
   | { tipo: 'medicacaoAdministrada'; medicacaoId: string; descricao: string }
   | { tipo: 'professorAlterouSinais'; sinais: Partial<SinaisVitais> }
+  /** Complicação disparada pelo professor: os sinais vão até o alvo aos poucos, começando agora. */
+  | { tipo: 'complicacao'; nome: string; mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number }[] }
   /** Só registra na linha do tempo (ex.: exame pedido); não muda o paciente. */
   | { tipo: 'anotacao'; descricao: string };
 
@@ -135,6 +137,12 @@ export function aplicarEvento(
 
     case 'anotacao':
       return { ...estado, registro: [...estado.registro, { tempoMin: estado.tempoMin, descricao: evento.descricao }] };
+
+    case 'complicacao': {
+      const mudancas = [...estado.mudancas, ...agendar(evento.mudancas.map((m) => ({ ...m, atrasoMin: 0 })), estado.tempoMin)];
+      const registro = [...estado.registro, { tempoMin: estado.tempoMin, descricao: `Complicação: ${evento.nome}` }];
+      return avancarUmMinuto({ ...estado, mudancas, registro }, estado.tempoMin);
+    }
 
     case 'professorAlterouSinais': {
       const alterados = Object.keys(evento.sinais) as NomeSinal[];

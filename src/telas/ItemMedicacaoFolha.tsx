@@ -40,10 +40,11 @@ interface Props {
   aoMudar: (campos: CamposMedicacao) => void;
   aoRemover: () => void;
   aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
+  aoConferir?: (descricao: string) => void;
 }
 
 /** Item de medicação estruturado: medicação → apresentação → indicação → dose → volume → via → intervalo. */
-export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar }: Props) {
+export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente, aoMudar, aoRemover, aoAdministrar, aoConferir }: Props) {
   const [mostrarConferencia, setMostrarConferencia] = useState(false);
   const { config } = useConfiguracoes();
   const { catalogo } = useBanco();
@@ -244,7 +245,13 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
 
       {medicacao && (
         <div className="item-med-acoes">
-          <button type="button" onClick={() => setMostrarConferencia((v) => !v)}>
+          <button
+            type="button"
+            onClick={() => {
+              if (!mostrarConferencia) aoConferir?.(texto || medicacao.nome);
+              setMostrarConferencia((v) => !v);
+            }}
+          >
             {mostrarConferencia ? 'Esconder conferência' : 'Conferir'}
           </button>
           <button

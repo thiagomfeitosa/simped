@@ -175,3 +175,10 @@
     display: none;
   }
 }
+
+.tela-erro-botoes .botao-principal {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+  font-weight: 700;
+}

@@ -4,6 +4,8 @@ import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
 import { ProvedorBanco } from './dados/medicacoes/ContextoBanco';
 import { ProtecaoDeErro, RelatarProblema } from './diagnostico/ProtecaoDeErro';
+import { ProvedorSessao } from './sessao/ContextoSessao';
+import { PerguntaContinuar } from './sessao/PerguntaContinuar';
 import { Banco } from './telas/Banco';
 import { Calculadoras } from './telas/Calculadoras';
 import { Configuracoes } from './telas/Configuracoes';
@@ -94,6 +96,7 @@ export function App() {
     <ProvedorConfiguracoes>
       <ProvedorBanco>
         <ProvedorCasos>
+          <ProvedorSessao>
           <nav className="modos" aria-label="Modo do SimPed">
             <span className="modos-marca" aria-hidden="true">
               Sim<b>Ped</b>
@@ -120,6 +123,8 @@ export function App() {
               <ProtecaoDeErro onde={m.rotulo}>{m.tela()}</ProtecaoDeErro>
             </div>
           ))}
+          <PerguntaContinuar />
+          </ProvedorSessao>
         </ProvedorCasos>
       </ProvedorBanco>
     </ProvedorConfiguracoes>

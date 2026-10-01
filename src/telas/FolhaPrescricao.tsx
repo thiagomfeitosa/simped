@@ -14,9 +14,11 @@ interface Props {
   medicacoes: readonly Medicacao[];
   /** vazaoMlH: só para soro e infusão contínua (entra no balanço hídrico). */
   aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
+  /** O aluno abriu a conferência de um item (entra no registro da sessão). */
+  aoConferir?: (itemId: number, descricao: string) => void;
 }
 
-export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdministrar }: Props) {
+export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdministrar, aoConferir }: Props) {
   const numeros = numerarItens(estado);
   const alertas = alertasDaFolha(estado, medicacoes, paciente);
 
@@ -77,6 +79,7 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
                     aoMudar={(campos) => despachar({ tipo: 'editarMedicacao', secao: secao.id, id: item.id, campos })}
                     aoRemover={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
                     aoAdministrar={aoAdministrar}
+                    aoConferir={(descricao) => aoConferir?.(numeros.get(item.id) ?? item.id, descricao)}
                   />
                 ) : item.tipo === 'soro' ? (
                   <ItemSoroFolha
