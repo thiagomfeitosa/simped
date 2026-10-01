@@ -4,13 +4,14 @@ import { ProvedorCasos } from './casos/ContextoCasos';
 import { ProvedorConfiguracoes } from './configuracoes/ContextoConfiguracoes';
 import { ProvedorBanco } from './dados/medicacoes/ContextoBanco';
 import { ProtecaoDeErro, RelatarProblema } from './diagnostico/ProtecaoDeErro';
-import { ProvedorSessao } from './sessao/ContextoSessao';
+import { papelDaJanela, ProvedorSessao } from './sessao/ContextoSessao';
 import { PerguntaContinuar } from './sessao/PerguntaContinuar';
 import { Banco } from './telas/Banco';
 import { Calculadoras } from './telas/Calculadoras';
 import { Configuracoes } from './telas/Configuracoes';
 import { EditorCasos } from './telas/EditorCasos';
 import { Prescrever } from './telas/Prescrever';
+import { Professor } from './telas/Professor';
 import { TreinoContas } from './telas/TreinoContas';
 
 interface DefinicaoModo {
@@ -69,6 +70,13 @@ const MODOS: readonly DefinicaoModo[] = [
     tela: () => <Banco />,
   },
   {
+    id: 'professor',
+    rotulo: '👩‍🏫 Professor',
+    descricao: 'Mudar sinais, disparar complicações e ver a folha do aluno ao vivo',
+    classe: 'modo-prescrever',
+    tela: () => <Professor />,
+  },
+  {
     id: 'configuracoes',
     rotulo: '⚙ Configurações',
     descricao: 'Fonte, hospital, modo prova, margem',
@@ -77,10 +85,13 @@ const MODOS: readonly DefinicaoModo[] = [
   },
 ];
 
+/** Janela do professor (B15): aberta pelo painel do professor, com ?papel=professor. */
+const JANELA_DO_PROFESSOR = papelDaJanela() === 'professor';
+
 /** O modo fica no endereço (#prescrever), então recarregar a página mantém a aba escolhida. */
 function modoDoEndereco(): string {
   const id = window.location.hash.slice(1);
-  return MODOS.some((m) => m.id === id) ? id : 'passo-a-passo';
+  return MODOS.some((m) => m.id === id) ? id : JANELA_DO_PROFESSOR ? 'professor' : 'passo-a-passo';
 }
 
 export function App() {
@@ -97,33 +108,39 @@ export function App() {
       <ProvedorBanco>
         <ProvedorCasos>
           <ProvedorSessao>
-          <nav className="modos" aria-label="Modo do SimPed">
-            <span className="modos-marca" aria-hidden="true">
-              Sim<b>Ped</b>
-            </span>
-            {MODOS.map((m) => (
-              <a
-                key={m.id}
-                href={`#${m.id}`}
-                className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
-                title={m.descricao}
-                aria-current={m.id === modo ? 'page' : undefined}
-              >
-                {m.rotulo}
-                {m.principal && <small>{m.descricao}</small>}
-              </a>
-            ))}
-            <RelatarProblema />
-          </nav>
+            <nav className="modos" aria-label="Modo do SimPed">
+              <span className="modos-marca" aria-hidden="true">
+                Sim<b>Ped</b>
+              </span>
+              {MODOS.map((m) => (
+                <a
+                  key={m.id}
+                  href={`#${m.id}`}
+                  className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
+                  title={m.descricao}
+                  aria-current={m.id === modo ? 'page' : undefined}
+                >
+                  {m.rotulo}
+                  {m.principal && <small>{m.descricao}</small>}
+                </a>
+              ))}
+              <RelatarProblema />
+            </nav>
+            {JANELA_DO_PROFESSOR && (
+              <p className="banner-professor">
+                👩‍🏫 Janela do professor — o que você faz aqui aparece na janela do aluno. A aba Prescrever desta janela mostra a mesma sessão do aluno.
+              </p>
+            )}
 
-          {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
-          {MODOS.map((m) => (
-            <div key={m.id} hidden={modo !== m.id} className={m.classe}>
-              {/* erro numa aba mostra uma mensagem amigável só nela; as outras continuam funcionando */}
-              <ProtecaoDeErro onde={m.rotulo}>{m.tela()}</ProtecaoDeErro>
-            </div>
-          ))}
-          <PerguntaContinuar />
+            {/* Todas as telas ficam abertas: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
+            {MODOS.map((m) => (
+              <div key={m.id} hidden={modo !== m.id} className={m.classe}>
+                {/* erro numa aba mostra uma mensagem amigável só nela; as outras continuam funcionando */}
+                <ProtecaoDeErro onde={m.rotulo}>{m.tela()}</ProtecaoDeErro>
+              </div>
+            ))}
+            {/* B13: continuar de onde parou (só na janela do aluno) */}
+            {!JANELA_DO_PROFESSOR && <PerguntaContinuar />}
           </ProvedorSessao>
         </ProvedorCasos>
       </ProvedorBanco>

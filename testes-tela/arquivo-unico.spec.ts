@@ -16,3 +16,14 @@ test('o arquivo único abre com dois cliques (sem servidor)', async ({ page }) =
   await expect(page.getByRole('button', { name: /Avançar/ })).toBeVisible();
   expect(erros).toEqual([]);
 });
+
+test('B15 no arquivo único: professor e aluno em duas janelas', async ({ page, context }) => {
+  test.skip(!existsSync(arquivo), 'Gere antes com "npm run arquivo-unico".');
+  const url = pathToFileURL(arquivo).href;
+  await page.goto(`${url}#prescrever`);
+  const prof = await context.newPage();
+  await prof.goto(`${url}?papel=professor#professor`);
+  await expect(prof.getByText('Conectado à janela do aluno')).toBeVisible();
+  await prof.locator('#raiz > div:not([hidden])').getByRole('button', { name: /TSV/ }).click();
+  await expect(page.locator('#raiz > div:not([hidden])').getByLabel('Ritmo no monitor')).toContainText('Taquicardia supraventricular');
+});

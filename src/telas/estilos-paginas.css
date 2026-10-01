@@ -273,3 +273,94 @@
   padding: 4px 6px;
   font-size: 0.88rem;
 }
+
+/* Painel do professor (B14/B15) */
+.professor-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+
+.professor .grade-sinais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0 8px;
+}
+
+.professor .campo.editado input,
+.professor .campo.editado select {
+  border-color: #7b4fd6;
+  background: #f3edff;
+}
+
+.professor textarea {
+  box-sizing: border-box;
+  width: 100%;
+  font: inherit;
+}
+
+.complicacoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.complicacoes button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+
+.complicacoes small {
+  color: var(--suave);
+  font-size: 0.75rem;
+}
+
+.ultimas-acoes {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  font-size: 0.88rem;
+}
+
+.ultimas-acoes li {
+  padding: 2px 0;
+  border-bottom: 1px solid var(--borda);
+}
+
+.ultimas-acoes .hora {
+  display: inline-block;
+  min-width: 3.2em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.conexao.ok {
+  color: var(--certo, #22935a);
+  font-weight: 700;
+}
+
+.conexao.espera {
+  color: var(--atencao, #b7791f);
+  font-weight: 700;
+}
+
+.aviso-professor {
+  margin: 0 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f3edff;
+  border: 1px solid #7b4fd6;
+}
+
+.banner-professor {
+  margin: 0;
+  padding: 6px 20px;
+  background: #7b4fd6;
+  color: #fff;
+  font-weight: 700;
+}
