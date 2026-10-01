@@ -25,10 +25,12 @@ export const caso02: CasoClinico = {
   historia: 'Bolsa rota há 24 h, mãe febril no parto, pesquisa de estreptococo do grupo B desconhecida.',
   exameFisico: 'Gemido, tiragem, pele moteada, TEC 4 s. PA média 35 mmHg.',
   hipotese: 'Sepse neonatal precoce.',
-  sinaisIniciais: { fc: 180, fr: 70, spo2: 91, paSistolica: 50, paDiastolica: 28, temperaturaC: 38.2, glicemiaMgDl: 60 },
-  evolucaoNatural: [muda('paSistolica', 42, 30, 90), muda('fc', 190, 30, 90), muda('temperaturaC', 38.8, 0, 120)],
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'desconforto' },
+  sinaisIniciais: { fc: 180, fr: 70, spo2: 91, paSistolica: 50, paDiastolica: 28, temperaturaC: 38.2, glicemiaMgDl: 60, tecS: 4, glasgow: 13 },
+  evolucaoNatural: [muda('paSistolica', 42, 30, 90), muda('fc', 190, 30, 90), muda('temperaturaC', 38.8, 0, 120), muda('tecS', 5, 30, 90)],
   respostas: [
-    resposta('sf09', [muda('paSistolica', 58, 0, 20), muda('fc', 168, 0, 20)], 'Expansão: melhora parcial; reavaliar.'),
+    resposta('sf09', [muda('paSistolica', 58, 0, 20), muda('fc', 168, 0, 20), muda('tecS', 3, 0, 20)], 'Expansão: melhora parcial; reavaliar.'),
     resposta('ampicilina', [muda('temperaturaC', 37.6, 60, 180), muda('fc', 150, 60, 120)]),
     resposta('gentamicina', [muda('spo2', 95, 30, 60), muda('fr', 55, 60, 120)]),
   ],

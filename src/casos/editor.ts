@@ -32,7 +32,7 @@ export function casoVazio(): CasoClinico {
     queixa: '',
     historia: '',
     exameFisico: '',
-    sinaisIniciais: { fc: 100, fr: 24, spo2: 98, paSistolica: 100, paDiastolica: 60, temperaturaC: 36.8, glicemiaMgDl: 90 },
+    sinaisIniciais: { fc: 100, fr: 24, spo2: 98, paSistolica: 100, paDiastolica: 60, temperaturaC: 36.8, glicemiaMgDl: 90, tecS: 2, glasgow: 15 },
     evolucaoNatural: [],
     respostas: [],
     resultadosExames: {},

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calcularBalanco, volumeInfundido } from './balanco';
+import { calcularBalanco, pesoPeloBalanco, volumeInfundido } from './balanco';
 
 describe('balanço hídrico', () => {
   it('volume infundido conta só dentro do período', () => {
@@ -33,5 +33,13 @@ describe('balanço hídrico', () => {
   it('período zero não divide por zero', () => {
     const b = calcularBalanco({ infusoes: [], registros: [], diureseMlKgH: 1, pesoKg: 10, deMin: 0, ateMin: 0 });
     expect(b.diureseMlKgH).toBe(0);
+  });
+});
+
+describe('B10: peso pelo balanço', () => {
+  it('soma o balanço (1 mL ≈ 1 g)', () => {
+    expect(pesoPeloBalanco(10, 250)).toBeCloseTo(10.25, 10);
+    expect(pesoPeloBalanco(3, -150)).toBeCloseTo(2.85, 10);
+    expect(pesoPeloBalanco(0.1, -500)).toBe(0);
   });
 });

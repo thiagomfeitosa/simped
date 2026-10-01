@@ -1,5 +1,5 @@
 /** Caso 6 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 const melhoraBeta2 = [muda('spo2', 93, 5, 20), muda('fr', 32, 5, 30), muda('fc', 150, 2, 10)];
@@ -29,11 +29,13 @@ export const caso06: CasoClinico = {
   historia: 'Asma sem controle, sem medicação de manutenção.',
   exameFisico: 'Fala frases curtas, tiragem, sibilos difusos.',
   hipotese: 'Crise de asma grave.',
-  sinaisIniciais: { fc: 140, fr: 40, spo2: 89, paSistolica: 105, paDiastolica: 65, temperaturaC: 37.2, glicemiaMgDl: 110 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'desconforto' },
+  sinaisIniciais: { fc: 140, fr: 40, spo2: 89, paSistolica: 105, paDiastolica: 65, temperaturaC: 37.2, glicemiaMgDl: 110, tecS: 2, glasgow: 15 },
   evolucaoNatural: [muda('spo2', 86, 0, 90), muda('fr', 46, 0, 90)],
   respostas: [
-    resposta('salbutamol', melhoraBeta2),
-    resposta('fenoterol', melhoraBeta2),
+    resposta('salbutamol', melhoraBeta2, undefined, { mudancasDeEstado: [respiracao('taquipneia', 20)] }),
+    resposta('fenoterol', melhoraBeta2, undefined, { mudancasDeEstado: [respiracao('taquipneia', 20)] }),
     resposta('ipratropio', [muda('spo2', 94, 10, 30)]),
     resposta('prednisolona', corticoide),
     resposta('metilprednisolona', corticoide),

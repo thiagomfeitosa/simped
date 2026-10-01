@@ -24,7 +24,7 @@ import { caso14 } from './clinicos/caso14-intoxicacao-bzd';
 import { caso15 } from './clinicos/caso15-hiponatremia';
 import { caso16 } from './clinicos/caso16-crise-adrenal';
 import { casoDemonstracao } from './demonstracao';
-import type { CasoClinico, NomeSinal } from './tipos';
+import { type CasoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal } from './tipos';
 
 export const CASOS: readonly CasoClinico[] = [
   casoDemonstracao,
@@ -46,7 +46,9 @@ export const CASOS: readonly CasoClinico[] = [
   caso16,
 ];
 
-const SINAIS: readonly NomeSinal[] = ['fc', 'fr', 'spo2', 'paSistolica', 'paDiastolica', 'temperaturaC', 'glicemiaMgDl'];
+const SINAIS: readonly NomeSinal[] = ['fc', 'fr', 'spo2', 'paSistolica', 'paDiastolica', 'temperaturaC', 'glicemiaMgDl', 'tecS', 'glasgow'];
+const RITMOS = Object.keys(NOME_RITMO);
+const PADROES = Object.keys(NOME_PADRAO_RESPIRATORIO);
 
 /** Ids que não são medicações do banco mas podem receber resposta (itens especiais da folha). */
 const IDS_ESPECIAIS = ['soro'];
@@ -58,7 +60,22 @@ export function verificarCaso(caso: CasoClinico, medicacoes: readonly Medicacao[
   p.push(...verificarDadosDeOrigem(caso.paciente, caso.inicio).map((x) => `${onde}: ${x}`));
   for (const sinal of SINAIS) {
     const v = caso.sinaisIniciais[sinal];
-    if (!Number.isFinite(v) || v < 0) p.push(`${onde}: sinal ${sinal} inválido (${v}).`);
+    if (v === undefined && (sinal === 'tecS' || sinal === 'glasgow')) continue; // entram os valores padrão
+    if (v === undefined || !Number.isFinite(v) || v < 0) p.push(`${onde}: sinal ${sinal} inválido (${v}).`);
+  }
+  const g = caso.sinaisIniciais.glasgow;
+  if (g !== undefined && (g < 3 || g > 15)) p.push(`${onde}: Glasgow fora de 3–15 (${g}).`);
+  const trocas = [...(caso.evolucaoDoEstado ?? []), ...(caso.respostas ?? []).flatMap((r) => r.mudancasDeEstado ?? [])];
+  if (caso.estadoInicial?.ritmo) trocas.push({ campo: 'ritmo', valor: caso.estadoInicial.ritmo, atrasoMin: 0 });
+  if (caso.estadoInicial?.padraoRespiratorio) trocas.push({ campo: 'padraoRespiratorio', valor: caso.estadoInicial.padraoRespiratorio, atrasoMin: 0 });
+  for (const t of trocas) {
+    const validos = t.campo === 'ritmo' ? RITMOS : PADROES;
+    if (!validos.includes(t.valor)) p.push(`${onde}: ${t.campo} desconhecido "${t.valor}".`);
+    if (t.atrasoMin < 0) p.push(`${onde}: troca de ${t.campo} com tempo negativo.`);
+  }
+  for (const r of caso.respostas ?? []) {
+    const f = r.faixaDose;
+    if (f && !(f.min > 0 && f.max >= f.min)) p.push(`${onde}: faixa de dose de ${r.medicacaoId} inválida.`);
   }
   const idsMed = new Set([...medicacoes.map((m) => m.id), ...IDS_ESPECIAIS]);
   for (const r of caso.respostas ?? []) {

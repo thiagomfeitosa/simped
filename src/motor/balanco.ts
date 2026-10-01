@@ -78,3 +78,11 @@ export function calcularBalanco(entrada: {
     diureseMlKgH: horas > 0 && pesoKg > 0 ? diureseMl / pesoKg / horas : 0,
   };
 }
+
+/**
+ * B10: peso estimado pelo balanço hídrico desde o início do caso (1 mL ≈ 1 g).
+ * Não conta perdas insensíveis (pele, respiração) nem fezes: estimativa didática, A VALIDAR.
+ */
+export function pesoPeloBalanco(pesoInicialKg: number, balancoMl: number): number {
+  return Math.max(0, pesoInicialKg + balancoMl / 1000);
+}

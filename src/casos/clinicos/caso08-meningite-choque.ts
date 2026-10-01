@@ -24,11 +24,13 @@ export const caso08: CasoClinico = {
   historia: 'Febre há 12 h, vômitos, sonolência, manchas na pele.',
   exameFisico: 'Petéquias e púrpura, rigidez de nuca, TEC 4 s, extremidades frias. Glasgow 12.',
   hipotese: 'Meningite / doença meningocócica com choque séptico.',
-  sinaisIniciais: { fc: 170, fr: 36, spo2: 94, paSistolica: 80, paDiastolica: 40, temperaturaC: 39.5, glicemiaMgDl: 70 },
-  evolucaoNatural: [muda('paSistolica', 65, 0, 120), muda('paDiastolica', 32, 0, 120), muda('fc', 185, 0, 120), muda('spo2', 90, 30, 120)],
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'taquipneia' },
+  sinaisIniciais: { fc: 170, fr: 36, spo2: 94, paSistolica: 80, paDiastolica: 40, temperaturaC: 39.5, glicemiaMgDl: 70, tecS: 4, glasgow: 12 },
+  evolucaoNatural: [muda('paSistolica', 65, 0, 120), muda('paDiastolica', 32, 0, 120), muda('fc', 185, 0, 120), muda('spo2', 90, 30, 120), muda('glasgow', 10, 0, 120), muda('tecS', 5, 0, 120)],
   respostas: [
-    resposta('sf09', [muda('paSistolica', 88, 0, 20), muda('paDiastolica', 48, 0, 20), muda('fc', 158, 0, 20)], 'Reavaliar após cada bolus.'),
-    resposta('ceftriaxona', [muda('temperaturaC', 38.4, 60, 240), muda('fc', 135, 60, 240), muda('paSistolica', 95, 60, 180)]),
+    resposta('sf09', [muda('paSistolica', 88, 0, 20), muda('paDiastolica', 48, 0, 20), muda('fc', 158, 0, 20), muda('tecS', 3, 0, 20)], 'Reavaliar após cada bolus.'),
+    resposta('ceftriaxona', [muda('temperaturaC', 38.4, 60, 240), muda('fc', 135, 60, 240), muda('paSistolica', 95, 60, 180), muda('glasgow', 13, 120, 240)]),
     resposta('dipirona', [muda('temperaturaC', 38.2, 30, 60), muda('paSistolica', 78, 10, 20)], 'EV pode baixar a PA.'),
     resposta('adrenalina', [muda('paSistolica', 96, 5, 20), muda('paDiastolica', 55, 5, 20), muda('fc', 160, 5, 20)]),
     resposta('hidrocortisona', [muda('paSistolica', 95, 30, 90)]),

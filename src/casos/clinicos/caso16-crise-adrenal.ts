@@ -25,12 +25,14 @@ export const caso16: CasoClinico = {
   historia: 'Hiperplasia adrenal congênita em uso de hidrocortisona oral.',
   exameFisico: 'Letárgico, desidratado. Na 124, K 6,2, glicemia 50.',
   hipotese: 'Crise adrenal.',
-  sinaisIniciais: { fc: 150, fr: 30, spo2: 96, paSistolica: 70, paDiastolica: 40, temperaturaC: 38.5, glicemiaMgDl: 50 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'taquipneia' },
+  sinaisIniciais: { fc: 150, fr: 30, spo2: 96, paSistolica: 70, paDiastolica: 40, temperaturaC: 38.5, glicemiaMgDl: 50, tecS: 4, glasgow: 13 },
   evolucaoNatural: [muda('paSistolica', 60, 0, 120), muda('glicemiaMgDl', 40, 0, 90)],
   respostas: [
     // só volume: melhora curta e volta a hipotensão
-    resposta('sf09', [muda('paSistolica', 82, 0, 20), muda('paSistolica', 70, 90, 60)]),
-    resposta('hidrocortisona', [muda('paSistolica', 95, 15, 90), muda('paDiastolica', 60, 15, 90), muda('fc', 120, 15, 90)]),
+    resposta('sf09', [muda('paSistolica', 82, 0, 20), muda('paSistolica', 70, 90, 60), muda('tecS', 3, 0, 20)]),
+    resposta('hidrocortisona', [muda('paSistolica', 95, 15, 90), muda('paDiastolica', 60, 15, 90), muda('fc', 120, 15, 90), muda('tecS', 2, 15, 90), muda('glasgow', 15, 15, 90)]),
     resposta('sg10', [muda('glicemiaMgDl', 90, 2, 10)]),
   ],
   resultadosExames: {

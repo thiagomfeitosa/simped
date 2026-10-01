@@ -1,5 +1,5 @@
 /** Caso 7 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 export const caso07: CasoClinico = {
@@ -24,12 +24,14 @@ export const caso07: CasoClinico = {
   historia: 'Quadro viral, tosse ladrante e rouquidão desde a noite anterior.',
   exameFisico: 'Estridor em repouso, tiragem.',
   hipotese: 'Laringotraqueíte viral (crupe) moderada a grave.',
-  sinaisIniciais: { fc: 150, fr: 44, spo2: 94, paSistolica: 95, paDiastolica: 60, temperaturaC: 37.8, glicemiaMgDl: 95 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'desconforto' },
+  sinaisIniciais: { fc: 150, fr: 44, spo2: 94, paSistolica: 95, paDiastolica: 60, temperaturaC: 37.8, glicemiaMgDl: 95, tecS: 2, glasgow: 15 },
   evolucaoNatural: [muda('spo2', 92, 0, 120), muda('fr', 48, 0, 120)],
   respostas: [
     // adrenalina inalatória: melhora em 30 min e rebote depois de 2 h
-    resposta('adrenalina', [muda('fr', 30, 5, 25), muda('fc', 165, 2, 10), muda('fr', 40, 120, 30)], 'Rebote após 2 h se não houver corticoide.'),
-    resposta('dexametasona', [muda('fr', 30, 60, 120), muda('spo2', 97, 60, 120)]),
+    resposta('adrenalina', [muda('fr', 30, 5, 25), muda('fc', 165, 2, 10), muda('fr', 40, 120, 30)], 'Rebote após 2 h se não houver corticoide.', { mudancasDeEstado: [respiracao('taquipneia', 10), respiracao('desconforto', 130)] }),
+    resposta('dexametasona', [muda('fr', 30, 60, 120), muda('spo2', 97, 60, 120)], undefined, { mudancasDeEstado: [respiracao('normal', 180)] }),
   ],
   diureseMlKgH: 1.5,
   condutasEsperadas: [

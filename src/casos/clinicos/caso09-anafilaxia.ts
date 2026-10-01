@@ -1,5 +1,5 @@
 /** Caso 9 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 export const caso09: CasoClinico = {
@@ -25,10 +25,12 @@ export const caso09: CasoClinico = {
   historia: 'Comeu camarão há 20 min.',
   exameFisico: 'Urticária generalizada, edema de lábios, sibilância, tontura.',
   hipotese: 'Anafilaxia.',
-  sinaisIniciais: { fc: 130, fr: 30, spo2: 92, paSistolica: 80, paDiastolica: 50, temperaturaC: 36.9, glicemiaMgDl: 100 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'desconforto' },
+  sinaisIniciais: { fc: 130, fr: 30, spo2: 92, paSistolica: 80, paDiastolica: 50, temperaturaC: 36.9, glicemiaMgDl: 100, tecS: 3, glasgow: 14 },
   evolucaoNatural: [muda('paSistolica', 65, 0, 20), muda('paDiastolica', 40, 0, 20), muda('spo2', 86, 0, 20)],
   respostas: [
-    resposta('adrenalina', [muda('paSistolica', 105, 2, 8), muda('paDiastolica', 65, 2, 8), muda('spo2', 96, 2, 8), muda('fc', 115, 2, 8), muda('fr', 22, 2, 8)]),
+    resposta('adrenalina', [muda('paSistolica', 105, 2, 8), muda('paDiastolica', 65, 2, 8), muda('spo2', 96, 2, 8), muda('fc', 115, 2, 8), muda('fr', 22, 2, 8), muda('tecS', 2, 2, 8), muda('glasgow', 15, 2, 8)], undefined, { mudancasDeEstado: [respiracao('normal', 10)] }),
     resposta('sf09', [muda('paSistolica', 90, 0, 15)]),
     resposta('salbutamol', [muda('spo2', 94, 5, 15)]),
     resposta('metilprednisolona', []),

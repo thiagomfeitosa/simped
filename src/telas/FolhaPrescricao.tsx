@@ -4,6 +4,7 @@ import { formatarDataHora, lerDataHora } from '../paciente/variaveis';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import { alertasDaFolha } from '../prescricao/alertas';
 import { type AcaoPrescricao, type EstadoPrescricao, numerarItens, SECOES } from '../prescricao/estado';
+import type { CamposMedicacao } from '../prescricao/itemMedicacao';
 import { ItemMedicacaoFolha } from './ItemMedicacaoFolha';
 import { ItemSoroFolha } from './ItemSoroFolha';
 
@@ -12,8 +13,8 @@ interface Props {
   estado: EstadoPrescricao;
   despachar: Dispatch<AcaoPrescricao>;
   medicacoes: readonly Medicacao[];
-  /** vazaoMlH: só para soro e infusão contínua (entra no balanço hídrico). */
-  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
+  /** vazaoMlH: só para soro e infusão contínua (entra no balanço hídrico); campos: para a reação depender da dose (B9). */
+  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number, campos?: CamposMedicacao) => void;
   /** O aluno abriu a conferência de um item (entra no registro da sessão). */
   aoConferir?: (itemId: number, descricao: string) => void;
 }

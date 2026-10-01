@@ -1,5 +1,5 @@
 /** Caso 14 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 export const caso14: CasoClinico = {
@@ -24,11 +24,13 @@ export const caso14: CasoClinico = {
   historia: 'Sem outros remédios em casa.',
   exameFisico: 'Sonolento, responde à dor. Pupilas normais.',
   hipotese: 'Intoxicação exógena por benzodiazepínico.',
-  sinaisIniciais: { fc: 100, fr: 14, spo2: 92, paSistolica: 90, paDiastolica: 60, temperaturaC: 36.5, glicemiaMgDl: 95 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'bradipneia' },
+  sinaisIniciais: { fc: 100, fr: 14, spo2: 92, paSistolica: 90, paDiastolica: 60, temperaturaC: 36.5, glicemiaMgDl: 95, tecS: 2, glasgow: 9 },
   evolucaoNatural: [muda('fr', 12, 0, 120), muda('spo2', 90, 0, 120)],
   respostas: [
     // efeito do flumazenil é mais curto que o do clonazepam: a sedação volta
-    resposta('flumazenil', [muda('fr', 22, 1, 2), muda('spo2', 97, 1, 3), muda('fr', 15, 60, 30), muda('spo2', 93, 60, 30)]),
+    resposta('flumazenil', [muda('fr', 22, 1, 2), muda('spo2', 97, 1, 3), muda('fr', 15, 60, 30), muda('spo2', 93, 60, 30), muda('glasgow', 14, 1, 3), muda('glasgow', 11, 60, 30)], undefined, { mudancasDeEstado: [respiracao('normal', 2), respiracao('bradipneia', 75)] }),
   ],
   diureseMlKgH: 1.2,
   condutasEsperadas: [

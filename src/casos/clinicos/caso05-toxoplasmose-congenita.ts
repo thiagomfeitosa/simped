@@ -26,7 +26,8 @@ export const caso05: CasoClinico = {
   historia: 'Mãe com soroconversão para toxoplasmose no 3º trimestre. RN com IgM positiva.',
   exameFisico: 'Bom estado geral. Exames: coriorretinite no fundo de olho; calcificações na USG transfontanela.',
   hipotese: 'Toxoplasmose congênita sintomática.',
-  sinaisIniciais: { fc: 140, fr: 42, spo2: 98, paSistolica: 70, paDiastolica: 40, temperaturaC: 36.7, glicemiaMgDl: 85 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  sinaisIniciais: { fc: 140, fr: 42, spo2: 98, paSistolica: 70, paDiastolica: 40, temperaturaC: 36.7, glicemiaMgDl: 85, tecS: 2, glasgow: 15 },
   resultadosExames: {
     'sorologia-toxo': { laudo: 'IgM positiva no RN.', status: 'A_VALIDAR' },
     'fundo-de-olho': { laudo: 'Coriorretinite.', status: 'A_VALIDAR' },

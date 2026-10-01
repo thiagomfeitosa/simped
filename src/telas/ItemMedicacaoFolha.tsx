@@ -39,7 +39,8 @@ interface Props {
   paciente: PacienteAtual;
   aoMudar: (campos: CamposMedicacao) => void;
   aoRemover: () => void;
-  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number) => void;
+  /** `campos` vai junto para o paciente reagir conforme a dose (B9). */
+  aoAdministrar: (medicacaoId: string, descricao: string, vazaoMlH?: number, campos?: CamposMedicacao) => void;
   aoConferir?: (descricao: string) => void;
 }
 
@@ -80,7 +81,7 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
       ? `${medicacao.nome} ${campos.infusao?.dose ?? ''} ${campos.infusao?.unidade ?? ''}/kg/${campos.infusao?.por ?? 'min'} em infusão contínua`
       : `${medicacao.nome} ${campos.dose} ${campos.unidadeDose} ${NOME_VIA[campos.via]}`;
     const vazao = continua ? lerNumero(campos.infusao?.vazaoMlH ?? '') : null;
-    aoAdministrar(medicacao.id, descricao, vazao ?? undefined);
+    aoAdministrar(medicacao.id, descricao, vazao ?? undefined, campos);
   }
 
   return (

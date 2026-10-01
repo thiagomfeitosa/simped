@@ -12,10 +12,10 @@
  * Sem tela e sem relógio de verdade: a hora real entra pronta em cada registro.
  */
 
-import type { NomeSinal, SinaisVitais } from '../casos/tipos';
+import { type EstadoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal, type SinaisVitais } from '../casos/tipos';
 import type { PedidoExame } from '../exames/exames';
 import type { Infusao, RegistroManual } from '../motor/balanco';
-import { acrescentarEvento, type EventoPaciente } from '../motor/paciente';
+import { acrescentarEvento, type AvaliacaoDoseEvento, type EventoPaciente } from '../motor/paciente';
 import type { Checagem } from '../prescricao/aprazamento';
 import { type AcaoPrescricao, type EstadoPrescricao, prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
 import { type CamposReceita, type ItemReceita, receitaVazia } from '../prescricao/receita';
@@ -33,9 +33,9 @@ export type AcaoSessao =
   /** O relógio do caso andou. */
   | { tipo: 'tempo'; minutos: number }
   /** Medicação (ou soro) dada ao paciente; vazão em mL/h entra no balanço hídrico. */
-  | { tipo: 'administrar'; medicacaoId: string; descricao: string; vazaoMlH?: number }
+  | { tipo: 'administrar'; medicacaoId: string; descricao: string; vazaoMlH?: number; avaliacao?: AvaliacaoDoseEvento }
   /** Dose checada no quadro de horários da enfermagem. */
-  | { tipo: 'checarDose'; itemId: number; minutoMarcado: number; medicacaoId: string; descricao: string }
+  | { tipo: 'checarDose'; itemId: number; minutoMarcado: number; medicacaoId: string; descricao: string; avaliacao?: AvaliacaoDoseEvento }
   | { tipo: 'pedirExame'; exameId: string; nome: string }
   | { tipo: 'balanco'; registro: Omit<RegistroManual, 'id' | 'minuto'> }
   /** O aluno abriu a conferência de um item (só registra). */
@@ -43,9 +43,15 @@ export type AcaoSessao =
   /** O aluno abriu o relatório final (só registra). */
   | { tipo: 'relatorio' }
   /** Professor: muda sinais vitais na hora. */
-  | { tipo: 'professorSinais'; sinais: Partial<SinaisVitais>; motivo?: string }
+  | { tipo: 'professorSinais'; sinais: Partial<SinaisVitais>; clinico?: Partial<EstadoClinico>; motivo?: string }
   /** Professor: complicação pronta (ex.: "Convulsão"); os sinais mudam aos poucos. */
-  | { tipo: 'complicacao'; id: string; nome: string; mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number }[] }
+  | {
+      tipo: 'complicacao';
+      id: string;
+      nome: string;
+      mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
+      clinico?: Partial<EstadoClinico>;
+    }
   /** Professor: mensagem que aparece para o aluno. */
   | { tipo: 'mensagem'; texto: string };
 
@@ -122,7 +128,12 @@ export function aplicarRegistro(estado: EstadoSessao, registro: Pick<RegistroSes
       return { ...comPaciente(estado, { tipo: 'tempoPassou', minutos }), minutoCaso: agora + minutos };
     }
     case 'administrar': {
-      const novo = comPaciente(estado, { tipo: 'medicacaoAdministrada', medicacaoId: a.medicacaoId, descricao: a.descricao });
+      const novo = comPaciente(estado, {
+        tipo: 'medicacaoAdministrada',
+        medicacaoId: a.medicacaoId,
+        descricao: a.descricao,
+        ...(a.avaliacao && { avaliacao: a.avaliacao }),
+      });
       if (a.vazaoMlH === undefined || !(a.vazaoMlH > 0)) return novo;
       const infusao: Infusao = { id: estado.infusoes.length + 1, descricao: a.descricao.slice(0, 60), inicioMin: agora, vazaoMlH: a.vazaoMlH };
       return { ...novo, infusoes: [...estado.infusoes, infusao] };
@@ -130,7 +141,12 @@ export function aplicarRegistro(estado: EstadoSessao, registro: Pick<RegistroSes
     case 'checarDose': {
       const checagem: Checagem = { itemId: a.itemId, minutoMarcado: a.minutoMarcado, feitaNoMinuto: agora };
       return {
-        ...comPaciente(estado, { tipo: 'medicacaoAdministrada', medicacaoId: a.medicacaoId, descricao: a.descricao }),
+        ...comPaciente(estado, {
+          tipo: 'medicacaoAdministrada',
+          medicacaoId: a.medicacaoId,
+          descricao: a.descricao,
+          ...(a.avaliacao && { avaliacao: a.avaliacao }),
+        }),
         checagens: [...estado.checagens, checagem],
       };
     }
@@ -149,11 +165,11 @@ export function aplicarRegistro(estado: EstadoSessao, registro: Pick<RegistroSes
     case 'relatorio':
       return estado;
     case 'professorSinais': {
-      const novo = comPaciente(estado, { tipo: 'professorAlterouSinais', sinais: a.sinais });
+      const novo = comPaciente(estado, { tipo: 'professorAlterouSinais', sinais: a.sinais, ...(a.clinico && { clinico: a.clinico }) });
       return a.motivo ? comPaciente(novo, { tipo: 'anotacao', descricao: `Professor: ${a.motivo}` }) : novo;
     }
     case 'complicacao':
-      return comPaciente(estado, { tipo: 'complicacao', nome: a.nome, mudancas: a.mudancas });
+      return comPaciente(estado, { tipo: 'complicacao', nome: a.nome, mudancas: a.mudancas, ...(a.clinico && { clinico: a.clinico }) });
     case 'mensagem':
       return {
         ...comPaciente(estado, { tipo: 'anotacao', descricao: `Mensagem do professor: ${a.texto}` }),
@@ -246,6 +262,8 @@ const NOME_SINAL: Record<NomeSinal, string> = {
   paDiastolica: 'PAD',
   temperaturaC: 'Temp.',
   glicemiaMgDl: 'Glicemia',
+  tecS: 'TEC',
+  glasgow: 'Glasgow',
 };
 
 /** Texto curto de um registro, para a lista "rever o caso". */
@@ -285,7 +303,7 @@ export function descreverRegistro(r: RegistroSessao): string {
     case 'tempo':
       return `Relógio do caso: +${a.minutos} min`;
     case 'administrar':
-      return `Administrou: ${a.descricao}`;
+      return `Administrou: ${a.descricao}${a.avaliacao && a.avaliacao.nivel !== 'certa' ? ` (${a.avaliacao.nivel === 'subdose' ? 'dose abaixo da faixa' : 'dose acima da faixa'})` : ''}`;
     case 'checarDose':
       return `Checou dose no horário: ${a.descricao}`;
     case 'pedirExame':
@@ -296,10 +314,14 @@ export function descreverRegistro(r: RegistroSessao): string {
       return `Conferiu o item ${a.itemId}: ${a.descricao}`;
     case 'relatorio':
       return 'Abriu o relatório';
-    case 'professorSinais':
-      return `Professor alterou ${Object.entries(a.sinais)
-        .map(([s, v]) => `${NOME_SINAL[s as NomeSinal]} ${Math.round(Number(v) * 10) / 10}`)
-        .join(', ')}${a.motivo ? ` (${a.motivo})` : ''}`;
+    case 'professorSinais': {
+      const partes = [
+        ...Object.entries(a.sinais).map(([s, v]) => `${NOME_SINAL[s as NomeSinal]} ${Math.round(Number(v) * 10) / 10}`),
+        ...(a.clinico?.ritmo ? [NOME_RITMO[a.clinico.ritmo]] : []),
+        ...(a.clinico?.padraoRespiratorio ? [NOME_PADRAO_RESPIRATORIO[a.clinico.padraoRespiratorio]] : []),
+      ];
+      return `Professor alterou ${partes.join(', ')}${a.motivo ? ` (${a.motivo})` : ''}`;
+    }
     case 'complicacao':
       return `Professor disparou complicação: ${a.nome}`;
     case 'mensagem':

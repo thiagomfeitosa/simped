@@ -1,5 +1,5 @@
 /** Caso 13 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 const glicoseEV = [muda('glicemiaMgDl', 110, 2, 5), muda('fc', 105, 5, 10)];
@@ -27,12 +27,14 @@ export const caso13: CasoClinico = {
   historia: 'Diabetes tipo 1 em uso de insulina; aplicou e não almoçou.',
   exameFisico: 'Convulsão. Sem acesso venoso após 2 tentativas.',
   hipotese: 'Hipoglicemia grave.',
-  sinaisIniciais: { fc: 120, fr: 24, spo2: 95, paSistolica: 100, paDiastolica: 62, temperaturaC: 36.6, glicemiaMgDl: 32 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'taquipneia' },
+  sinaisIniciais: { fc: 120, fr: 24, spo2: 95, paSistolica: 100, paDiastolica: 62, temperaturaC: 36.6, glicemiaMgDl: 32, tecS: 2, glasgow: 8 },
   evolucaoNatural: [muda('glicemiaMgDl', 25, 0, 60)],
   respostas: [
-    resposta('glucagon', [muda('glicemiaMgDl', 70, 5, 10)], 'A convulsão para quando a glicemia sobe.'),
-    resposta('sg10', glicoseEV),
-    resposta('g25', glicoseEV),
+    resposta('glucagon', [muda('glicemiaMgDl', 70, 5, 10), muda('glasgow', 14, 10, 20)], 'A convulsão para quando a glicemia sobe.', { mudancasDeEstado: [respiracao('normal', 15)] }),
+    resposta('sg10', [...glicoseEV, muda('glasgow', 14, 5, 15)], undefined, { mudancasDeEstado: [respiracao('normal', 10)] }),
+    resposta('g25', [...glicoseEV, muda('glasgow', 14, 5, 15)], undefined, { mudancasDeEstado: [respiracao('normal', 10)] }),
     resposta('soro', [muda('glicemiaMgDl', 120, 30, 60)]),
   ],
   diureseMlKgH: 1.2,

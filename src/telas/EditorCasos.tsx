@@ -2,7 +2,18 @@ import { type ReactNode, useRef, useState } from 'react';
 import { useCasos } from '../casos/ContextoCasos';
 import { casoVazio, copiarCaso, idDoTitulo, lerCasoDeJson, PREFIXO_PERSONALIZADO } from '../casos/editor';
 import { CASOS, verificarCaso } from '../casos/index';
-import type { CasoClinico, CondutaEsperada, MudancaDeSinal, NomeSinal, SinaisVitais } from '../casos/tipos';
+import {
+  type CasoClinico,
+  type CondutaEsperada,
+  type MudancaDeSinal,
+  NOME_PADRAO_RESPIRATORIO,
+  NOME_RITMO,
+  type NomeSinal,
+  type PadraoRespiratorio,
+  type Ritmo,
+  SINAIS_PADRAO,
+  type SinaisVitais,
+} from '../casos/tipos';
 import { EXAMES } from '../dados/exames';
 import { BANCO_MEDICACOES } from '../dados/medicacoes';
 import { SECOES } from '../dados/secoes';
@@ -15,6 +26,8 @@ const SINAIS: { id: NomeSinal; nome: string }[] = [
   { id: 'paDiastolica', nome: 'PA diastólica' },
   { id: 'temperaturaC', nome: 'Temperatura (°C)' },
   { id: 'glicemiaMgDl', nome: 'Glicemia (mg/dL)' },
+  { id: 'tecS', nome: 'TEC (s)' },
+  { id: 'glasgow', nome: 'Glasgow (3–15)' },
 ];
 
 const MEDS_ORDENADAS = [...BANCO_MEDICACOES].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
@@ -305,9 +318,39 @@ export function EditorCasos() {
           <div className="grade-sinais">
             {SINAIS.map((s) => (
               <Campo key={s.id} rotulo={s.nome}>
-                <input type="number" step="any" min={0} value={caso.sinaisIniciais[s.id]} onChange={(e) => ms(s.id, num(e.target.value))} />
+                <input
+                  type="number"
+                  step="any"
+                  min={0}
+                  value={caso.sinaisIniciais[s.id] ?? (s.id === 'tecS' || s.id === 'glasgow' ? SINAIS_PADRAO[s.id] : 0)}
+                  onChange={(e) => ms(s.id, num(e.target.value))}
+                />
               </Campo>
             ))}
+            <Campo rotulo="Ritmo">
+              <select
+                value={caso.estadoInicial?.ritmo ?? 'sinusal'}
+                onChange={(e) => m({ estadoInicial: { ...caso.estadoInicial, ritmo: e.target.value as Ritmo } })}
+              >
+                {(Object.keys(NOME_RITMO) as Ritmo[]).map((r) => (
+                  <option key={r} value={r}>
+                    {NOME_RITMO[r]}
+                  </option>
+                ))}
+              </select>
+            </Campo>
+            <Campo rotulo="Respiração">
+              <select
+                value={caso.estadoInicial?.padraoRespiratorio ?? 'normal'}
+                onChange={(e) => m({ estadoInicial: { ...caso.estadoInicial, padraoRespiratorio: e.target.value as PadraoRespiratorio } })}
+              >
+                {(Object.keys(NOME_PADRAO_RESPIRATORIO) as PadraoRespiratorio[]).map((r) => (
+                  <option key={r} value={r}>
+                    {NOME_PADRAO_RESPIRATORIO[r]}
+                  </option>
+                ))}
+              </select>
+            </Campo>
             <Campo rotulo="Diurese (mL/kg/h)">
               <input type="number" step="any" min={0} value={caso.diureseMlKgH ?? 1} onChange={(e) => m({ diureseMlKgH: num(e.target.value) })} />
             </Campo>

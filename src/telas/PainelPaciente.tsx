@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { CasoClinico, SinaisVitais } from '../casos/tipos';
+import { type CasoClinico, ESTADO_CLINICO_PADRAO, type EstadoClinico, NOME_PADRAO_RESPIRATORIO, type SinaisVitais } from '../casos/tipos';
 import type { PacienteAtual } from '../paciente/atual';
 import { formatarDataHora, lerDataHora, textoSemanasEDias } from '../paciente/variaveis';
 import { Monitor } from './Monitor';
@@ -12,12 +12,16 @@ interface Props {
   caso: CasoClinico;
   paciente: PacienteAtual;
   sinais: SinaisVitais;
+  /** Ritmo e padrão respiratório (B10). */
+  clinico?: EstadoClinico;
+  /** Peso estimado pelo balanço hídrico (B10). */
+  pesoEstimadoKg?: number;
   /** Fonte usada para o nome da faixa etária (mostrada ao lado). */
   fonteDaFaixa?: string;
   children?: ReactNode;
 }
 
-export function PainelPaciente({ caso, paciente, sinais, fonteDaFaixa = 'SBP', children }: Props) {
+export function PainelPaciente({ caso, paciente, sinais, clinico = ESTADO_CLINICO_PADRAO, pesoEstimadoKg, fonteDaFaixa = 'SBP', children }: Props) {
   const v = paciente.variaveis;
   const menorDeUmAno = v.idade.anos < 1;
 
@@ -59,7 +63,16 @@ export function PainelPaciente({ caso, paciente, sinais, fonteDaFaixa = 'SBP', c
           </>
         )}
         <dt>Peso atual</dt>
-        <dd>{formatar(paciente.pesoKg, paciente.pesoKg < 10 ? 3 : 1)} kg</dd>
+        <dd>
+          {formatar(paciente.pesoKg, paciente.pesoKg < 10 ? 3 : 1)} kg
+          {pesoEstimadoKg !== undefined && Math.abs(pesoEstimadoKg - paciente.pesoKg) >= 0.001 && (
+            <span className="faixa" title="Peso da admissão + balanço hídrico (1 mL ≈ 1 g; sem perdas insensíveis). As doses usam o peso da admissão. A VALIDAR.">
+              {' '}
+              pelo balanço: {formatar(pesoEstimadoKg, pesoEstimadoKg < 10 ? 3 : 1)} kg ({pesoEstimadoKg >= paciente.pesoKg ? '+' : '−'}
+              {formatar(Math.abs(pesoEstimadoKg - paciente.pesoKg) * 1000)} g)
+            </span>
+          )}
+        </dd>
         {paciente.estaturaCm !== undefined && (
           <>
             <dt>Estatura</dt>
@@ -88,7 +101,21 @@ export function PainelPaciente({ caso, paciente, sinais, fonteDaFaixa = 'SBP', c
       </details>
 
       <h3>Monitor</h3>
-      <Monitor sinais={sinais} idadeDias={v.idade.dias} />
+      <Monitor sinais={sinais} idadeDias={v.idade.dias} ritmo={clinico.ritmo} />
+
+      <h3>Beira do leito</h3>
+      <dl className="ficha beira-leito" aria-label="Exame à beira do leito">
+        <dt>TEC</dt>
+        <dd className={sinais.tecS > 2 ? 'alterado' : undefined}>{formatar(sinais.tecS, 1)} s</dd>
+        <dt>Glasgow</dt>
+        <dd className={sinais.glasgow < 15 ? 'alterado' : undefined}>
+          {formatar(sinais.glasgow)}
+          {menorDeUmAno && <span className="faixa"> (adaptado ao lactente)</span>}
+        </dd>
+        <dt>Respiração</dt>
+        <dd className={clinico.padraoRespiratorio !== 'normal' ? 'alterado' : undefined}>{NOME_PADRAO_RESPIRATORIO[clinico.padraoRespiratorio]}</dd>
+      </dl>
+      <p className="nota">TEC, Glasgow e padrão respiratório dos casos: provisórios (A VALIDAR).</p>
 
       {children}
 

@@ -25,7 +25,8 @@ export const caso04: CasoClinico = {
   historia: 'Mãe vivendo com HIV, carga viral detectável no 3º trimestre, má adesão ao tratamento. Cesárea eletiva.',
   exameFisico: 'Sem alterações.',
   hipotese: 'RN exposto ao HIV, alto risco de transmissão.',
-  sinaisIniciais: { fc: 138, fr: 46, spo2: 98, paSistolica: 66, paDiastolica: 38, temperaturaC: 36.7, glicemiaMgDl: 70 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  sinaisIniciais: { fc: 138, fr: 46, spo2: 98, paSistolica: 66, paDiastolica: 38, temperaturaC: 36.7, glicemiaMgDl: 70, tecS: 2, glasgow: 15 },
   resultadosExames: {
     'carga-viral-hiv': { laudo: 'Resultado em 7 dias (exemplo).', status: 'A_VALIDAR' },
     hemograma: { valores: { hb: 17, ht: 50, leucocitos: 14000, neutrofilos: 55, bastoes: 3, plaquetas: 250000 }, status: 'A_VALIDAR' },

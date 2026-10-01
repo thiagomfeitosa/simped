@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import type { SinaisVitais } from '../casos/tipos';
+import type { Ritmo, SinaisVitais } from '../casos/tipos';
+import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { LIMITES_ALARME } from '../dados/limites-alarme';
-import { alarmesAtivos, ecg, limitesParaIdade, pletismografia } from '../monitor/monitor';
+import { alarmesAtivos, ecgDoRitmo, limitesParaIdade, nomeDoRitmo, pletismografiaDoRitmo, semMedida } from '../monitor/monitor';
 
 function formatar(valor: number, casas = 0): string {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
@@ -85,20 +86,24 @@ function bipe() {
 interface Props {
   sinais: SinaisVitais;
   idadeDias: number;
+  /** Ritmo cardíaco (B10/B11); padrão: sinusal. */
+  ritmo?: Ritmo;
 }
 
 /** Monitor multiparamétrico: ECG e pletismografia em movimento, números e alarmes por idade (A VALIDAR). */
-export function Monitor({ sinais, idadeDias }: Props) {
+export function Monitor({ sinais, idadeDias, ritmo = 'sinusal' }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [som, setSom] = useState(false);
   const [silenciadoAte, setSilenciadoAte] = useState(0);
+  const { config } = useConfiguracoes();
   const limites = limitesParaIdade(idadeDias);
-  const alarmes = alarmesAtivos(sinais, limites);
+  const alarmes = alarmesAtivos(sinais, limites, ritmo);
   const emAlarme = new Set(alarmes.map((a) => a.sinal));
+  const sem = semMedida(ritmo);
 
   useTracado(canvas, () => [
-    { cor: '#3ee07a', valor: (t) => ecg(t, sinais.fc), min: -0.4, max: 1.1 },
-    { cor: '#38c8f0', valor: (t) => pletismografia(t, sinais.fc) * (sinais.spo2 >= 85 ? 1 : 0.5), min: -0.1, max: 1.2 },
+    { cor: '#3ee07a', valor: (t) => ecgDoRitmo(t, sinais.fc, ritmo), min: -0.8, max: 1.1 },
+    { cor: '#38c8f0', valor: (t) => pletismografiaDoRitmo(t, sinais.fc, ritmo) * (sinais.spo2 >= 85 ? 1 : 0.5), min: -0.1, max: 1.2 },
   ]);
 
   // bipe a cada 1,5 s enquanto houver alarme, com som ligado e sem silêncio
@@ -125,10 +130,14 @@ export function Monitor({ sinais, idadeDias }: Props) {
   return (
     <div className="monitor" aria-label="Monitor">
       <canvas ref={canvas} height={110} className="monitor-tela" aria-label="ECG (verde) e pletismografia (azul)" />
+      {/* no modo prova o aluno reconhece o ritmo sozinho */}
+      <p className="monitor-ritmo" aria-label="Ritmo no monitor">
+        {config.modo === 'prova' ? 'Ritmo: reconheça pelo traçado' : `Ritmo: ${nomeDoRitmo(ritmo, sinais.fc, limites)}`}
+      </p>
       <div className="vitais">
-        {numero('fc', 'FC', formatar(sinais.fc), 'bpm', 'cor-fc')}
-        {numero('spo2', 'SpO₂', formatar(sinais.spo2), '%', 'cor-spo2')}
-        {numero('pa', 'PA', `${formatar(sinais.paSistolica)} × ${formatar(sinais.paDiastolica)}`, 'mmHg', 'cor-pa')}
+        {numero('fc', 'FC', sem.fc ? '---' : formatar(sinais.fc), 'bpm', 'cor-fc')}
+        {numero('spo2', 'SpO₂', sem.spo2 ? '---' : formatar(sinais.spo2), '%', 'cor-spo2')}
+        {numero('pa', 'PA', sem.pa ? '--- × ---' : `${formatar(sinais.paSistolica)} × ${formatar(sinais.paDiastolica)}`, 'mmHg', 'cor-pa')}
         {numero('fr', 'FR', formatar(sinais.fr), 'irpm', 'cor-fr')}
         {numero('temperaturaC', 'Temp. axilar', formatar(sinais.temperaturaC, 1), '°C', 'cor-temp')}
         {numero('glicemiaMgDl', 'Glicemia capilar', formatar(sinais.glicemiaMgDl), 'mg/dL', 'cor-glic')}

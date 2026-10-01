@@ -3,15 +3,30 @@
  * Tudo que vem dos casos é "A VALIDAR" até o usuário conferir.
  */
 
-import type { CondutaEsperada, MudancaDeSinal, NomeSinal, RespostaAMedicacao } from './tipos';
+import type { CondutaEsperada, MudancaDeEstado, MudancaDeSinal, NomeSinal, PadraoRespiratorio, RespostaAMedicacao, Ritmo } from './tipos';
 
 /** O sinal vai até `alvo`, começando depois de `atrasoMin` e levando `duracaoMin`. */
 export function muda(sinal: NomeSinal, alvo: number, atrasoMin: number, duracaoMin: number): MudancaDeSinal {
   return { sinal, alvo, atrasoMin, duracaoMin };
 }
 
-export function resposta(medicacaoId: string, mudancas: MudancaDeSinal[], observacao?: string): RespostaAMedicacao {
-  return { medicacaoId, mudancas, status: 'A_VALIDAR', ...(observacao && { observacao }) };
+export function resposta(
+  medicacaoId: string,
+  mudancas: MudancaDeSinal[],
+  observacao?: string,
+  extra: Partial<RespostaAMedicacao> = {},
+): RespostaAMedicacao {
+  return { medicacaoId, mudancas, status: 'A_VALIDAR', ...(observacao && { observacao }), ...extra };
+}
+
+/** Troca de ritmo depois de `atrasoMin` minutos. */
+export function ritmo(valor: Ritmo, atrasoMin: number): MudancaDeEstado {
+  return { campo: 'ritmo', valor, atrasoMin };
+}
+
+/** Troca de padrão respiratório depois de `atrasoMin` minutos. */
+export function respiracao(valor: PadraoRespiratorio, atrasoMin: number): MudancaDeEstado {
+  return { campo: 'padraoRespiratorio', valor, atrasoMin };
 }
 
 export function conduta(

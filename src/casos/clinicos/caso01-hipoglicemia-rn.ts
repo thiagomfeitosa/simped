@@ -25,10 +25,11 @@ export const caso01: CasoClinico = {
   historia: 'Mãe com diabetes gestacional em uso de insulina, mal controlado. RN grande para a idade gestacional (GIG).',
   exameFisico: 'Tremores, hipoatividade, sucção fraca.',
   hipotese: 'Hipoglicemia neonatal sintomática.',
-  sinaisIniciais: { fc: 150, fr: 52, spo2: 97, paSistolica: 65, paDiastolica: 40, temperaturaC: 36.6, glicemiaMgDl: 28 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  sinaisIniciais: { fc: 150, fr: 52, spo2: 97, paSistolica: 65, paDiastolica: 40, temperaturaC: 36.6, glicemiaMgDl: 28, tecS: 2, glasgow: 14 },
   evolucaoNatural: [muda('glicemiaMgDl', 20, 0, 60), muda('fc', 165, 30, 60)],
   respostas: [
-    resposta('sg10', [muda('glicemiaMgDl', 65, 5, 25), muda('fc', 145, 5, 25)], 'Bolus de SG 10%: 30 min depois, glicemia 60–70.'),
+    resposta('sg10', [muda('glicemiaMgDl', 65, 5, 25), muda('fc', 145, 5, 25), muda('glasgow', 15, 5, 25)], 'Bolus de SG 10%: 30 min depois, glicemia 60–70.'),
     resposta('soro', [muda('glicemiaMgDl', 70, 30, 60)], 'Soro com VIG adequada mantém a glicemia.'),
     resposta('g50', [muda('glicemiaMgDl', 90, 2, 10)], 'Sobe a glicemia, mas glicose 50% não é para bolus no RN (hiperosmolar).'),
   ],

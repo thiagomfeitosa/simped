@@ -4,11 +4,15 @@ import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { EXAMES } from '../dados/exames';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
+import { calcularBalanco, pesoPeloBalanco } from '../motor/balanco';
+import { avaliarDose } from '../motor/avaliarDose';
 import { reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
 import { itensParaAprazar } from '../prescricao/aprazamento';
+import { lerNumero } from '../prescricao/comum';
 import type { AcaoPrescricao } from '../prescricao/estado';
+import type { CamposMedicacao } from '../prescricao/itemMedicacao';
 import { gerarRelatorio } from '../relatorio/relatorio';
 import { useSessao } from '../sessao/ContextoSessao';
 import { temTrabalho } from '../sessao/sessao';
@@ -61,6 +65,43 @@ function SessaoCaso() {
     if (exame) fazer({ tipo: 'pedirExame', exameId, nome: exame.nome });
   };
   const ultimaMensagem = estado.mensagens[estado.mensagens.length - 1];
+  // B9: a reação do paciente depende da dose escrita no item (subdose, na faixa, sobredose)
+  const avaliar = (campos: CamposMedicacao | undefined) => {
+    if (!campos || campos.intervalo === 'continua' || !campos.unidadeDose) return undefined;
+    const dose = lerNumero(campos.dose);
+    if (dose === null) return undefined;
+    return avaliarDose({
+      medicacao: BANCO_MEDICACOES.find((m) => m.id === campos.medicacaoId),
+      resposta: caso.respostas?.find((r) => r.medicacaoId === campos.medicacaoId),
+      ...(campos.indicacao && { indicacao: campos.indicacao }),
+      faixa: pacienteAtual.faixa,
+      variaveis: pacienteAtual.paraRegra,
+      ...(campos.via && { via: campos.via }),
+      pesoKg: pacienteAtual.pesoKg,
+      dose,
+      unidade: campos.unidadeDose,
+      fontePreferida: config.fonteDose,
+    });
+  };
+  const camposDoItem = (itemId: number) => {
+    for (const lista of Object.values(prescricao.itens)) {
+      const item = lista.find((i) => i.id === itemId);
+      if (item?.tipo === 'medicacao') return item.campos;
+    }
+    return undefined;
+  };
+  // B10: peso estimado pelo balanço desde o início do caso
+  const pesoEstimadoKg = useMemo(() => {
+    const b = calcularBalanco({
+      infusoes,
+      registros: registrosBalanco,
+      diureseMlKgH: caso.diureseMlKgH ?? 1,
+      pesoKg: caso.paciente.pesoKg,
+      deMin: 0,
+      ateMin: paciente.tempoMin,
+    });
+    return pesoPeloBalanco(caso.paciente.pesoKg, b.balancoMl);
+  }, [infusoes, registrosBalanco, caso, paciente.tempoMin]);
 
   const houveTrabalho = temTrabalho(registros);
   const relatorio = relatorioAberto
@@ -155,7 +196,14 @@ function SessaoCaso() {
 
       <main className={pacienteVisivel ? 'area com-paciente' : 'area'}>
         {pacienteVisivel && (
-          <PainelPaciente caso={caso} paciente={pacienteAtual} sinais={paciente.sinais} fonteDaFaixa={config.fonteFaixa}>
+          <PainelPaciente
+            caso={caso}
+            paciente={pacienteAtual}
+            sinais={paciente.sinais}
+            clinico={paciente.clinico}
+            pesoEstimadoKg={pesoEstimadoKg}
+            fonteDaFaixa={config.fonteFaixa}
+          >
             <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoPassarTempo={(minutos) => fazer({ tipo: 'tempo', minutos })} />
           </PainelPaciente>
         )}
@@ -176,9 +224,16 @@ function SessaoCaso() {
               estado={prescricao}
               despachar={despachar}
               medicacoes={BANCO_MEDICACOES}
-              aoAdministrar={(medicacaoId, descricao, vazaoMlH) =>
-                fazer({ tipo: 'administrar', medicacaoId, descricao, ...(vazaoMlH !== undefined && { vazaoMlH }) })
-              }
+              aoAdministrar={(medicacaoId, descricao, vazaoMlH, campos) => {
+                const avaliacao = avaliar(campos);
+                fazer({
+                  tipo: 'administrar',
+                  medicacaoId,
+                  descricao,
+                  ...(vazaoMlH !== undefined && { vazaoMlH }),
+                  ...(avaliacao && { avaliacao }),
+                });
+              }}
               aoConferir={(itemId, descricao) => fazer({ tipo: 'conferir', itemId, descricao })}
             />
           </div>
@@ -190,15 +245,17 @@ function SessaoCaso() {
             agoraMin={paciente.tempoMin}
             hospital={hospitalAtual(config)}
             checagens={checagens}
-            aoChecar={(dose) =>
+            aoChecar={(dose) => {
+              const avaliacao = avaliar(camposDoItem(dose.itemId));
               fazer({
                 tipo: 'checarDose',
                 itemId: dose.itemId,
                 minutoMarcado: dose.minuto,
                 medicacaoId: dose.medicacaoId,
                 descricao: `${dose.descricao} (horário das ${dose.hora})`,
-              })
-            }
+                ...(avaliacao && { avaliacao }),
+              });
+            }}
           />
           <PainelExames caso={caso} agoraMin={paciente.tempoMin} pedidos={pedidos} aoPedir={pedirExame} />
           <PainelBalanco

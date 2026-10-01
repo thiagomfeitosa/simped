@@ -25,7 +25,8 @@ export const caso03: CasoClinico = {
   historia: 'Mãe com VDRL 1:32 no parto e tratamento inadequado na gestação. Exames do RN já colhidos.',
   exameFisico: 'Assintomática.',
   hipotese: 'Sífilis congênita com neurossífilis.',
-  sinaisIniciais: { fc: 140, fr: 44, spo2: 98, paSistolica: 68, paDiastolica: 40, temperaturaC: 36.8, glicemiaMgDl: 80 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  sinaisIniciais: { fc: 140, fr: 44, spo2: 98, paSistolica: 68, paDiastolica: 40, temperaturaC: 36.8, glicemiaMgDl: 80, tecS: 2, glasgow: 15 },
   resultadosExames: {
     vdrl: { laudo: 'VDRL do RN 1:128 (maior que o materno).', status: 'A_VALIDAR' },
     liquor: { laudo: 'VDRL no líquor REAGENTE.', status: 'A_VALIDAR' },

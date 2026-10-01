@@ -1,5 +1,5 @@
 /** Caso 10 de docs/fase-0/casos-clinicos.md. TUDO A VALIDAR. */
-import { conduta, INICIO_PADRAO, muda, resposta } from '../ajuda';
+import { conduta, INICIO_PADRAO, muda, respiracao, resposta } from '../ajuda';
 import type { CasoClinico } from '../tipos';
 
 export const caso10: CasoClinico = {
@@ -25,11 +25,13 @@ export const caso10: CasoClinico = {
   historia: 'Poliúria, polidipsia e emagrecimento há 3 semanas; vômitos hoje.',
   exameFisico: 'Desidratado (~10%), respiração de Kussmaul, hálito cetônico. Glasgow 15.',
   hipotese: 'Cetoacidose diabética grave (abertura de diabetes tipo 1).',
-  sinaisIniciais: { fc: 128, fr: 34, spo2: 98, paSistolica: 104, paDiastolica: 64, temperaturaC: 36.8, glicemiaMgDl: 480 },
+  // B10: TEC, Glasgow, ritmo e padrão respiratório PROVISÓRIOS (A VALIDAR), escritos pelo assistente.
+  estadoInicial: { padraoRespiratorio: 'kussmaul' },
+  sinaisIniciais: { fc: 128, fr: 34, spo2: 98, paSistolica: 104, paDiastolica: 64, temperaturaC: 36.8, glicemiaMgDl: 480, tecS: 3, glasgow: 15 },
   evolucaoNatural: [muda('fc', 135, 0, 120)],
   respostas: [
-    resposta('sf09', [muda('fc', 118, 0, 60)]),
-    resposta('insulina-regular', [muda('glicemiaMgDl', 250, 60, 300), muda('fr', 26, 120, 300)], 'Glicemia não deve cair rápido demais (edema cerebral).'),
+    resposta('sf09', [muda('fc', 118, 0, 60), muda('tecS', 2, 0, 60)]),
+    resposta('insulina-regular', [muda('glicemiaMgDl', 250, 60, 300), muda('fr', 26, 120, 300)], 'Glicemia não deve cair rápido demais (edema cerebral).', { mudancasDeEstado: [respiracao('taquipneia', 180), respiracao('normal', 360)] }),
     resposta('soro', [muda('fc', 110, 60, 240)]),
   ],
   resultadosExames: {

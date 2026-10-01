@@ -1211,3 +1211,19 @@
     display: none;
   }
 }
+
+/* Ritmo no monitor e beira do leito (B10/B11) */
+.monitor-ritmo {
+  margin: 2px 0 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--monitor-verde);
+  background: var(--monitor);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.beira-leito .alterado {
+  color: #b5452b;
+  font-weight: 700;
+}
