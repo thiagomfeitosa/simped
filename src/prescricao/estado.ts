@@ -4,6 +4,7 @@
  */
 
 import { type CamposMedicacao, camposVazios } from './itemMedicacao';
+import { type CamposSoro, soroVazio } from './soro';
 import { SECOES, type SecaoId } from './secoes';
 
 export { type DefinicaoSecao, SECOES, type SecaoId } from './secoes';
@@ -22,7 +23,14 @@ export interface ItemMedicacao {
   campos: CamposMedicacao;
 }
 
-export type ItemPrescricao = ItemTexto | ItemMedicacao;
+/** Soro montado (seção 4): soluções + tempo, com as contas conferidas. */
+export interface ItemSoro {
+  id: number;
+  tipo: 'soro';
+  campos: CamposSoro;
+}
+
+export type ItemPrescricao = ItemTexto | ItemMedicacao | ItemSoro;
 
 export interface EstadoPrescricao {
   itens: Record<SecaoId, ItemPrescricao[]>;
@@ -34,6 +42,8 @@ export type AcaoPrescricao =
   | { tipo: 'editar'; secao: SecaoId; id: number; texto: string }
   | { tipo: 'adicionarMedicacao'; secao: SecaoId; campos?: CamposMedicacao }
   | { tipo: 'editarMedicacao'; secao: SecaoId; id: number; campos: CamposMedicacao }
+  | { tipo: 'adicionarSoro'; secao: SecaoId; campos?: CamposSoro }
+  | { tipo: 'editarSoro'; secao: SecaoId; id: number; campos: CamposSoro }
   | { tipo: 'remover'; secao: SecaoId; id: number }
   | { tipo: 'limpar' };
 
@@ -74,6 +84,12 @@ export function reduzirPrescricao(estado: EstadoPrescricao, acao: AcaoPrescricao
     case 'editarMedicacao':
       return trocar(estado, acao.secao, (item) =>
         item.id === acao.id && item.tipo === 'medicacao' ? { ...item, campos: acao.campos } : item,
+      );
+    case 'adicionarSoro':
+      return incluir(estado, acao.secao, { id: estado.proximoId, tipo: 'soro', campos: acao.campos ?? soroVazio() });
+    case 'editarSoro':
+      return trocar(estado, acao.secao, (item) =>
+        item.id === acao.id && item.tipo === 'soro' ? { ...item, campos: acao.campos } : item,
       );
     case 'remover':
       return {

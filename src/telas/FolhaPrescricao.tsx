@@ -4,6 +4,7 @@ import { formatarDataHora, lerDataHora } from '../paciente/variaveis';
 import type { Medicacao } from '../dados/medicacoes/tipos';
 import { type AcaoPrescricao, type EstadoPrescricao, numerarItens, SECOES } from '../prescricao/estado';
 import { ItemMedicacaoFolha } from './ItemMedicacaoFolha';
+import { ItemSoroFolha } from './ItemSoroFolha';
 
 interface Props {
   paciente: PacienteAtual;
@@ -53,6 +54,16 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
                     aoRemover={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
                     aoAdministrar={aoAdministrar}
                   />
+                ) : item.tipo === 'soro' ? (
+                  <ItemSoroFolha
+                    key={item.id}
+                    numero={numeros.get(item.id)}
+                    campos={item.campos}
+                    pesoKg={paciente.pesoKg}
+                    aoMudar={(campos) => despachar({ tipo: 'editarSoro', secao: secao.id, id: item.id, campos })}
+                    aoRemover={() => despachar({ tipo: 'remover', secao: secao.id, id: item.id })}
+                    aoAdministrar={(descricao) => aoAdministrar('soro', descricao)}
+                  />
                 ) : (
                   <li key={item.id}>
                     <span className="numero-item">{numeros.get(item.id)}.</span>
@@ -83,6 +94,15 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
             >
               + item em texto
             </button>
+            {secao.id === 'volemia' && (
+              <button
+                type="button"
+                className="adicionar"
+                onClick={() => despachar({ tipo: 'adicionarSoro', secao: secao.id })}
+              >
+                + soro
+              </button>
+            )}
             {secao.aceitaMedicacao && (
               <button
                 type="button"

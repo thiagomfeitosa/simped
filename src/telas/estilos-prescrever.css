@@ -532,3 +532,24 @@
   flex: none;
   width: auto;
 }
+
+/* Item de soro */
+.soro-componente {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-soro input {
+  flex: none;
+}
+
+.soro-componente select {
+  width: auto;
+  max-width: 14em;
+}
+
+.soro-componente input {
+  flex: none;
+  width: 5em;
+}

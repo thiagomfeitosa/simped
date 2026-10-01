@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { numerarItens, prescricaoVazia, reduzirPrescricao, SECOES } from './estado';
 import { camposVazios } from './itemMedicacao';
+import { soroVazio } from './soro';
 
 describe('folha de prescrição', () => {
   it('tem as seções 2 a 9 na ordem oficial', () => {
@@ -65,5 +66,25 @@ describe('folha de prescrição', () => {
     let estado = reduzirPrescricao(prescricaoVazia(), { tipo: 'adicionar', secao: 'dieta' });
     estado = reduzirPrescricao(estado, { tipo: 'limpar' });
     expect(estado).toEqual(prescricaoVazia());
+  });
+});
+
+describe('item de soro', () => {
+  it('adiciona, edita e numera junto com os outros itens', () => {
+    let e = prescricaoVazia();
+    e = reduzirPrescricao(e, { tipo: 'adicionarSoro', secao: 'volemia' });
+    e = reduzirPrescricao(e, { tipo: 'adicionar', secao: 'dieta', texto: 'Dieta livre' });
+    const soro = e.itens.volemia[0]!;
+    expect(soro.tipo).toBe('soro');
+    e = reduzirPrescricao(e, {
+      tipo: 'editarSoro',
+      secao: 'volemia',
+      id: soro.id,
+      campos: { ...soroVazio(), horas: '8' },
+    });
+    const editado = e.itens.volemia[0]!;
+    expect(editado.tipo === 'soro' && editado.campos.horas).toBe('8');
+    // dieta (seção 3) vem antes do soro (seção 4)
+    expect(numerarItens(e).get(soro.id)).toBe(2);
   });
 });
