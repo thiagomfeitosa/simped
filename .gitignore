@@ -4,3 +4,8 @@ referencias/privado/*
 
 # Arquivos do sistema
 .DS_Store
+
+# Dependências instaladas pelo npm (recriadas com "npm install")
+node_modules/
+dist/
+*.tsbuildinfo

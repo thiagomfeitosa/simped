@@ -1,0 +1,95 @@
+// Caso fictício só para testar o motor: os números não têm significado clínico.
+import { describe, expect, it } from 'vitest';
+import type { CasoClinico } from '../casos/tipos';
+import { aplicarEvento, iniciarPaciente, reproduzirEventos } from './paciente';
+
+const caso: CasoClinico = {
+  id: 'teste',
+  titulo: 'Teste',
+  paciente: { nome: 'X', idadeTexto: '1 ano', faixa: 'crianca', pesoKg: 10, sexo: 'M', leito: '1' },
+  queixa: '',
+  historia: '',
+  exameFisico: '',
+  sinaisIniciais: { fc: 100, fr: 30, spo2: 95, paSistolica: 90, paDiastolica: 50, temperaturaC: 38, glicemiaMgDl: 80 },
+  evolucaoNatural: [{ sinal: 'temperaturaC', alvo: 40, atrasoMin: 0, duracaoMin: 100 }],
+  respostas: [
+    {
+      medicacaoId: 'droga-x',
+      mudancas: [{ sinal: 'temperaturaC', alvo: 37, atrasoMin: 10, duracaoMin: 20 }],
+      status: 'A_VALIDAR',
+    },
+    {
+      medicacaoId: 'droga-imediata',
+      mudancas: [{ sinal: 'spo2', alvo: 99, atrasoMin: 0, duracaoMin: 0 }],
+      status: 'A_VALIDAR',
+    },
+  ],
+};
+
+describe('motor do paciente', () => {
+  it('começa com os sinais iniciais do caso', () => {
+    const p = iniciarPaciente(caso);
+    expect(p.tempoMin).toBe(0);
+    expect(p.sinais.temperaturaC).toBe(38);
+  });
+
+  it('evolução natural: a febre sobe em linha reta (38 → 40 em 100 min; após 50 min = 39)', () => {
+    const p = aplicarEvento(iniciarPaciente(caso), { tipo: 'tempoPassou', minutos: 50 }, caso);
+    expect(p.tempoMin).toBe(50);
+    expect(p.sinais.temperaturaC).toBeCloseTo(39, 10);
+  });
+
+  it('depois do fim da mudança o sinal fica parado no alvo', () => {
+    const p = aplicarEvento(iniciarPaciente(caso), { tipo: 'tempoPassou', minutos: 300 }, caso);
+    expect(p.sinais.temperaturaC).toBe(40);
+    expect(p.mudancas).toEqual([]);
+  });
+
+  it('medicação: nada muda durante o atraso; depois leva o sinal ao alvo e interrompe a febre subindo', () => {
+    let p = iniciarPaciente(caso);
+    p = aplicarEvento(p, { tipo: 'medicacaoAdministrada', medicacaoId: 'droga-x', descricao: 'Droga X' }, caso);
+    p = aplicarEvento(p, { tipo: 'tempoPassou', minutos: 10 }, caso);
+    expect(p.sinais.temperaturaC).toBeCloseTo(38.2, 10); // ainda só a evolução natural (10 min)
+
+    p = aplicarEvento(p, { tipo: 'tempoPassou', minutos: 10 }, caso);
+    expect(p.sinais.temperaturaC).toBeCloseTo(37.6, 10); // metade do caminho de 38,2 até 37
+
+    p = aplicarEvento(p, { tipo: 'tempoPassou', minutos: 60 }, caso);
+    expect(p.sinais.temperaturaC).toBe(37); // a febre não volta a subir sozinha
+  });
+
+  it('mudança imediata (duração 0) aparece na hora', () => {
+    const p = aplicarEvento(
+      iniciarPaciente(caso),
+      { tipo: 'medicacaoAdministrada', medicacaoId: 'droga-imediata', descricao: 'Imediata' },
+      caso,
+    );
+    expect(p.sinais.spo2).toBe(99);
+  });
+
+  it('medicação sem efeito definido no caso fica registrada e não muda nada', () => {
+    const antes = iniciarPaciente(caso);
+    const depois = aplicarEvento(antes, { tipo: 'medicacaoAdministrada', medicacaoId: 'outra', descricao: 'Outra' }, caso);
+    expect(depois.sinais).toEqual(antes.sinais);
+    expect(depois.registro.at(-1)?.descricao).toContain('sem efeito definido');
+  });
+
+  it('professor altera um sinal e cancela a mudança em andamento naquele sinal', () => {
+    let p = iniciarPaciente(caso);
+    p = aplicarEvento(p, { tipo: 'professorAlterouSinais', sinais: { temperaturaC: 36.5, fc: 160 } }, caso);
+    p = aplicarEvento(p, { tipo: 'tempoPassou', minutos: 60 }, caso);
+    expect(p.sinais.temperaturaC).toBe(36.5);
+    expect(p.sinais.fc).toBe(160);
+    expect(p.registro.at(-1)?.descricao).toContain('Professor');
+  });
+
+  it('a mesma lista de eventos sempre gera o mesmo paciente', () => {
+    const eventos = [
+      { tipo: 'tempoPassou', minutos: 15 },
+      { tipo: 'medicacaoAdministrada', medicacaoId: 'droga-x', descricao: 'Droga X' },
+      { tipo: 'tempoPassou', minutos: 40 },
+    ] as const;
+    expect(reproduzirEventos(caso, eventos)).toEqual(reproduzirEventos(caso, eventos));
+    expect(reproduzirEventos(caso, eventos).tempoMin).toBe(55);
+  });
+});

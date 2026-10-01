@@ -1,0 +1,75 @@
+/* Barra do topo com os modos do SimPed (vale para o app inteiro).
+   As cores vêm de src/componentes/passo-a-passo/estilos.css (:root). */
+
+[hidden] {
+  display: none !important;
+}
+
+.modos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 20px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+  box-shadow: var(--sombra);
+}
+
+.modos-marca {
+  margin-right: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--primaria-escura);
+}
+
+.modos-marca b {
+  color: var(--seta);
+}
+
+.modo-aba {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 14px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: var(--texto);
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.modo-aba small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+.modo-aba:hover {
+  border-color: var(--borda);
+}
+
+.modo-aba[aria-current='page'] {
+  background: var(--primaria);
+  border-color: var(--primaria);
+  color: #fff;
+}
+
+.modo-aba[aria-current='page'] small {
+  color: rgb(255 255 255 / 85%);
+}
+
+@media print {
+  .modos {
+    display: none;
+  }
+}
+
+/* Título de cada modo (ex.: "Passo a passo da prescrição") */
+.modo-titulo {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primaria-escura);
+}

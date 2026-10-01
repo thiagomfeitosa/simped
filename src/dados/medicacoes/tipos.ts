@@ -1,0 +1,106 @@
+/**
+ * Molde do banco de medicações.
+ * Cada remédio é um arquivo de dados que segue este formato.
+ * Regras de segurança (CLAUDE.md):
+ * - todo valor de dose aponta para uma fonte;
+ * - valor não conferido fica com status 'A_VALIDAR' e NÃO é usado para corrigir o aluno.
+ */
+
+/** 'A_VALIDAR' = ainda não conferido pelo usuário na fonte; 'CONFERIDO' = conferido (com documento e página). */
+export type StatusValidacao = 'A_VALIDAR' | 'CONFERIDO';
+
+/** Códigos de fonte (docs/fase-0/fontes.md e referencias/catalogo.md). */
+export type CodigoFonte =
+  | 'SBP'
+  | 'MS'
+  | 'AAP'
+  | 'PALS'
+  | 'NRP'
+  | 'GINA'
+  | 'ISPAD'
+  | 'ASBAI'
+  | 'BULA'
+  | 'HOSPITAL';
+
+export interface Fonte {
+  codigo: CodigoFonte;
+  /** Documento, edição e ano (obrigatório para status CONFERIDO). */
+  documento?: string;
+  /** Página, tabela ou seção. */
+  pagina?: string;
+}
+
+export type FaixaEtaria = 'RN' | 'crianca' | 'adolescente';
+
+export type Via = 'EV' | 'IM' | 'SC' | 'VO' | 'IO' | 'inalatoria' | 'endotraqueal' | 'retal';
+
+/** Unidade de quantidade de droga. */
+export type UnidadeDroga = 'g' | 'mg' | 'mcg' | 'UI' | 'mEq' | 'mL';
+
+/** Seção da folha de prescrição onde o item entra (ordem do CLAUDE.md). */
+export type SecaoPrescricao = 4 | 5 | 6;
+
+export interface Apresentacao {
+  id: string;
+  /** Texto como aparece para o aluno. Ex.: "Ampola 1 mg/mL, 1 mL". */
+  descricao: string;
+  forma:
+    | 'ampola'
+    | 'frasco-ampola-po'
+    | 'frasco-ampola-solucao'
+    | 'bolsa-soro'
+    | 'comprimido'
+    | 'solucao-oral'
+    | 'gotas'
+    | 'spray'
+    | 'nebulizacao'
+    | 'outro';
+  vias: Via[];
+  /** Quantidade de droga por unidade (ampola, frasco, comprimido). */
+  quantidade?: { valor: number; unidade: UnidadeDroga };
+  /** Volume da unidade em mL (vazio para pó ou comprimido). */
+  volumeMl?: number;
+  /** Concentração por mL (ex.: { valor: 1, unidade: 'mg' } = 1 mg/mL). */
+  concentracaoPorMl?: { valor: number; unidade: UnidadeDroga };
+  status: StatusValidacao;
+  fonte?: Fonte;
+}
+
+/**
+ * Como a dose está expressa:
+ * - porKg: faixa por kg (ex.: 10–25 mg/kg/dose);
+ * - fixa: faixa fixa (ex.: 500–1000 mg/dose);
+ * - texto: regra ainda não estruturada (tabelas por IG, por superfície corporal...). Nunca corrige o aluno.
+ */
+export type ExpressaoDeDose =
+  | { tipo: 'porKg'; min: number; max: number; unidade: UnidadeDroga; por: Periodo }
+  | { tipo: 'fixa'; min: number; max: number; unidade: UnidadeDroga; por: Periodo }
+  | { tipo: 'texto'; descricao: string };
+
+/** 'dose' = por dose; 'dia' = por dia (dividido nas tomadas); 'min'/'h' = infusão contínua. */
+export type Periodo = 'dose' | 'dia' | 'min' | 'h';
+
+export interface RegraDeDose {
+  id: string;
+  /** Ex.: "Anafilaxia", "PCR", "Meningite". */
+  indicacao: string;
+  faixas: FaixaEtaria[];
+  vias: Via[];
+  dose: ExpressaoDeDose;
+  doseMaxima?: { valor: number; unidade: UnidadeDroga; por: Periodo };
+  /** Intervalos aceitos, em horas (ex.: [6] = 6/6h; [12, 24] = 12/12h ou 1x/dia). */
+  intervalosHoras?: number[];
+  observacoes?: string;
+  fonte: Fonte;
+  status: StatusValidacao;
+}
+
+export interface Medicacao {
+  id: string;
+  nome: string;
+  secao: SecaoPrescricao;
+  apresentacoes: Apresentacao[];
+  regras: RegraDeDose[];
+  /** Alertas sempre mostrados (ex.: "NUNCA em bolus"). */
+  alertas?: string[];
+}
