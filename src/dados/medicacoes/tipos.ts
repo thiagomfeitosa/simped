@@ -20,7 +20,11 @@ export type CodigoFonte =
   | 'ISPAD'
   | 'ASBAI'
   | 'BULA'
-  | 'HOSPITAL';
+  | 'HOSPITAL'
+  /** Neofax (neonatologia). */
+  | 'NEOFAX'
+  /** Surviving Sepsis Campaign pediátrico. */
+  | 'SSC';
 
 export interface Fonte {
   codigo: CodigoFonte;

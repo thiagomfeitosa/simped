@@ -131,3 +131,18 @@ describe('regras que dependem da idade em dias (condições)', () => {
     expect(verificarBanco([med]).join(' ')).toMatch(/condição idadeDias/);
   });
 });
+
+describe('banco completo (exemplos + rascunho)', () => {
+  it('passa no verificador de integridade', async () => {
+    const { BANCO_MEDICACOES } = await import('./index');
+    expect(verificarBanco(BANCO_MEDICACOES)).toEqual([]);
+    expect(BANCO_MEDICACOES.length).toBeGreaterThanOrEqual(40);
+  });
+  it('nada do rascunho corrige o aluno (tudo A VALIDAR)', async () => {
+    const { BANCO_MEDICACOES } = await import('./index');
+    for (const med of BANCO_MEDICACOES) {
+      for (const r of med.regras) expect(podeCorrigirAluno(r)).toBe(false);
+      for (const a of med.apresentacoes) expect(a.status).toBe('A_VALIDAR');
+    }
+  });
+});

@@ -24,7 +24,20 @@ export interface Configuracoes {
   margemPct: number;
 }
 
-export const FONTES_DE_DOSE: readonly CodigoFonte[] = ['SBP', 'MS', 'AAP', 'PALS', 'NRP', 'GINA', 'ISPAD', 'ASBAI', 'BULA', 'HOSPITAL'];
+export const FONTES_DE_DOSE: readonly CodigoFonte[] = [
+  'SBP',
+  'MS',
+  'AAP',
+  'PALS',
+  'NRP',
+  'GINA',
+  'ISPAD',
+  'ASBAI',
+  'NEOFAX',
+  'SSC',
+  'BULA',
+  'HOSPITAL',
+];
 
 export const CONFIGURACOES_PADRAO: Configuracoes = {
   fonteDose: 'SBP',

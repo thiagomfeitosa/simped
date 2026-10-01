@@ -89,10 +89,17 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
           onChange={(e) => mudar({ medicacaoId: e.target.value })}
         >
           <option value="">Medicação…</option>
-          {medicacoes.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.nome}
-            </option>
+          {([4, 5, 6] as const).map((n) => (
+            <optgroup key={n} label={`Seção ${n}`}>
+              {medicacoes
+                .filter((m) => m.secao === n)
+                .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
+                .map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.nome}
+                  </option>
+                ))}
+            </optgroup>
           ))}
         </select>
         {medicacao && (

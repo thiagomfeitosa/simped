@@ -2,7 +2,7 @@ import { useMemo, useReducer, useState } from 'react';
 import { casoDemonstracao } from '../casos/demonstracao';
 import { hospitalAtual } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
-import { MEDICACOES_EXEMPLO } from '../dados/medicacoes/exemplos-a-validar';
+import { BANCO_MEDICACOES } from '../dados/medicacoes';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
@@ -40,7 +40,7 @@ export function Prescrever() {
   const registrarEvento = (evento: EventoPaciente) => setEventos((lista) => acrescentarEvento(lista, evento));
   // doses checadas pela enfermagem no quadro de horários
   const [checagens, setChecagens] = useState<Checagem[]>([]);
-  const aprazaveis = useMemo(() => itensParaAprazar(prescricao, MEDICACOES_EXEMPLO), [prescricao]);
+  const aprazaveis = useMemo(() => itensParaAprazar(prescricao, BANCO_MEDICACOES), [prescricao]);
   // balanço hídrico: soros/infusões instalados e registros manuais
   const [infusoes, setInfusoes] = useState<Infusao[]>([]);
   const [registrosBalanco, setRegistrosBalanco] = useState<RegistroManual[]>([]);
@@ -86,14 +86,14 @@ export function Prescrever() {
         )}
         <div className="coluna-documento">
           <div hidden={documento !== 'receita'}>
-            <ReceitaAlta paciente={pacienteAtual} medicacoes={MEDICACOES_EXEMPLO} />
+            <ReceitaAlta paciente={pacienteAtual} medicacoes={BANCO_MEDICACOES} />
           </div>
           <div hidden={documento !== 'folha'}>
             <FolhaPrescricao
               paciente={pacienteAtual}
               estado={prescricao}
               despachar={despachar}
-              medicacoes={MEDICACOES_EXEMPLO}
+              medicacoes={BANCO_MEDICACOES}
               aoAdministrar={(medicacaoId, descricao, vazaoMlH) => {
                 registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao });
                 if (vazaoMlH !== undefined && vazaoMlH > 0) {
