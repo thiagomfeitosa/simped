@@ -128,10 +128,17 @@ export function podeCorrigirAluno(regra: RegraDeDose): boolean {
 export function verificarBanco(medicacoes: readonly Medicacao[]): string[] {
   const problemas: string[] = [];
   const idsMedicacao = new Set<string>();
+  const codigos = new Set<string>();
 
   for (const med of medicacoes) {
     if (idsMedicacao.has(med.id)) problemas.push(`Medicação repetida: ${med.id}.`);
     idsMedicacao.add(med.id);
+    if (med.codigo !== undefined) {
+      const codigo = med.codigo.trim().toUpperCase();
+      if (!codigo) problemas.push(`${med.id}: código vazio.`);
+      else if (codigos.has(codigo)) problemas.push(`${med.id}: código "${med.codigo}" repetido (é o Nº da planilha).`);
+      codigos.add(codigo);
+    }
 
     const idsInternos = new Set<string>();
     for (const item of [...med.apresentacoes, ...med.regras]) {

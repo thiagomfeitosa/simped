@@ -17,14 +17,14 @@ import { decodificarXml, indiceColuna, lerXlsx } from './xlsx';
 const bytes = (dataUrl: string) => Uint8Array.from(atob(dataUrl.split(',')[1] ?? ''), (c) => c.charCodeAt(0));
 
 describe('leitor de .xlsx', () => {
-  it('lê o formulário original (3 abas, cabeçalho e as 39 medicações + exemplo)', async () => {
+  it('lê o formulário do projeto (3 abas, cabeçalho, exemplo e uma linha por medicação do banco)', async () => {
     const abas = await lerXlsx(bytes(formularioOriginal));
     expect(abas.map((a) => a.nome)).toEqual(['Como preencher', 'Apresentações', 'Listas']);
     const ap = abas[1]!;
     expect(ap.linhas[0]?.[0]).toBe('Nº');
     expect(ap.linhas[0]?.[1]).toBe('Medicação');
     expect(ap.linhas[1]?.[0]).toBe('EX');
-    expect(ap.linhas.filter((l) => l[1]).length).toBe(41);
+    expect(ap.linhas.filter((l) => l[1]).length).toBe(BANCO_MEDICACOES.length + 2);
   });
 
   it('detalhes: coluna por letra e entidades XML', () => {

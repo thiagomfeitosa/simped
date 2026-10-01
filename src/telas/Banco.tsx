@@ -6,15 +6,20 @@ import { listaAValidarCsv, resumirBanco, textoDaRegra } from '../dados/medicacoe
 import type { Apresentacao, StatusValidacao } from '../dados/medicacoes/tipos';
 import { acharAlvo, type AlvoValidacao, arquivoDeValidacoes, chaveDoAlvo, lerValidacoes, ultimasPorAlvo } from '../dados/medicacoes/validacoes';
 import { importarApresentacoes, type ResultadoImportacao } from '../importacao/apresentacoes';
+import { gerarPlanilhaApresentacoes } from '../importacao/planilha';
 import { lerXlsx } from '../importacao/xlsx';
 import { CatalogoFontes } from './banco/CatalogoFontes';
 import { ConferirItem } from './banco/ConferirItem';
+import { VersaoBanco } from './banco/VersaoBanco';
 
 const SELO: Record<StatusValidacao, string> = { A_VALIDAR: 'A VALIDAR', CONFERIDO: '✔ CONFERIDO' };
 
-function baixar(nome: string, conteudo: string, tipo: string) {
+function baixar(nome: string, conteudo: string | Uint8Array<ArrayBuffer>, tipo: string) {
   // BOM para o Excel abrir o CSV com acentos certos
-  const blob = new Blob([tipo === 'text/csv' ? `﻿${conteudo}` : conteudo], { type: `${tipo};charset=utf-8` });
+  const blob =
+    typeof conteudo === 'string'
+      ? new Blob([tipo === 'text/csv' ? `﻿${conteudo}` : conteudo], { type: `${tipo};charset=utf-8` })
+      : new Blob([conteudo], { type: tipo });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -25,7 +30,7 @@ function baixar(nome: string, conteudo: string, tipo: string) {
 
 /** Banco de medicações: o que existe, o que já foi conferido e a importação da planilha do hospital. */
 export function Banco() {
-  const { banco, importadas, usarImportadas, descartarImportadas, validacoes, carregarValidacoes, apagarValidacoes, catalogo } = useBanco();
+  const { banco, emUso, importadas, usarImportadas, descartarImportadas, validacoes, carregarValidacoes, apagarValidacoes, catalogo } = useBanco();
   const [busca, setBusca] = useState('');
   const [secao, setSecao] = useState<'' | '4' | '5' | '6'>('');
   const [soFalta, setSoFalta] = useState(false);
@@ -98,7 +103,9 @@ export function Banco() {
     <div className="pagina-simples banco">
       <header className="cabecalho">
         <h1>Banco de medicações</h1>
-        <span className="subtitulo">O que o app usa para conferir as prescrições. Só o que estiver CONFERIDO corrige o aluno.</span>
+        <span className="subtitulo">
+          O que o app usa para conferir as prescrições. Só o que estiver CONFERIDO corrige o aluno. Banco {emUso.texto}.
+        </span>
       </header>
 
       <div className="cartoes">
@@ -184,10 +191,23 @@ export function Banco() {
         <section className="painel">
           <h2>Importar planilha de apresentações</h2>
           <p className="nota">
-            Use o formulário <code>docs/fase-0/apresentacoes-formulario.xlsx</code>. O app lê a aba “Apresentações” sem internet. Linha com
-            “Onde conferi” preenchido entra como CONFERIDA; sem fonte, fica A VALIDAR.
+            Baixe a planilha (gerada agora, com todas as {banco.length} medicações do banco), preencha as células amarelas e escolha o arquivo
+            aqui. O app lê a aba “Apresentações” sem internet. Linha com “Onde conferi” preenchido entra como CONFERIDA; sem fonte, fica A
+            VALIDAR.
           </p>
           <div className="linha-botoes">
+            <button
+              type="button"
+              onClick={() =>
+                baixar(
+                  'apresentacoes-formulario.xlsx',
+                  gerarPlanilhaApresentacoes(banco),
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                )
+              }
+            >
+              ⬇ Baixar planilha para preencher (.xlsx)
+            </button>
             <button type="button" onClick={() => arquivo.current?.click()}>
               📂 Escolher planilha (.xlsx)
             </button>
@@ -275,6 +295,7 @@ export function Banco() {
       </div>
 
       <div className="cartoes">
+        <VersaoBanco />
         <CatalogoFontes aoBaixar={(nome, conteudo) => baixar(nome, conteudo, 'application/json')} />
       </div>
 

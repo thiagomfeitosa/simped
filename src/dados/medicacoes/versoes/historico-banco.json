@@ -1,0 +1,572 @@
+{
+  "versoes": [
+    {
+      "versao": 1,
+      "data": "2026-10-01",
+      "descricao": "Banco inicial (antes de B8): as medicações do MVP e os exemplos, copiadas do rascunho do assistente (docs/fase-0/doses-rascunho.md). Tudo A VALIDAR.",
+      "codigo": "95dde7fb",
+      "resumo": {
+        "medicacoes": 41,
+        "apresentacoes": 81,
+        "regras": 98,
+        "conferidos": 0
+      },
+      "mudancas": [
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "adrenalina",
+          "medicacao": "Adrenalina",
+          "depois": "Nº 33 · seção 6 · 1 apresentação(ões) · 8 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "dipirona",
+          "medicacao": "Dipirona",
+          "depois": "Nº 23 · seção 6 · 4 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "ceftriaxona",
+          "medicacao": "Ceftriaxona",
+          "depois": "Nº 9 · seção 5 · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "penicilina-cristalina",
+          "medicacao": "Penicilina G cristalina",
+          "depois": "Nº 13 · seção 5 · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "prednisolona",
+          "medicacao": "Prednisolona",
+          "depois": "Nº 30 · seção 6 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "amoxicilina",
+          "medicacao": "Amoxicilina",
+          "depois": "Nº A26 · seção 5 · Penicilina · 2 apresentação(ões) · 0 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sf09",
+          "medicacao": "Soro fisiológico 0,9%",
+          "depois": "Nº 1 · seção 4 · 4 apresentação(ões) · 4 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sg5",
+          "medicacao": "Soro glicosado 5%",
+          "depois": "Nº 2 · seção 4 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sg10",
+          "medicacao": "Soro glicosado 10%",
+          "depois": "Nº 3 · seção 4 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "g25",
+          "medicacao": "Glicose 25%",
+          "depois": "Nº 4 · seção 4 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "g50",
+          "medicacao": "Glicose 50%",
+          "depois": "Nº 5 · seção 4 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "gluconato-calcio",
+          "medicacao": "Gluconato de cálcio 10%",
+          "depois": "Nº 6 · seção 4 · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "kcl",
+          "medicacao": "Cloreto de potássio (KCl)",
+          "depois": "Nº 7 · seção 4 · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "nacl20",
+          "medicacao": "Cloreto de sódio 20%",
+          "depois": "Nº 8 · seção 4 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "nacl3",
+          "medicacao": "Cloreto de sódio 3% (preparado)",
+          "depois": "Nº 8b · seção 4 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "ampicilina",
+          "medicacao": "Ampicilina",
+          "depois": "Nº 10 · seção 5 · 2 apresentação(ões) · 5 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "gentamicina",
+          "medicacao": "Gentamicina",
+          "depois": "Nº 11 · seção 5 · 4 apresentação(ões) · 6 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "vancomicina",
+          "medicacao": "Vancomicina",
+          "depois": "Nº 12 · seção 5 · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "penicilina-procaina",
+          "medicacao": "Penicilina G procaína",
+          "depois": "Nº 14 · seção 5 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "penicilina-benzatina",
+          "medicacao": "Penicilina G benzatina",
+          "depois": "Nº 15 · seção 5 · 2 apresentação(ões) · 4 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sulfadiazina",
+          "medicacao": "Sulfadiazina",
+          "depois": "Nº 16 · seção 5 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "pirimetamina",
+          "medicacao": "Pirimetamina",
+          "depois": "Nº 17 · seção 5 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "acido-folinico",
+          "medicacao": "Ácido folínico (folinato de cálcio)",
+          "depois": "Nº 18 · seção 5 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "zidovudina",
+          "medicacao": "Zidovudina (AZT)",
+          "depois": "Nº 19 · seção 5 · 3 apresentação(ões) · 4 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "lamivudina",
+          "medicacao": "Lamivudina (3TC)",
+          "depois": "Nº 20 · seção 5 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "raltegravir",
+          "medicacao": "Raltegravir",
+          "depois": "Nº 21 · seção 5 · 3 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "dolutegravir",
+          "medicacao": "Dolutegravir",
+          "depois": "Nº 22 · seção 5 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "salbutamol",
+          "medicacao": "Salbutamol",
+          "depois": "Nº 24 · seção 6 · 3 apresentação(ões) · 4 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "fenoterol",
+          "medicacao": "Fenoterol",
+          "depois": "Nº 25 · seção 6 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "ipratropio",
+          "medicacao": "Brometo de ipratrópio",
+          "depois": "Nº 26 · seção 6 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "salmeterol",
+          "medicacao": "Salmeterol + fluticasona",
+          "depois": "Nº 27 · seção 6 · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "hidrocortisona",
+          "medicacao": "Hidrocortisona",
+          "depois": "Nº 28 · seção 6 · 2 apresentação(ões) · 6 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "metilprednisolona",
+          "medicacao": "Metilprednisolona",
+          "depois": "Nº 32b · seção 6 · 3 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "cortisona",
+          "medicacao": "Cortisona (acetato)",
+          "depois": "Nº 32 · seção 6 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "prednisona",
+          "medicacao": "Prednisona",
+          "depois": "Nº 29 · seção 6 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "dexametasona",
+          "medicacao": "Dexametasona",
+          "depois": "Nº 31 · seção 6 · 3 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "amiodarona",
+          "medicacao": "Amiodarona",
+          "depois": "Nº 34 · seção 6 · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "adenosina",
+          "medicacao": "Adenosina",
+          "depois": "Nº 35 · seção 6 · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "flumazenil",
+          "medicacao": "Flumazenil",
+          "depois": "Nº 36 · seção 6 · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "glucagon",
+          "medicacao": "Glucagon",
+          "depois": "Nº 37 · seção 6 · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "insulina-regular",
+          "medicacao": "Insulina regular",
+          "depois": "Nº 38 · seção 6 · 1 apresentação(ões) · 2 regra(s) de dose"
+        }
+      ]
+    },
+    {
+      "versao": 2,
+      "data": "2026-10-01",
+      "descricao": "B8: entram as 49 medicações da ampliação A1–A50 (a A26, amoxicilina, já estava no banco). Apresentações do rascunho do assistente e dose só em texto (ainda não cadastrada). Tudo A VALIDAR.",
+      "codigo": "ac8478b4",
+      "resumo": {
+        "medicacoes": 90,
+        "apresentacoes": 192,
+        "regras": 185,
+        "conferidos": 0
+      },
+      "mudancas": [
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "midazolam",
+          "medicacao": "Midazolam",
+          "depois": "Nº A1 · seção 6 · Benzodiazepínico · 4 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "diazepam",
+          "medicacao": "Diazepam",
+          "depois": "Nº A2 · seção 6 · Benzodiazepínico · 3 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "fenobarbital",
+          "medicacao": "Fenobarbital",
+          "depois": "Nº A3 · seção 6 · Barbitúrico · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "fenitoina",
+          "medicacao": "Fenitoína",
+          "depois": "Nº A4 · seção 6 · Anticonvulsivante · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "levetiracetam",
+          "medicacao": "Levetiracetam",
+          "depois": "Nº A5 · seção 6 · Anticonvulsivante · 3 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "cetamina",
+          "medicacao": "Cetamina",
+          "depois": "Nº A6 · seção 6 · Anestésico dissociativo · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "fentanil",
+          "medicacao": "Fentanil",
+          "depois": "Nº A7 · seção 6 · Opioide · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "morfina",
+          "medicacao": "Morfina",
+          "depois": "Nº A8 · seção 6 · Opioide · 3 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "paracetamol",
+          "medicacao": "Paracetamol",
+          "depois": "Nº A9 · seção 6 · Analgésico / antitérmico · 5 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "ibuprofeno",
+          "medicacao": "Ibuprofeno",
+          "depois": "Nº A10 · seção 6 · Anti-inflamatório (AINE) · 4 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "naloxona",
+          "medicacao": "Naloxona",
+          "depois": "Nº A11 · seção 6 · Antagonista opioide · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "carvao-ativado",
+          "medicacao": "Carvão ativado",
+          "depois": "Nº A12 · seção 6 · Adsorvente · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "acetilcisteina",
+          "medicacao": "N-acetilcisteína",
+          "depois": "Nº A13 · seção 6 · Antídoto · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "atropina",
+          "medicacao": "Atropina",
+          "depois": "Nº A14 · seção 6 · Anticolinérgico · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "rocuronio",
+          "medicacao": "Rocurônio",
+          "depois": "Nº A15 · seção 6 · Bloqueador neuromuscular · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "succinilcolina",
+          "medicacao": "Succinilcolina (suxametônio)",
+          "depois": "Nº A16 · seção 6 · Bloqueador neuromuscular · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "noradrenalina",
+          "medicacao": "Noradrenalina",
+          "depois": "Nº A17 · seção 6 · Vasopressor · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "dobutamina",
+          "medicacao": "Dobutamina",
+          "depois": "Nº A18 · seção 6 · Inotrópico · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "milrinona",
+          "medicacao": "Milrinona",
+          "depois": "Nº A19 · seção 6 · Inodilatador · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "alprostadil",
+          "medicacao": "Alprostadil (prostaglandina E1)",
+          "depois": "Nº A20 · seção 6 · Prostaglandina · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "bicarbonato-sodio",
+          "medicacao": "Bicarbonato de sódio 8,4%",
+          "depois": "Nº A21 · seção 4 · Alcalinizante · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sulfato-magnesio",
+          "medicacao": "Sulfato de magnésio",
+          "depois": "Nº A22 · seção 4 · Eletrólito · 2 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "furosemida",
+          "medicacao": "Furosemida",
+          "depois": "Nº A23 · seção 6 · Diurético de alça · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "manitol",
+          "medicacao": "Manitol 20%",
+          "depois": "Nº A24 · seção 6 · Diurético osmótico · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sro",
+          "medicacao": "Sais de reidratação oral (SRO)",
+          "depois": "Nº A25 · seção 4 · Solução oral · 1 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "amoxicilina-clavulanato",
+          "medicacao": "Amoxicilina + clavulanato",
+          "depois": "Nº A27 · seção 5 · Penicilina + inibidor de betalactamase · 5 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "oxacilina",
+          "medicacao": "Oxacilina",
+          "depois": "Nº A28 · seção 5 · Penicilina antiestafilocócica · 1 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "cefotaxima",
+          "medicacao": "Cefotaxima",
+          "depois": "Nº A29 · seção 5 · Cefalosporina 3ª geração · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "meropenem",
+          "medicacao": "Meropeném",
+          "depois": "Nº A30 · seção 5 · Carbapenêmico · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "azitromicina",
+          "medicacao": "Azitromicina",
+          "depois": "Nº A31 · seção 5 · Macrolídeo · 3 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "clindamicina",
+          "medicacao": "Clindamicina",
+          "depois": "Nº A32 · seção 5 · Lincosamida · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "metronidazol",
+          "medicacao": "Metronidazol",
+          "depois": "Nº A33 · seção 5 · Nitroimidazol · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "sulfametoxazol-trimetoprima",
+          "medicacao": "Sulfametoxazol + trimetoprima",
+          "depois": "Nº A34 · seção 5 · Sulfonamida · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "aciclovir",
+          "medicacao": "Aciclovir",
+          "depois": "Nº A35 · seção 5 · Antiviral · 3 apresentação(ões) · 3 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "oseltamivir",
+          "medicacao": "Oseltamivir",
+          "depois": "Nº A36 · seção 5 · Antiviral · 3 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "fluconazol",
+          "medicacao": "Fluconazol",
+          "depois": "Nº A37 · seção 5 · Antifúngico azólico · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "anfotericina-b",
+          "medicacao": "Anfotericina B (desoxicolato / lipossomal)",
+          "depois": "Nº A38 · seção 5 · Antifúngico poliênico · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "rifampicina",
+          "medicacao": "Rifampicina",
+          "depois": "Nº A39 · seção 5 · Rifamicina · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "isoniazida",
+          "medicacao": "Isoniazida",
+          "depois": "Nº A40 · seção 5 · Antituberculoso · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "vitamina-k",
+          "medicacao": "Vitamina K1 (fitomenadiona)",
+          "depois": "Nº A41 · seção 6 · Vitamina · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "profilaxia-ocular",
+          "medicacao": "Profilaxia ocular neonatal",
+          "depois": "Nº A42 · seção 5 · Antimicrobiano tópico · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "imunoglobulina-hepatite-b",
+          "medicacao": "Imunoglobulina anti-hepatite B + vacina hepatite B",
+          "depois": "Nº A43 · seção 6 · Imunização · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "nirsevimabe-palivizumabe",
+          "medicacao": "Nirsevimabe / palivizumabe",
+          "depois": "Nº A44 · seção 6 · Anticorpo monoclonal · 4 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "cafeina",
+          "medicacao": "Citrato de cafeína",
+          "depois": "Nº A45 · seção 6 · Estimulante respiratório · 2 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "surfactante",
+          "medicacao": "Surfactante (poractanto / beractanto)",
+          "depois": "Nº A46 · seção 6 · Surfactante pulmonar · 4 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "ondansetrona",
+          "medicacao": "Ondansetrona",
+          "depois": "Nº A47 · seção 6 · Antiemético · 4 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "prometazina",
+          "medicacao": "Prometazina",
+          "depois": "Nº A48 · seção 6 · Anti-histamínico H1 · 2 apresentação(ões) · 2 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "cabergolina",
+          "medicacao": "Cabergolina",
+          "depois": "Nº A49 · seção 6 · Agonista dopaminérgico · 1 apresentação(ões) · 1 regra(s) de dose"
+        },
+        {
+          "tipo": "medicacao-nova",
+          "medicacaoId": "imunoglobulina-humana",
+          "medicacao": "Imunoglobulina humana EV",
+          "depois": "Nº A50 · seção 6 · Imunoglobulina · 2 apresentação(ões) · 3 regra(s) de dose"
+        }
+      ]
+    }
+  ]
+}

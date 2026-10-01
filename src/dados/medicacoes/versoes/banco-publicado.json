@@ -1,0 +1,8728 @@
+[
+ {
+  "id": "adrenalina",
+  "codigo": "33",
+  "nome": "Adrenalina",
+  "secao": 6,
+  "classes": [
+   "catecolaminas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "ampola-1mg-ml",
+    "descricao": "Ampola 1 mg/mL (1:1.000), 1 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IO",
+     "IM",
+     "endotraqueal",
+     "inalatoria"
+    ],
+    "quantidade": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "pcr-crianca",
+    "indicacao": "PCR",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.01,
+     "max": 0.01,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 1,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "0,1 mL/kg da 1:10.000 (1 mL + 9 mL de SF), a cada 3–5 min.",
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "anafilaxia-crianca",
+    "indicacao": "Anafilaxia",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.01,
+     "max": 0.01,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 0.3,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Da 1:1.000 = 0,01 mL/kg. Repetir em 5–15 min.",
+    "fonte": {
+     "codigo": "ASBAI"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "anafilaxia-adolescente",
+    "indicacao": "Anafilaxia",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.01,
+     "max": 0.01,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 0.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Da 1:1.000 = 0,01 mL/kg. Repetir em 5–15 min.",
+    "fonte": {
+     "codigo": "ASBAI"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "rn-reanimacao-ev",
+    "indicacao": "Reanimação neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.01,
+     "max": 0.03,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "0,1–0,3 mL/kg da 1:10.000. Conferir valor da SBP 2022.",
+    "fonte": {
+     "codigo": "NRP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "rn-reanimacao-traqueal",
+    "indicacao": "Reanimação neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "endotraqueal"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.05,
+     "max": 0.1,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "0,5–1 mL/kg da 1:10.000.",
+    "fonte": {
+     "codigo": "NRP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "pcr-traqueal",
+    "indicacao": "PCR",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "endotraqueal"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.1,
+     "max": 0.1,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "crupe-nebulizacao",
+    "indicacao": "Laringite (crupe)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.5,
+     "max": 0.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "0,5 mL/kg da 1:1.000 pura na nebulização (máx 5 mL). Observar 2–4 h (rebote).",
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "choque-infusao",
+    "indicacao": "Choque",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.05,
+     "max": 1,
+     "unidade": "mcg",
+     "por": "min"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "dipirona",
+  "codigo": "23",
+  "nome": "Dipirona",
+  "secao": 6,
+  "classes": [
+   "pirazolonas",
+   "analgesicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "ampola-500mg-ml",
+    "descricao": "Ampola 500 mg/mL, 2 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "concentracaoPorMl": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sol-oral-50mg-ml",
+    "descricao": "Solução oral 50 mg/mL, frasco 100 mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Comprimido 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "gotas-500mg-ml",
+    "descricao": "Gotas 500 mg/mL, frasco 20 mL",
+    "forma": "gotas",
+    "vias": [
+     "VO"
+    ],
+    "concentracaoPorMl": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "volumeMl": 20,
+    "gotasPorMl": 20,
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "febre-dor-crianca",
+    "indicacao": "Febre/dor",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "VO",
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 10,
+     "max": 25,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "intervalosHoras": [
+     6
+    ],
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "febre-dor-adolescente",
+    "indicacao": "Febre/dor",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 500,
+     "max": 1000,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 4000,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "intervalosHoras": [
+     6
+    ],
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "alertas": [
+   "Bula: não usar em < 3 meses ou < 5 kg. EV com cautela (hipotensão)."
+  ]
+ },
+ {
+  "id": "ceftriaxona",
+  "codigo": "9",
+  "nome": "Ceftriaxona",
+  "secao": 5,
+  "classes": [
+   "cefalosporinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "concentracaoMaximaEV": {
+   "valor": 40,
+   "unidade": "mg",
+   "fonte": {
+    "codigo": "BULA"
+   },
+   "status": "A_VALIDAR",
+   "observacao": "Valor de exemplo para o alerta funcionar; conferir na bula/rotina."
+  },
+  "apresentacoes": [
+   {
+    "id": "fa-500mg",
+    "descricao": "Frasco-ampola 500 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "fa-1g",
+    "descricao": "Frasco-ampola 1 g (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "geral-crianca",
+    "indicacao": "Infecção bacteriana",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50,
+     "max": 75,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "doseMaxima": {
+     "valor": 2000,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "intervalosHoras": [
+     12,
+     24
+    ],
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "rn-oftalmia",
+    "indicacao": "Oftalmia gonocócica",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "IM",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 25,
+     "max": 50,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "doseMaxima": {
+     "valor": 125,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Dose única.",
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "meningite-crianca",
+    "indicacao": "Meningite",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 100,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "doseMaxima": {
+     "valor": 4000,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "intervalosHoras": [
+     12,
+     24
+    ],
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "alertas": [
+   "RN: evitar em hiperbilirrubinemia/prematuro e NUNCA com cálcio EV em ≤ 28 dias."
+  ]
+ },
+ {
+  "id": "penicilina-cristalina",
+  "codigo": "13",
+  "nome": "Penicilina G cristalina",
+  "secao": 5,
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-1milhao",
+    "descricao": "Frasco-ampola 1.000.000 UI (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "quantidade": {
+     "valor": 1000000,
+     "unidade": "UI"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "fa-5milhoes",
+    "descricao": "Frasco-ampola 5.000.000 UI (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "quantidade": {
+     "valor": 5000000,
+     "unidade": "UI"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "sifilis-rn-ate-7d",
+    "indicacao": "Sífilis congênita / neurossífilis",
+    "faixas": [
+     "RN"
+    ],
+    "condicoes": {
+     "idadeDias": {
+      "ate": 7
+     }
+    },
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50000,
+     "max": 50000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "Por 10 dias.",
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sifilis-rn-apos-7d",
+    "indicacao": "Sífilis congênita / neurossífilis",
+    "faixas": [
+     "RN"
+    ],
+    "condicoes": {
+     "idadeDias": {
+      "de": 7
+     }
+    },
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50000,
+     "max": 50000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "intervalosHoras": [
+     8
+    ],
+    "observacoes": "Completar 10 dias de tratamento.",
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "infeccao-grave-crianca",
+    "indicacao": "Infecção grave / meningite",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 250000,
+     "max": 400000,
+     "unidade": "UI",
+     "por": "dia"
+    },
+    "doseMaxima": {
+     "valor": 24000000,
+     "unidade": "UI",
+     "por": "dia"
+    },
+    "intervalosHoras": [
+     4,
+     6
+    ],
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "prednisolona",
+  "codigo": "30",
+  "nome": "Prednisolona",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "receituario": "simples",
+  "apresentacoes": [
+   {
+    "id": "sol-oral-3mg-ml",
+    "descricao": "Solução oral 3 mg/mL, frasco 60 mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "concentracaoPorMl": {
+     "valor": 3,
+     "unidade": "mg"
+    },
+    "volumeMl": 60,
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sol-oral-1mg-ml",
+    "descricao": "Solução oral 1 mg/mL, frasco 100 mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma-crianca",
+    "indicacao": "Asma (crise)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "doseMaxima": {
+     "valor": 60,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "intervalosHoras": [
+     24
+    ],
+    "observacoes": "Por 3–5 dias. Rascunho diz \"máx 40–60 mg/dia\": usado 60 até conferir.",
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "amoxicilina",
+  "codigo": "A26",
+  "nome": "Amoxicilina",
+  "secao": 5,
+  "classe": "Penicilina",
+  "usos": "Otite, sinusite, pneumonia (ambulatorial/alta)",
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "susp-250mg-5ml",
+    "descricao": "Suspensão oral 250 mg/5 mL, frasco 150 mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "volumeMl": 150,
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Cápsula 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": []
+ },
+ {
+  "id": "sf09",
+  "codigo": "1",
+  "nome": "Soro fisiológico 0,9%",
+  "secao": 4,
+  "classes": [
+   "cristaloides"
+  ],
+  "apresentacoes": [
+   {
+    "id": "bolsa-100",
+    "descricao": "Bolsa 100 mL (Na 154 mEq/L)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 100,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   },
+   {
+    "id": "bolsa-250",
+    "descricao": "Bolsa 250 mL (Na 154 mEq/L)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 250,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   },
+   {
+    "id": "bolsa-500",
+    "descricao": "Bolsa 500 mL (Na 154 mEq/L)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 500,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   },
+   {
+    "id": "bolsa-1000",
+    "descricao": "Bolsa 1000 mL (Na 154 mEq/L)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 1000,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-hipovolemia",
+    "indicacao": "Expansão (reanimação/hipovolemia)",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 10,
+     "max": 10,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NRP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Em 5–10 min, pode repetir."
+   },
+   {
+    "id": "choque",
+    "indicacao": "Expansão (choque/sepse)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 10,
+     "max": 20,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Em 5–20 min, reavaliar após cada bolus; até 40–60 mL/kg na 1ª hora se sem sinais de sobrecarga."
+   },
+   {
+    "id": "plano-c",
+    "indicacao": "Desidratação grave (Plano C)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 20,
+     "max": 20,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Fase rápida em 30 min, repetir até hidratar. Conferir versão vigente do MS."
+   },
+   {
+    "id": "cad",
+    "indicacao": "Cetoacidose diabética",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 10,
+     "max": 20,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "ISPAD"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Em 1 h."
+   }
+  ]
+ },
+ {
+  "id": "sg5",
+  "codigo": "2",
+  "nome": "Soro glicosado 5%",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "frasco-500",
+    "descricao": "Frasco 500 mL (50 mg/mL de glicose)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 500,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   },
+   {
+    "id": "frasco-1000",
+    "descricao": "Frasco 1000 mL (50 mg/mL de glicose)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 1000,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "manutencao",
+    "indicacao": "Base do soro de manutenção",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Holliday-Segar; tendência atual: manutenção isotônica (Na ~140) de 28 dias a 18 anos."
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ],
+  "alertas": [
+   "Para montar o soro de manutenção, use o botão \"+ soro\" da seção 4."
+  ]
+ },
+ {
+  "id": "sg10",
+  "codigo": "3",
+  "nome": "Soro glicosado 10%",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "frasco-250",
+    "descricao": "Frasco 250 mL (100 mg/mL de glicose)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 250,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   },
+   {
+    "id": "frasco-500",
+    "descricao": "Frasco 500 mL (100 mg/mL de glicose)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 500,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-hipoglicemia",
+    "indicacao": "Hipoglicemia (bolus)",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Em 1 min, seguido de VIG 6–8 mg/kg/min."
+   },
+   {
+    "id": "crianca-hipoglicemia",
+    "indicacao": "Hipoglicemia (bolus)",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 5,
+     "max": 10,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "0,5–1 g/kg."
+   }
+  ]
+ },
+ {
+  "id": "g25",
+  "codigo": "4",
+  "nome": "Glicose 25%",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "amp-10ml",
+    "descricao": "Ampola 10 mL (250 mg/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "hipoglicemia",
+    "indicacao": "Hipoglicemia (bolus)",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 4,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "0,5–1 g/kg."
+   }
+  ]
+ },
+ {
+  "id": "g50",
+  "codigo": "5",
+  "nome": "Glicose 50%",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "amp-10ml",
+    "descricao": "Ampola 10 mL (500 mg/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "hipoglicemia-ado",
+    "indicacao": "Hipoglicemia (bolus)",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 2,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 50,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "observacoes": "Acesso calibroso."
+   }
+  ],
+  "alertas": [
+   "Evitar em RN e lactentes (hiperosmolar). Usada para concentrar soros."
+  ]
+ },
+ {
+  "id": "gluconato-calcio",
+  "codigo": "6",
+  "nome": "Gluconato de cálcio 10%",
+  "secao": 4,
+  "classes": [
+   "calcio"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-10ml",
+    "descricao": "Ampola 10 mL (100 mg/mL; ~0,45 mEq/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "mg"
+    },
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-manutencao",
+    "indicacao": "Manutenção no soro",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 200,
+     "max": 400,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "2–4 mL/kg/dia no soro."
+   },
+   {
+    "id": "hipocalcemia",
+    "indicacao": "Hipocalcemia sintomática / hipercalemia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 60,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 2000,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "0,6–1 mL/kg EV lento (10–20 min), diluído."
+   }
+  ],
+  "alertas": [
+   "Monitorizar FC. Não misturar com bicarbonato. Nunca com ceftriaxona EV no RN ≤ 28 dias."
+  ]
+ },
+ {
+  "id": "kcl",
+  "codigo": "7",
+  "nome": "Cloreto de potássio (KCl)",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "amp-19-1",
+    "descricao": "Ampola KCl 19,1% 10 mL (2,56 mEq/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25.6,
+     "unidade": "mEq"
+    },
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 2.56,
+     "unidade": "mEq"
+    }
+   },
+   {
+    "id": "amp-10",
+    "descricao": "Ampola KCl 10% 10 mL (1,34 mEq/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 13.4,
+     "unidade": "mEq"
+    },
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 1.34,
+     "unidade": "mEq"
+    }
+   },
+   {
+    "id": "xarope-6",
+    "descricao": "Xarope 6% (0,8 mEq/mL)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.8,
+     "unidade": "mEq"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "manutencao",
+    "indicacao": "Manutenção no soro",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 3,
+     "unidade": "mEq",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "≈ 2 mEq/100 mL do Holliday."
+   },
+   {
+    "id": "hipocalemia",
+    "indicacao": "Hipocalemia (reposição EV)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.5,
+     "max": 1,
+     "unidade": "mEq",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 40,
+     "unidade": "mEq",
+     "por": "dose"
+    },
+    "observacoes": "Em 1–2 h, máx 0,5–1 mEq/kg/h, com monitor."
+   }
+  ],
+  "concentracaoMaximaEV": {
+   "valor": 0.04,
+   "unidade": "mEq",
+   "fonte": {
+    "codigo": "PALS"
+   },
+   "status": "A_VALIDAR",
+   "observacao": "~40 mEq/L em veia periférica (60–80 mEq/L em acesso central, conforme protocolo)."
+  },
+  "alertas": [
+   "NUNCA em bolus."
+  ]
+ },
+ {
+  "id": "nacl20",
+  "codigo": "8",
+  "nome": "Cloreto de sódio 20%",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "amp-10ml",
+    "descricao": "Ampola NaCl 20% 10 mL (3,4 mEq/mL)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 34,
+     "unidade": "mEq"
+    },
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 3.4,
+     "unidade": "mEq"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "manutencao",
+    "indicacao": "Manutenção no soro",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 3,
+     "max": 3,
+     "unidade": "mEq",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "≈ 3 mEq/100 mL do Holliday."
+   }
+  ],
+  "alertas": [
+   "Concentrado: sempre diluído no soro. Correção: subir no máx 8–10 mEq/L de Na em 24 h."
+  ]
+ },
+ {
+  "id": "nacl3",
+  "codigo": "8b",
+  "nome": "Cloreto de sódio 3% (preparado)",
+  "secao": 4,
+  "apresentacoes": [
+   {
+    "id": "preparo-100ml",
+    "descricao": "NaCl 3% 100 mL (0,513 mEq/mL) = 15 mL de NaCl 20% + 85 mL de AD",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "volumeMl": 100,
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mL"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "hiponatremia-grave",
+    "indicacao": "Hiponatremia sintomática grave (convulsão)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 5,
+     "unidade": "mL",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Em 10–20 min, repetir até melhora (máx ~2–3 doses). mEq = (Na desejado − Na atual) × 0,6 × peso."
+   }
+  ]
+ },
+ {
+  "id": "ampicilina",
+  "codigo": "10",
+  "nome": "Ampicilina",
+  "secao": 5,
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-500",
+    "descricao": "Frasco-ampola 500 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-1g",
+    "descricao": "Frasco-ampola 1 g (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-sepse",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50,
+     "max": 50,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     8,
+     12
+    ],
+    "observacoes": "12/12h ou 8/8h conforme IG e dias de vida (tabela por IG — A VALIDAR)."
+   },
+   {
+    "id": "rn-meningite-ate-7d",
+    "indicacao": "Meningite",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 100,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "ate": 8
+     }
+    },
+    "intervalosHoras": [
+     8
+    ]
+   },
+   {
+    "id": "rn-meningite-apos-7d",
+    "indicacao": "Meningite",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 75,
+     "max": 75,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "de": 8
+     }
+    },
+    "intervalosHoras": [
+     6
+    ]
+   },
+   {
+    "id": "crianca",
+    "indicacao": "Infecção bacteriana",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 100,
+     "max": 200,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ],
+    "doseMaxima": {
+     "valor": 12000,
+     "unidade": "mg",
+     "por": "dia"
+    }
+   },
+   {
+    "id": "crianca-meningite",
+    "indicacao": "Meningite",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 300,
+     "max": 400,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ],
+    "doseMaxima": {
+     "valor": 12000,
+     "unidade": "mg",
+     "por": "dia"
+    }
+   }
+  ]
+ },
+ {
+  "id": "gentamicina",
+  "codigo": "11",
+  "nome": "Gentamicina",
+  "secao": 5,
+  "classes": [
+   "aminoglicosideos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "amp-10mg-ml",
+    "descricao": "Ampola 10 mg/mL, 1 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-20mg-ml",
+    "descricao": "Ampola 20 mg/mL, 1 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "concentracaoPorMl": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-40mg-ml-1",
+    "descricao": "Ampola 40 mg/mL, 1 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 40,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "concentracaoPorMl": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-40mg-ml-2",
+    "descricao": "Ampola 40 mg/mL, 2 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 80,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "concentracaoPorMl": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-ate29-0a7d",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 5,
+     "max": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadePosMenstrualSemanas": {
+      "ate": 30
+     },
+     "idadeDias": {
+      "ate": 8
+     }
+    },
+    "intervalosHoras": [
+     48
+    ]
+   },
+   {
+    "id": "rn-ate29-8a28d",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 4,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadePosMenstrualSemanas": {
+      "ate": 30
+     },
+     "idadeDias": {
+      "de": 8
+     }
+    },
+    "intervalosHoras": [
+     36
+    ]
+   },
+   {
+    "id": "rn-30a34-0a7d",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4.5,
+     "max": 4.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadePosMenstrualSemanas": {
+      "de": 30,
+      "ate": 35
+     },
+     "idadeDias": {
+      "ate": 8
+     }
+    },
+    "intervalosHoras": [
+     36
+    ]
+   },
+   {
+    "id": "rn-30a34-8d",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 4,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadePosMenstrualSemanas": {
+      "de": 30,
+      "ate": 35
+     },
+     "idadeDias": {
+      "de": 8
+     }
+    },
+    "intervalosHoras": [
+     24
+    ]
+   },
+   {
+    "id": "rn-35",
+    "indicacao": "Sepse neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 4,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadePosMenstrualSemanas": {
+      "de": 35
+     }
+    },
+    "intervalosHoras": [
+     24
+    ]
+   },
+   {
+    "id": "crianca",
+    "indicacao": "Infecção bacteriana",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 5,
+     "max": 7.5,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ]
+   }
+  ],
+  "alertas": [
+   "Infundir em 30 min. Nível sérico se uso prolongado ou disfunção renal."
+  ]
+ },
+ {
+  "id": "vancomicina",
+  "codigo": "12",
+  "nome": "Vancomicina",
+  "secao": 5,
+  "classes": [
+   "glicopeptideos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-500",
+    "descricao": "Frasco-ampola 500 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-1g",
+    "descricao": "Frasco-ampola 1 g (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn",
+    "indicacao": "Infecção grave",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 10,
+     "max": 15,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "NEOFAX"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     8,
+     12,
+     24
+    ],
+    "observacoes": "Intervalo conforme IG e dias de vida."
+   },
+   {
+    "id": "crianca",
+    "indicacao": "Infecção grave",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 40,
+     "max": 60,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ]
+   },
+   {
+    "id": "crianca-meningite",
+    "indicacao": "Meningite",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 60,
+     "max": 60,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "AAP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ]
+   }
+  ],
+  "concentracaoMaximaEV": {
+   "valor": 5,
+   "unidade": "mg",
+   "fonte": {
+    "codigo": "BULA"
+   },
+   "status": "A_VALIDAR",
+   "observacao": "≤ 5 mg/mL."
+  },
+  "alertas": [
+   "Infundir em ≥ 60 min (síndrome do homem vermelho). Nível sérico/AUC."
+  ]
+ },
+ {
+  "id": "penicilina-procaina",
+  "codigo": "14",
+  "nome": "Penicilina G procaína",
+  "secao": 5,
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-400mil",
+    "descricao": "Frasco-ampola 400.000 UI (300.000 procaína + 100.000 potássica)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 400000,
+     "unidade": "UI"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-sifilis",
+    "indicacao": "Sífilis congênita sem neurossífilis",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50000,
+     "max": 50000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ],
+    "observacoes": "Por 10 dias. Verificar disponibilidade atual."
+   }
+  ],
+  "alertas": [
+   "Somente IM."
+  ]
+ },
+ {
+  "id": "penicilina-benzatina",
+  "codigo": "15",
+  "nome": "Penicilina G benzatina",
+  "secao": 5,
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-600mil",
+    "descricao": "Frasco-ampola 600.000 UI",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 600000,
+     "unidade": "UI"
+    }
+   },
+   {
+    "id": "fa-1200mil",
+    "descricao": "Frasco-ampola 1.200.000 UI",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1200000,
+     "unidade": "UI"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn",
+    "indicacao": "Sífilis congênita (fluxograma do MS)",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50000,
+     "max": 50000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Dose única."
+   },
+   {
+    "id": "faringo-menor27",
+    "indicacao": "Faringoamigdalite / profilaxia de febre reumática",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 600000,
+     "max": 600000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "ate": 27
+     }
+    },
+    "observacoes": "Profilaxia a cada 21 dias."
+   },
+   {
+    "id": "faringo-27",
+    "indicacao": "Faringoamigdalite / profilaxia de febre reumática",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 1200000,
+     "max": 1200000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "de": 27
+     }
+    },
+    "observacoes": "Profilaxia a cada 21 dias."
+   },
+   {
+    "id": "ado-sifilis-recente",
+    "indicacao": "Sífilis recente",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 2400000,
+     "max": 2400000,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Dose única (1.200.000 em cada glúteo); tardia: 2.400.000 UI/semana por 3 semanas."
+   }
+  ],
+  "alertas": [
+   "Somente IM. Nunca EV."
+  ]
+ },
+ {
+  "id": "sulfadiazina",
+  "codigo": "16",
+  "nome": "Sulfadiazina",
+  "secao": 5,
+  "classes": [
+   "sulfonamidas"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "comp-500",
+    "descricao": "Comprimido 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "susp-manipulada",
+    "descricao": "Suspensão manipulada 100 mg/mL (concentração da farmácia, A VALIDAR)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 100
+   }
+  ],
+  "regras": [
+   {
+    "id": "toxo",
+    "indicacao": "Toxoplasmose congênita",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 100,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "Por 1 ano."
+   }
+  ]
+ },
+ {
+  "id": "pirimetamina",
+  "codigo": "17",
+  "nome": "Pirimetamina",
+  "secao": 5,
+  "classes": [
+   "antiparasitarios"
+  ],
+  "apresentacoes": [
+   {
+    "id": "comp-25",
+    "descricao": "Comprimido 25 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "susp-manipulada",
+    "descricao": "Suspensão manipulada 2 mg/mL (concentração da farmácia, A VALIDAR)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 2,
+     "unidade": "mg"
+    },
+    "volumeMl": 60
+   }
+  ],
+  "regras": [
+   {
+    "id": "toxo-ataque",
+    "indicacao": "Toxoplasmose congênita — 2 primeiros dias",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ]
+   },
+   {
+    "id": "toxo-manutencao",
+    "indicacao": "Toxoplasmose congênita — depois",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 1,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ],
+    "observacoes": "Até 2–6 meses → depois 1 mg/kg 3x/semana (seg/qua/sex) até completar 1 ano."
+   }
+  ],
+  "alertas": [
+   "Sempre com ácido folínico; hemograma seriado."
+  ]
+ },
+ {
+  "id": "acido-folinico",
+  "codigo": "18",
+  "nome": "Ácido folínico (folinato de cálcio)",
+  "secao": 5,
+  "apresentacoes": [
+   {
+    "id": "comp-15",
+    "descricao": "Comprimido 15 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 15,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "susp-manipulada",
+    "descricao": "Suspensão manipulada 5 mg/mL (concentração da farmácia, A VALIDAR)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "volumeMl": 30
+   }
+  ],
+  "regras": [
+   {
+    "id": "toxo",
+    "indicacao": "Toxoplasmose congênita",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 10,
+     "max": 10,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "3x/semana, até 1 semana após suspender a pirimetamina."
+   }
+  ],
+  "alertas": [
+   "Ácido FOLÍNICO, não ácido fólico."
+  ]
+ },
+ {
+  "id": "zidovudina",
+  "codigo": "19",
+  "nome": "Zidovudina (AZT)",
+  "secao": 5,
+  "classes": [
+   "antirretrovirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "sol-oral-10",
+    "descricao": "Solução oral 10 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 200
+   },
+   {
+    "id": "fa-ev-10",
+    "descricao": "Frasco-ampola EV 10 mg/mL, 20 mL",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 200,
+     "unidade": "mg"
+    },
+    "volumeMl": 20,
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-100",
+    "descricao": "Cápsula 100 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-35",
+    "indicacao": "RN exposto ao HIV",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 4,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "igNascerSemanas": {
+      "de": 35
+     }
+    },
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "Por 28 dias."
+   },
+   {
+    "id": "rn-30a35-ate14d",
+    "indicacao": "RN exposto ao HIV",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "igNascerSemanas": {
+      "de": 30,
+      "ate": 35
+     },
+     "idadeDias": {
+      "ate": 14
+     }
+    },
+    "intervalosHoras": [
+     12
+    ]
+   },
+   {
+    "id": "rn-30a35-apos14d",
+    "indicacao": "RN exposto ao HIV",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 3,
+     "max": 3,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "igNascerSemanas": {
+      "de": 30,
+      "ate": 35
+     },
+     "idadeDias": {
+      "de": 14
+     }
+    },
+    "intervalosHoras": [
+     12
+    ]
+   },
+   {
+    "id": "rn-menor30",
+    "indicacao": "RN exposto ao HIV",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "igNascerSemanas": {
+      "ate": 30
+     }
+    },
+    "intervalosHoras": [
+     12
+    ]
+   }
+  ],
+  "alertas": [
+   "RN sem via oral: dose EV — conferir tabela do MS. Hemograma (anemia)."
+  ]
+ },
+ {
+  "id": "lamivudina",
+  "codigo": "20",
+  "nome": "Lamivudina (3TC)",
+  "secao": 5,
+  "classes": [
+   "antirretrovirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "sol-oral-10",
+    "descricao": "Solução oral 10 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 240
+   },
+   {
+    "id": "comp-150",
+    "descricao": "Comprimido 150 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 150,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-alto-risco",
+    "indicacao": "RN exposto ao HIV (alto risco)",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "igNascerSemanas": {
+      "de": 32
+     }
+    },
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "Por 28 dias."
+   },
+   {
+    "id": "crianca",
+    "indicacao": "Tratamento do HIV",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 4,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     12
+    ],
+    "doseMaxima": {
+     "valor": 150,
+     "unidade": "mg",
+     "por": "dose"
+    }
+   }
+  ]
+ },
+ {
+  "id": "raltegravir",
+  "codigo": "21",
+  "nome": "Raltegravir",
+  "secao": 5,
+  "classes": [
+   "antirretrovirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "granulado-100",
+    "descricao": "Granulado 100 mg (sachê) em 10 mL de água = 10 mg/mL (preparo A VALIDAR)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 10
+   },
+   {
+    "id": "mastigavel-25",
+    "descricao": "Comprimido mastigável 25 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "mastigavel-100",
+    "descricao": "Comprimido mastigável 100 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-semana1",
+    "indicacao": "RN exposto ao HIV (alto risco)",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1.5,
+     "max": 1.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "ate": 7
+     }
+    },
+    "intervalosHoras": [
+     24
+    ],
+    "observacoes": "≥ 37 semanas e ≥ 2 kg."
+   },
+   {
+    "id": "rn-semana2a4",
+    "indicacao": "RN exposto ao HIV (alto risco)",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 3,
+     "max": 3,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "de": 7,
+      "ate": 28
+     }
+    },
+    "intervalosHoras": [
+     12
+    ]
+   },
+   {
+    "id": "apos-4sem",
+    "indicacao": "RN exposto ao HIV (alto risco)",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 6,
+     "max": 6,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "de": 28
+     }
+    },
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "Se tratamento."
+   }
+  ]
+ },
+ {
+  "id": "dolutegravir",
+  "codigo": "22",
+  "nome": "Dolutegravir",
+  "secao": 5,
+  "classes": [
+   "antirretrovirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "comp-50",
+    "descricao": "Comprimido 50 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "disp-5",
+    "descricao": "Comprimido dispersível 5 mg (verificar disponibilidade)",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 5,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "20kg",
+    "indicacao": "Tratamento do HIV",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 50,
+     "max": 50,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "de": 20
+     }
+    },
+    "intervalosHoras": [
+     24
+    ]
+   },
+   {
+    "id": "menor20kg",
+    "indicacao": "Tratamento do HIV",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "< 20 kg: dose por faixa de peso com comprimido dispersível (conferir tabela vigente do MS)."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "ate": 20
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "salbutamol",
+  "codigo": "24",
+  "nome": "Salbutamol",
+  "secao": 6,
+  "classes": [
+   "beta2-agonistas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "spray-100",
+    "descricao": "Spray 100 mcg/jato (com espaçador)",
+    "forma": "spray",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mcg"
+    }
+   },
+   {
+    "id": "nebulizacao-5",
+    "descricao": "Solução para nebulização 5 mg/mL",
+    "forma": "nebulizacao",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "xarope-0-4",
+    "descricao": "Xarope 0,4 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.4,
+     "unidade": "mg"
+    },
+    "volumeMl": 120
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma-spray",
+    "indicacao": "Crise de asma (spray)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 50,
+     "max": 50,
+     "unidade": "mcg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 1000,
+     "unidade": "mcg",
+     "por": "dose"
+    },
+    "observacoes": "≈ 1 jato/2 kg (mín 2, máx 10 jatos), 20/20 min na 1ª hora."
+   },
+   {
+    "id": "asma-nebulizacao",
+    "indicacao": "Crise de asma (nebulização)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.15,
+     "max": 0.15,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Mín 2,5 mg; 20/20 min na 1ª hora."
+   },
+   {
+    "id": "hipercalemia-menor25",
+    "indicacao": "Hipercalemia",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 2.5,
+     "max": 2.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "ate": 25
+     }
+    }
+   },
+   {
+    "id": "hipercalemia-25",
+    "indicacao": "Hipercalemia",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 5,
+     "max": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "de": 25
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "fenoterol",
+  "codigo": "25",
+  "nome": "Fenoterol",
+  "secao": 6,
+  "classes": [
+   "beta2-agonistas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "gotas-5",
+    "descricao": "Gotas 5 mg/mL (1 gota = 0,25 mg)",
+    "forma": "gotas",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "gotasPorMl": 20,
+    "volumeMl": 20
+   },
+   {
+    "id": "spray-100",
+    "descricao": "Spray 100 mcg/jato",
+    "forma": "spray",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mcg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma-nebulizacao",
+    "indicacao": "Crise de asma (nebulização)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.0833,
+     "max": 0.0833,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 2.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "1 gota/3 kg (máx 8–10 gotas) em 3–5 mL de SF, 20/20 min na 1ª hora. Prática brasileira."
+   }
+  ]
+ },
+ {
+  "id": "ipratropio",
+  "codigo": "26",
+  "nome": "Brometo de ipratrópio",
+  "secao": 6,
+  "classes": [
+   "anticolinergicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "nebulizacao-0-25",
+    "descricao": "Solução para nebulização 0,25 mg/mL (20 gotas = 1 mL)",
+    "forma": "gotas",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 250,
+     "unidade": "mcg"
+    },
+    "gotasPorMl": 20,
+    "volumeMl": 20
+   },
+   {
+    "id": "spray-20",
+    "descricao": "Spray 20 mcg/jato",
+    "forma": "spray",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mcg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "ate12",
+    "indicacao": "Crise de asma moderada/grave",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 250,
+     "max": 250,
+     "unidade": "mcg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "ate": 13
+     }
+    },
+    "observacoes": "20 gotas, junto com o beta-2, 20/20 min, 3 doses na 1ª hora."
+   },
+   {
+    "id": "maior12",
+    "indicacao": "Crise de asma moderada/grave",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 500,
+     "max": 500,
+     "unidade": "mcg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "de": 13
+     }
+    },
+    "observacoes": "40 gotas, 20/20 min, 3 doses na 1ª hora."
+   }
+  ]
+ },
+ {
+  "id": "salmeterol",
+  "codigo": "27",
+  "nome": "Salmeterol + fluticasona",
+  "secao": 6,
+  "classes": [
+   "beta2-longa-acao",
+   "corticoides-inalatorios"
+  ],
+  "apresentacoes": [
+   {
+    "id": "spray-25-50",
+    "descricao": "Spray salmeterol 25 mcg + fluticasona 50 mcg/jato",
+    "forma": "spray",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mcg"
+    }
+   },
+   {
+    "id": "spray-25-125",
+    "descricao": "Spray salmeterol 25 mcg + fluticasona 125 mcg/jato",
+    "forma": "spray",
+    "vias": [
+     "inalatoria"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mcg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "manutencao",
+    "indicacao": "Manutenção da asma (alta)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "inalatoria"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 50,
+     "max": 50,
+     "unidade": "mcg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "de": 4
+     }
+    },
+    "intervalosHoras": [
+     12
+    ],
+    "observacoes": "50 mcg de salmeterol 12/12h (ex.: 2 jatos do 25/50), SEMPRE com corticoide inalatório. Etapa do GINA A VALIDAR."
+   }
+  ],
+  "alertas": [
+   "NUNCA salmeterol isolado nem como resgate."
+  ]
+ },
+ {
+  "id": "hidrocortisona",
+  "codigo": "28",
+  "nome": "Hidrocortisona",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-100",
+    "descricao": "Frasco-ampola 100 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-500",
+    "descricao": "Frasco-ampola 500 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma",
+    "indicacao": "Asma grave",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 4,
+     "max": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ],
+    "observacoes": "Conferir dose máxima."
+   },
+   {
+    "id": "adrenal-bolus-menor3",
+    "indicacao": "Crise adrenal (bolus)",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 25,
+     "max": 25,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "ate": 3
+     }
+    }
+   },
+   {
+    "id": "adrenal-bolus-3a12",
+    "indicacao": "Crise adrenal (bolus)",
+    "faixas": [
+     "crianca"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 50,
+     "max": 50,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "de": 3,
+      "ate": 12
+     }
+    }
+   },
+   {
+    "id": "adrenal-bolus-12",
+    "indicacao": "Crise adrenal (bolus)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 100,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeAnos": {
+      "de": 12
+     }
+    }
+   },
+   {
+    "id": "adrenal-manutencao",
+    "indicacao": "Crise adrenal (manutenção)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porM2",
+     "min": 50,
+     "max": 100,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ]
+   },
+   {
+    "id": "choque-refratario",
+    "indicacao": "Choque refratário a catecolamina",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porM2",
+     "min": 50,
+     "max": 50,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6
+    ],
+    "observacoes": "Até 50 mg/m²/dia, com suspeita de insuficiência adrenal."
+   }
+  ]
+ },
+ {
+  "id": "metilprednisolona",
+  "codigo": "32b",
+  "nome": "Metilprednisolona",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-40",
+    "descricao": "Frasco-ampola 40 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-125",
+    "descricao": "Frasco-ampola 125 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 125,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-500",
+    "descricao": "Frasco-ampola 500 mg (pó)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma",
+    "indicacao": "Asma grave",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     6,
+     12
+    ],
+    "doseMaxima": {
+     "valor": 60,
+     "unidade": "mg",
+     "por": "dia"
+    }
+   },
+   {
+    "id": "anafilaxia",
+    "indicacao": "Anafilaxia",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "ASBAI"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 125,
+     "unidade": "mg",
+     "por": "dose"
+    }
+   },
+   {
+    "id": "pulso",
+    "indicacao": "Pulsoterapia",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 30,
+     "max": 30,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ],
+    "doseMaxima": {
+     "valor": 1000,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "observacoes": "Por 3–5 dias."
+   }
+  ]
+ },
+ {
+  "id": "cortisona",
+  "codigo": "32",
+  "nome": "Cortisona (acetato)",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "apresentacoes": [
+   {
+    "id": "comp-25",
+    "descricao": "Comprimido 25 mg (verificar disponibilidade no Brasil)",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "reposicao",
+    "indicacao": "Reposição na insuficiência adrenal",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose equivalente a ~1,25× a da hidrocortisona (A VALIDAR com endocrinologia pediátrica)."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "prednisona",
+  "codigo": "29",
+  "nome": "Prednisona",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "receituario": "simples",
+  "apresentacoes": [
+   {
+    "id": "comp-5",
+    "descricao": "Comprimido 5 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 5,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-20",
+    "descricao": "Comprimido 20 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma",
+    "indicacao": "Asma (crise)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 1,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ],
+    "doseMaxima": {
+     "valor": 60,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "observacoes": "Por 3–5 dias. Rascunho diz \"máx 40–60 mg/dia\": usado 60 até conferir."
+   },
+   {
+    "id": "nefrotica",
+    "indicacao": "Síndrome nefrótica",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 2,
+     "max": 2,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "intervalosHoras": [
+     24
+    ],
+    "doseMaxima": {
+     "valor": 60,
+     "unidade": "mg",
+     "por": "dia"
+    },
+    "observacoes": "Ou 60 mg/m²/dia."
+   }
+  ]
+ },
+ {
+  "id": "dexametasona",
+  "codigo": "31",
+  "nome": "Dexametasona",
+  "secao": 6,
+  "classes": [
+   "corticoides"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-4mg-ml",
+    "descricao": "Ampola 4 mg/mL, 2,5 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 2.5,
+    "concentracaoPorMl": {
+     "valor": 4,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "elixir-0-1",
+    "descricao": "Elixir 0,1 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.1,
+     "unidade": "mg"
+    },
+    "volumeMl": 120
+   },
+   {
+    "id": "comp-4",
+    "descricao": "Comprimido 4 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 4,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "crupe",
+    "indicacao": "Laringite (crupe)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "IM",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.15,
+     "max": 0.6,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 16,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Dose única. Rascunho diz \"máx 10–16 mg\": usado 16 até conferir."
+   },
+   {
+    "id": "meningite",
+    "indicacao": "Meningite bacteriana",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.15,
+     "max": 0.15,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "idadeDias": {
+      "de": 42
+     }
+    },
+    "intervalosHoras": [
+     6
+    ],
+    "observacoes": "Por 2–4 dias, antes ou junto da 1ª dose de antibiótico (> 6 semanas)."
+   },
+   {
+    "id": "asma",
+    "indicacao": "Asma",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "IM",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.6,
+     "max": 0.6,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 16,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "1–2 doses."
+   }
+  ]
+ },
+ {
+  "id": "amiodarona",
+  "codigo": "34",
+  "nome": "Amiodarona",
+  "secao": 6,
+  "classes": [
+   "antiarritmicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-50mg-ml",
+    "descricao": "Ampola 50 mg/mL, 3 mL (150 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 150,
+     "unidade": "mg"
+    },
+    "volumeMl": 3,
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "pcr",
+    "indicacao": "PCR (FV/TV sem pulso)",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 5,
+     "max": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 300,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Bolus; pode repetir até 15 mg/kg."
+   },
+   {
+    "id": "taquiarritmia",
+    "indicacao": "Taquiarritmia com pulso",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 5,
+     "max": 5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 300,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Em 20–60 min."
+   }
+  ],
+  "alertas": [
+   "Diluir em SG 5%."
+  ]
+ },
+ {
+  "id": "adenosina",
+  "codigo": "35",
+  "nome": "Adenosina",
+  "secao": 6,
+  "classes": [
+   "antiarritmicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-3mg-ml",
+    "descricao": "Ampola 3 mg/mL, 2 mL (6 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 6,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "concentracaoPorMl": {
+     "valor": 3,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "tsv-1",
+    "indicacao": "TSV — 1ª dose",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.1,
+     "max": 0.1,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 6,
+     "unidade": "mg",
+     "por": "dose"
+    }
+   },
+   {
+    "id": "tsv-2",
+    "indicacao": "TSV — 2ª dose",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.2,
+     "max": 0.2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 12,
+     "unidade": "mg",
+     "por": "dose"
+    }
+   }
+  ],
+  "alertas": [
+   "Bolus RÁPIDO seguido de flush de SF (duas seringas), em acesso próximo ao coração."
+  ]
+ },
+ {
+  "id": "flumazenil",
+  "codigo": "36",
+  "nome": "Flumazenil",
+  "secao": 6,
+  "classes": [
+   "antidotos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-0-1mg-ml",
+    "descricao": "Ampola 0,1 mg/mL, 5 mL (0,5 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 0.5,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "concentracaoPorMl": {
+     "valor": 0.1,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "intoxicacao-bzd",
+    "indicacao": "Intoxicação por benzodiazepínico",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.01,
+     "max": 0.01,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 0.2,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "observacoes": "Em 15 s; repetir a cada 1 min até total de 0,05 mg/kg ou 1 mg."
+   }
+  ],
+  "alertas": [
+   "Risco de convulsão em uso crônico de benzodiazepínico ou ingestão de tricíclico."
+  ]
+ },
+ {
+  "id": "glucagon",
+  "codigo": "37",
+  "nome": "Glucagon",
+  "secao": 6,
+  "classes": [
+   "hormonios"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-1mg",
+    "descricao": "Frasco-ampola 1 mg (kit com diluente)",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "IM",
+     "SC"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "menor25",
+    "indicacao": "Hipoglicemia sem acesso venoso",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM",
+     "SC"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 0.5,
+     "max": 0.5,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "ISPAD"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "ate": 25
+     }
+    }
+   },
+   {
+    "id": "25",
+    "indicacao": "Hipoglicemia sem acesso venoso",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM",
+     "SC"
+    ],
+    "dose": {
+     "tipo": "fixa",
+     "min": 1,
+     "max": 1,
+     "unidade": "mg",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "ISPAD"
+    },
+    "status": "A_VALIDAR",
+    "condicoes": {
+     "pesoKg": {
+      "de": 25
+     }
+    }
+   }
+  ]
+ },
+ {
+  "id": "insulina-regular",
+  "codigo": "38",
+  "nome": "Insulina regular",
+  "secao": 6,
+  "classes": [
+   "insulinas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "frasco-100",
+    "descricao": "Frasco 100 UI/mL, 10 mL",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV",
+     "SC"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1000,
+     "unidade": "UI"
+    },
+    "volumeMl": 10,
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "UI"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "cad",
+    "indicacao": "Cetoacidose diabética",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.05,
+     "max": 0.1,
+     "unidade": "UI",
+     "por": "h"
+    },
+    "fonte": {
+     "codigo": "ISPAD"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Contínua, SEM bolus, iniciar 1–2 h após o início da hidratação. Solução usual 50 UI em 50 mL de SF (1 UI/mL)."
+   },
+   {
+    "id": "hipercalemia",
+    "indicacao": "Hipercalemia",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "porKg",
+     "min": 0.1,
+     "max": 0.1,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR",
+    "doseMaxima": {
+     "valor": 10,
+     "unidade": "UI",
+     "por": "dose"
+    },
+    "observacoes": "Junto com glicose 0,5–1 g/kg."
+   }
+  ]
+ },
+ {
+  "id": "midazolam",
+  "codigo": "A1",
+  "nome": "Midazolam",
+  "secao": 6,
+  "classe": "Benzodiazepínico",
+  "usos": "Crise convulsiva (IM, intranasal, EV), sedação, intubação",
+  "classes": [
+   "benzodiazepinicos"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-5mg-3ml",
+    "descricao": "Ampola 5 mg/mL, 3 mL (15 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "intranasal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "volumeMl": 3,
+    "quantidade": {
+     "valor": 15,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-5mg-10ml",
+    "descricao": "Ampola 5 mg/mL, 10 mL (50 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-1mg-5ml",
+    "descricao": "Ampola 1 mg/mL, 5 mL (5 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "quantidade": {
+     "valor": 5,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "sol-oral-2mg",
+    "descricao": "Solução oral 2 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 2,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "crise-convulsiva",
+    "indicacao": "Crise convulsiva",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM",
+     "intranasal",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sedacao",
+    "indicacao": "Sedação",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO",
+     "intranasal"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "intubacao",
+    "indicacao": "Intubação",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "diazepam",
+  "codigo": "A2",
+  "nome": "Diazepam",
+  "secao": 6,
+  "classe": "Benzodiazepínico",
+  "usos": "Crise convulsiva (EV, retal)",
+  "classes": [
+   "benzodiazepinicos"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-5mg-2ml",
+    "descricao": "Ampola 5 mg/mL, 2 mL (10 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "retal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-5mg",
+    "descricao": "Comprimido 5 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 5,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-10mg",
+    "descricao": "Comprimido 10 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "crise-convulsiva",
+    "indicacao": "Crise convulsiva",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "retal"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "fenobarbital",
+  "codigo": "A3",
+  "nome": "Fenobarbital",
+  "secao": 6,
+  "classe": "Barbitúrico",
+  "usos": "Convulsão neonatal (1ª escolha), estado de mal",
+  "classes": [
+   "barbituricos",
+   "anticonvulsivantes"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-100mg-2ml",
+    "descricao": "Ampola 100 mg/mL, 2 mL (200 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 200,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "gotas-40mg",
+    "descricao": "Gotas 40 mg/mL",
+    "forma": "gotas",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 40,
+     "unidade": "mg"
+    },
+    "observacao": "Quantas gotas tem 1 mL: conferir na bula (A VALIDAR)."
+   },
+   {
+    "id": "comp-100mg",
+    "descricao": "Comprimido 100 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "convulsao-neonatal",
+    "indicacao": "Convulsão neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "estado-de-mal-epileptico",
+    "indicacao": "Estado de mal epiléptico",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "fenitoina",
+  "codigo": "A4",
+  "nome": "Fenitoína",
+  "secao": 6,
+  "classe": "Anticonvulsivante",
+  "usos": "Estado de mal epiléptico (2ª linha)",
+  "classes": [
+   "anticonvulsivantes",
+   "hidantoinas"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-50mg-5ml",
+    "descricao": "Ampola 50 mg/mL, 5 mL (250 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "quantidade": {
+     "valor": 250,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-100mg",
+    "descricao": "Comprimido 100 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "estado-de-mal-epileptico",
+    "indicacao": "Estado de mal epiléptico (2ª linha)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "levetiracetam",
+  "codigo": "A5",
+  "nome": "Levetiracetam",
+  "secao": 6,
+  "classe": "Anticonvulsivante",
+  "usos": "Estado de mal epiléptico (2ª linha)",
+  "classes": [
+   "anticonvulsivantes"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "fa-100mg-5ml",
+    "descricao": "Frasco-ampola 100 mg/mL, 5 mL (500 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "sol-oral-100mg",
+    "descricao": "Solução oral 100 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Comprimido 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "estado-de-mal-epileptico",
+    "indicacao": "Estado de mal epiléptico (2ª linha)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "cetamina",
+  "codigo": "A6",
+  "nome": "Cetamina",
+  "secao": 6,
+  "classe": "Anestésico dissociativo",
+  "usos": "Sedação para procedimentos, intubação na asma e no choque",
+  "classes": [
+   "anestesicos"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "fa-50mg-10ml",
+    "descricao": "Frasco-ampola 50 mg/mL, 10 mL (500 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "observacao": "Cetamina racêmica ou escetamina: conferir qual o hospital usa (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "sedacao-para-procedimentos",
+    "indicacao": "Sedação para procedimentos",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "intubacao",
+    "indicacao": "Intubação (asma, choque)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "fentanil",
+  "codigo": "A7",
+  "nome": "Fentanil",
+  "secao": 6,
+  "classe": "Opioide",
+  "usos": "Analgesia, sedação, intubação",
+  "classes": [
+   "opioides"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-50mcg-2ml",
+    "descricao": "Ampola 50 mcg/mL, 2 mL (100 mcg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mcg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mcg"
+    }
+   },
+   {
+    "id": "fa-50mcg-10ml",
+    "descricao": "Frasco-ampola 50 mcg/mL, 10 mL (500 mcg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mcg"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mcg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "analgesia",
+    "indicacao": "Analgesia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sedacao",
+    "indicacao": "Sedação",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "intubacao",
+    "indicacao": "Intubação",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "morfina",
+  "codigo": "A8",
+  "nome": "Morfina",
+  "secao": 6,
+  "classe": "Opioide",
+  "usos": "Dor intensa (queimados, fraturas, crise falciforme)",
+  "classes": [
+   "opioides"
+  ],
+  "receituario": "controle-especial",
+  "apresentacoes": [
+   {
+    "id": "amp-10mg-1ml",
+    "descricao": "Ampola 10 mg/mL, 1 mL (10 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "SC"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-1mg-2ml",
+    "descricao": "Ampola 1 mg/mL, 2 mL (2 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "SC"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 2,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "sol-oral-10mg",
+    "descricao": "Solução oral 10 mg/mL",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "dor-intensa",
+    "indicacao": "Dor intensa",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "SC",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "paracetamol",
+  "codigo": "A9",
+  "nome": "Paracetamol",
+  "secao": 6,
+  "classe": "Analgésico / antitérmico",
+  "usos": "Febre, dor (VO, retal; EV conforme disponibilidade)",
+  "classes": [
+   "analgesicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "gotas-200mg",
+    "descricao": "Gotas 200 mg/mL",
+    "forma": "gotas",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 200,
+     "unidade": "mg"
+    },
+    "observacao": "Quantas gotas tem 1 mL: conferir na bula (A VALIDAR)."
+   },
+   {
+    "id": "sol-oral-32mg",
+    "descricao": "Solução oral 160 mg/5 mL (32 mg/mL)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 32,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Comprimido 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-750mg",
+    "descricao": "Comprimido 750 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 750,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "bolsa-10mg-100ml",
+    "descricao": "Bolsa 10 mg/mL, 100 mL (1 g)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "quantidade": {
+     "valor": 1,
+     "unidade": "g"
+    },
+    "observacao": "Paracetamol EV: verificar disponibilidade no hospital (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "febre",
+    "indicacao": "Febre",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "dor",
+    "indicacao": "Dor",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "ibuprofeno",
+  "codigo": "A10",
+  "nome": "Ibuprofeno",
+  "secao": 6,
+  "classe": "Anti-inflamatório (AINE)",
+  "usos": "Febre, dor",
+  "classes": [
+   "aines",
+   "analgesicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "gotas-50mg",
+    "descricao": "Gotas 50 mg/mL",
+    "forma": "gotas",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "observacao": "Quantas gotas tem 1 mL: conferir na bula (A VALIDAR)."
+   },
+   {
+    "id": "gotas-100mg",
+    "descricao": "Gotas 100 mg/mL",
+    "forma": "gotas",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "observacao": "Quantas gotas tem 1 mL: conferir na bula (A VALIDAR)."
+   },
+   {
+    "id": "comp-400mg",
+    "descricao": "Comprimido 400 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 400,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-600mg",
+    "descricao": "Comprimido 600 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 600,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "febre",
+    "indicacao": "Febre",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "dor",
+    "indicacao": "Dor",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "naloxona",
+  "codigo": "A11",
+  "nome": "Naloxona",
+  "secao": 6,
+  "classe": "Antagonista opioide",
+  "usos": "Intoxicação por opioide, depressão respiratória",
+  "classes": [
+   "antidotos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-0-4mg-1ml",
+    "descricao": "Ampola 0,4 mg/mL, 1 mL (0,4 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "SC",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.4,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 0.4,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "intoxicacao-por-opioide",
+    "indicacao": "Intoxicação por opioide",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "depressao-respiratoria-por-opioide",
+    "indicacao": "Depressão respiratória por opioide",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IM",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "carvao-ativado",
+  "codigo": "A12",
+  "nome": "Carvão ativado",
+  "secao": 6,
+  "classe": "Adsorvente",
+  "usos": "Descontaminação digestiva em intoxicações",
+  "classes": [
+   "antidotos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "po-oral",
+    "descricao": "Pó para suspensão oral (embalagem do hospital: conferir)",
+    "forma": "outro",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "descontaminacao-digestiva-em-intoxicacoe",
+    "indicacao": "Descontaminação digestiva em intoxicações",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "acetilcisteina",
+  "codigo": "A13",
+  "nome": "N-acetilcisteína",
+  "secao": 6,
+  "classe": "Antídoto",
+  "usos": "Intoxicação por paracetamol",
+  "classes": [
+   "antidotos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-100mg-3ml",
+    "descricao": "Ampola 100 mg/mL, 3 mL (300 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 3,
+    "quantidade": {
+     "valor": 300,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "envelope-600mg",
+    "descricao": "Granulado (envelope) 600 mg",
+    "forma": "outro",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 600,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "intoxicacao-por-paracetamol",
+    "indicacao": "Intoxicação por paracetamol",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "atropina",
+  "codigo": "A14",
+  "nome": "Atropina",
+  "secao": 6,
+  "classe": "Anticolinérgico",
+  "usos": "Bradicardia, pré-intubação, intoxicação por organofosforado",
+  "classes": [
+   "anticolinergicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-0-25mg-1ml",
+    "descricao": "Ampola 0,25 mg/mL, 1 mL (0,25 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "SC",
+     "IO",
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.25,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 0.25,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-0-5mg-1ml",
+    "descricao": "Ampola 0,5 mg/mL, 1 mL (0,5 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM",
+     "SC",
+     "IO",
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 0.5,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 0.5,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "bradicardia",
+    "indicacao": "Bradicardia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "pre-intubacao",
+    "indicacao": "Pré-intubação",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "intoxicacao-por-organofosforado",
+    "indicacao": "Intoxicação por organofosforado",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "rocuronio",
+  "codigo": "A15",
+  "nome": "Rocurônio",
+  "secao": 6,
+  "classe": "Bloqueador neuromuscular",
+  "usos": "Intubação em sequência rápida",
+  "classes": [
+   "bloqueadores-neuromusculares"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-10mg-5ml",
+    "descricao": "Frasco-ampola 10 mg/mL, 5 mL (50 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "intubacao-em-sequencia-rapida",
+    "indicacao": "Intubação em sequência rápida",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "succinilcolina",
+  "codigo": "A16",
+  "nome": "Succinilcolina (suxametônio)",
+  "secao": 6,
+  "classe": "Bloqueador neuromuscular",
+  "usos": "Intubação em sequência rápida",
+  "classes": [
+   "bloqueadores-neuromusculares"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-po-100mg",
+    "descricao": "Frasco-ampola (pó) 100 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-po-500mg",
+    "descricao": "Frasco-ampola (pó) 500 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "intubacao-em-sequencia-rapida",
+    "indicacao": "Intubação em sequência rápida",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "noradrenalina",
+  "codigo": "A17",
+  "nome": "Noradrenalina",
+  "secao": 6,
+  "classe": "Vasopressor",
+  "usos": "Choque \"quente\" (vasodilatado)",
+  "classes": [
+   "catecolaminas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-4ml",
+    "descricao": "Ampola 4 mL (hemitartarato 2 mg/mL = 1 mg/mL de noradrenalina base)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 4,
+    "quantidade": {
+     "valor": 4,
+     "unidade": "mg"
+    },
+    "observacao": "Sal × base: conferir no rótulo se a concentração é do sal ou da base (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "choque-quente",
+    "indicacao": "Choque quente (vasodilatado)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "dobutamina",
+  "codigo": "A18",
+  "nome": "Dobutamina",
+  "secao": 6,
+  "classe": "Inotrópico",
+  "usos": "Disfunção miocárdica, choque cardiogênico",
+  "classes": [
+   "catecolaminas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-12-5mg-20ml",
+    "descricao": "Ampola 12,5 mg/mL, 20 mL (250 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 12.5,
+     "unidade": "mg"
+    },
+    "volumeMl": 20,
+    "quantidade": {
+     "valor": 250,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "disfuncao-miocardica",
+    "indicacao": "Disfunção miocárdica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "choque-cardiogenico",
+    "indicacao": "Choque cardiogênico",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "milrinona",
+  "codigo": "A19",
+  "nome": "Milrinona",
+  "secao": 6,
+  "classe": "Inodilatador",
+  "usos": "Choque \"frio\" com resistência alta, pós-operatório cardíaco",
+  "classes": [
+   "inodilatadores"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-1mg-20ml",
+    "descricao": "Frasco-ampola 1 mg/mL, 20 mL (20 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mg"
+    },
+    "volumeMl": 20,
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "choque-frio-com-resistencia-alta",
+    "indicacao": "Choque frio com resistência alta",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "pos-operatorio-cardiaco",
+    "indicacao": "Pós-operatório cardíaco",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SSC"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "alprostadil",
+  "codigo": "A20",
+  "nome": "Alprostadil (prostaglandina E1)",
+  "secao": 6,
+  "classe": "Prostaglandina",
+  "usos": "Cardiopatia congênita canal-dependente no RN",
+  "classes": [
+   "prostaglandinas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-500mcg-1ml",
+    "descricao": "Ampola 500 mcg/mL, 1 mL (500 mcg)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 500,
+     "unidade": "mcg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mcg"
+    },
+    "observacao": "Verificar a apresentação disponível no Brasil e no hospital (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "cardiopatia-congenita-canal-dependente",
+    "indicacao": "Cardiopatia congênita canal-dependente",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "bicarbonato-sodio",
+  "codigo": "A21",
+  "nome": "Bicarbonato de sódio 8,4%",
+  "secao": 4,
+  "classe": "Alcalinizante",
+  "usos": "Hipercalemia, intoxicação por tricíclico; uso restrito na acidose",
+  "classes": [
+   "alcalinizantes"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-10ml",
+    "descricao": "Ampola 8,4% (1 mEq/mL), 10 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mEq"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mEq"
+    }
+   },
+   {
+    "id": "frasco-250ml",
+    "descricao": "Frasco 8,4% (1 mEq/mL), 250 mL",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 1,
+     "unidade": "mEq"
+    },
+    "volumeMl": 250,
+    "quantidade": {
+     "valor": 250,
+     "unidade": "mEq"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "hipercalemia",
+    "indicacao": "Hipercalemia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "IO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "intoxicacao-por-triciclico",
+    "indicacao": "Intoxicação por tricíclico",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "acidose-metabolica",
+    "indicacao": "Acidose metabólica (uso restrito)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "PALS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "sulfato-magnesio",
+  "codigo": "A22",
+  "nome": "Sulfato de magnésio",
+  "secao": 4,
+  "classe": "Eletrólito",
+  "usos": "Asma grave, hipomagnesemia, torsades de pointes",
+  "classes": [
+   "magnesio"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-50pct-10ml",
+    "descricao": "Ampola 50% (500 mg/mL), 10 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 500,
+     "unidade": "mg"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 5,
+     "unidade": "g"
+    }
+   },
+   {
+    "id": "amp-10pct-10ml",
+    "descricao": "Ampola 10% (100 mg/mL), 10 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 10,
+    "quantidade": {
+     "valor": 1,
+     "unidade": "g"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "asma-grave",
+    "indicacao": "Asma grave",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "hipomagnesemia",
+    "indicacao": "Hipomagnesemia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "torsades-de-pointes",
+    "indicacao": "Torsades de pointes",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "GINA"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "furosemida",
+  "codigo": "A23",
+  "nome": "Furosemida",
+  "secao": 6,
+  "classe": "Diurético de alça",
+  "usos": "Congestão, edema agudo de pulmão, sobrecarga hídrica",
+  "classes": [
+   "diureticos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-10mg-2ml",
+    "descricao": "Ampola 10 mg/mL, 2 mL (20 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-40mg",
+    "descricao": "Comprimido 40 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "congestao-sobrecarga-hidrica",
+    "indicacao": "Congestão / sobrecarga hídrica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "edema-agudo-de-pulmao",
+    "indicacao": "Edema agudo de pulmão",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "manitol",
+  "codigo": "A24",
+  "nome": "Manitol 20%",
+  "secao": 6,
+  "classe": "Diurético osmótico",
+  "usos": "Hipertensão intracraniana",
+  "classes": [
+   "diureticos-osmoticos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "frasco-250ml",
+    "descricao": "Frasco 20% (200 mg/mL), 250 mL",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 200,
+     "unidade": "mg"
+    },
+    "volumeMl": 250,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "g"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "hipertensao-intracraniana",
+    "indicacao": "Hipertensão intracraniana",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "sro",
+  "codigo": "A25",
+  "nome": "Sais de reidratação oral (SRO)",
+  "secao": 4,
+  "classe": "Solução oral",
+  "usos": "Desidratação (Planos A e B do MS)",
+  "classes": [
+   "sro"
+  ],
+  "apresentacoes": [
+   {
+    "id": "envelope",
+    "descricao": "Envelope (pó para diluir em 1 litro de água; fórmula do MS)",
+    "forma": "outro",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "desidratacao-plano-a",
+    "indicacao": "Desidratação — Plano A",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "desidratacao-plano-b",
+    "indicacao": "Desidratação — Plano B",
+    "faixas": [
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "amoxicilina-clavulanato",
+  "codigo": "A27",
+  "nome": "Amoxicilina + clavulanato",
+  "secao": 5,
+  "classe": "Penicilina + inibidor de betalactamase",
+  "usos": "Mordedura, sinusite/otite com falha, celulite",
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "susp-250mg-5ml",
+    "descricao": "Suspensão oral 250 mg + 62,5 mg/5 mL (50 mg/mL de amoxicilina)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "susp-400mg-5ml",
+    "descricao": "Suspensão oral 400 mg + 57 mg/5 mL (80 mg/mL de amoxicilina)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 80,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Comprimido 500 mg + 125 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-875mg",
+    "descricao": "Comprimido 875 mg + 125 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 875,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-po-1g",
+    "descricao": "Frasco-ampola (pó) 1 g + 200 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1,
+     "unidade": "g"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "mordedura",
+    "indicacao": "Mordedura",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sinusite-otite-com-falha",
+    "indicacao": "Sinusite / otite com falha",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "celulite",
+    "indicacao": "Celulite",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "oxacilina",
+  "codigo": "A28",
+  "nome": "Oxacilina",
+  "secao": 5,
+  "classe": "Penicilina antiestafilocócica",
+  "usos": "Celulite grave, osteomielite, artrite séptica",
+  "classes": [
+   "penicilinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-po-500mg",
+    "descricao": "Frasco-ampola (pó) 500 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "celulite-grave",
+    "indicacao": "Celulite grave",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "osteomielite",
+    "indicacao": "Osteomielite",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "artrite-septica",
+    "indicacao": "Artrite séptica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "cefotaxima",
+  "codigo": "A29",
+  "nome": "Cefotaxima",
+  "secao": 5,
+  "classe": "Cefalosporina 3ª geração",
+  "usos": "Sepse/meningite neonatal (alternativa à ceftriaxona no RN); verificar disponibilidade no Brasil",
+  "classes": [
+   "cefalosporinas",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-po-1g",
+    "descricao": "Frasco-ampola (pó) 1 g",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1,
+     "unidade": "g"
+    },
+    "observacao": "Verificar disponibilidade no Brasil e no hospital (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "sepse-meningite-neonatal",
+    "indicacao": "Sepse / meningite neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "meropenem",
+  "codigo": "A30",
+  "nome": "Meropeném",
+  "secao": 5,
+  "classe": "Carbapenêmico",
+  "usos": "Sepse hospitalar, germes multirresistentes",
+  "classes": [
+   "carbapenemicos",
+   "betalactamicos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "fa-po-500mg",
+    "descricao": "Frasco-ampola (pó) 500 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-po-1g",
+    "descricao": "Frasco-ampola (pó) 1 g",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 1,
+     "unidade": "g"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "sepse-hospitalar-germes-multirresistente",
+    "indicacao": "Sepse hospitalar / germes multirresistentes",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "azitromicina",
+  "codigo": "A31",
+  "nome": "Azitromicina",
+  "secao": 5,
+  "classe": "Macrolídeo",
+  "usos": "Coqueluche (tratamento e profilaxia), pneumonia atípica",
+  "classes": [
+   "macrolideos"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "susp-200mg-5ml",
+    "descricao": "Suspensão oral 200 mg/5 mL (40 mg/mL)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-500mg",
+    "descricao": "Comprimido 500 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "fa-po-500mg",
+    "descricao": "Frasco-ampola (pó) 500 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "coqueluche-tratamento",
+    "indicacao": "Coqueluche — tratamento",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "coqueluche-profilaxia",
+    "indicacao": "Coqueluche — profilaxia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "pneumonia-atipica",
+    "indicacao": "Pneumonia atípica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "clindamicina",
+  "codigo": "A32",
+  "nome": "Clindamicina",
+  "secao": 5,
+  "classe": "Lincosamida",
+  "usos": "Infecção de pele/partes moles, choque tóxico (junto com betalactâmico)",
+  "classes": [
+   "lincosamidas"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "amp-150mg-2ml",
+    "descricao": "Ampola 150 mg/mL, 2 mL (300 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 150,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 300,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-150mg-4ml",
+    "descricao": "Ampola 150 mg/mL, 4 mL (600 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 150,
+     "unidade": "mg"
+    },
+    "volumeMl": 4,
+    "quantidade": {
+     "valor": 600,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-300mg",
+    "descricao": "Cápsula 300 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 300,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "infeccao-de-pele-e-partes-moles",
+    "indicacao": "Infecção de pele e partes moles",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "choque-toxico",
+    "indicacao": "Choque tóxico (junto com betalactâmico)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "metronidazol",
+  "codigo": "A33",
+  "nome": "Metronidazol",
+  "secao": 5,
+  "classe": "Nitroimidazol",
+  "usos": "Infecção abdominal, enterocolite necrosante",
+  "classes": [
+   "nitroimidazois"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "bolsa-5mg-100ml",
+    "descricao": "Bolsa 5 mg/mL, 100 mL (500 mg)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 5,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "quantidade": {
+     "valor": 500,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "susp-40mg",
+    "descricao": "Suspensão oral 40 mg/mL (benzoilmetronidazol)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 40,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-250mg",
+    "descricao": "Comprimido 250 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 250,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "infeccao-abdominal",
+    "indicacao": "Infecção abdominal",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "enterocolite-necrosante",
+    "indicacao": "Enterocolite necrosante",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "sulfametoxazol-trimetoprima",
+  "codigo": "A34",
+  "nome": "Sulfametoxazol + trimetoprima",
+  "secao": 5,
+  "classe": "Sulfonamida",
+  "usos": "Profilaxia de pneumocistose na criança exposta ao HIV, infecção urinária",
+  "classes": [
+   "sulfonamidas"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "susp-oral",
+    "descricao": "Suspensão oral SMX 200 mg + TMP 40 mg/5 mL (8 mg/mL de trimetoprima)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 8,
+     "unidade": "mg"
+    },
+    "observacao": "Concentração em trimetoprima (TMP); confirmar por qual componente a dose é calculada (A VALIDAR)."
+   },
+   {
+    "id": "comp-400-80",
+    "descricao": "Comprimido SMX 400 mg + TMP 80 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 80,
+     "unidade": "mg"
+    },
+    "observacao": "Quantidade em trimetoprima (A VALIDAR)."
+   },
+   {
+    "id": "amp-400-80-5ml",
+    "descricao": "Ampola SMX 400 mg + TMP 80 mg/5 mL (16 mg/mL de trimetoprima)",
+    "forma": "ampola",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 16,
+     "unidade": "mg"
+    },
+    "volumeMl": 5,
+    "quantidade": {
+     "valor": 80,
+     "unidade": "mg"
+    },
+    "observacao": "Concentração em trimetoprima (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "profilaxia-de-pneumocistose",
+    "indicacao": "Profilaxia de pneumocistose (criança exposta ao HIV)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "infeccao-urinaria",
+    "indicacao": "Infecção urinária",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "aciclovir",
+  "codigo": "A35",
+  "nome": "Aciclovir",
+  "secao": 5,
+  "classe": "Antiviral",
+  "usos": "Herpes neonatal, encefalite herpética, varicela grave",
+  "classes": [
+   "antivirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-po-250mg",
+    "descricao": "Frasco-ampola (pó) 250 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 250,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-200mg",
+    "descricao": "Comprimido 200 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 200,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-400mg",
+    "descricao": "Comprimido 400 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 400,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "herpes-neonatal",
+    "indicacao": "Herpes neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "encefalite-herpetica",
+    "indicacao": "Encefalite herpética",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "varicela-grave",
+    "indicacao": "Varicela grave",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "oseltamivir",
+  "codigo": "A36",
+  "nome": "Oseltamivir",
+  "secao": 5,
+  "classe": "Antiviral",
+  "usos": "Influenza (tratamento e profilaxia)",
+  "classes": [
+   "antivirais"
+  ],
+  "apresentacoes": [
+   {
+    "id": "caps-30mg",
+    "descricao": "Cápsula 30 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 30,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-45mg",
+    "descricao": "Cápsula 45 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 45,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-75mg",
+    "descricao": "Cápsula 75 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 75,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "influenza-tratamento",
+    "indicacao": "Influenza — tratamento",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "influenza-profilaxia",
+    "indicacao": "Influenza — profilaxia",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "fluconazol",
+  "codigo": "A37",
+  "nome": "Fluconazol",
+  "secao": 5,
+  "classe": "Antifúngico azólico",
+  "usos": "Candidíase; profilaxia no prematuro extremo",
+  "classes": [
+   "antifungicos",
+   "azois"
+  ],
+  "apresentacoes": [
+   {
+    "id": "bolsa-2mg-100ml",
+    "descricao": "Bolsa 2 mg/mL, 100 mL (200 mg)",
+    "forma": "bolsa-soro",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 2,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "quantidade": {
+     "valor": 200,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-150mg",
+    "descricao": "Cápsula 150 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 150,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "candidiase",
+    "indicacao": "Candidíase",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "profilaxia-no-prematuro-extremo",
+    "indicacao": "Profilaxia no prematuro extremo",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "anfotericina-b",
+  "codigo": "A38",
+  "nome": "Anfotericina B (desoxicolato / lipossomal)",
+  "secao": 5,
+  "classe": "Antifúngico poliênico",
+  "usos": "Candidíase invasiva, fungemia neonatal",
+  "classes": [
+   "antifungicos",
+   "polienos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "desoxicolato-50mg",
+    "descricao": "Desoxicolato — frasco-ampola (pó) 50 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "lipossomal-50mg",
+    "descricao": "Lipossomal — frasco-ampola (pó) 50 mg",
+    "forma": "frasco-ampola-po",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "alertas": [
+   "Desoxicolato e lipossomal têm doses diferentes: não trocar uma pela outra (A VALIDAR)."
+  ],
+  "regras": [
+   {
+    "id": "candidiase-invasiva",
+    "indicacao": "Candidíase invasiva",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "fungemia-neonatal",
+    "indicacao": "Fungemia neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "rifampicina",
+  "codigo": "A39",
+  "nome": "Rifampicina",
+  "secao": 5,
+  "classe": "Rifamicina",
+  "usos": "Quimioprofilaxia de contatos de doença meningocócica e Hib (completa o caso 8)",
+  "classes": [
+   "rifamicinas"
+  ],
+  "receituario": "antimicrobiano",
+  "apresentacoes": [
+   {
+    "id": "susp-20mg",
+    "descricao": "Suspensão oral 100 mg/5 mL (20 mg/mL)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "caps-300mg",
+    "descricao": "Cápsula 300 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 300,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "quimioprofilaxia-doenca-meningococica",
+    "indicacao": "Quimioprofilaxia — doença meningocócica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "quimioprofilaxia-haemophilus-influenzae",
+    "indicacao": "Quimioprofilaxia — Haemophilus influenzae tipo b",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "isoniazida",
+  "codigo": "A40",
+  "nome": "Isoniazida",
+  "secao": 5,
+  "classe": "Antituberculoso",
+  "usos": "Tuberculose latente; RN de mãe bacilífera",
+  "classes": [
+   "antituberculosos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "comp-100mg",
+    "descricao": "Comprimido 100 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-300mg",
+    "descricao": "Comprimido 300 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 300,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "tuberculose-latente",
+    "indicacao": "Tuberculose latente",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "rn-de-mae-bacilifera",
+    "indicacao": "RN de mãe bacilífera",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "vitamina-k",
+  "codigo": "A41",
+  "nome": "Vitamina K1 (fitomenadiona)",
+  "secao": 6,
+  "classe": "Vitamina",
+  "usos": "Profilaxia da doença hemorrágica do RN (sala de parto)",
+  "classes": [
+   "vitaminas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-10mg-1ml",
+    "descricao": "Ampola 10 mg/mL, 1 mL (10 mg)",
+    "forma": "ampola",
+    "vias": [
+     "IM",
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 10,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-2mg-0-2ml",
+    "descricao": "Ampola pediátrica 2 mg/0,2 mL (10 mg/mL)",
+    "forma": "ampola",
+    "vias": [
+     "IM",
+     "EV",
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 10,
+     "unidade": "mg"
+    },
+    "volumeMl": 0.2,
+    "quantidade": {
+     "valor": 2,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "profilaxia-da-doenca-hemorragica-do-rn",
+    "indicacao": "Profilaxia da doença hemorrágica do RN",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "profilaxia-ocular",
+  "codigo": "A42",
+  "nome": "Profilaxia ocular neonatal",
+  "secao": 5,
+  "classe": "Antimicrobiano tópico",
+  "usos": "Oftalmia neonatal; produto recomendado pelo MS A VALIDAR (ex.: iodopovidona 2,5% ou pomada de eritromicina)",
+  "classes": [
+   "antimicrobianos-topicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "iodopovidona-2-5",
+    "descricao": "Colírio de iodopovidona 2,5%",
+    "forma": "outro",
+    "vias": [
+     "ocular"
+    ],
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "eritromicina-pomada",
+    "descricao": "Pomada oftálmica de eritromicina 0,5%",
+    "forma": "outro",
+    "vias": [
+     "ocular"
+    ],
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "profilaxia-da-oftalmia-neonatal",
+    "indicacao": "Profilaxia da oftalmia neonatal",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "ocular"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Produto recomendado pelo MS: A VALIDAR."
+   }
+  ]
+ },
+ {
+  "id": "imunoglobulina-hepatite-b",
+  "codigo": "A43",
+  "nome": "Imunoglobulina anti-hepatite B + vacina hepatite B",
+  "secao": 6,
+  "classe": "Imunização",
+  "usos": "RN de mãe HBsAg positiva",
+  "classes": [
+   "imunobiologicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "ighahb",
+    "descricao": "Imunoglobulina anti-hepatite B (IGHAHB), frasco-ampola (conteúdo em UI: conferir no CRIE)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "vacina-hb",
+    "descricao": "Vacina hepatite B recombinante, dose pediátrica (frasco do PNI: conferir)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR"
+   }
+  ],
+  "regras": [
+   {
+    "id": "rn-de-mae-hbsag-positiva",
+    "indicacao": "RN de mãe HBsAg positiva",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "nirsevimabe-palivizumabe",
+  "codigo": "A44",
+  "nome": "Nirsevimabe / palivizumabe",
+  "secao": 6,
+  "classe": "Anticorpo monoclonal",
+  "usos": "Prevenção do vírus sincicial respiratório em grupos de risco; critérios do MS A VALIDAR",
+  "classes": [
+   "anticorpos-monoclonais",
+   "imunobiologicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "nirsevimabe-50mg",
+    "descricao": "Nirsevimabe — seringa 50 mg/0,5 mL (100 mg/mL)",
+    "forma": "outro",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 0.5,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "nirsevimabe-100mg",
+    "descricao": "Nirsevimabe — seringa 100 mg/1 mL (100 mg/mL)",
+    "forma": "outro",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "palivizumabe-50mg",
+    "descricao": "Palivizumabe — frasco-ampola 100 mg/mL, 0,5 mL (50 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 0.5,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "palivizumabe-100mg",
+    "descricao": "Palivizumabe — frasco-ampola 100 mg/mL, 1 mL (100 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "prevencao-do-virus-sincicial-respiratori",
+    "indicacao": "Prevenção do vírus sincicial respiratório (grupos de risco)",
+    "faixas": [
+     "RN",
+     "crianca"
+    ],
+    "vias": [
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Critérios do MS: A VALIDAR."
+   }
+  ]
+ },
+ {
+  "id": "cafeina",
+  "codigo": "A45",
+  "nome": "Citrato de cafeína",
+  "secao": 6,
+  "classe": "Estimulante respiratório",
+  "usos": "Apneia da prematuridade",
+  "classes": [
+   "metilxantinas"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-20mg-1ml",
+    "descricao": "Ampola 20 mg/mL de citrato de cafeína (= 10 mg/mL de cafeína base), 1 mL",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 20,
+     "unidade": "mg"
+    },
+    "volumeMl": 1,
+    "quantidade": {
+     "valor": 20,
+     "unidade": "mg"
+    },
+    "observacao": "Concentração em citrato (a base é a metade): conferir por qual a dose é escrita (A VALIDAR)."
+   },
+   {
+    "id": "sol-oral-20mg",
+    "descricao": "Solução oral 20 mg/mL de citrato de cafeína (manipulada?)",
+    "forma": "solucao-oral",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 20,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "apneia-da-prematuridade",
+    "indicacao": "Apneia da prematuridade",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "EV",
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "surfactante",
+  "codigo": "A46",
+  "nome": "Surfactante (poractanto / beractanto)",
+  "secao": 6,
+  "classe": "Surfactante pulmonar",
+  "usos": "Síndrome do desconforto respiratório do prematuro",
+  "classes": [
+   "surfactantes"
+  ],
+  "apresentacoes": [
+   {
+    "id": "poractanto-1-5ml",
+    "descricao": "Poractanto alfa 80 mg/mL — frasco 1,5 mL (120 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 80,
+     "unidade": "mg"
+    },
+    "volumeMl": 1.5,
+    "quantidade": {
+     "valor": 120,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "poractanto-3ml",
+    "descricao": "Poractanto alfa 80 mg/mL — frasco 3 mL (240 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 80,
+     "unidade": "mg"
+    },
+    "volumeMl": 3,
+    "quantidade": {
+     "valor": 240,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "beractanto-4ml",
+    "descricao": "Beractanto 25 mg/mL — frasco 4 mL (100 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 25,
+     "unidade": "mg"
+    },
+    "volumeMl": 4,
+    "quantidade": {
+     "valor": 100,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "beractanto-8ml",
+    "descricao": "Beractanto 25 mg/mL — frasco 8 mL (200 mg)",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "endotraqueal"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 25,
+     "unidade": "mg"
+    },
+    "volumeMl": 8,
+    "quantidade": {
+     "valor": 200,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "alertas": [
+   "Poractanto e beractanto têm concentrações diferentes: conferir qual frasco está sendo usado (A VALIDAR)."
+  ],
+  "regras": [
+   {
+    "id": "sindrome-do-desconforto-respiratorio-do",
+    "indicacao": "Síndrome do desconforto respiratório do prematuro",
+    "faixas": [
+     "RN"
+    ],
+    "vias": [
+     "endotraqueal"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "ondansetrona",
+  "codigo": "A47",
+  "nome": "Ondansetrona",
+  "secao": 6,
+  "classe": "Antiemético",
+  "usos": "Vômitos na gastroenterite (facilita a hidratação oral)",
+  "classes": [
+   "antiemeticos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-2mg-2ml",
+    "descricao": "Ampola 2 mg/mL, 2 mL (4 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 2,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 4,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "amp-2mg-4ml",
+    "descricao": "Ampola 2 mg/mL, 4 mL (8 mg)",
+    "forma": "ampola",
+    "vias": [
+     "EV",
+     "IM"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 2,
+     "unidade": "mg"
+    },
+    "volumeMl": 4,
+    "quantidade": {
+     "valor": 8,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-od-4mg",
+    "descricao": "Comprimido orodispersível 4 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 4,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-od-8mg",
+    "descricao": "Comprimido orodispersível 8 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 8,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "vomitos-na-gastroenterite",
+    "indicacao": "Vômitos na gastroenterite",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "EV",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ },
+ {
+  "id": "prometazina",
+  "codigo": "A48",
+  "nome": "Prometazina",
+  "secao": 6,
+  "classe": "Anti-histamínico H1",
+  "usos": "Urticária, anafilaxia (depois da adrenalina; completa o caso 9). Restrições por idade A VALIDAR; alternativas: dexclorfeniramina, difenidramina",
+  "classes": [
+   "anti-histaminicos",
+   "fenotiazinicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "amp-25mg-2ml",
+    "descricao": "Ampola 25 mg/mL, 2 mL (50 mg)",
+    "forma": "ampola",
+    "vias": [
+     "IM",
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 25,
+     "unidade": "mg"
+    },
+    "volumeMl": 2,
+    "quantidade": {
+     "valor": 50,
+     "unidade": "mg"
+    }
+   },
+   {
+    "id": "comp-25mg",
+    "descricao": "Comprimido 25 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 25,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "urticaria",
+    "indicacao": "Urticária",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "VO",
+     "IM"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Restrições por idade: A VALIDAR (conferir a idade mínima na bula)."
+   },
+   {
+    "id": "anafilaxia",
+    "indicacao": "Anafilaxia (depois da adrenalina)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "IM",
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Restrições por idade: A VALIDAR (conferir a idade mínima na bula)."
+   }
+  ]
+ },
+ {
+  "id": "cabergolina",
+  "codigo": "A49",
+  "nome": "Cabergolina",
+  "secao": 6,
+  "classe": "Agonista dopaminérgico",
+  "usos": "Inibição da lactação na mãe vivendo com HIV (completa o caso 4)",
+  "classes": [
+   "agonistas-dopaminergicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "comp-0-5mg",
+    "descricao": "Comprimido 0,5 mg",
+    "forma": "comprimido",
+    "vias": [
+     "VO"
+    ],
+    "status": "A_VALIDAR",
+    "quantidade": {
+     "valor": 0.5,
+     "unidade": "mg"
+    }
+   }
+  ],
+  "regras": [
+   {
+    "id": "inibicao-da-lactacao",
+    "indicacao": "Inibição da lactação (mãe vivendo com HIV)",
+    "faixas": [
+     "adolescente"
+    ],
+    "vias": [
+     "VO"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "MS"
+    },
+    "status": "A_VALIDAR",
+    "observacoes": "Prescrição para a MÃE (puérpera), não para o RN. Faixa etária: A VALIDAR."
+   }
+  ]
+ },
+ {
+  "id": "imunoglobulina-humana",
+  "codigo": "A50",
+  "nome": "Imunoglobulina humana EV",
+  "secao": 6,
+  "classe": "Imunoglobulina",
+  "usos": "Doença de Kawasaki, síndrome inflamatória multissistêmica (SIM-P), púrpura trombocitopênica",
+  "classes": [
+   "imunoglobulinas",
+   "imunobiologicos"
+  ],
+  "apresentacoes": [
+   {
+    "id": "fa-5pct-5g",
+    "descricao": "Frasco 5% (50 mg/mL), 5 g em 100 mL",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 50,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "quantidade": {
+     "valor": 5,
+     "unidade": "g"
+    },
+    "observacao": "Concentração e tamanho do frasco variam com o fabricante (A VALIDAR)."
+   },
+   {
+    "id": "fa-10pct-10g",
+    "descricao": "Frasco 10% (100 mg/mL), 10 g em 100 mL",
+    "forma": "frasco-ampola-solucao",
+    "vias": [
+     "EV"
+    ],
+    "status": "A_VALIDAR",
+    "concentracaoPorMl": {
+     "valor": 100,
+     "unidade": "mg"
+    },
+    "volumeMl": 100,
+    "quantidade": {
+     "valor": 10,
+     "unidade": "g"
+    },
+    "observacao": "Concentração e tamanho do frasco variam com o fabricante (A VALIDAR)."
+   }
+  ],
+  "regras": [
+   {
+    "id": "doenca-de-kawasaki",
+    "indicacao": "Doença de Kawasaki",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "sindrome-inflamatoria-multissistemica",
+    "indicacao": "Síndrome inflamatória multissistêmica (SIM-P)",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   },
+   {
+    "id": "purpura-trombocitopenica",
+    "indicacao": "Púrpura trombocitopênica",
+    "faixas": [
+     "RN",
+     "crianca",
+     "adolescente"
+    ],
+    "vias": [
+     "EV"
+    ],
+    "dose": {
+     "tipo": "texto",
+     "descricao": "Dose ainda não cadastrada (A VALIDAR): preencher com a fonte — documento e página — no botão Conferir da aba Banco."
+    },
+    "fonte": {
+     "codigo": "SBP"
+    },
+    "status": "A_VALIDAR"
+   }
+  ]
+ }
+]

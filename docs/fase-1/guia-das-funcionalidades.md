@@ -24,7 +24,7 @@ Abra o app (`npm run dev`, ou `SimPed.html`, ou `npm run desktop` — ver README
 - **Banco** (I20): situação da validação, lista .csv do que falta validar, detalhes de cada medicação; importar a planilha (I19).
 - **Configurações** (I11): fonte das doses, nome da faixa etária, hospital (volume final da BIC, hora da 1ª dose), modo treino × prova, margem de arredondamento.
 
-## Novidades das bases (B1–B15, out/2026)
+## Novidades das bases (B1–B15, B4, B7, B8 — out/2026)
 Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do professor: `docs/fase-1/sessao-e-professor.md`.
 
 - **B3 — "Algo deu errado"**: em **Configurações**, clique em **Testar a tela de erro** → aparece a mensagem amigável só naquela aba (as outras continuam). **📋 Copiar relato do problema** copia aba, caso, erro e navegador; **↻ Tentar de novo** volta. No topo, **🐞 Relatar problema** faz o mesmo a qualquer hora (escreva o que estava fazendo e copie).
@@ -38,6 +38,10 @@ Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do 
 - **B11 — Traçados por ritmo**: caso 12 → monitor em **FV** (ondas caóticas, FC/SpO₂/PA "---", alarme "FV — SEM PULSO"); caso 11 → **TSV**. No modo **prova** (Configurações) o nome do ritmo some ("reconheça pelo traçado").
 - **B9 — Reação pela dose**: caso de demonstração (16 kg) → dipirona com indicação "Febre/dor": 80 mg (5 mg/kg) → linha do tempo "dose abaixo da faixa: efeito parcial"; 800 mg (50 mg/kg) → "dose acima da faixa: efeito adverso — Hipotensão". No caso 11, adenosina em subdose não reverte a TSV.
 - **B14 — Painel do professor**: aba **👩‍🏫 Professor**: monitor do paciente, **Alterar sinais agora** (mude só o que quiser, inclusive ritmo e respiração), **+1/+5/+15 min**, **Complicações** (um clique: convulsão, PCR em FV...), **Mensagem para o aluno**, **Folha do aluno (ao vivo)** e **Últimas ações**. Volte ao Prescrever: a mensagem aparece em roxo no topo e a linha do tempo mostra o que o professor fez.
+- **B8 — Ampliação A1–A50**: aba **Banco** → o quadro mostra **90** medicações. Busque "midazolam" → abra → apresentações de rascunho (A VALIDAR) e as regras "Crise convulsiva", "Sedação", "Intubação" com **"Dose ainda não cadastrada (A VALIDAR)"**: nenhuma dose foi inventada. Para preencher, use **Conferir** na regra (tipo "por kg", valor, documento e página). No Prescrever, as 49 novas aparecem na lista de medicações (a dose não corrige o aluno enquanto for texto).
+- **B8 — Planilha gerada pelo app**: aba **Banco** → **Importar planilha de apresentações** → **⬇ Baixar planilha para preencher (.xlsx)** → abre no Excel com as 3 abas (Como preencher, Apresentações, Listas), uma linha por medicação do banco (Nº = código: 1…38, 8b, A1…A50), células amarelas para preencher e listas de escolha. Preencha e volte em **📂 Escolher planilha**. O arquivo do projeto `docs/fase-0/apresentacoes-formulario.xlsx` é o mesmo (atualizado com `npm run gerar-planilha`).
+- **B7 — Versão do banco**: aba **Banco** → painel **Versão do banco**: "Versão 2 de 01/10/2026 · código …" e **Histórico de mudanças** (cada versão com o que entrou/mudou: era → ficou, quem conferiu e quando). Faça uma conferência (B5) → o painel avisa **"mudanças que ainda não entraram no projeto"** e **Ver as mudanças deste computador** mostra o que mudou. No Prescrever, **Relatório** → linha "Banco de medicações: versão 2 de …" (ou "+ mudanças deste computador (código …)"); o histórico de relatórios guarda a versão. O 🐞 Relatar problema também diz a versão.
+- **B4 — Backup e restauração**: aba **⚙ Configurações** → **Backup e restauração**: lista o que está guardado neste computador → **💾 Salvar backup (.json)** baixa um arquivo `simped-backup-AAAA-MM-DD.json`. No outro computador (ou depois de apagar tudo): **📂 Restaurar backup…** → escolha o arquivo → confira a lista → **Restaurar agora** (substitui o que havia; o app recarrega). Arquivo que não é backup do SimPed é recusado.
 - **B15 — Duas janelas**: no painel do professor, **🪟 Abrir janela do professor** abre outra janela (faixa roxa "Janela do professor", "● Conectado à janela do aluno"). Deixe as duas lado a lado: o que o aluno escreve aparece na do professor; complicações e mensagens do professor aparecem na do aluno. Funciona no navegador, no `SimPed.html` e no programa de computador.
 
 ## Onde fica no código
@@ -70,3 +74,7 @@ Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do 
 | Traçados por ritmo (B11) | `src/monitor/monitor.ts` | `src/telas/Monitor.tsx` |
 | Reação pela dose (B9) | `src/motor/avaliarDose.ts`, `src/dados/efeitos-sobredose.ts` | `src/telas/Prescrever.tsx` |
 | Professor e duas janelas (B14/B15) | `src/dados/complicacoes.ts`, `src/sessao/canal.ts` | `src/telas/Professor.tsx` |
+| Backup e restauração (B4) | `src/backup/backup.ts` | `src/telas/PainelBackup.tsx` (em Configurações) |
+| Versão do banco e histórico (B7) | `src/dados/medicacoes/versao.ts`, `versoes/historico-banco.json`, `versoes/banco-publicado.json`, `scripts/nova-versao-banco.mjs` | `src/telas/banco/VersaoBanco.tsx`, `src/telas/RelatorioCaso.tsx` |
+| Ampliação A1–A50 (B8) | `src/dados/medicacoes/ampliacao-a-validar.ts` | aba Banco |
+| Planilha gerada pelo app (B8) | `src/importacao/planilha.ts`, `xlsx-escrever.ts`, `scripts/gerar-planilha.mjs` | `src/telas/Banco.tsx` |

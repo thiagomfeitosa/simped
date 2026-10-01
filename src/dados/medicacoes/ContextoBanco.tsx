@@ -1,9 +1,11 @@
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { definirContexto } from '../../diagnostico/relato';
 import { aplicarApresentacoes } from '../../importacao/apresentacoes';
 import { CATALOGO_FONTES, type DocumentoFonte, juntarCatalogos, lerCatalogo } from '../fontes/fontes';
 import { BANCO_MEDICACOES } from './index';
 import type { Apresentacao, Medicacao } from './tipos';
 import { aplicarValidacoes, juntarHistoricos, lerValidacoes, registrarValidacao, type Validacao } from './validacoes';
+import { type BancoEmUso, descreverBancoEmUso } from './versao';
 
 const CHAVE = 'simped.apresentacoes-hospital';
 const CHAVE_VALIDACOES = 'simped.validacoes';
@@ -12,6 +14,8 @@ const CHAVE_FONTES = 'simped.fontes';
 interface ValorContexto {
   /** Banco em uso: o do projeto, com as apresentações importadas e as conferências feitas no app por cima. */
   banco: readonly Medicacao[];
+  /** Versão do banco em uso (B7): a do projeto ou "com mudanças deste computador". */
+  emUso: BancoEmUso;
   /** Banco antes das conferências feitas neste computador (para mostrar o "valor anterior"). */
   bancoSemValidacoesLocais: readonly Medicacao[];
   /** Apresentações importadas (medicação → lista). */
@@ -33,6 +37,7 @@ interface ValorContexto {
 const nada = () => {};
 const Contexto = createContext<ValorContexto>({
   banco: BANCO_MEDICACOES,
+  emUso: descreverBancoEmUso(BANCO_MEDICACOES),
   bancoSemValidacoesLocais: BANCO_MEDICACOES,
   importadas: {},
   usarImportadas: nada,
@@ -90,11 +95,15 @@ export function ProvedorBanco({ children }: { children: ReactNode }) {
   );
   const banco = useMemo(() => aplicarValidacoes(bancoSemValidacoesLocais, validacoes), [bancoSemValidacoesLocais, validacoes]);
   const catalogo = useMemo(() => juntarCatalogos(CATALOGO_FONTES, documentosDoApp), [documentosDoApp]);
+  const emUso = useMemo(() => descreverBancoEmUso(banco), [banco]);
+  // o "Relatar problema" diz com qual banco o app estava
+  useEffect(() => definirContexto('Banco de medicações', emUso.texto), [emUso.texto]);
 
   return (
     <Contexto.Provider
       value={{
         banco,
+        emUso,
         bancoSemValidacoesLocais,
         importadas,
         usarImportadas: setImportadas,

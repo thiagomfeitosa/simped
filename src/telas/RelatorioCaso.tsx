@@ -54,6 +54,10 @@ export function RelatorioCaso({ relatorio: r, aoFechar }: Props) {
         <p className="nota">
           Condutas esperadas, prazos e reações do caso: A VALIDAR. Tempo de caso: {formatarTempo(r.duracaoMin)}.
         </p>
+        <p className="nota banco-do-relatorio">
+          Banco de medicações: {r.banco.texto}
+          {r.banco.local && ' — com conferências ou apresentações deste computador que ainda não entraram no projeto'}.
+        </p>
 
         <div className="relatorio-numeros">
           <div>
@@ -141,6 +145,7 @@ export function RelatorioCaso({ relatorio: r, aoFechar }: Props) {
                     <td>{h.titulo}</td>
                     <td className="valor">{h.aproveitamento}%</td>
                     <td className="valor">{h.erros} erro(s)</td>
+                    <td className="nota">{h.banco ? `banco ${h.banco}` : ''}</td>
                   </tr>
                 ))}
               </tbody>

@@ -9,49 +9,6 @@
 import type { Apresentacao, Medicacao, UnidadeDroga, Via } from '../dados/medicacoes/tipos';
 import type { Aba } from './xlsx';
 
-/** Nº da planilha → id da medicação no banco. */
-const POR_NUMERO: Record<string, string> = {
-  '1': 'sf09',
-  '2': 'sg5',
-  '3': 'sg10',
-  '4': 'g25',
-  '5': 'g50',
-  '6': 'gluconato-calcio',
-  '7': 'kcl',
-  '8': 'nacl20',
-  '9': 'ceftriaxona',
-  '10': 'ampicilina',
-  '11': 'gentamicina',
-  '12': 'vancomicina',
-  '13': 'penicilina-cristalina',
-  '14': 'penicilina-procaina',
-  '15': 'penicilina-benzatina',
-  '16': 'sulfadiazina',
-  '17': 'pirimetamina',
-  '18': 'acido-folinico',
-  '19': 'zidovudina',
-  '20': 'lamivudina',
-  '21': 'raltegravir',
-  '22': 'dolutegravir',
-  '23': 'dipirona',
-  '24': 'salbutamol',
-  '25': 'fenoterol',
-  '26': 'ipratropio',
-  '27': 'salmeterol',
-  '28': 'hidrocortisona',
-  '29': 'prednisona',
-  '30': 'prednisolona',
-  '31': 'dexametasona',
-  '32': 'cortisona',
-  '32b': 'metilprednisolona',
-  '33': 'adrenalina',
-  '34': 'amiodarona',
-  '35': 'adenosina',
-  '36': 'flumazenil',
-  '37': 'glucagon',
-  '38': 'insulina-regular',
-};
-
 const FORMAS: [RegExp, Apresentacao['forma']][] = [
   [/^ampola|^flaconete/i, 'ampola'],
   [/frasco-ampola.*p[óo]/i, 'frasco-ampola-po'],
@@ -73,6 +30,8 @@ const VIAS: [RegExp, Via][] = [
   [/^(inal|inalat[óo]ria|nebuliza[çc][ãa]o)$/i, 'inalatoria'],
   [/^(et|endotraqueal|traqueal)$/i, 'endotraqueal'],
   [/^(retal|vr)$/i, 'retal'],
+  [/^(in|intranasal|nasal)$/i, 'intranasal'],
+  [/^(ocular|oft[áa]lmic[ao])$/i, 'ocular'],
 ];
 
 const UNIDADES: Record<string, UnidadeDroga> = { g: 'g', mg: 'mg', mcg: 'mcg', 'µg': 'mcg', ug: 'mcg', ui: 'UI', u: 'UI', meq: 'mEq', ml: 'mL' };
@@ -157,11 +116,18 @@ function normalizar(t: string): string {
   return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+/** Nº da planilha → medicação do banco (pelo `codigo`); sem número conhecido, tenta pelo nome. */
 function idDaMedicacao(numero: string, nome: string, rotulo: string, banco: readonly Medicacao[]): string | undefined {
-  const pelo = POR_NUMERO[numero.trim()];
-  if (pelo === 'nacl20' && /\b3\s*%/.test(rotulo)) return 'nacl3';
+  const codigo = numero.trim().toUpperCase();
+  const pelo = banco.find((m) => m.codigo?.toUpperCase() === codigo)?.id;
+  // planilha antiga: o nº 8 servia para o NaCl 20% e para o 3% preparado
+  if (pelo === 'nacl20' && /\b3\s*%/.test(rotulo) && banco.some((m) => m.id === 'nacl3')) return 'nacl3';
   if (pelo) return pelo;
   const n = normalizar(nome);
+  if (!n) return undefined;
+  // nome igual primeiro ("Amoxicilina + clavulanato" não pode virar "Amoxicilina")
+  const igual = banco.find((m) => normalizar(m.nome) === n);
+  if (igual) return igual.id;
   return banco.find((m) => normalizar(m.nome).startsWith(n) || n.startsWith(normalizar(m.nome)))?.id;
 }
 
@@ -236,7 +202,8 @@ export function importarApresentacoes(abas: readonly Aba[], banco: readonly Medi
     else if (formaBanco === 'outro') registro.avisos.push(`Forma "${forma}" virou "outro".`);
 
     const vias = pegar('vias')
-      .split(/[\/,;e]+|\s+/)
+      // "EV/IM", "EV, IM", "EV e IM" ("e" sozinho não é via e cai fora no filtro)
+      .split(/[\/,;+\s]+/)
       .map((v) => v.trim())
       .filter(Boolean)
       .map((v) => VIAS.find(([re]) => re.test(v))?.[1])

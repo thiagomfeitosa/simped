@@ -38,7 +38,7 @@ export interface Fonte {
 
 export type FaixaEtaria = 'RN' | 'crianca' | 'adolescente';
 
-export type Via = 'EV' | 'IM' | 'SC' | 'VO' | 'IO' | 'inalatoria' | 'endotraqueal' | 'retal';
+export type Via = 'EV' | 'IM' | 'SC' | 'VO' | 'IO' | 'inalatoria' | 'endotraqueal' | 'retal' | 'intranasal' | 'ocular';
 
 /** Unidade de quantidade de droga. */
 export type UnidadeDroga = 'g' | 'mg' | 'mcg' | 'UI' | 'mEq' | 'mL';
@@ -143,8 +143,17 @@ export interface ConcentracaoMaxima {
 
 export interface Medicacao {
   id: string;
+  /**
+   * Código da lista de origem: nº do MVP (docs/fase-0/medicacoes-mvp.md, ex.: '9', '32b')
+   * ou da ampliação (docs/fase-0/medicacoes-ampliacao.md, ex.: 'A1'). É o "Nº" da planilha de apresentações.
+   */
+  codigo?: string;
   nome: string;
   secao: SecaoPrescricao;
+  /** Classe farmacológica em texto (ex.: "Benzodiazepínico"). As etiquetas de alergia/interação ficam em `classes`. */
+  classe?: string;
+  /** Usos principais na emergência (texto, da lista de origem). */
+  usos?: string;
   /**
    * Classes/etiquetas para alergia e interações (ex.: ['betalactamicos', 'penicilinas']).
    * O id da medicação já conta como etiqueta.

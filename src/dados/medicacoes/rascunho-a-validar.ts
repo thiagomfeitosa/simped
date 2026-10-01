@@ -63,6 +63,7 @@ const texto = (descricao: string): ExpressaoDeDose => ({ tipo: 'texto', descrica
 /** Item 1. Dose em mL/kg; "1 mL/mL" faz o volume a aspirar ser a própria dose. */
 export const soroFisiologico: Medicacao = {
   id: 'sf09',
+  codigo: '1',
   nome: 'Soro fisiológico 0,9%',
   secao: 4,
   classes: ['cristaloides'],
@@ -87,6 +88,7 @@ export const soroFisiologico: Medicacao = {
 /** Item 2. */
 export const soroGlicosado5: Medicacao = {
   id: 'sg5',
+  codigo: '2',
   nome: 'Soro glicosado 5%',
   secao: 4,
   apresentacoes: [
@@ -102,6 +104,7 @@ export const soroGlicosado5: Medicacao = {
 /** Item 3. Dose em mL/kg (2 mL/kg = 200 mg/kg). */
 export const soroGlicosado10: Medicacao = {
   id: 'sg10',
+  codigo: '3',
   nome: 'Soro glicosado 10%',
   secao: 4,
   apresentacoes: [
@@ -119,6 +122,7 @@ export const soroGlicosado10: Medicacao = {
 /** Item 4. */
 export const glicose25: Medicacao = {
   id: 'g25',
+  codigo: '4',
   nome: 'Glicose 25%',
   secao: 4,
   apresentacoes: [ap('amp-10ml', 'Ampola 10 mL (250 mg/mL)', 'ampola', ['EV'], { volumeMl: 10, concentracaoPorMl: { valor: 1, unidade: 'mL' } })],
@@ -128,6 +132,7 @@ export const glicose25: Medicacao = {
 /** Item 5. */
 export const glicose50: Medicacao = {
   id: 'g50',
+  codigo: '5',
   nome: 'Glicose 50%',
   secao: 4,
   apresentacoes: [ap('amp-10ml', 'Ampola 10 mL (500 mg/mL)', 'ampola', ['EV'], { volumeMl: 10, concentracaoPorMl: { valor: 1, unidade: 'mL' } })],
@@ -143,6 +148,7 @@ export const glicose50: Medicacao = {
 /** Item 6. */
 export const gluconatoCalcio: Medicacao = {
   id: 'gluconato-calcio',
+  codigo: '6',
   nome: 'Gluconato de cálcio 10%',
   secao: 4,
   classes: ['calcio'],
@@ -166,6 +172,7 @@ export const gluconatoCalcio: Medicacao = {
 /** Item 7. */
 export const cloretoPotassio: Medicacao = {
   id: 'kcl',
+  codigo: '7',
   nome: 'Cloreto de potássio (KCl)',
   secao: 4,
   apresentacoes: [
@@ -201,6 +208,7 @@ export const cloretoPotassio: Medicacao = {
 /** Item 8. */
 export const cloretoSodio20: Medicacao = {
   id: 'nacl20',
+  codigo: '8',
   nome: 'Cloreto de sódio 20%',
   secao: 4,
   apresentacoes: [
@@ -217,6 +225,7 @@ export const cloretoSodio20: Medicacao = {
 /** Item 8 (NaCl 3%, preparado a partir do 20%). Dose em mL/kg. */
 export const cloretoSodio3: Medicacao = {
   id: 'nacl3',
+  codigo: '8b',
   nome: 'Cloreto de sódio 3% (preparado)',
   secao: 4,
   apresentacoes: [
@@ -239,6 +248,7 @@ export const cloretoSodio3: Medicacao = {
 /** Item 10. */
 export const ampicilina: Medicacao = {
   id: 'ampicilina',
+  codigo: '10',
   nome: 'Ampicilina',
   secao: 5,
   classes: ['penicilinas', 'betalactamicos'],
@@ -268,6 +278,7 @@ export const ampicilina: Medicacao = {
 /** Item 11. Regras do RN por idade pós-menstrual (IG corrigida) e dias de vida, como no rascunho. */
 export const gentamicina: Medicacao = {
   id: 'gentamicina',
+  codigo: '11',
   nome: 'Gentamicina',
   secao: 5,
   classes: ['aminoglicosideos'],
@@ -307,6 +318,7 @@ export const gentamicina: Medicacao = {
 /** Item 12. */
 export const vancomicina: Medicacao = {
   id: 'vancomicina',
+  codigo: '12',
   nome: 'Vancomicina',
   secao: 5,
   classes: ['glicopeptideos'],
@@ -327,6 +339,7 @@ export const vancomicina: Medicacao = {
 /** Item 14. */
 export const penicilinaProcaina: Medicacao = {
   id: 'penicilina-procaina',
+  codigo: '14',
   nome: 'Penicilina G procaína',
   secao: 5,
   classes: ['penicilinas', 'betalactamicos'],
@@ -348,6 +361,7 @@ export const penicilinaProcaina: Medicacao = {
 /** Item 15. */
 export const penicilinaBenzatina: Medicacao = {
   id: 'penicilina-benzatina',
+  codigo: '15',
   nome: 'Penicilina G benzatina',
   secao: 5,
   classes: ['penicilinas', 'betalactamicos'],
@@ -376,6 +390,7 @@ export const penicilinaBenzatina: Medicacao = {
 /** Item 16. */
 export const sulfadiazina: Medicacao = {
   id: 'sulfadiazina',
+  codigo: '16',
   nome: 'Sulfadiazina',
   secao: 5,
   classes: ['sulfonamidas'],
@@ -393,6 +408,7 @@ export const sulfadiazina: Medicacao = {
 /** Item 17. */
 export const pirimetamina: Medicacao = {
   id: 'pirimetamina',
+  codigo: '17',
   nome: 'Pirimetamina',
   secao: 5,
   classes: ['antiparasitarios'],
@@ -416,6 +432,7 @@ export const pirimetamina: Medicacao = {
 /** Item 18. */
 export const acidoFolinico: Medicacao = {
   id: 'acido-folinico',
+  codigo: '18',
   nome: 'Ácido folínico (folinato de cálcio)',
   secao: 5,
   apresentacoes: [
@@ -436,6 +453,7 @@ export const acidoFolinico: Medicacao = {
 /** Item 19. */
 export const zidovudina: Medicacao = {
   id: 'zidovudina',
+  codigo: '19',
   nome: 'Zidovudina (AZT)',
   secao: 5,
   classes: ['antirretrovirais'],
@@ -473,6 +491,7 @@ export const zidovudina: Medicacao = {
 /** Item 20. */
 export const lamivudina: Medicacao = {
   id: 'lamivudina',
+  codigo: '20',
   nome: 'Lamivudina (3TC)',
   secao: 5,
   classes: ['antirretrovirais'],
@@ -496,6 +515,7 @@ export const lamivudina: Medicacao = {
 /** Item 21. */
 export const raltegravir: Medicacao = {
   id: 'raltegravir',
+  codigo: '21',
   nome: 'Raltegravir',
   secao: 5,
   classes: ['antirretrovirais'],
@@ -528,6 +548,7 @@ export const raltegravir: Medicacao = {
 /** Item 22. */
 export const dolutegravir: Medicacao = {
   id: 'dolutegravir',
+  codigo: '22',
   nome: 'Dolutegravir',
   secao: 5,
   classes: ['antirretrovirais'],
@@ -550,6 +571,7 @@ export const dolutegravir: Medicacao = {
 /** Item 24. */
 export const salbutamol: Medicacao = {
   id: 'salbutamol',
+  codigo: '24',
   nome: 'Salbutamol',
   secao: 6,
   classes: ['beta2-agonistas'],
@@ -575,6 +597,7 @@ export const salbutamol: Medicacao = {
 /** Item 25. 1 gota = 0,25 mg (20 gotas/mL). */
 export const fenoterol: Medicacao = {
   id: 'fenoterol',
+  codigo: '25',
   nome: 'Fenoterol',
   secao: 6,
   classes: ['beta2-agonistas'],
@@ -593,6 +616,7 @@ export const fenoterol: Medicacao = {
 /** Item 26. 20 gotas = 1 mL. */
 export const ipratropio: Medicacao = {
   id: 'ipratropio',
+  codigo: '26',
   nome: 'Brometo de ipratrópio',
   secao: 6,
   classes: ['anticolinergicos'],
@@ -619,6 +643,7 @@ export const ipratropio: Medicacao = {
 /** Item 27. */
 export const salmeterol: Medicacao = {
   id: 'salmeterol',
+  codigo: '27',
   nome: 'Salmeterol + fluticasona',
   secao: 6,
   classes: ['beta2-longa-acao', 'corticoides-inalatorios'],
@@ -639,6 +664,7 @@ export const salmeterol: Medicacao = {
 /** Item 28. */
 export const hidrocortisona: Medicacao = {
   id: 'hidrocortisona',
+  codigo: '28',
   nome: 'Hidrocortisona',
   secao: 6,
   classes: ['corticoides'],
@@ -662,6 +688,7 @@ export const hidrocortisona: Medicacao = {
 /** Item 29. */
 export const metilprednisolona: Medicacao = {
   id: 'metilprednisolona',
+  codigo: '32b',
   nome: 'Metilprednisolona',
   secao: 6,
   classes: ['corticoides'],
@@ -687,6 +714,7 @@ export const metilprednisolona: Medicacao = {
 /** Item 30. */
 export const cortisona: Medicacao = {
   id: 'cortisona',
+  codigo: '32',
   nome: 'Cortisona (acetato)',
   secao: 6,
   classes: ['corticoides'],
@@ -699,6 +727,7 @@ export const cortisona: Medicacao = {
 /** Item 31. */
 export const prednisona: Medicacao = {
   id: 'prednisona',
+  codigo: '29',
   nome: 'Prednisona',
   secao: 6,
   classes: ['corticoides'],
@@ -724,6 +753,7 @@ export const prednisona: Medicacao = {
 /** Item 33. */
 export const dexametasona: Medicacao = {
   id: 'dexametasona',
+  codigo: '31',
   nome: 'Dexametasona',
   secao: 6,
   classes: ['corticoides'],
@@ -749,6 +779,7 @@ export const dexametasona: Medicacao = {
 /** Item 35. */
 export const amiodarona: Medicacao = {
   id: 'amiodarona',
+  codigo: '34',
   nome: 'Amiodarona',
   secao: 6,
   classes: ['antiarritmicos'],
@@ -771,6 +802,7 @@ export const amiodarona: Medicacao = {
 /** Item 36. */
 export const adenosina: Medicacao = {
   id: 'adenosina',
+  codigo: '35',
   nome: 'Adenosina',
   secao: 6,
   classes: ['antiarritmicos'],
@@ -787,6 +819,7 @@ export const adenosina: Medicacao = {
 /** Item 37. */
 export const flumazenil: Medicacao = {
   id: 'flumazenil',
+  codigo: '36',
   nome: 'Flumazenil',
   secao: 6,
   classes: ['antidotos'],
@@ -805,6 +838,7 @@ export const flumazenil: Medicacao = {
 /** Item 38. */
 export const glucagon: Medicacao = {
   id: 'glucagon',
+  codigo: '37',
   nome: 'Glucagon',
   secao: 6,
   classes: ['hormonios'],
@@ -818,6 +852,7 @@ export const glucagon: Medicacao = {
 /** Item 39. */
 export const insulinaRegular: Medicacao = {
   id: 'insulina-regular',
+  codigo: '38',
   nome: 'Insulina regular',
   secao: 6,
   classes: ['insulinas'],

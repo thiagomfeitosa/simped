@@ -7,6 +7,7 @@
 import type { Tolerancia } from '../calculos';
 import type { CasoClinico, CondutaEsperada } from '../casos/tipos';
 import type { CodigoFonte, Medicacao } from '../dados/medicacoes/tipos';
+import { descreverBancoEmUso } from '../dados/medicacoes/versao';
 import type { PedidoExame } from '../exames/exames';
 import type { EventoPaciente } from '../motor/paciente';
 import type { PacienteAtual } from '../paciente/atual';
@@ -53,6 +54,8 @@ export interface Relatorio {
   acertosPorTipo: Partial<Record<Verificacao['assunto'], number>>;
   itensDeMedicacao: number;
   alertasDeSeguranca: number;
+  /** Com qual banco de medicações o aluno treinou (B7): "versão 2 de 01/10/2026" ou "+ mudanças deste computador". */
+  banco: { texto: string; versao: number; codigo: string; local: boolean };
 }
 
 export const NOME_TIPO_ERRO: Partial<Record<Verificacao['assunto'], string>> = {
@@ -186,6 +189,7 @@ export function gerarRelatorio(entrada: {
     acertosPorTipo,
     itensDeMedicacao,
     alertasDeSeguranca: alertasDaFolha(prescricao, medicacoes, paciente).length,
+    banco: (({ texto, versao, codigo, local }) => ({ texto, versao: versao.versao, codigo, local }))(descreverBancoEmUso(medicacoes)),
   };
 }
 
@@ -198,6 +202,8 @@ export interface ResumoHistorico {
   quando: string;
   aproveitamento: number;
   erros: number;
+  /** Versão do banco de medicações usada (B7); vazio nos registros antigos. */
+  banco?: string;
 }
 
 export function resumoParaHistorico(r: Relatorio, quando: Date): ResumoHistorico {
@@ -207,6 +213,7 @@ export function resumoParaHistorico(r: Relatorio, quando: Date): ResumoHistorico
     quando: quando.toISOString(),
     aproveitamento: r.aproveitamento,
     erros: Object.values(r.errosPorTipo).reduce((s, n) => s + (n ?? 0), 0),
+    banco: r.banco.texto,
   };
 }
 

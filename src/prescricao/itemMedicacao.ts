@@ -102,6 +102,8 @@ export const NOME_VIA: Record<Via, string> = {
   inalatoria: 'inalatória',
   endotraqueal: 'endotraqueal',
   retal: 'retal',
+  intranasal: 'intranasal',
+  ocular: 'ocular',
 };
 export const VIAS = Object.keys(NOME_VIA) as Via[];
 

@@ -39,6 +39,8 @@ Outros comandos:
 - `npm run teste-tela` — abre o app num navegador automático e clica como o aluno (na 1ª vez: `npx playwright install chromium`).
 - `npm run conferir-tudo` — tipos + testes + arquivo único + testes de tela.
 - `npm run build` — gera a versão final em `dist/`.
+- `npm run nova-versao-banco -- "o que mudou"` — registra uma versão nova do banco de medicações (obrigatório depois de mudar qualquer dado do banco; o teste avisa).
+- `npm run gerar-planilha` — atualiza `docs/fase-0/apresentacoes-formulario.xlsx` com a lista atual de medicações.
 
 No GitHub, cada envio roda a **Conferência** sozinho (aba Actions): ✔ verde = nada quebrou.
 

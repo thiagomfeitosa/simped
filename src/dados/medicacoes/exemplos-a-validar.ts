@@ -9,6 +9,7 @@ import type { Medicacao } from './tipos';
 
 export const adrenalina: Medicacao = {
   id: 'adrenalina',
+  codigo: '33',
   nome: 'Adrenalina',
   secao: 6,
   classes: ['catecolaminas'],
@@ -112,6 +113,7 @@ export const adrenalina: Medicacao = {
 
 export const dipirona: Medicacao = {
   id: 'dipirona',
+  codigo: '23',
   nome: 'Dipirona',
   secao: 6,
   classes: ['pirazolonas', 'analgesicos'],
@@ -182,6 +184,7 @@ export const dipirona: Medicacao = {
 
 export const ceftriaxona: Medicacao = {
   id: 'ceftriaxona',
+  codigo: '9',
   nome: 'Ceftriaxona',
   secao: 5,
   classes: ['cefalosporinas', 'betalactamicos'],
@@ -254,6 +257,7 @@ export const ceftriaxona: Medicacao = {
 /** Exemplo de regra que muda com a idade em dias (12/12h até 7 dias de vida, 8/8h depois). */
 export const penicilinaCristalina: Medicacao = {
   id: 'penicilina-cristalina',
+  codigo: '13',
   nome: 'Penicilina G cristalina',
   secao: 5,
   classes: ['penicilinas', 'betalactamicos'],
@@ -318,6 +322,7 @@ export const penicilinaCristalina: Medicacao = {
 /** Oral, para a receita de alta. Dose do doses-rascunho.md (item 32), A VALIDAR. */
 export const prednisolona: Medicacao = {
   id: 'prednisolona',
+  codigo: '30',
   nome: 'Prednisolona',
   secao: 6,
   classes: ['corticoides'],
@@ -361,8 +366,11 @@ export const prednisolona: Medicacao = {
 /** Oral, para a receita de alta. Só apresentações (sem dose no rascunho): A VALIDAR. */
 export const amoxicilina: Medicacao = {
   id: 'amoxicilina',
+  codigo: 'A26',
   nome: 'Amoxicilina',
   secao: 5,
+  classe: 'Penicilina',
+  usos: 'Otite, sinusite, pneumonia (ambulatorial/alta)',
   classes: ['penicilinas', 'betalactamicos'],
   receituario: 'antimicrobiano',
   apresentacoes: [

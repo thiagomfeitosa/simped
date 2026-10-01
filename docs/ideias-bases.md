@@ -2,8 +2,9 @@
 
 > Sugeridas pelo assistente em out/2026, depois de concluídas as ideias I1–I21 (`docs/ideias.md`).
 > **Feitas em out/2026 (pedido do usuário: "faça todas as opções que você me deu")**: B1, B2, B3, B5, B6, B9, B10, B11, B12, B13, B14 e B15 (✅ na tabela).
+> **Feitas em out/2026 (pedido "faz B4, B7 e B8")**: B4, B7 e B8.
 > Como testar cada uma: `docs/fase-1/guia-das-funcionalidades.md` ("Novidades das bases"). Dados provisórios: `docs/a-validar-dados-novos.md`.
-> Ainda livres para escolher: B4, B7, B8, B16, B17, B18, B19, B20.
+> Ainda livres para escolher: B16, B17, B18, B19, B20.
 > Regra de sempre: dado clínico novo entra como valor fictício **"A VALIDAR"**, em arquivo de dados separado.
 
 Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com valor fictício e o usuário corrige quando puder.
@@ -15,7 +16,7 @@ Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com 
 | ✅ B1 | Testes de tela automáticos + conferência no GitHub a cada envio | Os testes que hoje faço "na mão" no navegador (abrir cada aba, jogar um caso, gerar relatório) viram parte do projeto (`npm run teste-tela`). O GitHub roda testes, tipos e build a cada envio e avisa se algo quebrou. | nenhum |
 | ✅ B2 | Unificar as duplicações | Uma só lista de seções da folha e um só motor de fórmulas (passo a passo e Prescrever usam o mesmo). Menos lugares para corrigir quando uma conta mudar. | nenhum |
 | ✅ B3 | Tela "algo deu errado" + "Relatar problema" | Em vez de tela branca, mensagem amigável e um botão que copia o que aconteceu (aba, caso, erro) para colar na conversa. Acelera o conserto. | nenhum |
-| B4 | Backup e restauração | Um botão salva tudo o que fica no computador (configurações, casos criados, histórico, apresentações importadas) num arquivo; outro restaura em outro computador. | nenhum |
+| ✅ B4 | Backup e restauração | Um botão salva tudo o que fica no computador (configurações, casos criados, histórico, apresentações importadas) num arquivo; outro restaura em outro computador. | nenhum |
 
 ## B. Acelerar a validação (a sua parte)
 
@@ -23,8 +24,8 @@ Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com 
 |---|---|---|---|
 | ✅ B5 | Modo validação dentro do app | Na aba Banco, cada dose/apresentação tem "Conferir": você digita a fonte, a edição e a página (e corrige o valor, se for o caso). O app marca CONFERIDO e gera o arquivo para entrar no projeto. Sem planilha intermediária para as doses. | o usuário confere |
 | ✅ B6 | Catálogo de fontes como dado | `referencias/catalogo.md` vira lista no app (código, título, edição, ano, link). Cada dose aponta para uma fonte do catálogo; a tela mostra de onde veio cada número. | o usuário cadastra as fontes |
-| B7 | Versão do banco e histórico de mudanças | Cada correção de dado fica registrada (o que era, o que ficou, quem conferiu, quando). O app mostra "banco versão X" e o relatório diz com qual versão o aluno treinou. | nenhum |
-| B8 | Ampliação: as 50 medicações A1–A50 no banco | Entram com nome, seção, classe e apresentações do rascunho, dose em texto "A VALIDAR". A planilha de apresentações passa a ser **gerada pelo app** a partir do banco (sempre em dia com a lista). | depois |
+| ✅ B7 | Versão do banco e histórico de mudanças | Cada correção de dado fica registrada (o que era, o que ficou, quem conferiu, quando). O app mostra "banco versão X" e o relatório diz com qual versão o aluno treinou. | nenhum |
+| ✅ B8 | Ampliação: as 50 medicações A1–A50 no banco | Entram com nome, seção, classe e apresentações do rascunho, dose em texto "A VALIDAR". A planilha de apresentações passa a ser **gerada pelo app** a partir do banco (sempre em dia com a lista). | depois |
 
 ## C. Motor do paciente (base das fases 2, 5 e 7)
 

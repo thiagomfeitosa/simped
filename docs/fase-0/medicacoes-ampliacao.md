@@ -1,6 +1,7 @@
 # Ampliação do banco de medicações — 50 novas (proposta)
 
 > **Status:** lista proposta pelo assistente e **aprovada integralmente pelo usuário** (todas as 50 entram no banco).
+> **No banco desde out/2026 (B8):** `src/dados/medicacoes/ampliacao-a-validar.ts` (a A26 já estava em `exemplos-a-validar.ts`), com nome, código, seção, classe, usos e apresentações de rascunho (A VALIDAR). Cada uso da tabela virou uma regra com a dose em texto "ainda não cadastrada". O que conferir: `docs/a-validar-dados-novos.md` → "Dados novos de B8".
 > **Sem doses de propósito.** As doses entram depois, uma a uma, **com fonte**, e marcadas "A VALIDAR" até a conferência (regra do `CLAUDE.md`: nunca inventar doses).
 > Códigos **A1–A50** para não confundir com a numeração da lista do MVP (`medicacoes-mvp.md`).
 > Total do banco: 39 (MVP) + 50 (A1–A50) = **89 medicações**. A ordem de preenchimento das doses acompanha os casos clínicos que precisarem de cada uma.
@@ -100,5 +101,5 @@ Dopamina, cefepima, piperacilina + tazobactam, ácido tranexâmico, propofol, et
 
 ## Pendências com o usuário
 1. ~~Aprovar a lista~~ — aprovada (todas as 50).
-2. Apresentações da Santa Casa para cada item.
-3. Doses com fonte (a preencher, marcadas "A VALIDAR").
+2. Apresentações da Santa Casa para cada item (planilha gerada pela aba Banco; o rascunho do assistente já está no app, A VALIDAR).
+3. Doses com fonte (a preencher, marcadas "A VALIDAR") — dá para preencher no app (aba Banco → Conferir na regra).

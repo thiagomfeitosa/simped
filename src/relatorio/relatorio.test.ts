@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { caso02 } from '../casos/clinicos/caso02-sepse-neonatal';
 import { BANCO_MEDICACOES } from '../dados/medicacoes';
+import { dataBrasileira, VERSAO_ATUAL } from '../dados/medicacoes/versao';
 import type { EventoPaciente } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
@@ -94,10 +95,18 @@ describe('relatório do caso 2 (sepse neonatal)', () => {
     expect(r.aproveitamento).toBeLessThan(100);
   });
 
+  it('diz com qual versão do banco o aluno treinou (B7)', () => {
+    const r = gerarRelatorio({ ...base, eventos: [], pedidos: [], agoraMin: 0 });
+    expect(r.banco).toEqual({ texto: `versão ${VERSAO_ATUAL.versao} de ${dataBrasileira(VERSAO_ATUAL.data)}`, versao: VERSAO_ATUAL.versao, codigo: VERSAO_ATUAL.codigo, local: false });
+    const comLocal = gerarRelatorio({ ...base, medicacoes: BANCO_MEDICACOES.map((m) => (m.id === 'ampicilina' ? { ...m, alertas: ['local'] } : m)), eventos: [], pedidos: [], agoraMin: 0 });
+    expect(comLocal.banco.local).toBe(true);
+    expect(comLocal.banco.texto).toContain('mudanças deste computador');
+  });
+
   it('histórico: resumo e leitura segura', () => {
     const r = gerarRelatorio({ ...base, eventos: [], pedidos: [], agoraMin: 0 });
     const resumo = resumoParaHistorico(r, new Date('2026-10-01T12:00:00Z'));
-    expect(resumo).toMatchObject({ casoId: 'caso02-sepse-neonatal', erros: 1 });
+    expect(resumo).toMatchObject({ casoId: 'caso02-sepse-neonatal', erros: 1, banco: `versão ${VERSAO_ATUAL.versao} de ${dataBrasileira(VERSAO_ATUAL.data)}` });
     expect(lerHistorico(JSON.stringify([resumo, { lixo: 1 }]))).toEqual([resumo]);
     expect(lerHistorico('não é json')).toEqual([]);
   });

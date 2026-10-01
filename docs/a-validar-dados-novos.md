@@ -7,7 +7,7 @@
 | Assunto | Arquivo | O que conferir |
 |---|---|---|
 | Doses e apresentações do MVP (39 medicações) | `src/dados/medicacoes/rascunho-a-validar.ts` e `exemplos-a-validar.ts` | Copiadas do `docs/fase-0/doses-rascunho.md` (item do rascunho anotado em cada uma). Na aba **Banco** há o botão "Baixar lista do que falta validar (.csv)". |
-| Apresentações da Santa Casa | planilha `docs/fase-0/apresentacoes-formulario.xlsx` | Preencher e importar na aba **Banco** (linha com "Onde conferi" entra como CONFERIDA). |
+| Apresentações da Santa Casa | planilha gerada pelo app (aba **Banco → ⬇ Baixar planilha para preencher**; cópia em `docs/fase-0/apresentacoes-formulario.xlsx`) | Preencher e importar na aba **Banco** (linha com "Onde conferi" entra como CONFERIDA). Agora com as 90 medicações. |
 | Faixas etárias e classificação do RN | `src/dados/faixas-etarias.ts` | Pontos de corte por sociedade; faixa usada nas doses (criança até 11 anos, adolescente ≥ 12, como no rascunho); idade corrigida mostrada até 3 anos. |
 | Horários das doses (aprazamento) | `src/dados/hospitais.ts` | Horários de cada intervalo na Santa Casa (ex.: 8/8h = 06–14–22) e hora da 1ª dose. Folga de 30 min para "atrasada" em `src/prescricao/aprazamento.ts`. |
 | Soluções do soro | `src/dados/solucoes.ts` | Glicose e eletrólitos por mL (SG, SF, Ringer, glicose 25/50%, NaCl 20/10%, KCl 19,1/10%, gluconato de cálcio); referências de Na, K, VIG, osmolaridade e potássio máximo. |
@@ -32,3 +32,20 @@
 | Efeitos de sobredose (B9) | `src/dados/efeitos-sobredose.ts` | Efeito adverso de cada medicação acima da faixa (beta-2: taquicardia; adenosina: assistolia transitória; KCl: TV; insulina: hipoglicemia; corticoide: hiperglicemia; soro: congestão...). |
 | Complicações do professor (B14) | `src/dados/complicacoes.ts` | Convulsão, dessaturação, apneia, choque, febre, hipoglicemia, bradicardia, TSV, PCR em FV/assistolia, anafilaxia: quanto cada sinal muda e as mensagens sugeridas. |
 | Traçados do monitor (B11) | `src/monitor/monitor.ts` | Desenhos didáticos de cada ritmo (não são sinais reais). |
+
+## Dados novos de B8 — ampliação A1–A50 (out/2026)
+
+Arquivo único: `src/dados/medicacoes/ampliacao-a-validar.ts` (49 medicações; a A26, amoxicilina, já estava em `exemplos-a-validar.ts`). Tudo A VALIDAR.
+
+| Assunto | O que conferir |
+|---|---|
+| **Apresentações** (192 no banco, 111 delas novas) | Escritas de memória pelo assistente (as mais comuns no Brasil), **sem consulta à bula**. Conferir com a bula e com a Santa Casa: aba **Banco → ⬇ Baixar planilha para preencher**. Atenção especial: noradrenalina (concentração do sal × da base), sulfametoxazol + trimetoprima (concentração escrita em trimetoprima), citrato de cafeína (citrato × cafeína base), paracetamol EV, cefotaxima e alprostadil (disponibilidade no Brasil), imunoglobulina humana (frasco varia com o fabricante), IGHAHB e vacina hepatite B (sem conteúdo informado). |
+| **Doses** | **Nenhuma foi escrita.** Cada indicação da lista aprovada virou uma regra com a dose em texto "Dose ainda não cadastrada (A VALIDAR)" — 87 regras. Para preencher: aba **Banco → Conferir** na regra (escolha "por kg", "fixa"..., documento e página) e mande o .json na conversa; ou mande os valores na conversa. Se uma dose depender da idade (RN × criança), avise: a regra precisa ser dividida no arquivo. |
+| Seção da folha | Provisória: **bicarbonato, sulfato de magnésio e SRO na seção 4** (eletrólitos/hidratação); **antivirais, antifúngicos, rifampicina, isoniazida e profilaxia ocular na seção 5** (anti-infecciosos); furosemida, manitol, vitamina K, imunobiológicos e o resto na seção 6. A seção errada é marcada como erro na conferência do item: confirme (ex.: magnésio na asma). |
+| Faixa etária das regras | Só RN: alprostadil, vitamina K, profilaxia ocular, IGHAHB + vacina, cafeína, surfactante e as indicações neonatais (convulsão neonatal, herpes neonatal, fungemia neonatal, enterocolite, sepse neonatal da cefotaxima, RN de mãe bacilífera, profilaxia no prematuro). RN e criança: nirsevimabe/palivizumabe. Criança e adolescente: SRO. **Cabergolina: "adolescente" (é para a mãe, não para o RN)**. O resto: todas as faixas. |
+| Fonte provável | Código da sociedade em cada regra (SBP na maioria; PALS em antídotos e intubação; SSC em vasoativos; GINA no magnésio; MS em SRO, profilaxias, SMX-TMP, oseltamivir, cabergolina). Nada conferido. |
+| Receituário na alta | Controle especial: midazolam, diazepam, fenobarbital, fenitoína, levetiracetam, cetamina, fentanil, morfina. Antimicrobiano (2 vias): antibióticos (amoxicilina + clavulanato a SMX-TMP, rifampicina). Conferir com a legislação vigente. |
+| Etiquetas de alergia/interação | Penicilinas (amoxicilina + clavulanato, oxacilina), cefalosporinas (cefotaxima), carbapenêmicos (meropeném), benzodiazepínicos, opioides, catecolaminas etc. (campo `classes`). |
+| Alertas novos | Anfotericina B: "desoxicolato e lipossomal têm doses diferentes". Surfactante: "poractanto e beractanto têm concentrações diferentes". Prometazina: restrição por idade a conferir. |
+| Vias novas | `intranasal` (midazolam) e `ocular` (profilaxia ocular). A importação da planilha entende "IN/intranasal/nasal" e "ocular/oftálmica". |
+| Códigos (Nº da planilha) | Cada medicação tem `codigo`: nº do MVP (1…38, 32b) ou da ampliação (A1…A50). O NaCl 3% preparado ganhou o **8b** (antes dividia o nº 8 com o NaCl 20%). |

@@ -51,6 +51,12 @@ describe('verificador pega erros de digitação', () => {
     expect(problemas[0]).toContain('id repetido');
   });
 
+  it('código da lista repetido (é o Nº da planilha)', () => {
+    const a = { ...droga([]), codigo: 'A1' };
+    const b = { ...droga([]), id: 'droga-y', codigo: 'a1' };
+    expect(verificarBanco([a, b])[0]).toContain('código "a1" repetido');
+  });
+
   it('regra conferida e estruturada pode corrigir o aluno; regra em texto não', () => {
     expect(podeCorrigirAluno(regraBase)).toBe(true);
     expect(podeCorrigirAluno({ ...regraBase, dose: { tipo: 'texto', descricao: 'tabela por IG' } })).toBe(false);

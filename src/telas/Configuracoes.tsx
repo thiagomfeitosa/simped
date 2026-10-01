@@ -4,6 +4,7 @@ import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { FAIXAS_POR_FONTE, FONTES_DE_FAIXA, type FonteDeFaixa } from '../dados/faixas-etarias';
 import { hospitalPorId, LISTA_HOSPITAIS } from '../dados/hospitais';
 import type { CodigoFonte } from '../dados/medicacoes/tipos';
+import { PainelBackup } from './PainelBackup';
 
 /** Tela de configurações: tudo fica guardado no próprio computador. */
 export function Configuracoes() {
@@ -135,6 +136,8 @@ export function Configuracoes() {
           </label>
           <p className="nota">Provisório: 1% (pendente com o usuário, formulas.md item 8).</p>
         </section>
+
+        <PainelBackup />
       </div>
 
       <p className="rodape-config">
