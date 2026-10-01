@@ -13,6 +13,7 @@ import { FolhaPrescricao } from './FolhaPrescricao';
 import { PainelPaciente } from './PainelPaciente';
 import { QuadroHorarios } from './QuadroHorarios';
 import { RascunhoCalculos } from './RascunhoCalculos';
+import { ReceitaAlta } from './ReceitaAlta';
 
 /** Modo "Prescrever": folha de prescrição, rascunho e paciente que reage às medicações administradas. */
 export function Prescrever() {
@@ -20,6 +21,8 @@ export function Prescrever() {
   const { config } = useConfiguracoes();
   const [prescricao, despachar] = useReducer(reduzirPrescricao, undefined, prescricaoVazia);
   const [pacienteVisivel, setPacienteVisivel] = useState(true);
+  // folha hospitalar ou receita de alta (as duas ficam abertas: trocar não apaga nada)
+  const [documento, setDocumento] = useState<'folha' | 'receita'>('folha');
   const [rascunho, setRascunho] = useState('');
   // o paciente é sempre recalculado a partir da lista de eventos (motor estado + eventos)
   const [eventos, setEventos] = useState<EventoPaciente[]>([]);
@@ -39,6 +42,14 @@ export function Prescrever() {
       <header className="cabecalho">
         <h1>Prescrever</h1>
         <span className="subtitulo">{caso.titulo}</span>
+        <div className="alternar-documento" role="group" aria-label="Documento">
+          <button type="button" aria-pressed={documento === 'folha'} onClick={() => setDocumento('folha')}>
+            Folha de prescrição
+          </button>
+          <button type="button" aria-pressed={documento === 'receita'} onClick={() => setDocumento('receita')}>
+            Receita de alta
+          </button>
+        </div>
         <button type="button" onClick={() => setPacienteVisivel((v) => !v)}>
           {pacienteVisivel ? 'Ocultar paciente' : 'Mostrar paciente'}
         </button>
@@ -53,15 +64,22 @@ export function Prescrever() {
             <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoEvento={registrarEvento} />
           </PainelPaciente>
         )}
-        <FolhaPrescricao
-          paciente={pacienteAtual}
-          estado={prescricao}
-          despachar={despachar}
-          medicacoes={MEDICACOES_EXEMPLO}
-          aoAdministrar={(medicacaoId, descricao) =>
-            registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao })
-          }
-        />
+        <div className="coluna-documento">
+          <div hidden={documento !== 'receita'}>
+            <ReceitaAlta paciente={pacienteAtual} medicacoes={MEDICACOES_EXEMPLO} />
+          </div>
+          <div hidden={documento !== 'folha'}>
+            <FolhaPrescricao
+              paciente={pacienteAtual}
+              estado={prescricao}
+              despachar={despachar}
+              medicacoes={MEDICACOES_EXEMPLO}
+              aoAdministrar={(medicacaoId, descricao) =>
+                registrarEvento({ tipo: 'medicacaoAdministrada', medicacaoId, descricao })
+              }
+            />
+          </div>
+        </div>
         <div className="coluna-direita">
           <QuadroHorarios
             itens={aprazaveis}

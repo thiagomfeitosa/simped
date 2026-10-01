@@ -88,10 +88,12 @@ export const dipirona: Medicacao = {
     },
     {
       id: 'gotas-500mg-ml',
-      descricao: 'Gotas 500 mg/mL',
+      descricao: 'Gotas 500 mg/mL, frasco 20 mL',
       forma: 'gotas',
       vias: ['VO'],
       concentracaoPorMl: { valor: 500, unidade: 'mg' },
+      volumeMl: 20,
+      gotasPorMl: 20,
       status: 'A_VALIDAR',
     },
   ],
@@ -126,6 +128,7 @@ export const ceftriaxona: Medicacao = {
   nome: 'Ceftriaxona',
   secao: 5,
   classes: ['cefalosporinas', 'betalactamicos'],
+  receituario: 'antimicrobiano',
   concentracaoMaximaEV: {
     valor: 40,
     unidade: 'mg',
@@ -186,6 +189,7 @@ export const penicilinaCristalina: Medicacao = {
   nome: 'Penicilina G cristalina',
   secao: 5,
   classes: ['penicilinas', 'betalactamicos'],
+  receituario: 'antimicrobiano',
   apresentacoes: [
     {
       id: 'fa-1milhao',
@@ -243,4 +247,83 @@ export const penicilinaCristalina: Medicacao = {
   ],
 };
 
-export const MEDICACOES_EXEMPLO: readonly Medicacao[] = [adrenalina, dipirona, ceftriaxona, penicilinaCristalina];
+/** Oral, para a receita de alta. Dose do doses-rascunho.md (item 32), A VALIDAR. */
+export const prednisolona: Medicacao = {
+  id: 'prednisolona',
+  nome: 'Prednisolona',
+  secao: 6,
+  classes: ['corticoides'],
+  receituario: 'simples',
+  apresentacoes: [
+    {
+      id: 'sol-oral-3mg-ml',
+      descricao: 'Solução oral 3 mg/mL, frasco 60 mL',
+      forma: 'solucao-oral',
+      vias: ['VO'],
+      concentracaoPorMl: { valor: 3, unidade: 'mg' },
+      volumeMl: 60,
+      status: 'A_VALIDAR',
+    },
+    {
+      id: 'sol-oral-1mg-ml',
+      descricao: 'Solução oral 1 mg/mL, frasco 100 mL',
+      forma: 'solucao-oral',
+      vias: ['VO'],
+      concentracaoPorMl: { valor: 1, unidade: 'mg' },
+      volumeMl: 100,
+      status: 'A_VALIDAR',
+    },
+  ],
+  regras: [
+    {
+      id: 'asma-crianca',
+      indicacao: 'Asma (crise)',
+      faixas: ['crianca', 'adolescente'],
+      vias: ['VO'],
+      dose: { tipo: 'porKg', min: 1, max: 2, unidade: 'mg', por: 'dia' },
+      doseMaxima: { valor: 60, unidade: 'mg', por: 'dia' },
+      intervalosHoras: [24],
+      observacoes: 'Por 3–5 dias. Rascunho diz "máx 40–60 mg/dia": usado 60 até conferir.',
+      fonte: { codigo: 'SBP' },
+      status: 'A_VALIDAR',
+    },
+  ],
+};
+
+/** Oral, para a receita de alta. Só apresentações (sem dose no rascunho): A VALIDAR. */
+export const amoxicilina: Medicacao = {
+  id: 'amoxicilina',
+  nome: 'Amoxicilina',
+  secao: 5,
+  classes: ['penicilinas', 'betalactamicos'],
+  receituario: 'antimicrobiano',
+  apresentacoes: [
+    {
+      id: 'susp-250mg-5ml',
+      descricao: 'Suspensão oral 250 mg/5 mL, frasco 150 mL',
+      forma: 'solucao-oral',
+      vias: ['VO'],
+      concentracaoPorMl: { valor: 50, unidade: 'mg' },
+      volumeMl: 150,
+      status: 'A_VALIDAR',
+    },
+    {
+      id: 'comp-500mg',
+      descricao: 'Cápsula 500 mg',
+      forma: 'comprimido',
+      vias: ['VO'],
+      quantidade: { valor: 500, unidade: 'mg' },
+      status: 'A_VALIDAR',
+    },
+  ],
+  regras: [],
+};
+
+export const MEDICACOES_EXEMPLO: readonly Medicacao[] = [
+  adrenalina,
+  dipirona,
+  ceftriaxona,
+  penicilinaCristalina,
+  prednisolona,
+  amoxicilina,
+];

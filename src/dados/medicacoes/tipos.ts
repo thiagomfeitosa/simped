@@ -62,6 +62,8 @@ export interface Apresentacao {
   volumeMl?: number;
   /** Concentração por mL (ex.: { valor: 1, unidade: 'mg' } = 1 mg/mL). */
   concentracaoPorMl?: { valor: number; unidade: UnidadeDroga };
+  /** Gotas: quantas gotas tem 1 mL deste frasco (depende do conta-gotas; A VALIDAR com a bula). */
+  gotasPorMl?: number;
   status: StatusValidacao;
   fonte?: Fonte;
 }
@@ -140,6 +142,11 @@ export interface Medicacao {
   classes?: string[];
   /** Concentração máxima EV (A VALIDAR até conferir); gera alerta na conferência do item. */
   concentracaoMaximaEV?: ConcentracaoMaxima;
+  /**
+   * Tipo de receituário na alta: 'simples'; 'antimicrobiano' (2 vias, retenção na farmácia);
+   * 'controle-especial' (receita de controle especial). A VALIDAR com a legislação vigente.
+   */
+  receituario?: 'simples' | 'antimicrobiano' | 'controle-especial';
   apresentacoes: Apresentacao[];
   regras: RegraDeDose[];
   /** Alertas sempre mostrados (ex.: "NUNCA em bolus"). */

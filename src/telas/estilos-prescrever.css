@@ -659,3 +659,50 @@
   font-weight: 700;
   color: var(--a-validar);
 }
+
+/* Alternar folha × receita */
+.alternar-documento {
+  display: inline-flex;
+}
+
+.alternar-documento button {
+  border-radius: 0;
+}
+
+.alternar-documento button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.alternar-documento button:last-child {
+  border-radius: 0 6px 6px 0;
+  margin-left: -1px;
+}
+
+.alternar-documento button[aria-pressed='true'] {
+  background: var(--destaque);
+  border-color: var(--destaque);
+  color: #fff;
+}
+
+.coluna-documento {
+  min-width: 0;
+}
+
+.coluna-documento > div,
+.coluna-documento .prancheta {
+  height: 100%;
+}
+
+/* Receita */
+.receita h3 {
+  margin-top: 16px;
+}
+
+.assinatura {
+  margin: 48px 0 8px auto;
+  width: 60%;
+  border-top: 1px solid var(--texto);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
