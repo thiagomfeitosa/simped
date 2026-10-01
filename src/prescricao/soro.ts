@@ -207,6 +207,21 @@ export function conferirSoro(campos: CamposSoro, pesoKg: number, tolerancia: Tol
     if (avisos.length > 0) {
       verificacoes.push({ assunto: 'dose', situacao: 'a-validar', texto: `Fora da referência (A VALIDAR, não corrige): ${avisos.join('; ')}.` });
     }
+    if (r.potassioMEqL > ref.potassioPerifericoMaxMEqL) {
+      verificacoes.push({
+        assunto: 'alerta',
+        situacao: 'atencao',
+        texto: `Potássio ${formatarNumero(r.potassioMEqL)} mEq/L no soro: acima de ${ref.potassioPerifericoMaxMEqL} mEq/L costuma exigir acesso central (A VALIDAR).`,
+      });
+    }
+    const potassioPorKgH = r.potassioMEq / r.horas / pesoKg;
+    if (potassioPorKgH > ref.potassioMaxMEqKgH) {
+      verificacoes.push({
+        assunto: 'alerta',
+        situacao: 'atencao',
+        texto: `Potássio correndo a ${formatarNumero(potassioPorKgH)} mEq/kg/h: acima de ${ref.potassioMaxMEqKgH} mEq/kg/h (A VALIDAR).`,
+      });
+    }
     if (r.osmolaridade > ref.osmolaridadePerifericaMax) {
       verificacoes.push({
         assunto: 'alerta',

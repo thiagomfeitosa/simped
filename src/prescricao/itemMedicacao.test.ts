@@ -494,3 +494,33 @@ describe('preparo dentro do item: diluição, BIC e infusão contínua', () => {
     expect(atualizarCampos(c, { intervalo: 6 }, MEDICACOES_EXEMPLO, 'crianca').infusao).toBeNull();
   });
 });
+
+describe('alerta de concentração máxima EV (A VALIDAR)', () => {
+  const base = {
+    medicacaoId: 'ceftriaxona',
+    apresentacaoId: 'fa-1g',
+    indicacao: 'Infecção bacteriana',
+    dose: '800',
+    unidadeDose: 'mg' as const,
+    reconstituicaoMl: '10',
+    volumeMl: '8',
+    via: 'EV' as const,
+    intervalo: 24,
+  };
+  it('pó reconstituído a 100 mg/mL direto na veia: avisa (máx. 40 mg/mL, A VALIDAR)', () => {
+    const r = conferir(base, { secao: 5 });
+    const alerta = r.verificacoes.find((v) => v.texto.includes('Concentração na veia'));
+    expect(alerta?.situacao).toBe('atencao');
+    expect(alerta?.texto).toMatch(/100 mg\/mL acima da máxima de 40 mg\/mL/);
+  });
+  it('diluído na seringa de 20 mL (40 mg/mL) não avisa', () => {
+    const r = conferirItemMedicacao({
+      campos: campos({ ...base, seringaBic: { soroMl: '12', concentracao: '40', tempoMin: '', vazaoMlH: '' } }),
+      medicacoes: MEDICACOES_EXEMPLO,
+      paciente: crianca16kg,
+      secaoNumero: 5,
+      volumeFinalBicMl: 20,
+    });
+    expect(r.verificacoes.some((v) => v.texto.includes('Concentração na veia'))).toBe(false);
+  });
+});

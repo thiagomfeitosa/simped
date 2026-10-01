@@ -16,6 +16,8 @@ export interface Solucao {
   sodioMEqPorMl?: number;
   potassioMEqPorMl?: number;
   calcioMEqPorMl?: number;
+  /** Etiquetas para interações (ex.: ['calcio']). */
+  classes?: string[];
   status: StatusValidacao;
   observacao?: string;
 }
@@ -31,6 +33,7 @@ export const SOLUCOES: readonly Solucao[] = [
     sodioMEqPorMl: 0.13,
     potassioMEqPorMl: 0.004,
     calcioMEqPorMl: 0.003,
+    classes: ['calcio'],
     status: 'A_VALIDAR',
   },
   { id: 'g25', nome: 'Glicose 25%', tipo: 'aditivo', glicosePct: 25, status: 'A_VALIDAR' },
@@ -58,6 +61,7 @@ export const SOLUCOES: readonly Solucao[] = [
     nome: 'Gluconato de cálcio 10%',
     tipo: 'aditivo',
     calcioMEqPorMl: 0.46,
+    classes: ['calcio'],
     status: 'A_VALIDAR',
   },
 ];
@@ -76,5 +80,9 @@ export const REFERENCIAS_SORO = {
   vigMgKgMin: { min: 4, max: 8 },
   /** Osmolaridade a partir da qual muitos serviços evitam veia periférica (mOsm/L). */
   osmolaridadePerifericaMax: 900,
+  /** Concentração de potássio acima da qual se pede acesso central (mEq/L). */
+  potassioPerifericoMaxMEqL: 40,
+  /** Velocidade de infusão de potássio (mEq/kg/h). */
+  potassioMaxMEqKgH: 0.5,
   status: 'A_VALIDAR' as StatusValidacao,
 };

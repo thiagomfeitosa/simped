@@ -11,6 +11,7 @@ export const adrenalina: Medicacao = {
   id: 'adrenalina',
   nome: 'Adrenalina',
   secao: 6,
+  classes: ['catecolaminas'],
   apresentacoes: [
     {
       id: 'ampola-1mg-ml',
@@ -73,6 +74,7 @@ export const dipirona: Medicacao = {
   id: 'dipirona',
   nome: 'Dipirona',
   secao: 6,
+  classes: ['pirazolonas', 'analgesicos'],
   apresentacoes: [
     {
       id: 'ampola-500mg-ml',
@@ -123,6 +125,14 @@ export const ceftriaxona: Medicacao = {
   id: 'ceftriaxona',
   nome: 'Ceftriaxona',
   secao: 5,
+  classes: ['cefalosporinas', 'betalactamicos'],
+  concentracaoMaximaEV: {
+    valor: 40,
+    unidade: 'mg',
+    fonte: { codigo: 'BULA' },
+    status: 'A_VALIDAR',
+    observacao: 'Valor de exemplo para o alerta funcionar; conferir na bula/rotina.',
+  },
   apresentacoes: [
     {
       id: 'fa-500mg',
@@ -175,6 +185,7 @@ export const penicilinaCristalina: Medicacao = {
   id: 'penicilina-cristalina',
   nome: 'Penicilina G cristalina',
   secao: 5,
+  classes: ['penicilinas', 'betalactamicos'],
   apresentacoes: [
     {
       id: 'fa-1milhao',

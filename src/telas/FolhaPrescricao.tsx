@@ -2,6 +2,7 @@ import type { Dispatch } from 'react';
 import type { PacienteAtual } from '../paciente/atual';
 import { formatarDataHora, lerDataHora } from '../paciente/variaveis';
 import type { Medicacao } from '../dados/medicacoes/tipos';
+import { alertasDaFolha } from '../prescricao/alertas';
 import { type AcaoPrescricao, type EstadoPrescricao, numerarItens, SECOES } from '../prescricao/estado';
 import { ItemMedicacaoFolha } from './ItemMedicacaoFolha';
 import { ItemSoroFolha } from './ItemSoroFolha';
@@ -16,6 +17,7 @@ interface Props {
 
 export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdministrar }: Props) {
   const numeros = numerarItens(estado);
+  const alertas = alertasDaFolha(estado, medicacoes, paciente);
 
   return (
     <section className="painel prancheta" aria-label="Folha de prescrição">
@@ -33,6 +35,23 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
             Alergias: {paciente.alergias && paciente.alergias.length > 0 ? paciente.alergias.join(', ') : 'nenhuma conhecida'}
           </p>
         </div>
+
+        {alertas.length > 0 && (
+          <div className="alertas-folha" role="alert" aria-label="Alertas de segurança">
+            <strong>⚠ Alertas de segurança</strong>
+            <ul>
+              {alertas.map((a, i) => (
+                <li key={i} className={`alerta-${a.gravidade}`}>
+                  <span className="alerta-itens">
+                    item {a.itemIds.map((id) => numeros.get(id)).filter(Boolean).join(', ')}
+                  </span>{' '}
+                  {a.texto}
+                  {a.status === 'A_VALIDAR' && <span className="alerta-validar"> A VALIDAR</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {SECOES.map((secao) => (
           <div className="secao" key={secao.id}>

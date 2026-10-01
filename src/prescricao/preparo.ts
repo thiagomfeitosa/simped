@@ -69,6 +69,8 @@ export interface ResultadoPreparo {
   faltando: string[];
   /** Falso quando algum número digitado é inválido (o item não pode ser administrado). */
   numerosValidos: boolean;
+  /** Concentração que entra na veia (calculada pelo programa), quando dá para saber. */
+  concentracaoFinal?: Concentracao | null;
 }
 
 function novoResultado(): ResultadoPreparo {
@@ -193,6 +195,7 @@ export function conferirSeringaDose(entrada: {
       tolerancia,
     );
   }
+  if (seringa.concentracaoFinal !== undefined) r.concentracaoFinal = { valor: seringa.concentracaoFinal, unidade };
   const concentracao = lerObrigatorio(r, campos.concentracao, 'concentração final da seringa', 'bic');
   if (concentracao !== null && seringa.concentracaoFinal !== undefined) {
     comparar(
@@ -293,6 +296,7 @@ export function conferirInfusao(entrada: {
     return r;
   }
   const cFinal = quantidade / volumeFinalMl;
+  r.concentracaoFinal = { valor: cFinal, unidade };
   const conversao = unidade !== c.unidade ? ` = ${formatarNumero(quantidade)} ${unidade}` : '';
   const concentracao = lerObrigatorio(r, campos.concentracao, 'concentração final da seringa', 'infusao');
   if (concentracao !== null) {

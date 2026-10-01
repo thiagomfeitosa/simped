@@ -535,10 +535,18 @@ export function conferirItemMedicacao(entrada: {
   // diluição/rediluição: a solução de trabalho passa a ser a da última etapa
   let concentracaoTrabalho: Concentracao | null =
     concentracaoBase !== null && concentracaoBase !== 'falta-reconstituicao' ? concentracaoBase : null;
-  const juntar = (r: { verificacoes: Verificacao[]; faltando: string[]; numerosValidos: boolean }) => {
+  // concentração que entra na veia (para o alerta de concentração máxima)
+  let concentracaoNaVeia: Concentracao | null = concentracaoTrabalho;
+  const juntar = (r: {
+    verificacoes: Verificacao[];
+    faltando: string[];
+    numerosValidos: boolean;
+    concentracaoFinal?: Concentracao | null;
+  }) => {
     verificacoes.push(...r.verificacoes);
     faltando.push(...r.faltando);
     if (!r.numerosValidos) numerosValidos = false;
+    if (r.concentracaoFinal !== undefined) concentracaoNaVeia = r.concentracaoFinal;
   };
   if (campos.etapas.length > 0 && concentracaoTrabalho !== null) {
     const etapas = conferirEtapas(campos.etapas, concentracaoTrabalho, tolerancia);
@@ -707,6 +715,22 @@ export function conferirItemMedicacao(entrada: {
           });
         }
       }
+    }
+  }
+
+  // concentração máxima EV (alerta; só vira erro com valor CONFERIDO)
+  const maxima = medicacao.concentracaoMaximaEV;
+  const naVeia = concentracaoNaVeia as Concentracao | null;
+  if (maxima && naVeia && (campos.via === 'EV' || campos.via === 'IO')) {
+    const naUnidade = converterDroga(naVeia.valor, naVeia.unidade, maxima.unidade);
+    if (naUnidade !== null && naUnidade > maxima.valor * (1 + tolerancia.relativa) + RUIDO_NUMERICO) {
+      verificacoes.push({
+        assunto: 'alerta',
+        situacao: maxima.status === 'CONFERIDO' ? 'errado' : 'atencao',
+        texto:
+          `Concentração na veia ${formatarNumero(naUnidade)} ${maxima.unidade}/mL acima da máxima de ` +
+          `${formatarNumero(maxima.valor)} ${maxima.unidade}/mL (${maxima.fonte.codigo}${maxima.status === 'A_VALIDAR' ? ', A VALIDAR' : ''}): diluir mais.`,
+      });
     }
   }
 

@@ -95,3 +95,25 @@ describe('conferirSoro', () => {
     ).toBe('SG 5% 500 mL + NaCl 20% 10 mL + KCl 19,1% 5 mL — EV em 24 h (21,5 mL/h)');
   });
 });
+
+describe('alertas de potássio no soro (A VALIDAR)', () => {
+  it('concentração acima de 40 mEq/L e velocidade acima de 0,5 mEq/kg/h', () => {
+    // 100 mL de SF + 4 mL de KCl 19,1% (10 mEq) = 96 mEq/L; em 1 h para 10 kg = 1 mEq/kg/h
+    const r = conferirSoro(
+      {
+        ...soroVazio(),
+        componentes: [
+          { solucaoId: 'sf09', volumeMl: '100' },
+          { solucaoId: 'kcl191', volumeMl: '4' },
+        ],
+        horas: '1',
+        vazaoMlH: '104',
+      },
+      10,
+      TOLERANCIA_PADRAO,
+    );
+    const alertas = r.verificacoes.filter((v) => v.assunto === 'alerta').map((v) => v.texto);
+    expect(alertas.join(' ')).toMatch(/96,15 mEq\/L/);
+    expect(alertas.join(' ')).toMatch(/1 mEq\/kg\/h/);
+  });
+});

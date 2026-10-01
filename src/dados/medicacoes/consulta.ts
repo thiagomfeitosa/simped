@@ -90,8 +90,13 @@ export function regraValeParaPaciente(
   variaveis?: VariaveisParaRegra,
 ): boolean {
   if (!regra.faixas.includes(faixa)) return false;
-  if (!regra.condicoes || !variaveis) return true;
-  return (Object.entries(regra.condicoes) as [keyof CondicoesDaRegra, FaixaNumerica][]).every(([nome, f]) =>
+  return condicoesValem(regra.condicoes, variaveis);
+}
+
+/** Todas as condições numéricas valem para estas variáveis? Sem condições ou sem variáveis: vale. */
+export function condicoesValem(condicoes: CondicoesDaRegra | undefined, variaveis: VariaveisParaRegra | undefined): boolean {
+  if (!condicoes || !variaveis) return true;
+  return (Object.entries(condicoes) as [keyof CondicoesDaRegra, FaixaNumerica][]).every(([nome, f]) =>
     dentroDaFaixa(variaveis[nome], f),
   );
 }

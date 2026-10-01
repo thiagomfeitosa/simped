@@ -18,7 +18,7 @@ export const casoDemonstracao: CasoClinico = {
     estaturaCm: 102,
     sexo: 'F',
     leito: 'PS-03',
-    alergias: [],
+    alergias: ['Penicilinas'],
   },
   queixa: 'Febre há 1 dia.',
   historia: 'Texto de exemplo. O caso real será escrito na tarefa "Casos clínicos".',

@@ -120,10 +120,26 @@ export interface RegraDeDose {
   status: StatusValidacao;
 }
 
+/** Concentração máxima da solução que entra na veia (por mL). */
+export interface ConcentracaoMaxima {
+  valor: number;
+  unidade: UnidadeDroga;
+  fonte: Fonte;
+  status: StatusValidacao;
+  observacao?: string;
+}
+
 export interface Medicacao {
   id: string;
   nome: string;
   secao: SecaoPrescricao;
+  /**
+   * Classes/etiquetas para alergia e interações (ex.: ['betalactamicos', 'penicilinas']).
+   * O id da medicação já conta como etiqueta.
+   */
+  classes?: string[];
+  /** Concentração máxima EV (A VALIDAR até conferir); gera alerta na conferência do item. */
+  concentracaoMaximaEV?: ConcentracaoMaxima;
   apresentacoes: Apresentacao[];
   regras: RegraDeDose[];
   /** Alertas sempre mostrados (ex.: "NUNCA em bolus"). */

@@ -622,3 +622,40 @@
   border-left-color: var(--atencao);
   background: var(--atencao-fundo);
 }
+
+/* Alertas de segurança da folha */
+.alertas-folha {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 2px solid var(--errado);
+  border-radius: 8px;
+  background: var(--errado-fundo);
+  font-size: 0.9rem;
+}
+
+.alertas-folha ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.alertas-folha .alerta-alta {
+  color: var(--errado);
+  font-weight: 600;
+}
+
+.alertas-folha .alerta-media {
+  color: var(--atencao);
+}
+
+.alerta-itens {
+  font-variant-numeric: tabular-nums;
+  background: #fff;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.alerta-validar {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--a-validar);
+}
