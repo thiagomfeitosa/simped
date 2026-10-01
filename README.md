@@ -6,14 +6,23 @@ Simulador de Prescrição em Emergências Pediátricas — software de treinamen
 
 - Visão geral, regras do projeto e roteiro de fases: [`CLAUDE.md`](CLAUDE.md)
 - Documentos da Fase 0 (planejamento): [`docs/fase-0/`](docs/fase-0/)
+- Modo "Passo a passo": [`docs/passo-a-passo.md`](docs/passo-a-passo.md)
+- Modo "Prescrever" (item de medicação estruturado): [`docs/fase-1/item-de-medicacao.md`](docs/fase-1/item-de-medicacao.md)
 - Motor de cálculo (fórmulas de dose, diluição, BIC etc.): [`src/calculos/`](src/calculos/)
 
-## Abrir o app e rodar os testes
+## Como abrir o app no computador
+Precisa do [Node.js](https://nodejs.org) (versão 20 ou mais nova) instalado uma única vez.
 
-Precisa do [Node.js](https://nodejs.org) instalado. No Terminal, dentro da pasta do projeto:
+No Terminal, dentro da pasta do projeto:
 
+```bash
+npm install     # só na primeira vez (baixa as peças do programa)
+npm run dev     # abre o app
 ```
-npm install   # só na primeira vez
-npm run dev   # abre o app: copie o endereço que aparecer (http://localhost:5173) no navegador
-npm test      # roda os testes automáticos; tudo verde = conferido
-```
+
+Depois abra no navegador o endereço que aparecer (normalmente http://localhost:5173).
+No topo há duas abas: **Passo a passo** (aprender vendo as contas animadas) e **Prescrever** (praticar na folha, com o paciente reagindo).
+
+Outros comandos:
+- `npm test` — roda os testes automáticos das contas; tudo verde = conferido.
+- `npm run build` — gera a versão final em `dist/`.

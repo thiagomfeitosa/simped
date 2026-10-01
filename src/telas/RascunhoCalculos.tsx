@@ -1,6 +1,6 @@
 export function RascunhoCalculos({ texto, aoMudar }: { texto: string; aoMudar: (texto: string) => void }) {
   return (
-    <section className="painel rascunho" aria-label="Rascunho de cálculos">
+    <section className="painel rascunho-calculos" aria-label="Rascunho de cálculos">
       <h2>Rascunho de cálculos</h2>
       <textarea
         value={texto}

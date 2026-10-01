@@ -17,7 +17,7 @@ export function FolhaPrescricao({ paciente, estado, despachar, medicacoes, aoAdm
 
   return (
     <section className="painel prancheta" aria-label="Folha de prescrição">
-      <div className="folha">
+      <div className="folha-papel">
         <h2 className="folha-titulo">Prescrição médica</h2>
 
         <div className="secao">

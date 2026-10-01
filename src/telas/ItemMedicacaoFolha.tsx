@@ -205,12 +205,12 @@ export function ItemMedicacaoFolha({ numero, secao, campos, medicacoes, paciente
       {mostrarConferencia && medicacao && (
         <ul className="conferencia" aria-label={`Conferência do ${rotulo.toLowerCase()}`}>
           {resultado.faltando.length > 0 && (
-            <li className="atencao">
+            <li className="sit-atencao">
               <span className="selo">falta</span> {resultado.faltando.join(', ')}.
             </li>
           )}
           {resultado.verificacoes.map((v, i) => (
-            <li key={i} className={v.situacao}>
+            <li key={i} className={`sit-${v.situacao}`}>
               <span className="selo">{SELO[v.situacao]}</span> {v.texto}
             </li>
           ))}

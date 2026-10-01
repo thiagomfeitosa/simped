@@ -13,7 +13,7 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 1. Identificação do paciente
 2. Oxigenoterapia (se aplicável)
 3. Dieta
-4. Reposição volêmica e glicose
+4. Reposição volêmica, glicose e eletrólitos (inclui correções de Na/K)
 5. Antibióticos / antiparasitários / ARV
 6. Demais medicações
 7. Exames solicitados
@@ -85,10 +85,18 @@ Treinar prescrição hospitalar e ambulatorial em emergências pediátricas (RN,
 - Decisão do usuário: seguir em frente com os dados "A VALIDAR" como estão; a validação será feita depois. Por isso, tudo que é dado clínico (doses, apresentações, casos) deve ficar em arquivos de dados isolados, para ser corrigido sem mexer no resto do código, e cada item continua marcado "A VALIDAR" até o usuário conferir.
 - **Motor de cálculo pronto** em `src/calculos/` (TypeScript + Vitest, `npm test`): dose por peso com dose máxima, volume a aspirar, reconstituição, diluição/rediluição em etapas, infusão contínua (por min ou por h), VIG, mistura de duas soluções, Holliday-Segar, seringa da BIC com volume final configurável (`src/dados/hospitais.ts`) e conferência da resposta do aluno. Testes usam números ilustrativos, não doses.
 - **Banco de medicações (molde)** em `src/dados/medicacoes/`: `tipos.ts` (formato), `consulta.ts` (escolha da fonte com queda para SBP, verificador de integridade; só valor CONFERIDO corrige o aluno), `exemplos-a-validar.ts` (adrenalina, dipirona, ceftriaxona copiadas do rascunho, TUDO A VALIDAR).
-- **App (Fase 1)** React + Vite (`npm run dev`): painel do paciente removível com sinais vitais, folha de prescrição nas 9 seções (itens em texto livre ou de medicação, numerados pela ordem da folha; estado em `src/prescricao/estado.ts`), rascunho de cálculos, aviso de treinamento.
+- **App único com duas abas** (React + Vite, `npm run dev`; como rodar: `README.md`). A barra do topo fica em `src/App.tsx` e a aba escolhida vai no endereço (`#passo-a-passo` / `#prescrever`). As duas telas ficam abertas ao mesmo tempo: trocar de aba não perde o que o aluno fez. Os estilos de cada aba são separados (`src/componentes/passo-a-passo/estilos.css` é a base; `src/telas/estilos-prescrever.css` vale só dentro de `.modo-prescrever`).
+- **Aba "Passo a passo"** (`src/componentes/passo-a-passo/`, roteiros em `src/dados/roteiros/`, fórmulas próprias em `src/logica/`): trilha de setas, animações (avançar/voltar, setas do teclado), explicação, rascunho e folha preenchidos etapa a etapa. Detalhes e como criar roteiros: `docs/passo-a-passo.md`.
+  - Roteiros (menu agrupado por tema): **Neonatologia** — RN com sepse, icterícia neonatal (fototerapia); **Distúrbios hidroeletrolíticos** — desidratação grave (Plano C + soro 4:1 com KCl + reposição), hiponatremia com convulsão (NaCl 3% do 20%, teto 24 h), hipocalemia (KCl, concentração e velocidade); **Emergência** — adrenalina 1:10.000. Doses todas "A VALIDAR"; lista para conferir: `docs/roteiros-a-validar.md`.
+  - Todo roteiro termina na etapa automática **"Prescrição com os cálculos"** (folha completa + contas de cada item, imprimível).
+  - Contas animadas devagar, com **desfazer/refazer por conta**; seletor de velocidade das animações (Devagar/Normal/Rápido).
+  - Pendente: roteiro de rediluição (aguarda apresentações da Santa Casa); hipercalemia/hipocalcemia; hipernatremia; infusão contínua; escolha de fonte (SBP × AAP 2022) nos limiares de icterícia.
+- **Aba "Prescrever"** (`src/telas/Prescrever.tsx`): painel do paciente removível com sinais vitais, folha de prescrição nas 9 seções (itens em texto livre ou de medicação, numerados pela ordem da folha; estado em `src/prescricao/estado.ts`), rascunho de cálculos, aviso de treinamento.
 - **Item de medicação estruturado** (seções 4–6, botão "+ medicação"): medicação → apresentação → indicação → dose → reconstituição (pó) → volume → via → intervalo; botões "Conferir" e "Administrar" (manda a dose para o motor do paciente). A conta do volume é sempre conferida; dose/via/intervalo só corrigem com valor CONFERIDO. Regras e decisões provisórias em `docs/fase-1/item-de-medicacao.md`; lógica em `src/prescricao/itemMedicacao.ts`.
 - **Motor do paciente** em `src/motor/paciente.ts`: estado + eventos (tempo passa, medicação administrada, professor altera sinais); o paciente é recalculado a partir da lista de eventos. Os efeitos vêm do arquivo do caso (`evolucaoNatural`, `respostas`), nunca do motor. Caso atual: `src/casos/demonstracao.ts` (fictício, A VALIDAR).
 - Usuário decidiu **adiar a planilha de apresentações** e avançar o código primeiro.
 - Pendente com o usuário: margem de arredondamento aceita na correção (provisório: 1%), ver `formulas.md` item 8.
 - Pendente com o usuário (item de medicação): deslocamento do pó na reconstituição, conversão gotas ↔ mL, mostrar ou esconder o gabarito ("modo prova").
+- Duplicações a resolver (vieram de duas linhas de trabalho paralelas): fórmulas em `src/logica/calculos.ts` (passo a passo) e em `src/calculos/` (prescrever); lista de seções da folha em `src/dados/secoes.ts` e em `src/prescricao/secoes.ts`. Unificar numa tarefa própria, com os testes das duas.
+- **Tudo unificado no ramo `claude/trusting-mendel-98imqv`** (casos clínicos + passo a passo + prescrever). Nova conversa deve partir dele. O ramo `claude/stoic-hamilton-t3fhgb` (primeiro esqueleto do app) ficou de fora: foi substituído por este.
 - Próximo passo (código): diluição, rediluição e BIC dentro do item de medicação (etapas C1×V1 = C2×V2, infusão contínua em mL/h e seringa com volume final do hospital), conferidas pelo motor de cálculo. Depois: casos clínicos reais e preenchimento do banco.
