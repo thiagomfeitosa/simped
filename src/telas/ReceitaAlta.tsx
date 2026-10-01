@@ -19,7 +19,7 @@ import {
 const SELO: Record<Situacao, string> = { certo: '✔ certo', errado: '✘ errado', atencao: '⚠ atenção', 'a-validar': 'A VALIDAR' };
 const INTERVALOS = [4, 6, 8, 12, 24] as const;
 
-interface ItemReceita {
+export interface ItemReceita {
   id: number;
   campos: CamposReceita;
 }
@@ -27,12 +27,14 @@ interface ItemReceita {
 interface Props {
   paciente: PacienteAtual;
   medicacoes: readonly Medicacao[];
+  /** Os itens ficam na sessão do caso (entram no relatório final). */
+  itens: readonly ItemReceita[];
+  aoMudarItens: (mudar: (itens: ItemReceita[]) => ItemReceita[]) => void;
 }
 
 /** Receita de alta / ambulatorial: medicações orais, quanto dar por vez e quanto comprar. */
-export function ReceitaAlta({ paciente, medicacoes }: Props) {
-  const [itens, setItens] = useState<ItemReceita[]>([]);
-  const [proximo, setProximo] = useState(1);
+export function ReceitaAlta({ paciente, medicacoes, itens, aoMudarItens: setItens }: Props) {
+  const proximo = itens.reduce((max, i) => Math.max(max, i.id), 0) + 1;
   const orais = medicacoesOrais(medicacoes);
 
   const mudar = (id: number, campos: CamposReceita) => setItens((l) => l.map((i) => (i.id === id ? { ...i, campos } : i)));
@@ -71,7 +73,6 @@ export function ReceitaAlta({ paciente, medicacoes }: Props) {
           className="adicionar"
           onClick={() => {
             setItens((l) => [...l, { id: proximo, campos: receitaVazia() }]);
-            setProximo((p) => p + 1);
           }}
         >
           + medicação oral

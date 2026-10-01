@@ -1,6 +1,8 @@
 import { useMemo, useReducer, useState } from 'react';
-import { casoDemonstracao } from '../casos/demonstracao';
-import { hospitalAtual } from '../configuracoes/configuracoes';
+import { useCasos } from '../casos/ContextoCasos';
+import { CASOS, casosPorGrupo } from '../casos/index';
+import type { CasoClinico } from '../casos/tipos';
+import { hospitalAtual, toleranciaDe } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { BANCO_MEDICACOES } from '../dados/medicacoes';
 import { acrescentarEvento, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
@@ -11,6 +13,7 @@ import type { PedidoExame } from '../exames/exames';
 import type { Infusao, RegistroManual } from '../motor/balanco';
 import { type Checagem, itensParaAprazar } from '../prescricao/aprazamento';
 import { prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
+import { gerarRelatorio } from '../relatorio/relatorio';
 import { ControlesCaso } from './ControlesCaso';
 import { FolhaPrescricao } from './FolhaPrescricao';
 import { PainelBalanco } from './PainelBalanco';
@@ -18,12 +21,50 @@ import { PainelExames } from './PainelExames';
 import { PainelPaciente } from './PainelPaciente';
 import { QuadroHorarios } from './QuadroHorarios';
 import { RascunhoCalculos } from './RascunhoCalculos';
-import { ReceitaAlta } from './ReceitaAlta';
+import { type ItemReceita, ReceitaAlta } from './ReceitaAlta';
+import { RelatorioCaso } from './RelatorioCaso';
 
-/** Modo "Prescrever": folha de prescrição, rascunho e paciente que reage às medicações administradas. */
+const CHAVE_CASO = 'simped.caso-atual';
+
+function casoGuardado(): string | null {
+  try {
+    return window.localStorage.getItem(CHAVE_CASO);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Modo "Prescrever": escolhe o caso e abre uma sessão. Trocar de caso começa uma sessão nova
+ * (folha, relógio, exames e balanço do zero).
+ */
 export function Prescrever() {
-  const caso = casoDemonstracao;
+  const { personalizados } = useCasos();
+  const casos = useMemo(() => [...CASOS, ...personalizados], [personalizados]);
+  const [casoId, setCasoId] = useState<string>(() => casoGuardado() ?? CASOS[0]!.id);
+  const caso = casos.find((c) => c.id === casoId) ?? CASOS[0]!;
+  const trocar = (id: string) => {
+    setCasoId(id);
+    try {
+      window.localStorage.setItem(CHAVE_CASO, id);
+    } catch {
+      // sem armazenamento: só não lembra o caso na próxima vez
+    }
+  };
+  return <SessaoCaso key={caso.id} caso={caso} casos={casos} aoTrocarCaso={trocar} />;
+}
+
+interface PropsSessao {
+  caso: CasoClinico;
+  casos: readonly CasoClinico[];
+  aoTrocarCaso: (id: string) => void;
+}
+
+/** Uma sessão de um caso: folha de prescrição, rascunho e paciente que reage às medicações administradas. */
+function SessaoCaso({ caso, casos, aoTrocarCaso }: PropsSessao) {
   const { config } = useConfiguracoes();
+  const [itensReceita, setItensReceita] = useState<ItemReceita[]>([]);
+  const [relatorioAberto, setRelatorioAberto] = useState(false);
   const [prescricao, despachar] = useReducer(reduzirPrescricao, undefined, prescricaoVazia);
   const [pacienteVisivel, setPacienteVisivel] = useState(true);
   // folha hospitalar ou receita de alta (as duas ficam abertas: trocar não apaga nada)
@@ -54,11 +95,52 @@ export function Prescrever() {
     registrarEvento({ tipo: 'anotacao', descricao: `Exame pedido: ${exame.nome}` });
   };
 
+  const temTrabalho = eventos.length > 0 || Object.values(prescricao.itens).some((l) => l.length > 0) || itensReceita.length > 0;
+  const relatorio = relatorioAberto
+    ? gerarRelatorio({
+        caso,
+        prescricao,
+        receita: itensReceita.map((i) => i.campos),
+        eventos,
+        pedidos,
+        medicacoes: BANCO_MEDICACOES,
+        paciente: pacienteAtual,
+        agoraMin: paciente.tempoMin,
+        fontePreferida: config.fonteDose,
+        tolerancia: toleranciaDe(config),
+        volumeFinalBicMl: hospitalAtual(config).volumeFinalBicMl,
+      })
+    : null;
+
   return (
-    <div className="prescrever">
+    <div className={relatorioAberto ? 'prescrever relatorio-aberto' : 'prescrever'}>
       <header className="cabecalho">
         <h1>Prescrever</h1>
-        <span className="subtitulo">{caso.titulo}</span>
+        <label className="escolha-caso">
+          Caso:
+          <select
+            aria-label="Caso clínico"
+            value={caso.id}
+            onChange={(e) => {
+              if (temTrabalho && !window.confirm('Trocar de caso começa do zero (folha, relógio, exames). Continuar?')) return;
+              aoTrocarCaso(e.target.value);
+            }}
+          >
+            {casosPorGrupo(casos).map(([grupo, lista]) => (
+              <optgroup key={grupo} label={grupo}>
+                {lista.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.titulo}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          <small className="subtitulo">
+            {caso.cenario ?? ''}
+            {caso.status === 'A_VALIDAR' ? ' · caso A VALIDAR' : ''}
+          </small>
+        </label>
         <div className="alternar-documento" role="group" aria-label="Documento">
           <button type="button" aria-pressed={documento === 'folha'} onClick={() => setDocumento('folha')}>
             Folha de prescrição
@@ -69,6 +151,9 @@ export function Prescrever() {
         </div>
         <button type="button" onClick={() => window.print()} title="Na janela de impressão, escolha “Salvar como PDF” para gerar o arquivo">
           🖨 Imprimir / PDF
+        </button>
+        <button type="button" className="botao-relatorio" onClick={() => setRelatorioAberto(true)}>
+          📋 Relatório
         </button>
         <button type="button" onClick={() => setPacienteVisivel((v) => !v)}>
           {pacienteVisivel ? 'Ocultar paciente' : 'Mostrar paciente'}
@@ -86,7 +171,12 @@ export function Prescrever() {
         )}
         <div className="coluna-documento">
           <div hidden={documento !== 'receita'}>
-            <ReceitaAlta paciente={pacienteAtual} medicacoes={BANCO_MEDICACOES} />
+            <ReceitaAlta
+              paciente={pacienteAtual}
+              medicacoes={BANCO_MEDICACOES}
+              itens={itensReceita}
+              aoMudarItens={setItensReceita}
+            />
           </div>
           <div hidden={documento !== 'folha'}>
             <FolhaPrescricao
@@ -139,6 +229,7 @@ export function Prescrever() {
           <RascunhoCalculos texto={rascunho} aoMudar={setRascunho} />
         </div>
       </main>
+      {relatorio && <RelatorioCaso relatorio={relatorio} aoFechar={() => setRelatorioAberto(false)} />}
     </div>
   );
 }

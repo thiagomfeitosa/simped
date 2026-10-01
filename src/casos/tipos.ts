@@ -33,9 +33,38 @@ export interface Paciente extends DadosDeOrigem {
   dadosMaternos?: string;
 }
 
+/**
+ * Conduta que o caso espera do aluno (para o relatório final).
+ * - medicacao: algum item da folha (ou da receita) com uma das medicações de `alvos`;
+ * - soro: um item de soro na seção 4;
+ * - exame: um dos exames de `alvos` pedido;
+ * - secao: algum item escrito na seção (ex.: 'sinan', 'oxigenoterapia').
+ */
+export interface CondutaEsperada {
+  id: string;
+  descricao: string;
+  tipo: 'medicacao' | 'soro' | 'exame' | 'secao';
+  alvos: string[];
+  /** Medicação dada (ou exame pedido) até este minuto do caso. */
+  prazoMin?: number;
+  /** Exame que precisa ser pedido ANTES da 1ª dose desta medicação (ex.: hemocultura antes do antibiótico). */
+  antesDaMedicacao?: string;
+  status: StatusValidacao;
+}
+
 export interface CasoClinico {
   id: string;
   titulo: string;
+  /** Grupo no menu de casos (ex.: "Neonatologia"). */
+  grupo?: string;
+  /** Onde o caso acontece (PS, UTI neonatal, ambulatório...). */
+  cenario?: string;
+  /** Hipótese diagnóstica esperada (mostrada só no relatório final). */
+  hipotese?: string;
+  pontosDeEnsino?: string[];
+  condutasEsperadas?: CondutaEsperada[];
+  /** Situação do caso inteiro (história, sinais, reações): A VALIDAR até o usuário conferir. */
+  status?: StatusValidacao;
   /** Data e hora em que o caso começa ("AAAA-MM-DDTHH:MM"): o relógio do caso parte daqui. */
   inicio: string;
   paciente: Paciente;

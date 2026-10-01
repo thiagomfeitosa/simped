@@ -976,3 +976,111 @@
 .painel-balanco .conferencia {
   margin-left: 0;
 }
+
+/* Escolha do caso */
+.escolha-caso {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  font-weight: 600;
+}
+
+.escolha-caso select {
+  font: inherit;
+  font-weight: normal;
+  max-width: 28em;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.escolha-caso small {
+  font-weight: normal;
+}
+
+.cabecalho {
+  flex-wrap: wrap;
+}
+
+/* Relatório do caso */
+.relatorio-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(0 0 0 / 45%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 24px 12px;
+}
+
+.relatorio {
+  width: min(900px, 100%);
+}
+
+.relatorio-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.relatorio-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.relatorio-numeros > div {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--a-validar-fundo);
+}
+
+.relatorio-numeros strong {
+  font-size: 1.6rem;
+  color: var(--destaque);
+}
+
+.relatorio-numeros span {
+  font-size: 0.8rem;
+  color: var(--suave);
+}
+
+.relatorio .conferencia {
+  margin-left: 0;
+}
+
+.relatorio th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--suave);
+}
+
+.historico {
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+@media print {
+  .modo-prescrever .relatorio-aberto > :not(.relatorio-fundo) {
+    display: none !important;
+  }
+
+  .modo-prescrever .relatorio-fundo {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+
+  .modo-prescrever .relatorio .linha-botoes {
+    display: none;
+  }
+}
