@@ -6,6 +6,7 @@
 
 import {
   concentracao,
+  converterMassa,
   diluir,
   gotasPorMinuto,
   hollidaySegarMlDia,
@@ -13,6 +14,7 @@ import {
   prepararSeringaBic,
   vazaoMlPorHora,
   vig,
+  vazaoDoVolume,
   volumeAspirar,
 } from '../calculos';
 import { formatarNumero } from '../prescricao/comum';
@@ -28,6 +30,9 @@ export const TIPOS_DE_EXERCICIO = {
   gotejamento: 'Gotejamento (gotas/min)',
   holliday: 'Holliday-Segar',
   mistura: 'Mistura de duas soluções',
+  vazao: 'Vazão (volume ÷ tempo)',
+  unidade: 'Unidades (g, mg, mcg)',
+  rediluicao: 'Rediluição (volume a aspirar)',
 } as const;
 
 export type TipoExercicio = keyof typeof TIPOS_DE_EXERCICIO;
@@ -211,6 +216,61 @@ export function gerarExercicio(tipo: TipoExercicio, sorteio: () => number): Exer
         resposta: volumeMaiorMl,
         conta: `${n(final)} × (${n(desejada)} − 5) ÷ (50 − 5) = ${n(volumeMaiorMl)} mL de glicose 50% (o resto, ${n(final - volumeMaiorMl)} mL, de SG 5%)`,
         dica: 'Volume da mais concentrada = final × (desejada − menor) ÷ (maior − menor).',
+      };
+    }
+    case 'vazao':
+    case 'unidade':
+    case 'rediluicao':
+      return exercicioNovo(tipo, sorteio);
+  }
+}
+
+function exercicioNovo(tipo: 'vazao' | 'unidade' | 'rediluicao', sorteio: () => number): Exercicio {
+  switch (tipo) {
+    case 'vazao': {
+      const volume = escolher(sorteio, [12, 20, 24, 28, 50, 100, 240, 500]);
+      const minutos = escolher(sorteio, [10, 15, 20, 30, 60, 120, 240]);
+      const v = vazaoDoVolume(volume, minutos);
+      return {
+        tipo,
+        enunciado: `Correr ${n(volume)} mL em ${minutos >= 60 ? `${n(minutos / 60)} h` : `${n(minutos)} min`} na bomba. Qual a vazão (mL/h)?`,
+        unidade: 'mL/h',
+        resposta: v,
+        conta: `${n(volume)} mL ÷ ${n(minutos / 60)} h = ${n(v)} mL/h`,
+        dica: 'Vazão = volume ÷ tempo em HORAS (30 min = 0,5 h).',
+      };
+    }
+    case 'unidade': {
+      const opcoes = [
+        { valor: escolher(sorteio, [0.05, 0.1, 0.25, 0.5, 1.5]), de: 'mg', para: 'mcg' },
+        { valor: escolher(sorteio, [50, 100, 250, 400, 1000]), de: 'mcg', para: 'mg' },
+        { valor: escolher(sorteio, [0.5, 1, 2.5, 7]), de: 'g', para: 'mg' },
+        { valor: escolher(sorteio, [250, 500, 1500, 7000]), de: 'mg', para: 'g' },
+      ] as const;
+      const o = escolher(sorteio, opcoes);
+      const r = converterMassa(o.valor, o.de, o.para);
+      return {
+        tipo,
+        enunciado: `Quanto é ${n(o.valor)} ${o.de} em ${o.para}?`,
+        unidade: o.para,
+        resposta: r,
+        conta: `1 g → 1.000 mg → 1.000.000 mcg: ${n(o.valor)} ${o.de} = ${n(r)} ${o.para}`,
+        dica: 'Cada degrau (g → mg → mcg) multiplica por 1.000; voltando, divide por 1.000.',
+      };
+    }
+    case 'rediluicao': {
+      const c1 = escolher(sorteio, [100, 200, 500, 1000]);
+      const final = escolher(sorteio, [5, 10, 20]);
+      const c2 = diluir({ concentracaoInicial: c1, volumeAspiradoMl: 1, volumeFinalMl: final }).concentracaoFinal;
+      const dose = r2(c2 * escolher(sorteio, [0.4, 0.6, 0.8, 1.2, 1.5, 2.5]));
+      const v = volumeAspirar({ dose, concentracao: c2 });
+      return {
+        tipo,
+        enunciado: `Solução com ${n(c1)} mg/mL. Você aspira 1 mL e completa com AD até ${n(final)} mL (rediluição). Quantos mL DA REDILUIÇÃO aspirar para dar ${n(dose)} mg?`,
+        unidade: 'mL',
+        resposta: v,
+        conta: `Rediluição: ${n(c1)} × 1 ÷ ${n(final)} = ${n(c2)} mg/mL; ${n(dose)} ÷ ${n(c2)} = ${n(v)} mL`,
+        dica: 'Primeiro a concentração NOVA (C1 × V1 ÷ V2); a dose divide por ela, não pela antiga.',
       };
     }
   }

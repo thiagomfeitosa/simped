@@ -409,3 +409,175 @@
   color: #fff;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   Treino: caça-erros e caderno de erros
+   ========================================================================== */
+.caca-erros,
+.caderno {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.folha-caca {
+  background: var(--papel);
+}
+
+.secao-caca h3 {
+  margin: 12px 0 4px;
+  font-size: 0.95rem;
+  color: var(--texto);
+}
+
+.secao-caca ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linha-caca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px 12px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-bottom-color: var(--linha-papel);
+  border-radius: var(--raio-pequeno);
+}
+
+.linha-caca-texto {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.linha-caca-texto small {
+  color: var(--suave);
+}
+
+.linha-caca.marcada {
+  border-color: var(--atencao);
+  background: var(--atencao-fundo);
+}
+
+.linha-caca.achou {
+  border-color: var(--ok);
+  background: var(--ok-suave);
+}
+
+.linha-caca.perdeu {
+  border-color: var(--perigo);
+  background: var(--perigo-suave);
+}
+
+.linha-caca.falso-alarme {
+  border-color: var(--atencao);
+  background: var(--atencao-fundo);
+}
+
+.tipos-erro {
+  flex: 1 1 100%;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px dashed var(--borda);
+  border-radius: var(--raio-pequeno);
+  font-size: 0.85rem;
+}
+
+.tipos-erro .opcao-check {
+  display: inline-flex;
+  margin-right: 12px;
+}
+
+.explicacao-caca {
+  flex: 1 1 100%;
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+
+.explicacao-caca del {
+  color: var(--perigo);
+}
+
+.explicacao-caca ins {
+  color: var(--ok);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.caca-acoes {
+  margin-top: 12px;
+}
+
+.tipos-de-conta {
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.treino-dirigido {
+  font-weight: 600;
+}
+
+.tabela-rola {
+  overflow-x: auto;
+}
+
+.tabela-caderno th {
+  text-align: left;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+.tabela-caderno .ultimos span {
+  margin-right: 2px;
+  font-size: 0.85rem;
+}
+
+.tabela-caderno .ultimos .ok {
+  color: var(--ok);
+}
+
+.tabela-caderno .ultimos .erro {
+  color: var(--perigo);
+}
+
+.caixas {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.caixas span {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--borda);
+  border-radius: 3px;
+}
+
+.caixas span.cheia {
+  border-color: var(--primaria);
+  background: var(--primaria);
+}
+
+.mini-evolucao {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.mini-evolucao .coluna {
+  fill: var(--primaria);
+}
+
+.mini-evolucao .base {
+  stroke: var(--borda);
+  stroke-width: 1;
+}
+
+.mini-evolucao small {
+  color: var(--suave);
+}
