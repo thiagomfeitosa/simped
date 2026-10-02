@@ -76,3 +76,17 @@ Arquivo único: `src/casos/variacoes-a-validar.ts`. Tudo A VALIDAR, escrito pelo
 | Curva de respiração e figura animada | `src/monitor/monitor.ts` (`respiracaoDoPadrao`), `src/telas/RespiracaoAnimada.tsx` | Forma de cada padrão (Kussmaul profunda, gasping a cada ~5 s, tiragem no desconforto). |
 
 Química usada (não é dose, mas confira se quiser): pH por Henderson-Hasselbalch, pH = 6,1 + log₁₀(HCO₃⁻ ÷ (0,0307 × pCO₂)); BE = 0,93 × (HCO₃⁻ − 24,4 + 14,8 × (pH − 7,4)).
+
+## Dados novos de C1–C6 — treino e emergência (out/2026)
+
+| Assunto | Arquivo | O que conferir |
+|---|---|---|
+| Drogas do carrinho de parada | `src/dados/parada-a-validar.ts` (`DROGAS_PARADA`) | Adrenalina 0,01 mg/kg (máx. 1 mg) da 1:10.000 (1 mL + 9 mL de SF), a cada 3–5 min; amiodarona 5 mg/kg (máx. 300 mg) depois do 3º choque; glicose 25% 0,5 g/kg; gluconato de cálcio 10% 60 mg/kg (máx. 2 g) — valores do rascunho (PALS). |
+| Bolus na PCR | idem (`EXPANSAO_PARADA`) | SF 0,9% 20 mL/kg (rascunho: 10–20). |
+| Energia do choque | idem (`CHOQUE`) | 2 J/kg, depois 4 J/kg; máx. 10 J/kg ou dose de adulto (200 J) — PALS 2020, **não está no rascunho**. |
+| Tempos do algoritmo | idem (`TEMPOS_PARADA`) | Ciclo de 2 min; adrenalina a cada 3–5 min; 1ª adrenalina no não chocável até 5 min; tolerância de 20 s na checagem. |
+| Tubo endotraqueal | idem (`TUBO`) | Com cuff = idade/4 + 3,5; sem cuff = idade/4 + 4; < 1 ano: 3,0 / 3,5; profundidade ≈ 3 × nº — **não está no rascunho**. |
+| Cenários da parada | idem (`CENARIOS_PARADA`) | Assistolia (8 meses, 8 kg; volta com 2 adrenalinas); FV (6 anos, 20 kg; volta com 3 choques + adrenalina + amiodarona); AESP por hipovolemia (13 anos, 45 kg; volta com adrenalina + SF). |
+| Peso estimado pela idade | `src/dados/peso-estimado-a-validar.ts` | APLS: (0,5 × meses) + 4 até 12 meses; (2 × anos) + 8 de 1 a 5 anos; (3 × anos) + 7 de 6 a 12 anos; antiga: (idade + 4) × 2 de 1 a 10 anos. |
+| Oxigenoterapia | `src/dados/oxigenio-a-validar.ts` | FiO₂ por dispositivo e fluxo (cateter 25% + 4%/L até 37%; máscara simples 35–50%; com reservatório 60–90%; bolsa 90–100%); CPAP 40% e ventilador 60% de partida; FR 20 quando ventilado. Modelo de oxigenação em `src/motor/oxigenacao.ts` (simplificação didática). |
+| Caça-erros e caderno | `src/estudo/cacaErros.ts`, `src/estudo/caderno.ts` | Sem dado clínico novo (usam os roteiros). Intervalos da revisão espaçada (0, 1, 3, 7, 14 dias) são escolha didática. |

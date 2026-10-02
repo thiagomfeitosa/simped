@@ -55,6 +55,14 @@ Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do 
 - **Respiração animada**: no bloco **Beira do leito**, um tórax que respira no ritmo da FR, com a forma do padrão: caso 10 → **Kussmaul** (profunda); professor → Convulsão → **gasping**; "Dessaturação" → **desconforto** (tiragem e batimento de asa do nariz). O monitor ganhou a 3ª curva (amarela) da respiração.
 - **Onda T pelo potássio**: com K alto a onda T fica pontuda; com K baixo, achatada e com onda U (desenho didático).
 
+## Treino e emergência (C1–C6 — out/2026)
+Lista e decisões: `docs/ideias-treino-emergencia.md`.
+- **C1 — Caça-erros**: aba **🧮 Treino** → **🔎 Caça-erros** → escolha uma folha (ou 🎲) → leia a folha "do colega" e clique **⚠ Tem erro** nas linhas erradas (se quiser, marque o tipo) → **Conferir**. Cada linha errada mostra "estava → o certo é" e como achar; aparecem a nota, os erros achados e os falsos alarmes. **🎲 Outra folha** sorteia outros erros.
+- **C3 — Caderno de erros**: depois de algumas contas ou de um caça-erros, **📒 Caderno de erros** mostra cada assunto (últimos resultados ✔✘, acerto recente, caixa 1–5, quando revisar, evolução por dia). **🎯 Treinar meus pontos fracos** volta às contas sorteando só os assuntos fracos (aparece "🎯 treino dirigido"). Em **🧮 Contas** há três tipos novos: vazão, unidades (g/mg/mcg) e rediluição.
+- **C2 — Código de parada**: aba **🚨 Parada** → escolha o cenário (ex.: "Escolar em fibrilação ventricular") → **▶ Iniciar o código**. O relógio anda (×1, ×2, ×4 ou pausar), a barra do ciclo avisa "checar ritmo", o contador da adrenalina fica verde/amarelo/vermelho. Digite a energia e **Carregar e chocar**; nas gavetas, digite os mL e **Dar** (a conta é conferida na hora no modo treino). **🔍 Checar ritmo** a cada 2 min. **⏹ Encerrar o código** mostra a avaliação (✔/✘ de cada passo do algoritmo e de cada conta). No modo **prova** (Configurações) somem as dicas e a "próxima ação".
+- **C5 e C6 — Peso estimado e folha de emergência**: na **Parada**, o peso estimado pela idade aparece ao lado do peso e **📄 Folha de emergência** abre a tabela do peso (imprimível). Nas **Calculadoras**, cartão **🚨 Peso estimado e folha de emergência**: idade → peso (APLS) → **📄 Folha de emergência para X kg** (ou use o peso real).
+- **C4 — Oxigenoterapia**: no **Prescrever**, caso 6 (asma, SpO₂ 89%) → painel do paciente → **🫁 Oxigênio** → Cateter nasal, 2 L/min → **Instalar**: a SpO₂ do monitor sobe e a linha do tempo registra. Peça **Gasometria arterial**: aparece a pO₂. Na aba **Professor**, dispare **Apneia**: a máscara sozinha não adianta (aviso vermelho); com **Bolsa-válvula-máscara** o padrão vira "Ventilação assistida" e a SpO₂ volta.
+
 ## Onde fica no código
 | Assunto | Lógica (sem tela, com testes) | Tela |
 |---|---|---|
@@ -94,5 +102,8 @@ Lista e motivo de cada uma: `docs/ideias-bases.md`. Arquitetura da sessão e do 
 | Exames ligados ao paciente (Fase 2) | `src/motor/laboratorio.ts`, `src/dados/laboratorio-dinamico.ts`, `src/dados/efeitos-laboratorio.ts` | `src/telas/PainelExames.tsx`; teste: `testes-tela/fase2.spec.ts` |
 | Tira de ECG e respiração (Fase 2) | `src/monitor/monitor.ts` (`respiracaoDoPadrao`, `ondaTPeloPotassio`) | `src/telas/TiraEcg.tsx`, `src/telas/RespiracaoAnimada.tsx`, `src/telas/Monitor.tsx` |
 | Peças visuais (B19) | — | `src/estilos-base.css` (cores, cantos, botões, campos, cartões); guia `docs/estilo-visual.md` |
+| Caça-erros e caderno (C1/C3) | `src/estudo/cacaErros.ts`, `src/estudo/caderno.ts`, `src/estudo/treino.ts` | `src/telas/TreinoContas.tsx`, `CacaErros.tsx`, `CadernoErros.tsx`; teste: `testes-tela/treino.spec.ts` |
+| Código de parada e folha de emergência (C2/C5/C6) | `src/parada/parada.ts`, `src/calculos/pesoEstimado.ts`; dados `src/dados/parada-a-validar.ts`, `peso-estimado-a-validar.ts` | `src/telas/CodigoParada.tsx`, `FolhaEmergencia.tsx`; teste: `testes-tela/parada.spec.ts` |
+| Oxigenoterapia (C4) | `src/motor/oxigenacao.ts`; dados `src/dados/oxigenio-a-validar.ts` | `src/telas/ControleOxigenio.tsx`; teste: `testes-tela/oxigenio.spec.ts` |
 | Abas sob demanda (B20) | `vite.config.ts` (arquivo único sem pedaços: `--mode arquivo-unico`) | `src/App.tsx` (`telaSobDemanda`, `adiantarAbas`), `src/Provedores.tsx`; teste: `testes-tela/abas.spec.ts` |
 | App instalável (B18) | `src/pwa/montarServiceWorker.ts` (+ plugin em `vite.config.ts`), modelo `src/pwa/sw-modelo.js`, `src/pwa/pwa.ts` | `src/pwa/ComponentesPwa.tsx`; manifesto e ícones em `public/` (`npm run gerar-icones`); publicação: `.github/workflows/site.yml`; teste: `testes-tela/pwa.spec.ts` |
