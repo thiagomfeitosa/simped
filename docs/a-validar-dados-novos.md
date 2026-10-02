@@ -90,3 +90,25 @@ Química usada (não é dose, mas confira se quiser): pH por Henderson-Hasselbal
 | Peso estimado pela idade | `src/dados/peso-estimado-a-validar.ts` | APLS: (0,5 × meses) + 4 até 12 meses; (2 × anos) + 8 de 1 a 5 anos; (3 × anos) + 7 de 6 a 12 anos; antiga: (idade + 4) × 2 de 1 a 10 anos. |
 | Oxigenoterapia | `src/dados/oxigenio-a-validar.ts` | FiO₂ por dispositivo e fluxo (cateter 25% + 4%/L até 37%; máscara simples 35–50%; com reservatório 60–90%; bolsa 90–100%); CPAP 40% e ventilador 60% de partida; FR 20 quando ventilado. Modelo de oxigenação em `src/motor/oxigenacao.ts` (simplificação didática). |
 | Caça-erros e caderno | `src/estudo/cacaErros.ts`, `src/estudo/caderno.ts` | Sem dado clínico novo (usam os roteiros). Intervalos da revisão espaçada (0, 1, 3, 7, 14 dias) são escolha didática. |
+
+## Dados novos de D1–D7 — recém-nascido, atenção básica e briefing (out/2026)
+Tudo escrito pelo assistente de memória, **sem conferência**. Cada item tem `status: 'A_VALIDAR'` no arquivo.
+
+| Assunto | Arquivo | O que conferir |
+|---|---|---|
+| Capurro somático e somático-neurológico | `src/dados/neonatal/maturidade-a-validar.ts` | Pontos de cada opção (textura da pele 0–20; orelha 0–24; glândula mamária 0–15; mamilo 0–15; pregas plantares 0–20; xale 0–18; cabeça 0–12) e constantes (IG em dias = 204 + pontos; 200 + pontos). |
+| New Ballard | idem | Textos e pontos de −1/−2 a 5 de cada critério; conversão IG = 24 + 0,4 × pontos (−10 = 20 s; 50 = 44 s). |
+| Classificação pela IG | idem (`CLASSIFICACAO_IG_DETALHADA`) | Pré-termo extremo < 28; muito pré-termo 28–31+6; moderado 32–33+6; tardio 34–36+6; termo precoce 37–38+6; completo 39–40+6; tardio 41–41+6; pós-termo ≥ 42. |
+| Redatar pela USG | idem (`REDATAR_PELA_USG`) | Diferença DUM × USG que muda a data (ACOG 700): ≤ 8+6 s: > 5 d; 9–13+6: > 7 d; 14–15+6: > 7 d; 16–21+6: > 10 d; 22–27+6: > 14 d; ≥ 28: > 21 d. |
+| PIG/AIG/GIG | idem (`CLASSIFICACAO_PESO_IG`) | Percentis 10 e 90. |
+| Exame do RN e atlas | `src/dados/neonatal/exame-rn-a-validar.ts` | Texto de cada região (normal e como examinar), ≈50 achados (o que se vê, explicação, diferencial, conduta, categoria, urgente). Sinais vitais normais (FC 120–160, FR 40–60, T 36,5–37,5 °C); alterados sorteados (FR 72, T 38,1, T 36,0, FC 190). |
+| Triagens e coraçãozinho | idem (`TRIAGENS_NEONATAIS`, `CORACAOZINHO`) | Prazos (pezinho 3º–5º dia etc.); coraçãozinho: ≥ 95% e diferença < 3% normal; senão repetir em 1 h; persistindo, eco em 24 h. |
+| Zonas de Kramer | idem (`ZONAS_KRAMER`) | Bilirrubina aproximada por zona (4–8; 5–12; 8–16; 11–18; > 15 mg/dL). |
+| Apgar e Silverman-Andersen | `src/dados/neonatal/escores-a-validar.ts` | Itens e faixas (Apgar 0–3 / 4–6 / 7–10; Silverman 0 / 1–3 / 4–6 / 7–10). |
+| Receitas de problemas comuns | `src/dados/atencao-basica/receitas-a-validar.ts` | Apresentações e doses: paracetamol 10 mg/kg/dose (gotas 200 mg/mL, 20 gotas/mL); amoxicilina 50 mg/kg/dia (8/8 h na OMA, 12/12 h na faringoamigdalite); zinco 20 mg/dia; sulfato ferroso 3 mg/kg/dia (tratamento) e 1 mg/kg/dia (profilaxia); vitamina D 400 UI; albendazol 400 mg; nistatina 100.000 UI 6/6 h; cefalexina 50 mg/kg/dia 6/6 h; PEG 0,4 g/kg/dia; salbutamol 400 mcg (4 jatos); ibuprofeno 400 mg; permetrina, mupirocina, adapaleno+peróxido (uso tópico); durações e máximos. |
+| Exame físico de doenças comuns | `src/dados/atencao-basica/exame-fisico-a-validar.ts` | Descrições e condutas (otoscopia, oroscopia, exantemas, hidratação/planos A-B-C, FR do AIDPI, sinais meníngeos). |
+| Calendário de vacinas | `src/dados/atencao-basica/vacinas-a-validar.ts` | Calendário PNI 2024–2025 (idades, doses, idade máxima do rotavírus 3 m 15 d / 7 m 29 d, HPV dose única 9–14 anos, ACWY 11–14, VIP no reforço, meningo C × ACWY aos 12 meses, COVID-19). Conferir a versão vigente do MS. |
+| Desenvolvimento | `src/dados/atencao-basica/desenvolvimento-a-validar.ts` | Marcos por faixa (formato Caderneta/AIDPI), reflexos primitivos e até quando, sinais de alerta, fatores de risco; regra da classificação em `src/atencao-basica/desenvolvimento.ts`. |
+| Consulta de puericultura e hebiatria | `src/dados/atencao-basica/puericultura-a-validar.ts` | Calendário de consultas, orientações e suplementos por idade; HEEADSSS; sigilo; Tanner (texto); idades da puberdade; PA ≥ 13 anos (AAP 2017). |
+| Briefing e debriefing | `src/dados/parada-briefing-a-validar.ts` | Papéis da equipe, lista do briefing, fases do debriefing, itens de CRM, pausas usadas na fração de compressão estimada (10 s / 5 s / 10 s; meta > 80%). |
+

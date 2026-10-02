@@ -11,9 +11,10 @@
   gap: 4px;
   flex-wrap: wrap;
   padding: 8px 20px;
-  background: rgb(255 255 255 / 92%);
-  border-bottom: 1px solid var(--borda);
-  box-shadow: var(--sombra-leve);
+  /* paleta lilás/roxo: barra escura em gradiente, letras brancas */
+  background: var(--barra-topo);
+  border-bottom: 1px solid var(--roxo-900);
+  box-shadow: 0 2px 14px rgb(46 20 80 / 22%);
 }
 
 /* B19: no computador a barra fica sempre à vista ao rolar a página */
@@ -31,11 +32,11 @@
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: var(--primaria-escura);
+  color: #fff;
 }
 
 .modos-marca b {
-  color: var(--seta);
+  color: var(--lilas-200);
 }
 
 .modo-aba {
@@ -46,7 +47,7 @@
   padding: 4px 14px;
   border: 1px solid transparent;
   border-radius: var(--raio-medio);
-  color: var(--texto);
+  color: #f6f1fc;
   font-weight: 700;
   line-height: 1.25;
   text-decoration: none;
@@ -58,7 +59,7 @@
 .modo-aba small {
   font-size: 12px;
   font-weight: 400;
-  color: var(--texto-suave);
+  color: rgb(246 241 252 / 78%);
 }
 
 /* a descrição das abas principais só cabe em telas bem largas (senão a barra quebra em duas linhas) */
@@ -90,18 +91,60 @@
 }
 
 .modo-aba:hover {
-  border-color: var(--borda);
-  background: var(--primaria-suave);
+  border-color: rgb(255 255 255 / 28%);
+  background: rgb(255 255 255 / 12%);
 }
 
 .modo-aba[aria-current='page'] {
-  background: var(--primaria);
-  border-color: var(--primaria);
-  color: #fff;
+  background: #fff;
+  border-color: #fff;
+  color: var(--roxo-700);
+  box-shadow: 0 2px 8px rgb(20 0 50 / 25%);
 }
 
 .modo-aba[aria-current='page'] small {
-  color: rgb(255 255 255 / 85%);
+  color: var(--texto-suave);
+}
+
+/* foco do teclado visível sobre o roxo */
+.modos :focus-visible {
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 70%);
+}
+
+/* nome da aba ao lado do ícone; abas "compactas" mostram só o ícone em telas médias
+   (o nome continua lá para o leitor de tela e aparece ao passar o mouse) */
+.aba-icone {
+  margin-right: 5px;
+}
+
+@media screen and (min-width: 761px) and (max-width: 1700px) {
+  .modo-aba.compacta-1 .aba-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .modo-aba.compacta-1 .aba-icone {
+    margin-right: 0;
+  }
+}
+
+@media screen and (min-width: 761px) and (max-width: 1360px) {
+  .modo-aba.compacta-2 .aba-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .modo-aba.compacta-2 .aba-icone {
+    margin-right: 0;
+  }
 }
 
 @media print {
@@ -128,10 +171,10 @@
 .botao-relatar {
   margin-left: auto;
   padding: 6px 10px;
-  border: 1px solid var(--borda);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: var(--raio-medio);
-  background: var(--superficie);
-  color: var(--texto-suave);
+  background: rgb(255 255 255 / 10%);
+  color: #f6f1fc;
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;
@@ -145,8 +188,9 @@
 }
 
 .botao-relatar:hover {
-  border-color: var(--primaria);
-  color: var(--texto);
+  border-color: #fff;
+  background: rgb(255 255 255 / 20%);
+  color: #fff;
 }
 
 .tela-erro,
@@ -237,10 +281,10 @@
 /* ---- B18: app instalável (src/pwa/) ---------------------------------------- */
 .botao-instalar {
   padding: 6px 10px;
-  border: 1px solid var(--primaria);
+  border: 1px solid #fff;
   border-radius: var(--raio-medio);
-  background: var(--primaria);
-  color: #fff;
+  background: #fff;
+  color: var(--roxo-700);
   font: inherit;
   font-size: 0.85rem;
   font-weight: 700;

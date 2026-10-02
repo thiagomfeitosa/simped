@@ -159,7 +159,7 @@
 }
 .roteiro-botao.ativo {
   border-color: var(--primaria);
-  box-shadow: 0 0 0 3px rgb(15 111 181 / 15%);
+  box-shadow: 0 0 0 3px rgb(109 63 178 / 18%);
 }
 
 .aviso {
@@ -556,8 +556,8 @@
   animation: aparecer-subindo 0.5s 0.4s both;
 }
 .dica {
-  background: #eaf4fd;
-  border: 1px solid #c7e0f6;
+  background: var(--lilas-50);
+  border: 1px solid var(--lilas-200);
 }
 .dica > strong {
   color: var(--primaria);

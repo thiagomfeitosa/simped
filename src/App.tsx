@@ -23,6 +23,8 @@ const TELAS = {
   treino: telaSobDemanda(() => import('./telas/TreinoContas').then((m) => m.TreinoContas)),
   calculadoras: telaSobDemanda(() => import('./telas/Calculadoras').then((m) => m.Calculadoras)),
   parada: telaSobDemanda(() => import('./telas/CodigoParada').then((m) => m.CodigoParada)),
+  recemNascido: telaSobDemanda(() => import('./telas/neonatal/RecemNascido').then((m) => m.RecemNascido)),
+  atencaoBasica: telaSobDemanda(() => import('./telas/atencao-basica/AtencaoBasica').then((m) => m.AtencaoBasica)),
   casos: telaSobDemanda(() => import('./telas/EditorCasos').then((m) => m.EditorCasos)),
   banco: telaSobDemanda(() => import('./telas/Banco').then((m) => m.Banco)),
   professor: telaSobDemanda(() => import('./telas/Professor').then((m) => m.Professor)),
@@ -32,6 +34,13 @@ const TELAS = {
 interface DefinicaoModo {
   id: string;
   rotulo: string;
+  /** Ícone ao lado do nome (fica sozinho quando a aba é compacta). */
+  icone?: string;
+  /**
+   * Abas que viram só o ícone em telas médias, para a barra do topo caber numa linha:
+   * 1 = abaixo de 1700 px; 2 = abaixo de 1360 px. O nome continua lá para o leitor de tela.
+   */
+  compacta?: 1 | 2;
   descricao: string;
   /** Abas principais mostram a descrição embaixo do nome; as outras, só ao passar o mouse. */
   principal?: boolean;
@@ -61,49 +70,80 @@ const MODOS: readonly DefinicaoModo[] = [
   },
   {
     id: 'parada',
-    rotulo: '🚨 Parada',
-    descricao: 'Código de parada: cronômetro, desfibrilador e carrinho com gavetas',
+    rotulo: 'Parada',
+    icone: '🚨',
+    descricao: 'Código de parada: briefing, cronômetro, desfibrilador, carrinho e debriefing',
     classe: 'modo-prescrever',
     tela: TELAS.parada,
   },
   {
+    id: 'recem-nascido',
+    rotulo: 'Recém-nascido',
+    icone: '👶',
+    descricao: 'Capurro, New Ballard, idade gestacional, exame no alojamento conjunto e atlas de achados',
+    classe: 'modo-prescrever',
+    semProvedores: true,
+    tela: TELAS.recemNascido,
+  },
+  {
+    id: 'atencao-basica',
+    rotulo: 'Atenção básica',
+    icone: '🩺',
+    descricao: 'Puericultura e hebiatria: receitas, exame físico, vacinas e desenvolvimento',
+    classe: 'modo-prescrever',
+    semProvedores: true,
+    tela: TELAS.atencaoBasica,
+  },
+  {
     id: 'treino',
-    rotulo: '🧮 Treino',
+    rotulo: 'Treino',
+    icone: '🧮',
+    compacta: 2,
     descricao: 'Contas, caça-erros e caderno de erros',
     classe: 'modo-prescrever',
     tela: TELAS.treino,
   },
   {
     id: 'calculadoras',
-    rotulo: '📐 Calculadoras',
+    rotulo: 'Calculadoras',
+    icone: '📐',
+    compacta: 2,
     descricao: 'SC, Holliday, VIG, infusão, diluição, gotejamento, sódio',
     classe: 'modo-prescrever',
     tela: TELAS.calculadoras,
   },
   {
     id: 'casos',
-    rotulo: '✎ Casos',
+    rotulo: 'Casos',
+    icone: '✎',
+    compacta: 1,
     descricao: 'Criar ou copiar casos clínicos (editor)',
     classe: 'modo-prescrever',
     tela: TELAS.casos,
   },
   {
     id: 'banco',
-    rotulo: '💊 Banco',
+    rotulo: 'Banco',
+    icone: '💊',
+    compacta: 1,
     descricao: 'Medicações, o que falta validar e importar a planilha',
     classe: 'modo-prescrever',
     tela: TELAS.banco,
   },
   {
     id: 'professor',
-    rotulo: '👩‍🏫 Professor',
+    rotulo: 'Professor',
+    icone: '👩‍🏫',
+    compacta: 1,
     descricao: 'Mudar sinais, disparar complicações e ver a folha do aluno ao vivo',
     classe: 'modo-prescrever',
     tela: TELAS.professor,
   },
   {
     id: 'configuracoes',
-    rotulo: '⚙ Configurações',
+    rotulo: 'Configurações',
+    icone: '⚙',
+    compacta: 1,
     descricao: 'Fonte, hospital, modo prova, margem',
     classe: 'modo-prescrever',
     tela: TELAS.configuracoes,
@@ -188,11 +228,18 @@ export function App() {
           <a
             key={m.id}
             href={`#${m.id}`}
-            className={m.principal ? 'modo-aba' : 'modo-aba secundaria'}
-            title={m.descricao}
+            className={['modo-aba', !m.principal && 'secundaria', m.compacta && `compacta-${m.compacta}`].filter(Boolean).join(' ')}
+            title={`${m.rotulo}: ${m.descricao}`}
             aria-current={m.id === modo ? 'page' : undefined}
           >
-            {m.rotulo}
+            <span>
+              {m.icone && (
+                <span className="aba-icone" aria-hidden="true">
+                  {m.icone}
+                </span>
+              )}
+              <span className="aba-texto">{m.rotulo}</span>
+            </span>
             {m.principal && <small>{m.descricao}</small>}
           </a>
         ))}

@@ -51,3 +51,27 @@ test('folha de emergência por peso: no código de parada e nas calculadoras (pe
   await expect(page.getByRole('dialog', { name: 'Folha de emergência' })).toContainText('1º: 28 J');
   expect(erros).toEqual([]);
 });
+
+test('briefing antes e debriefing depois do código (números, anotações e arquivo)', async ({ page }) => {
+  const erros = await abrir(page, 'parada');
+  const aba = abaVisivel(page);
+  const briefing = aba.locator('details.briefing');
+  await expect(briefing).toHaveAttribute('open', '');
+  await aba.getByLabel('Nome: Líder').fill('Dra. Ana');
+  await aba.getByRole('region', { name: 'Conferência do briefing' }).getByLabel(/Papéis distribuídos/).check();
+  await expect(briefing.locator('summary')).toContainText('(1/9)');
+  await aba.getByRole('button', { name: /Iniciar o código/ }).click();
+  await expect(briefing).not.toHaveAttribute('open', '');
+  await aba.getByRole('button', { name: /Pausar relógio/ }).click();
+  await aba.getByRole('button', { name: /Encerrar o código/ }).click();
+  const debriefing = aba.getByRole('region', { name: 'Debriefing' });
+  await expect(debriefing.getByRole('list', { name: 'Números do código' })).toContainText('Tempo total de código');
+  await expect(debriefing).toContainText('1ª adrenalina: não dada');
+  await debriefing.getByLabel('3. Análise (plus/delta)').fill('+ RCP começou rápido; Δ faltou adrenalina');
+  await debriefing.getByLabel('Comunicação em alça fechada: 3').check();
+  const download = page.waitForEvent('download');
+  await debriefing.getByRole('button', { name: /Baixar o debriefing/ }).click();
+  const arquivo = await download;
+  expect(arquivo.suggestedFilename()).toMatch(/^debriefing-.*\.txt$/);
+  expect(erros).toEqual([]);
+});

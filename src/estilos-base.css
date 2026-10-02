@@ -6,19 +6,36 @@
    ========================================================================== */
 
 :root {
-  --fundo: #eef2f7;
+  /* Paleta lilás/roxo (out/2026). O texto continua quase preto (--texto) para ler bem;
+     verde/âmbar/vermelho (certo, atenção, perigo), as cores das seções da folha, o monitor
+     e os desenhos que imitam objetos reais mantêm as cores próprias. */
+  --fundo: #f4f1f9;
   --superficie: #ffffff;
-  --superficie-2: #f6f8fb;
-  --texto: #1c2635;
-  --texto-suave: #5a6778;
-  --borda: #d7dee8;
-  --primaria: #0f6fb5;
-  --primaria-escura: #0a4f82;
+  --superficie-2: #f8f5fc;
+  --texto: #1d1b24;
+  --texto-suave: #5e5670;
+  --borda: #ded5ec;
+  --primaria: #6d3fb2;
+  --primaria-escura: #4b2580;
   --seta: #ef7d1a;
   --ok: #22935a;
   --atencao: #b7791f;
   --atencao-fundo: #fff5dc;
   --perigo: #c2413b;
+
+  /* tons de lilás/roxo (do mais escuro ao mais claro) para destaques, faixas e ilustrações */
+  --roxo-900: #2e1450;
+  --roxo-800: #3b1a66;
+  --roxo-700: #4b2580;
+  --roxo-600: #5b2d9e;
+  --roxo-500: #6d3fb2;
+  --lilas-400: #9b74d4;
+  --lilas-300: #b99be6;
+  --lilas-200: #d8c7f2;
+  --lilas-100: #ece3f9;
+  --lilas-50: #f6f1fc;
+  /* barra do topo (gradiente roxo) */
+  --barra-topo: linear-gradient(100deg, #34175c 0%, #4f2789 45%, #6c40b0 100%);
 
   --secao-1: #5b6b82;
   --secao-2: #1f8fc4;
@@ -30,13 +47,13 @@
   --secao-8: #3474cf;
   --secao-9: #8a5a3c;
   --secao-revisao: #22935a;
-  --secao-final: #0a4f82;
+  --secao-final: #4b2580;
 
   /* tons das faixas (réguas, barras) */
   --tom-normal: #2fa56a;
   --tom-atencao: #e3a326;
   --tom-perigo: #d2493f;
-  --tom-info: #3a86d4;
+  --tom-info: #7655c9;
 
   /* velocidade das animações (1 = normal; o app muda pelo seletor "Animações") */
   --ritmo: 1;
@@ -56,15 +73,15 @@
   --raio: 14px;
   --raio-pilula: 999px;
   /* sombras e foco do teclado */
-  --sombra: 0 1px 2px rgb(20 40 70 / 6%), 0 6px 20px rgb(20 40 70 / 7%);
-  --sombra-leve: 0 1px 2px rgb(20 40 70 / 7%), 0 2px 8px rgb(20 40 70 / 5%);
-  --foco: 0 0 0 3px rgb(15 111 181 / 32%);
+  --sombra: 0 1px 2px rgb(46 20 80 / 6%), 0 8px 24px rgb(46 20 80 / 8%);
+  --sombra-leve: 0 1px 2px rgb(46 20 80 / 7%), 0 2px 10px rgb(46 20 80 / 5%);
+  --foco: 0 0 0 3px rgb(109 63 178 / 35%);
 
   /* superfícies de apoio */
-  --primaria-suave: #e7f1fa;
+  --primaria-suave: #f1eafb;
   --perigo-suave: #fdecea;
   --ok-suave: #e6f5ec;
-  --fundo-pagina: linear-gradient(180deg, #f4f7fb 0, #eaf0f6 360px, #eaf0f6 100%);
+  --fundo-pagina: radial-gradient(1200px 420px at 85% -120px, #e6d9f8 0, transparent 70%), linear-gradient(180deg, #faf8fd 0, #f2edf9 380px, #f2edf9 100%);
 
   /* controles (botões e campos) */
   --altura-controle: 36px;
@@ -192,6 +209,16 @@ button {
 .selo-ok {
   background: var(--ok-suave);
   color: var(--ok);
+}
+
+/* Texto só para leitor de tela (fica fora da vista) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

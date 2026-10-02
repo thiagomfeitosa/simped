@@ -3,7 +3,7 @@ import { abaVisivel, abrir } from './ajuda';
 
 /** B17 — Tablet e celular: a página nunca rola de lado e o Prescrever mostra um painel por vez. */
 
-const ABAS = ['passo-a-passo', 'prescrever', 'parada', 'treino', 'calculadoras', 'casos', 'banco', 'professor', 'configuracoes'];
+const ABAS = ['passo-a-passo', 'prescrever', 'parada', 'recem-nascido', 'atencao-basica', 'treino', 'calculadoras', 'casos', 'banco', 'professor', 'configuracoes'];
 
 const APARELHOS = [
   { nome: 'celular', viewport: { width: 390, height: 844 } },
@@ -93,4 +93,35 @@ test('computador: sem barra de painéis, as três colunas lado a lado', async ({
   await expect(tela.locator('.coluna-documento')).toBeVisible();
   await expect(tela.getByRole('region', { name: 'Rascunho de cálculos' })).toBeVisible();
   expect(erros).toEqual([]);
+});
+
+test.describe('abas Recém-nascido e Atenção básica no celular', () => {
+  test.use({ viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true });
+
+  test('nenhuma parte rola de lado', async ({ page }) => {
+    const erros = await abrir(page, 'recem-nascido');
+    const partes = async (grupo: string) => {
+      const botoes = abaVisivel(page).getByRole('group', { name: grupo }).getByRole('button');
+      const n = await botoes.count();
+      for (let i = 0; i < n; i++) {
+        await botoes.nth(i).click();
+        await page.waitForTimeout(150);
+        await semRolagemLateral(page, `${grupo} → ${await botoes.nth(i).innerText()}`);
+      }
+    };
+    await partes('Parte da aba Recém-nascido');
+    await abaVisivel(page).getByRole('group', { name: 'Parte da aba Recém-nascido' }).getByRole('button', { name: /Capurro/ }).click();
+    await partes('Método');
+    await page.evaluate(() => (window.location.hash = 'atencao-basica'));
+    await expect(page.getByRole('navigation', { name: 'Modo do SimPed' }).locator('[aria-current="page"]')).toHaveAttribute('href', '#atencao-basica');
+    await partes('Parte da aba Atenção básica');
+    const ab = abaVisivel(page).getByRole('group', { name: 'Parte da aba Atenção básica' });
+    await ab.getByRole('button', { name: /Vacinas/ }).click();
+    await partes('Parte das vacinas');
+    await ab.getByRole('button', { name: /Desenvolvimento/ }).click();
+    await partes('Parte do desenvolvimento');
+    await ab.getByRole('button', { name: /Exame físico/ }).click();
+    await partes('Modo do exame físico');
+    expect(erros).toEqual([]);
+  });
 });

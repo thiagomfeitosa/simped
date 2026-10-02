@@ -405,8 +405,9 @@
 .banner-professor {
   margin: 0;
   padding: 6px 20px;
-  background: #7b4fd6;
-  color: #fff;
+  background: var(--atencao-fundo);
+  border-bottom: 2px solid var(--tom-atencao);
+  color: #5a3a00;
   font-weight: 700;
 }
 
@@ -814,4 +815,129 @@
 
 .avaliacao-parada {
   margin-top: 12px;
+}
+
+/* ---- Código de parada: briefing e debriefing ------------------------------- */
+.etapas-codigo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.etapas-codigo li {
+  padding: 4px 14px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pilula);
+  background: var(--superficie);
+  color: var(--texto-suave);
+  font-weight: 700;
+}
+
+.etapas-codigo li.feita {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.etapas-codigo li.atual {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+}
+
+.briefing,
+.debriefing {
+  margin: 12px;
+}
+
+.briefing summary {
+  cursor: pointer;
+  font-size: 1.05rem;
+  color: var(--roxo-700);
+}
+
+.briefing-grade,
+.debriefing-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.briefing h3,
+.debriefing h3 {
+  margin: 4px 0 8px;
+  color: var(--roxo-700);
+}
+
+.papel-equipe {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 160px);
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--borda);
+}
+
+.papel-equipe span {
+  display: flex;
+  flex-direction: column;
+}
+
+.papel-equipe small {
+  color: var(--texto-suave);
+}
+
+.debriefing {
+  border: 2px solid var(--lilas-300);
+}
+
+.metricas-codigo {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.metricas-codigo li {
+  margin: 4px 0;
+  padding: 6px 10px;
+  border-left: 4px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--superficie-2);
+}
+
+.metricas-codigo li.sit-certo {
+  border-left-color: var(--ok);
+  background: var(--ok-suave);
+}
+
+.metricas-codigo li.sit-errado {
+  border-left-color: var(--perigo);
+  background: var(--perigo-suave);
+}
+
+.metricas-codigo small {
+  color: var(--texto-suave);
+}
+
+.tabela-crm td:not(:first-child),
+.tabela-crm th:not(:first-child) {
+  width: 2.5em;
+  text-align: center;
+}
+
+.fase-debriefing textarea {
+  width: 100%;
+}
+
+@media print {
+  .codigo-parada .parada-grade,
+  .codigo-parada .briefing,
+  .codigo-parada .cabecalho,
+  .codigo-parada .etapas-codigo,
+  .codigo-parada .aviso-treino {
+    display: none;
+  }
 }

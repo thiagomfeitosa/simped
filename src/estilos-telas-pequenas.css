@@ -251,3 +251,58 @@
     white-space: normal;
   }
 }
+
+/* Abas Recém-nascido e Atenção básica: colunas viram uma só */
+@media screen and (max-width: 1000px) {
+  .maturidade-grade,
+  .exame-grade,
+  .kramer,
+  .grade-receitas,
+  .avaliar-dnpm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resultado-maturidade,
+  .exame-bebe {
+    position: static;
+  }
+
+  .exame-bebe .bebe-corpo {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .seletor-tom {
+    margin-left: 0;
+  }
+
+  .opcoes-criterio {
+    grid-template-columns: repeat(auto-fill, minmax(min(132px, 42vw), 1fr));
+  }
+
+  .tabela-escore,
+  .tabela-escore tbody,
+  .tabela-escore tr,
+  .tabela-escore th,
+  .tabela-escore td {
+    display: block;
+    width: auto;
+  }
+
+  .tabela-escore tr {
+    margin-bottom: 8px;
+  }
+}
+
+/* Barras de opções (abas Recém-nascido e Atenção básica): um seletor com nome comprido não alarga a tela */
+.barra-opcoes > label,
+.barra-opcoes > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.barra-opcoes select {
+  max-width: 100%;
+}

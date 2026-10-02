@@ -1,0 +1,834 @@
+/* ==========================================================================
+   Abas Recém-nascido e Atenção básica (e ilustrações realistas).
+   Usa as peças padronizadas (src/estilos-base.css). Regras de tela pequena:
+   src/estilos-telas-pequenas.css.
+   ========================================================================== */
+
+/* ---- Ilustrações (SVG) ---------------------------------------------------- */
+.ilustracao {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--raio-medio);
+}
+
+/* ---- Sub-abas (grupo de botões que quebra linha) --------------------------- */
+.subabas {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modo-prescrever .subabas button {
+  border-radius: var(--raio-pilula);
+  padding: 5px 14px;
+}
+
+.modo-prescrever .subabas button[aria-pressed='true'] {
+  background: var(--primaria);
+  border-color: var(--primaria);
+  color: #fff;
+  box-shadow: 0 2px 8px rgb(75 37 128 / 25%);
+}
+
+.barra-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 12px;
+}
+
+.barra-opcoes .nota {
+  flex-basis: 100%;
+}
+
+/* ---- Tom de pele ----------------------------------------------------------- */
+.seletor-tom {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.modo-prescrever .seletor-tom .amostra-tom {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--borda);
+}
+
+.modo-prescrever .seletor-tom .amostra-tom[aria-pressed='true'] {
+  box-shadow: 0 0 0 3px var(--primaria);
+}
+
+.amostra-tom.tom-claro {
+  background: radial-gradient(circle at 35% 35%, #fde3d2, #f3c4a6 60%, #d48f72) !important;
+}
+
+.amostra-tom.tom-moreno {
+  background: radial-gradient(circle at 35% 35%, #e5b38d, #c98c62 60%, #97603d) !important;
+}
+
+.amostra-tom.tom-negro {
+  background: radial-gradient(circle at 35% 35%, #a26a45, #7b4b2f 60%, #4b2b19) !important;
+}
+
+/* ---- Selos de categoria ---------------------------------------------------- */
+.selo-normal {
+  background: var(--ok-suave);
+  color: var(--ok);
+}
+
+.selo-variacao {
+  background: var(--lilas-100);
+  color: var(--roxo-700);
+}
+
+.selo-alterado {
+  background: var(--atencao-fundo);
+  color: #8a5a00;
+}
+
+/* ---- Capurro / New Ballard -------------------------------------------------- */
+.maturidade-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 12px;
+  padding: 0 12px 12px;
+  align-items: start;
+}
+
+.criterios {
+  display: grid;
+  gap: 12px;
+}
+
+.criterio h3 {
+  margin: 0 0 4px;
+  color: var(--roxo-700);
+  font-size: 1rem;
+}
+
+.opcoes-criterio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.modo-prescrever .opcao-criterio {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 6px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  background: var(--superficie-2);
+}
+
+.modo-prescrever .opcao-criterio[aria-checked='true'] {
+  border-color: var(--primaria);
+  background: var(--lilas-100);
+  box-shadow: 0 0 0 2px var(--primaria);
+}
+
+.modo-prescrever .opcao-criterio.certa {
+  border-color: var(--ok);
+  box-shadow: 0 0 0 2px var(--ok);
+  background: var(--ok-suave);
+}
+
+.modo-prescrever .opcao-criterio.errada {
+  border-color: var(--perigo);
+  box-shadow: 0 0 0 2px var(--perigo);
+  background: var(--perigo-suave);
+}
+
+.opcao-pontos {
+  align-self: flex-end;
+  padding: 0 8px;
+  border-radius: var(--raio-pilula);
+  background: var(--roxo-600);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.achado-sorteado {
+  max-width: 260px;
+  margin: 8px 0;
+  padding: 6px;
+  border: 2px dashed var(--lilas-300);
+  border-radius: var(--raio-medio);
+}
+
+.destaque-treino {
+  margin: 0 12px 12px;
+  padding: 8px 12px;
+  border-radius: var(--raio-medio);
+  background: var(--lilas-100);
+}
+
+.resultado-maturidade {
+  position: sticky;
+  top: 72px;
+  display: grid;
+  gap: 8px;
+}
+
+.resultado-maturidade .soma {
+  font-size: 1.1rem;
+}
+
+.ig-grande {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--roxo-700);
+}
+
+.resultado-maturidade .conta {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.selo-ig {
+  margin: 4px 0;
+  padding: 6px 10px;
+  border-radius: var(--raio-pequeno);
+  background: var(--lilas-100);
+  color: var(--roxo-800);
+  font-weight: 700;
+}
+
+.selo-ig.grupo-pre-termo {
+  background: var(--atencao-fundo);
+  color: #7a4f00;
+}
+
+.selo-ig.grupo-pos-termo {
+  background: var(--perigo-suave);
+  color: var(--perigo);
+}
+
+.nota.fonte {
+  font-size: 0.75rem;
+}
+
+/* ---- Exame no alojamento conjunto ---------------------------------------- */
+.exame-grade {
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  align-items: start;
+}
+
+.exame-bebe {
+  position: sticky;
+  top: 72px;
+}
+
+.regiao-clicavel {
+  cursor: pointer;
+  outline: none;
+}
+
+.regiao-clicavel circle:first-child {
+  fill: rgb(255 255 255 / 0%);
+  stroke: rgb(109 63 178 / 0%);
+  stroke-width: 2;
+  transition:
+    fill var(--transicao),
+    stroke var(--transicao);
+}
+
+.regiao-clicavel .regiao-ponto {
+  fill: var(--primaria);
+  stroke: #fff;
+  stroke-width: 1.5;
+  opacity: 0.85;
+}
+
+.regiao-clicavel:hover circle:first-child,
+.regiao-clicavel:focus-visible circle:first-child,
+.regiao-clicavel.ativa circle:first-child {
+  fill: rgb(185 155 230 / 22%);
+  stroke: var(--primaria);
+  stroke-dasharray: 4 3;
+}
+
+.regiao-clicavel.ativa .regiao-ponto {
+  fill: var(--seta);
+}
+
+.lista-regioes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.modo-prescrever .lista-regioes button {
+  font-size: 0.85rem;
+  border-radius: var(--raio-pilula);
+}
+
+.modo-prescrever .lista-regioes button.feito-certo {
+  border-color: var(--ok);
+}
+
+.modo-prescrever .lista-regioes button.feito-errado {
+  border-color: var(--perigo);
+}
+
+.modo-prescrever .lista-regioes button[aria-pressed='true'] {
+  background: var(--primaria);
+  border-color: var(--primaria);
+  color: #fff;
+}
+
+.regiao-conteudo h2,
+.resumo-exame h2 {
+  color: var(--roxo-700);
+}
+
+.como-examinar,
+.achado-texto {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: var(--raio-pequeno);
+  background: var(--superficie-2);
+}
+
+.achado-texto {
+  border-left: 4px solid var(--lilas-400);
+  background: var(--lilas-50);
+}
+
+.sinais-rn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sinais-rn span {
+  padding: 6px 12px;
+  border-radius: var(--raio-pequeno);
+  background: #0e1418;
+  color: #3ee07a;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.sinais-rn strong {
+  font-size: 1.3rem;
+}
+
+.detalhe-figura {
+  max-width: 420px;
+  margin: 8px 0;
+}
+
+.detalhe-figura figcaption {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+}
+
+.classificar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.retorno-ok p,
+.retorno-erro p {
+  margin: 4px 0;
+}
+
+.lista-triagens li {
+  margin: 6px 0;
+}
+
+/* ---- Atlas ---------------------------------------------------------------- */
+.atlas-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+.cartao-atlas h3 {
+  margin: 8px 0 4px;
+  color: var(--roxo-700);
+}
+
+.cartao-atlas p {
+  margin: 4px 0;
+}
+
+.atlas-desenho {
+  max-height: 340px;
+  overflow: hidden;
+  border-radius: var(--raio-medio);
+}
+
+.atlas-desenho .bebe-corpo {
+  max-height: 340px;
+  object-fit: cover;
+}
+
+.sem-desenho {
+  display: grid;
+  place-items: center;
+  height: 140px;
+  border-radius: var(--raio-medio);
+  background: linear-gradient(135deg, var(--lilas-50), var(--lilas-100));
+  font-size: 48px;
+}
+
+.sem-desenho small {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+}
+
+.kramer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 16px;
+  margin: 0 12px 12px;
+}
+
+.kramer input[type='range'] {
+  accent-color: var(--primaria);
+}
+
+.tabela-simples {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabela-simples th,
+.tabela-simples td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+}
+
+.tabela-simples .linha-ativa {
+  background: var(--lilas-100);
+  font-weight: 700;
+}
+
+.contagem {
+  margin: 0 12px 6px !important;
+}
+
+/* ---- Escores (Apgar, Silverman) ------------------------------------------- */
+.tabela-escore {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+}
+
+.tabela-escore th {
+  text-align: left;
+  font-size: 0.85rem;
+  width: 22%;
+}
+
+.modo-prescrever .tabela-escore button {
+  width: 100%;
+  height: 100%;
+  padding: 4px 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.resultado-escore {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: var(--raio-pequeno);
+  font-size: 1.05rem;
+}
+
+.resultado-escore.tom-normal {
+  background: var(--ok-suave);
+}
+
+.resultado-escore.tom-atencao {
+  background: var(--atencao-fundo);
+}
+
+.resultado-escore.tom-perigo {
+  background: var(--perigo-suave);
+}
+
+/* ---- Atenção básica --------------------------------------------------------- */
+.lista-receita {
+  padding-left: 0;
+  list-style: none;
+}
+
+.item-receita-ab {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-medio);
+  background: var(--superficie-2);
+}
+
+.item-receita-ab p {
+  margin: 4px 0;
+}
+
+.passos-conta {
+  margin: 4px 0;
+  padding-left: 20px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+.desenhos-caso {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.desenhos-caso figure {
+  margin: 0;
+}
+
+.desenhos-caso figcaption {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+}
+
+.receita-pronta {
+  background: #fffdf6;
+  border-color: #e5dfcc;
+}
+
+.receita-pronta h3 {
+  margin: 12px 0 4px;
+  color: var(--texto);
+  text-decoration: underline;
+}
+
+.receita-pronta li {
+  margin: 6px 0;
+}
+
+.quiz-ab {
+  max-width: 720px;
+  margin: 0 12px 12px;
+}
+
+.quiz-desenho {
+  max-width: 360px;
+}
+
+.modo-prescrever button.alternativa-certa {
+  border-color: var(--ok);
+  background: var(--ok-suave);
+  color: var(--texto);
+}
+
+.modo-prescrever button.alternativa-errada {
+  border-color: var(--perigo);
+  background: var(--perigo-suave);
+  color: var(--texto);
+}
+
+.calendario-vacinal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+.idade-vacina h3 {
+  margin: 0 0 6px;
+  color: var(--roxo-700);
+}
+
+.idade-vacina ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.idade-vacina li {
+  margin: 4px 0;
+}
+
+.carteira {
+  margin: 0 12px 12px;
+}
+
+.tabela-carteira td:first-child {
+  width: 3em;
+  text-align: center;
+}
+
+.sit-vacina.sit-tomada td {
+  color: var(--ok);
+}
+
+.sit-vacina.sit-aplicar-hoje {
+  background: var(--lilas-100);
+  font-weight: 700;
+}
+
+.sit-vacina.sit-atrasada {
+  background: var(--atencao-fundo);
+  font-weight: 700;
+}
+
+.sit-vacina.sit-aguardar-intervalo {
+  background: #fff9ec;
+}
+
+.sit-vacina.sit-perdeu-a-idade td {
+  color: var(--texto-suave);
+  text-decoration: line-through;
+}
+
+.sit-vacina.sit-futura td {
+  color: var(--texto-suave);
+}
+
+.grade-marcos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+  gap: 10px;
+}
+
+.cartao-marco {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--lilas-300);
+  border-radius: var(--raio-medio);
+  background: var(--superficie);
+}
+
+.cartao-marco.dominio-social {
+  border-top-color: #d0427a;
+}
+
+.cartao-marco.dominio-motor-fino {
+  border-top-color: #e3a326;
+}
+
+.cartao-marco.dominio-linguagem {
+  border-top-color: #3a86d4;
+}
+
+.cartao-marco.dominio-motor-grosso {
+  border-top-color: var(--primaria);
+}
+
+.cartao-marco small {
+  color: var(--texto-suave);
+}
+
+.marco-sem-desenho {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 200 / 160;
+  border-radius: var(--raio-medio);
+  background: var(--lilas-50);
+  font-size: 42px;
+}
+
+.marco-presente {
+  margin-top: auto;
+  font-weight: 700;
+}
+
+.linha-marcos {
+  display: grid;
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+.linha-marcos h3 {
+  margin: 0 0 8px;
+  color: var(--roxo-700);
+}
+
+.linha-check {
+  display: block;
+  margin: 6px 0;
+}
+
+.tema-heeadsss {
+  margin: 6px 0;
+  padding: 6px 10px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+}
+
+.tema-heeadsss summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.tema-heeadsss .letra {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--primaria);
+  color: #fff;
+}
+
+.tema-heeadsss textarea {
+  width: 100%;
+}
+
+/* sinal da prega: pinça, solta e a pele volta (rápido ou devagar) */
+.sinal-prega .prega-dobra {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.sinal-prega.rapida .prega-dobra {
+  animation: prega-rapida 4s ease-in-out infinite;
+}
+
+.sinal-prega.lenta .prega-dobra {
+  animation: prega-lenta 4s ease-in-out infinite;
+}
+
+.sinal-prega .prega-dedos {
+  animation: prega-dedos 4s ease-in-out infinite;
+}
+
+@keyframes prega-rapida {
+  0%,
+  20% {
+    transform: scaleY(1);
+  }
+
+  32%,
+  95% {
+    transform: scaleY(0.02);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes prega-lenta {
+  0%,
+  20% {
+    transform: scaleY(1);
+  }
+
+  60% {
+    transform: scaleY(0.55);
+  }
+
+  90%,
+  95% {
+    transform: scaleY(0.02);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes prega-dedos {
+  0%,
+  18% {
+    opacity: 1;
+  }
+
+  24%,
+  94% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sinal-prega .prega-dobra,
+  .sinal-prega .prega-dedos {
+    animation: none;
+  }
+}
+
+/* grades das telas de saúde (colunas proporcionais, sem sobrar espaço vazio) */
+.grade-receitas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 12px;
+  padding: 0 12px 12px;
+  align-items: start;
+}
+
+.grade-receitas .receita-pronta {
+  grid-column: 1 / -1;
+}
+
+.avaliar-dnpm {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 12px;
+  padding: 0 12px 12px;
+  align-items: start;
+}
+
+.grade-duas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(520px, 100%), 1fr));
+  gap: 12px;
+  padding: 12px;
+  align-items: start;
+}
+
+.grade-duas.sem-margem {
+  padding: 0;
+}
+
+.marco-sem-desenho {
+  max-height: 110px;
+}
+
+.modo-prescrever input[type='range'],
+.modo-prescrever input[type='checkbox'],
+.modo-prescrever input[type='radio'] {
+  accent-color: var(--primaria);
+}
+
+/* itens de grade nunca ficam mais largos que a coluna (tabelas largas rolam dentro delas no celular) */
+.grade-duas > *,
+.grade-receitas > *,
+.avaliar-dnpm > *,
+.linha-marcos > *,
+.maturidade-grade > *,
+.exame-grade > *,
+.atlas-grade > *,
+.calendario-vacinal > *,
+.kramer > * {
+  min-width: 0;
+}

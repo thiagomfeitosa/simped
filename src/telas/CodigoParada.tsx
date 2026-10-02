@@ -25,6 +25,7 @@ import {
   volumeDoBolus,
 } from '../parada/parada';
 import { formatarNumero, lerNumero } from '../prescricao/comum';
+import { BriefingParada, DebriefingParada } from './BriefingDebriefing';
 import { FolhaEmergencia } from './FolhaEmergencia';
 import { Monitor } from './Monitor';
 
@@ -79,6 +80,12 @@ export function CodigoParada() {
   const [volumes, setVolumes] = useState<Record<string, string>>({});
   const [retorno, setRetorno] = useState<{ ok: boolean; texto: string } | null>(null);
   const [folhaAberta, setFolhaAberta] = useState(false);
+  // briefing (antes) e debriefing (depois): a equipe continua a mesma ao recomeçar
+  const [briefingFeito, setBriefingFeito] = useState<Set<string>>(new Set());
+  const [nomesEquipe, setNomesEquipe] = useState<Record<string, string>>({});
+  const [briefingAberto, setBriefingAberto] = useState(true);
+  const [respostasDebriefing, setRespostasDebriefing] = useState<Record<string, string>>({});
+  const [crm, setCrm] = useState<Record<string, number>>({});
 
   const estado = useMemo(() => estadoDaParada(cenario, eventos, tS), [cenario, eventos, tS]);
   const avaliacao = useMemo(() => (estado.encerrada ? avaliarParada(cenario, eventos, toleranciaDe(config)) : null), [estado.encerrada, cenario, eventos, config]);
@@ -100,11 +107,16 @@ export function CodigoParada() {
     setJoules('');
     setVolumes({});
     setRetorno(null);
+    setBriefingFeito(new Set());
+    setBriefingAberto(true);
+    setRespostasDebriefing({});
+    setCrm({});
   };
 
   const iniciar = () => {
     registrar({ tipo: 'iniciar', tS });
     setRodando(true);
+    setBriefingAberto(false);
   };
 
   const darDroga = (drogaId: string) => {
@@ -193,6 +205,33 @@ export function CodigoParada() {
       <p className="aviso-treino" role="note">
         ⚠️ Treinamento. Doses, energias e tempos do algoritmo: A VALIDAR (PALS). Não substitui protocolos institucionais.
       </p>
+      <ol className="etapas-codigo" aria-label="Etapas do código">
+        <li className={!estado.iniciada ? 'atual' : 'feita'}>1. Briefing</li>
+        <li className={estado.iniciada && !estado.encerrada ? 'atual' : estado.encerrada ? 'feita' : ''}>2. Código</li>
+        <li className={estado.encerrada ? 'atual' : ''}>3. Debriefing</li>
+      </ol>
+      <BriefingParada
+        cenario={cenario}
+        feitos={briefingFeito}
+        aoMudarFeitos={setBriefingFeito}
+        nomes={nomesEquipe}
+        aoMudarNomes={setNomesEquipe}
+        aberto={briefingAberto}
+        aoAlternar={setBriefingAberto}
+        aoAbrirFolha={() => setFolhaAberta(true)}
+      />
+      {estado.encerrada && (
+        <DebriefingParada
+          cenario={cenario}
+          eventos={eventos}
+          feitos={briefingFeito}
+          nomes={nomesEquipe}
+          respostas={respostasDebriefing}
+          aoMudarRespostas={setRespostasDebriefing}
+          crm={crm}
+          aoMudarCrm={setCrm}
+        />
+      )}
 
       <div className="parada-grade">
         {/* PACIENTE E MONITOR */}

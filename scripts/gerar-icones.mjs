@@ -11,7 +11,7 @@ import { chromium } from '@playwright/test';
 const pasta = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'icones');
 mkdirSync(pasta, { recursive: true });
 
-/** Seringa branca com líquido laranja, na diagonal, sobre fundo azul do app. */
+/** Seringa branca com líquido laranja, na diagonal, sobre fundo roxo do app. */
 function desenho({ cantos, escala }) {
   const seringa = `
     <g transform="translate(256 256) scale(${escala}) rotate(-45) translate(-256 -256)">
@@ -33,8 +33,8 @@ function desenho({ cantos, escala }) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0f6fb5"/>
-      <stop offset="1" stop-color="#0a4f82"/>
+      <stop offset="0" stop-color="#7a4cc2"/>
+      <stop offset="1" stop-color="#3b1a66"/>
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="${cantos}" fill="url(#fundo)"/>${seringa}
