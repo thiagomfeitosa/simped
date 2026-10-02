@@ -24,6 +24,9 @@ export interface Configuracoes {
   margemPct: number;
   /** B16: ao abrir um caso, sortear outro peso/idade/apresentação (dentro dos limites do caso). */
   variarCasos: boolean;
+  /** Código de parada: tecla de cada compressão e de cada ventilação (KeyboardEvent.code). */
+  teclaCompressao: string;
+  teclaVentilacao: string;
 }
 
 export const FONTES_DE_DOSE: readonly CodigoFonte[] = [
@@ -49,7 +52,39 @@ export const CONFIGURACOES_PADRAO: Configuracoes = {
   modo: 'treino',
   margemPct: 1,
   variarCasos: false,
+  teclaCompressao: 'Space',
+  teclaVentilacao: 'ArrowUp',
 };
+
+/** Teclas que não podem virar tecla da RCP (sair, navegar entre campos). */
+const TECLAS_PROIBIDAS: readonly string[] = ['Escape', 'Tab'];
+
+export function teclaValida(codigo: unknown): codigo is string {
+  return typeof codigo === 'string' && /^[A-Za-z0-9]{1,24}$/.test(codigo) && !TECLAS_PROIBIDAS.includes(codigo);
+}
+
+/** Nome da tecla para mostrar (Space → Espaço, ArrowUp → ↑, KeyV → V, Digit1 → 1). */
+export function nomeDaTecla(codigo: string): string {
+  const fixos: Record<string, string> = {
+    Space: 'Espaço',
+    ArrowUp: '↑',
+    ArrowDown: '↓',
+    ArrowLeft: '←',
+    ArrowRight: '→',
+    Enter: 'Enter',
+    NumpadEnter: 'Enter (numérico)',
+    ShiftLeft: 'Shift esquerdo',
+    ShiftRight: 'Shift direito',
+    ControlLeft: 'Ctrl esquerdo',
+    ControlRight: 'Ctrl direito',
+    Backspace: 'Apagar',
+  };
+  if (fixos[codigo]) return fixos[codigo];
+  if (/^Key[A-Z]$/.test(codigo)) return codigo.slice(3);
+  if (/^Digit\d$/.test(codigo)) return codigo.slice(5);
+  if (/^Numpad\d$/.test(codigo)) return `${codigo.slice(6)} (numérico)`;
+  return codigo;
+}
 
 /** Hospital escolhido já com os ajustes do usuário. */
 export function hospitalAtual(config: Configuracoes): ConfiguracaoHospital {
@@ -95,7 +130,15 @@ export function lerConfiguracoes(texto: string | null | undefined): Configuracoe
     modo: b.modo === 'prova' ? 'prova' : 'treino',
     margemPct: typeof margem === 'number' && margem >= 0 && margem <= 20 ? margem : p.margemPct,
     variarCasos: b.variarCasos === true,
+    ...teclasLidas(b.teclaCompressao, b.teclaVentilacao),
   };
+}
+
+function teclasLidas(compressao: unknown, ventilacao: unknown): Pick<Configuracoes, 'teclaCompressao' | 'teclaVentilacao'> {
+  const p = CONFIGURACOES_PADRAO;
+  const c = teclaValida(compressao) ? compressao : p.teclaCompressao;
+  const v = teclaValida(ventilacao) && ventilacao !== c ? ventilacao : c === p.teclaVentilacao ? p.teclaCompressao : p.teclaVentilacao;
+  return { teclaCompressao: c, teclaVentilacao: v };
 }
 
 export function escreverConfiguracoes(config: Configuracoes): string {

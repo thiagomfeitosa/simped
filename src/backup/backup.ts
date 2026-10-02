@@ -12,7 +12,7 @@
 export const PREFIXO = 'simped.';
 
 /** Gavetas que não entram no backup: passageiras, só valem enquanto o app está aberto. */
-export const FORA_DO_BACKUP: readonly string[] = ['simped.canal'];
+export const FORA_DO_BACKUP: readonly string[] = ['simped.canal', 'simped.canal-parada'];
 
 /** Nome de cada gaveta conhecida, para mostrar ao usuário. */
 export const NOMES_DAS_GAVETAS: Readonly<Record<string, string>> = {

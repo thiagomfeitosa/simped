@@ -112,3 +112,11 @@ Tudo escrito pelo assistente de memória, **sem conferência**. Cada item tem `s
 | Consulta de puericultura e hebiatria | `src/dados/atencao-basica/puericultura-a-validar.ts` | Calendário de consultas, orientações e suplementos por idade; HEEADSSS; sigilo; Tanner (texto); idades da puberdade; PA ≥ 13 anos (AAP 2017). |
 | Briefing e debriefing | `src/dados/parada-briefing-a-validar.ts` | Papéis da equipe, lista do briefing, fases do debriefing, itens de CRM, pausas usadas na fração de compressão estimada (10 s / 5 s / 10 s; meta > 80%). |
 
+
+## Parada em equipe (out/2026)
+| Dado | Arquivo | Valor provisório |
+|---|---|---|
+| Ritmo da RCP | `src/dados/parada-rcp-a-validar.ts` (`RCP`) | Compressões 100–120/min; 2 ventilações por pausa; com via aérea avançada 20–30/min (1 a cada 2–3 s); pausa máx. 10 s; intervalo > 1,5 s conta como pausa; meta da fração > 80%; compressão a menos de 0,6 s do choque = "tocando no choque". |
+| Relação compressão:ventilação | `src/dados/parada-a-validar.ts` (`relacaoCompressaoVentilacao`) | 15:2 no lactente e no escolar; 30:2 no adolescente de 13 anos (descrito "com sinais de puberdade"). |
+| Técnica das drogas | `src/dados/parada-rcp-a-validar.ts` (`ADMINISTRACAO_DROGA`) | Flush de 5–10 mL de SF; elevar o membro 10–20 s no acesso periférico. |
+| Papéis e ordens do líder | `src/dados/parada-briefing-a-validar.ts` | 8 papéis ("Registro e tempo" virou "Tempo" + "Anotação"); 10 ordens prontas. Avisos contam se dados entre 90 s do ciclo e a checagem; adrenalina a partir de 150 s da anterior. |

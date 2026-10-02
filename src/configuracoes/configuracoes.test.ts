@@ -4,6 +4,7 @@ import {
   escreverConfiguracoes,
   hospitalAtual,
   lerConfiguracoes,
+  nomeDaTecla,
   toleranciaDe,
 } from './configuracoes';
 
@@ -48,5 +49,13 @@ describe('configurações', () => {
 
   it('margem em % vira tolerância relativa', () => {
     expect(toleranciaDe({ ...CONFIGURACOES_PADRAO, margemPct: 2.5 }).relativa).toBeCloseTo(0.025);
+  });
+
+  it('teclas da RCP: padrão Espaço e ↑; tecla estranha ou repetida volta ao padrão', () => {
+    expect([nomeDaTecla(CONFIGURACOES_PADRAO.teclaCompressao), nomeDaTecla(CONFIGURACOES_PADRAO.teclaVentilacao)]).toEqual(['Espaço', '↑']);
+    expect(lerConfiguracoes(JSON.stringify({ teclaCompressao: 'KeyC', teclaVentilacao: 'KeyV' }))).toMatchObject({ teclaCompressao: 'KeyC', teclaVentilacao: 'KeyV' });
+    expect(lerConfiguracoes(JSON.stringify({ teclaCompressao: 'Escape', teclaVentilacao: '<b>' }))).toMatchObject({ teclaCompressao: 'Space', teclaVentilacao: 'ArrowUp' });
+    expect(lerConfiguracoes(JSON.stringify({ teclaCompressao: 'ArrowUp', teclaVentilacao: 'ArrowUp' }))).toMatchObject({ teclaCompressao: 'ArrowUp', teclaVentilacao: 'Space' });
+    expect([nomeDaTecla('KeyV'), nomeDaTecla('Digit3'), nomeDaTecla('Numpad0')]).toEqual(['V', '3', '0 (numérico)']);
   });
 });

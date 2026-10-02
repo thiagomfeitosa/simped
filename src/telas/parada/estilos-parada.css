@@ -1,0 +1,121 @@
+/* ==========================================================================
+   Código de parada — antes / durante / depois (regras de tela pequena: estilos-telas-pequenas.css)
+   ========================================================================== */
+.codigo-parada .cabecalho .etapas-codigo { margin: 0 0 0 auto; }
+
+/* ---- Antes ---- */
+.parada-antes { display: grid; gap: 12px; max-width: 1100px; margin: 0 auto; padding: 12px; }
+.passo-antes h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; color: var(--roxo-700); }
+.numero-passo {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primaria); color: #fff; font-size: 14px; font-weight: 800;
+}
+.cenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 10px; }
+.cartao-cenario {
+  display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; cursor: pointer;
+  border: 2px solid var(--borda); border-radius: var(--raio-medio); background: var(--superficie);
+}
+.cartao-cenario.escolhido { border-color: var(--primaria); background: var(--primaria-suave); }
+.cartao-cenario input { position: absolute; opacity: 0; pointer-events: none; }
+.cartao-cenario:focus-within { box-shadow: var(--foco); }
+.cartao-cenario small { color: var(--texto-suave); }
+.lista-papeis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr)); gap: 0 16px; margin: 0; padding: 0; list-style: none; }
+.lista-papeis .papel-equipe { grid-template-columns: 28px minmax(0, 1fr) minmax(90px, 150px) auto; }
+.papel-icone { font-size: 20px; }
+.papel-texto { display: flex; flex-direction: column; min-width: 0; }
+.papel-texto small { color: var(--texto-suave); font-size: 12px; }
+.papel-tela { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.teclas-rcp { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+.teclas-rcp small { flex-basis: 100%; color: var(--texto-suave); }
+kbd {
+  display: inline-block; min-width: 1.6em; padding: 1px 6px; border: 1px solid var(--borda);
+  border-bottom-width: 3px; border-radius: 6px; background: var(--superficie-2); font: inherit; font-weight: 700; text-align: center;
+}
+.texto-erro { color: var(--perigo); }
+.parada-iniciar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 8px 0 20px; }
+.botao-iniciar { font-size: 1.25rem; padding: 12px 28px; min-height: 52px; }
+
+/* ---- Durante ---- */
+.parada-durante { padding: 0 12px 12px; }
+.barra-codigo {
+  position: sticky; top: 64px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  margin: 8px 0; padding: 8px 12px; border-radius: var(--raio-medio); background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+.barra-codigo .relogio-grande { font-size: 40px; }
+.eu-sou { color: var(--texto-suave); font-weight: 600; }
+.barra-codigo-botoes { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+.recados { display: grid; gap: 4px; margin-bottom: 8px; }
+.recado { margin: 0; padding: 8px 12px; border-left: 5px solid var(--primaria); border-radius: var(--raio-pequeno); background: var(--primaria-suave); font-weight: 700; }
+.recado.perigo { border-left-color: var(--perigo); background: var(--perigo-suave); }
+.faixa-rcp { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 8px; margin-bottom: 8px; }
+.faixa-rcp > .aviso-rcp, .faixa-rcp > .dica-rcp { grid-column: 1 / -1; margin: 0; }
+.pad-rcp {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; align-items: center; padding: 10px;
+  border: 2px solid var(--borda); border-radius: var(--raio-medio); background: var(--superficie);
+}
+.pad-rcp.faixa-boa { border-color: var(--ok); }
+.pad-rcp.faixa-lenta, .pad-rcp.faixa-rapida, .pad-rcp.vez { border-color: var(--atencao); }
+.pad-rcp .aviso-rcp { grid-column: 1 / -1; }
+.aviso-rcp { margin: 0; padding: 6px 10px; border-radius: var(--raio-pequeno); background: var(--atencao-fundo); font-weight: 700; }
+.aviso-rcp.perigo { background: var(--perigo-suave); }
+.botao-rcp {
+  position: relative; overflow: hidden; min-width: 150px; min-height: 76px; font-size: 1.1rem; font-weight: 800;
+  touch-action: manipulation; user-select: none;
+}
+.pulso { position: absolute; inset: 0; background: var(--primaria); opacity: 0; animation: pulso-rcp 0.25s ease-out; pointer-events: none; }
+@keyframes pulso-rcp { from { opacity: 0.45; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pulso { animation: none; } }
+.leitura-rcp { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.leitura-rcp strong { font-size: 28px; font-variant-numeric: tabular-nums; }
+.leitura-rcp small { flex-basis: 100%; color: var(--texto-suave); }
+.regua-rcp { position: relative; display: inline-block; width: 140px; height: 12px; border-radius: var(--raio-pilula); background: var(--superficie-2); border: 1px solid var(--borda); }
+.regua-alvo { position: absolute; top: 0; bottom: 0; background: var(--ok-suave); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.regua-ponteiro { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--texto); }
+.abas-papeis { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.abas-papeis .selo { margin-left: 4px; }
+.parada-durante-grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 12px; align-items: start; }
+@media (max-width: 1000px) { .parada-durante-grade { grid-template-columns: minmax(0, 1fr); } }
+.painel-papel h2 small { color: var(--texto-suave); font-weight: 600; }
+.painel-papel-conteudo { display: grid; gap: 10px; }
+.painel-papel-conteudo h3 { margin: 6px 0 0; color: var(--roxo-700); }
+.parada-lateral { display: grid; gap: 10px; }
+.feed-equipe h2 { margin-top: 0; }
+.feed-equipe .quem, .lista-ordens small { color: var(--texto-suave); }
+.ordens-recebidas { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ordens-recebidas li {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; padding: 8px 10px;
+  border: 2px solid var(--atencao); border-radius: var(--raio-pequeno); background: var(--atencao-fundo);
+}
+.grade-ordens { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr)); gap: 6px; }
+.grade-ordens button { display: flex; flex-direction: column; align-items: flex-start; height: auto; padding: 6px 10px; text-align: left; }
+.grade-ordens small { color: var(--texto-suave); font-weight: 400; }
+.lista-ordens { margin: 0; padding-left: 18px; }
+.lista-drogas { display: flex; flex-wrap: wrap; gap: 6px; }
+.form-droga { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px; border: 1px solid var(--borda); border-radius: var(--raio-medio); background: var(--superficie-2); }
+.form-droga > .nota { flex-basis: 100%; margin: 0; }
+.acesso-linha { align-items: center; }
+.dicas { margin: 0; padding-left: 18px; color: var(--texto-suave); }
+.carregado { color: var(--perigo); }
+.folha-codigo td.hora { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.piscando { animation: piscar 1s steps(2) infinite; }
+@keyframes piscar { 50% { opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) { .piscando { animation: none; } }
+.consulta-rapida summary { cursor: pointer; font-weight: 700; }
+.consulta-rapida ul { margin: 4px 0 0; padding-left: 18px; font-size: 0.9rem; }
+
+/* ---- Depois ---- */
+.parada-depois { display: grid; gap: 12px; padding: 12px; }
+.resultado-codigo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.resultado-codigo h2 { margin: 0; }
+.resultado-codigo.sit-certo { border-left: 6px solid var(--ok); }
+.resultado-codigo.sit-errado { border-left: 6px solid var(--perigo); }
+.grade-depois { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 12px; align-items: start; }
+.grade-depois h3 { margin-top: 0; color: var(--roxo-700); }
+.parada-depois .debriefing { margin: 0; }
+.lista-participacao { margin: 8px 0 0; padding-left: 18px; }
+
+@media print {
+  .codigo-parada .barra-codigo, .codigo-parada .resultado-codigo button { display: none; }
+}
+@media (max-width: 1000px) { .barra-codigo { top: 0; } }

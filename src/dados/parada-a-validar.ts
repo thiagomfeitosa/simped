@@ -176,6 +176,11 @@ export interface CenarioParada {
   };
   /** Causa reversível do cenário (para o relatório). */
   causa?: { nome: string; tratamento: string; id: string };
+  /**
+   * Compressões por série antes das 2 ventilações, sem via aérea avançada (equipe com 2 socorristas):
+   * 15 no lactente e na criança; 30 no adolescente com puberdade (relação de adulto). Sem valor: 15.
+   */
+  relacaoCompressaoVentilacao?: 15 | 30;
   status: StatusValidacao;
 }
 
@@ -189,6 +194,7 @@ export const CENARIOS_PARADA: readonly CenarioParada[] = [
     pesoKg: 8,
     ritmoInicial: 'assistolia',
     retornoQuando: { adrenalinas: 2 },
+    relacaoCompressaoVentilacao: 15,
     status: AV,
   },
   {
@@ -200,18 +206,20 @@ export const CENARIOS_PARADA: readonly CenarioParada[] = [
     pesoKg: 20,
     ritmoInicial: 'fv',
     retornoQuando: { choques: 3, adrenalinas: 1, exige: ['amiodarona'] },
+    relacaoCompressaoVentilacao: 15,
     status: AV,
   },
   {
     id: 'aesp-trauma',
     titulo: 'Adolescente em AESP (hipovolemia)',
-    descricao: 'Adolescente de 13 anos, atropelado, muito sangramento. O monitor mostra ritmo organizado, mas não há pulso.',
+    descricao: 'Adolescente de 13 anos, já com sinais de puberdade, atropelado, muito sangramento. O monitor mostra ritmo organizado, mas não há pulso.',
     idadeAnos: 13,
     idadeTexto: '13 anos',
     pesoKg: 45,
     ritmoInicial: 'aesp',
     retornoQuando: { adrenalinas: 1, exige: ['sf-bolus'] },
     causa: { nome: 'Hipovolemia', tratamento: 'SF 0,9% em bolus (e sangue/controle do sangramento)', id: 'sf-bolus' },
+    relacaoCompressaoVentilacao: 30,
     status: AV,
   },
 ];

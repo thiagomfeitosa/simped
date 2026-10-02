@@ -8,20 +8,49 @@ import type { StatusValidacao } from './medicacoes/tipos';
 
 const AV: StatusValidacao = 'A_VALIDAR';
 
+/** Painel que cada papel vê durante o código (os dois compressores dividem o mesmo). */
+export type PainelPapel = 'lider' | 'compressoes' | 'ventilacao' | 'medicacao' | 'monitor' | 'tempo' | 'anotacao';
+
 export interface PapelEquipe {
   id: string;
   nome: string;
+  icone: string;
+  painel: PainelPapel;
   tarefas: string;
 }
 
 export const PAPEIS_EQUIPE: readonly PapelEquipe[] = [
-  { id: 'lider', nome: 'Líder', tarefas: 'Fica fora das mãos (não faz procedimento), olha o todo, decide, fala alto e confirma cada ordem.' },
-  { id: 'compressor-1', nome: 'Compressões 1', tarefas: 'RCP de alta qualidade: 100–120/min, profundidade de 1/3 do tórax, retorno total, mínimo de pausas.' },
-  { id: 'compressor-2', nome: 'Compressões 2', tarefas: 'Troca com o colega a cada 2 min (na checagem de ritmo) e confere a qualidade.' },
-  { id: 'via-aerea', nome: 'Via aérea', tarefas: 'Bolsa-válvula-máscara com O₂ 100%, 15:2 (2 socorristas) ou 1 ventilação a cada 2–3 s com via aérea avançada.' },
-  { id: 'medicacao', nome: 'Acesso e medicações', tarefas: 'EV/IO, prepara e aplica as drogas, fala a dose em voz alta e faz o flush.' },
-  { id: 'monitor', nome: 'Monitor e desfibrilador', tarefas: 'Eletrodos/pás, lê o ritmo para o líder, carrega e choca com segurança ("afastem-se").' },
-  { id: 'registro', nome: 'Registro e tempo', tarefas: 'Anota horários, avisa 2 min de RCP e o tempo desde a última adrenalina.' },
+  { id: 'lider', nome: 'Líder', icone: '🗣️', painel: 'lider', tarefas: 'Fica fora das mãos (não faz procedimento), olha o todo, decide, dá as ordens em voz alta e confirma cada uma.' },
+  { id: 'compressor-1', nome: 'Compressões 1', icone: '🫀', painel: 'compressoes', tarefas: 'RCP de alta qualidade: 100–120/min, profundidade de 1/3 do tórax, retorno total, mínimo de pausas.' },
+  { id: 'compressor-2', nome: 'Compressões 2', icone: '🫀', painel: 'compressoes', tarefas: 'Reveza com o colega a cada 2 min (na checagem de ritmo) e confere a qualidade.' },
+  { id: 'via-aerea', nome: 'Ventilação e via aérea', icone: '🫁', painel: 'ventilacao', tarefas: 'Bolsa-válvula-máscara com O₂ 100%: 2 ventilações a cada 15 compressões (30 no adolescente); com via aérea avançada, 1 a cada 2–3 s.' },
+  { id: 'medicacao', nome: 'Acesso e medicações', icone: '💉', painel: 'medicacao', tarefas: 'EV/IO, prepara e aplica as drogas, fala a dose em voz alta, faz o flush e eleva o membro.' },
+  { id: 'monitor', nome: 'Monitor e desfibrilador', icone: '⚡', painel: 'monitor', tarefas: 'Eletrodos/pás, lê o ritmo para o líder, carrega e choca com segurança ("afastem-se").' },
+  { id: 'tempo', nome: 'Tempo', icone: '⏱️', painel: 'tempo', tarefas: 'Cronometra: avisa os 2 min de RCP (checar ritmo e trocar o compressor) e a hora da adrenalina (3–5 min).' },
+  { id: 'registro', nome: 'Anotação', icone: '✍️', painel: 'anotacao', tarefas: 'Anota cada ação com o horário na folha do código e escreve as observações.' },
+];
+
+/** Ordens prontas do líder (comunicação em alça fechada: quem recebe responde "entendido"). */
+export interface OrdemLider {
+  id: string;
+  texto: string;
+  /** Papel que recebe a ordem. */
+  para: string;
+  /** Dica no campo do detalhe (o líder escreve a dose ou a energia). */
+  detalhe?: string;
+}
+
+export const ORDENS_LIDER: readonly OrdemLider[] = [
+  { id: 'checar', texto: 'Checar o ritmo', para: 'monitor' },
+  { id: 'carregar', texto: 'Carregar o desfibrilador', para: 'monitor', detalhe: 'quantos J?' },
+  { id: 'chocar', texto: 'Chocar', para: 'monitor' },
+  { id: 'acesso', texto: 'Acesso EV ou intraósseo', para: 'medicacao' },
+  { id: 'adrenalina', texto: 'Adrenalina', para: 'medicacao', detalhe: 'quantos mL?' },
+  { id: 'amiodarona', texto: 'Amiodarona', para: 'medicacao', detalhe: 'quantos mL?' },
+  { id: 'bolus', texto: 'SF 0,9% em bolus', para: 'medicacao', detalhe: 'quantos mL?' },
+  { id: 'intubar', texto: 'Intubar', para: 'via-aerea' },
+  { id: 'trocar', texto: 'Trocar o compressor', para: 'compressor-1' },
+  { id: 'tempo', texto: 'Quanto tempo desde a última adrenalina?', para: 'tempo' },
 ];
 
 export interface ItemBriefing {

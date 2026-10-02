@@ -18,16 +18,44 @@ import {
   TUBO,
 } from '../dados/parada-a-validar';
 
-export type EventoParada =
-  | { tipo: 'iniciar'; tS: number }
-  | { tipo: 'checarRitmo'; tS: number }
-  | { tipo: 'choque'; tS: number; joules: number }
-  /** Droga dada: o aluno informa quantos mL aspirou (a conta é conferida na avaliação). */
-  | { tipo: 'droga'; tS: number; drogaId: string; volumeMl: number }
-  | { tipo: 'fluido'; tS: number; volumeMl: number }
-  | { tipo: 'viaAerea'; tS: number; descricao: string }
-  | { tipo: 'acesso'; tS: number; descricao: string }
-  | { tipo: 'encerrar'; tS: number };
+/** Quem fez (papel da equipe) e a identidade do evento (para juntar o que vem de várias telas). */
+export interface AutoriaEvento {
+  id?: string;
+  /** Papel da equipe que fez a ação (src/dados/parada-briefing-a-validar.ts). */
+  por?: string;
+}
+
+/** Aviso do cronometrista para a equipe. */
+export type AvisoTempo = 'checar-ritmo' | 'adrenalina';
+
+export type EventoParada = AutoriaEvento &
+  (
+    | { tipo: 'iniciar'; tS: number }
+    | { tipo: 'checarRitmo'; tS: number }
+    /** Desfibrilador carregado ("afastem-se"); joules 0 = carga cancelada. */
+    | { tipo: 'carga'; tS: number; joules: number }
+    | { tipo: 'choque'; tS: number; joules: number }
+    /** Droga dada: o aluno informa quantos mL aspirou (a conta é conferida na avaliação), o flush e se elevou o membro. */
+    | { tipo: 'droga'; tS: number; drogaId: string; volumeMl: number; flushMl?: number; elevouMembro?: boolean }
+    | { tipo: 'fluido'; tS: number; volumeMl: number }
+    | { tipo: 'viaAerea'; tS: number; descricao: string }
+    | { tipo: 'acesso'; tS: number; descricao: string }
+    /** Equipe: aviso do tempo, ordem do líder (e o "entendido"), anotação livre e evento anotado na folha. */
+    | { tipo: 'aviso'; tS: number; aviso: AvisoTempo }
+    | { tipo: 'ordem'; tS: number; para: string; texto: string }
+    | { tipo: 'entendido'; tS: number; ordemId: string }
+    | { tipo: 'anotacao'; tS: number; texto: string }
+    | { tipo: 'anotado'; tS: number; eventoId: string }
+    | { tipo: 'encerrar'; tS: number }
+  );
+
+/** Eventos que vão para a folha do código (o anotador anota cada um). */
+export const EVENTOS_DA_FOLHA: readonly EventoParada['tipo'][] = ['checarRitmo', 'choque', 'droga', 'fluido', 'viaAerea', 'acesso'];
+
+/** Intubação (via aérea avançada): a partir dela, compressões contínuas e ventilação assíncrona. */
+export function ehViaAvancada(e: EventoParada): boolean {
+  return e.tipo === 'viaAerea' && /intuba|avançada/i.test(e.descricao);
+}
 
 /** Ritmos em que o choque está indicado. */
 export function ritmoChocavel(ritmo: Ritmo): boolean {
@@ -82,6 +110,12 @@ export interface EstadoParada {
   dadas: Record<string, number>;
   /** O último evento foi uma checagem que mostrou ritmo chocável (o choque é agora). */
   chocarAgora: boolean;
+  /** Desfibrilador carregado agora (J), esperando o choque. */
+  carregadoJ?: number;
+  /** Desde quando há via aérea avançada (intubação). */
+  viaAvancadaS?: number;
+  /** Já há acesso EV/IO registrado. */
+  acesso: boolean;
   /** Próxima ação sugerida (o modo prova esconde). */
   proximaAcao: string;
 }
@@ -128,6 +162,12 @@ export function estadoDaParada(cenario: CenarioParada, eventos: readonly EventoP
   const ultimaAdrenalinaS = adrenalinas[adrenalinas.length - 1]?.tS;
   const restanteS = TEMPOS_PARADA.cicloRcpS - (agoraS - inicioCiclo);
   const rce = rceEmS !== undefined;
+  let carregadoJ: number | undefined;
+  for (const e of ate) {
+    if (e.tipo === 'carga') carregadoJ = e.joules > 0 ? e.joules : undefined;
+    if (e.tipo === 'choque') carregadoJ = undefined;
+  }
+  const viaAvancadaS = ate.find(ehViaAvancada)?.tS;
 
   const estado: Omit<EstadoParada, 'proximaAcao'> = {
     iniciada: !!inicio,
@@ -142,6 +182,9 @@ export function estadoDaParada(cenario: CenarioParada, eventos: readonly EventoP
     ...(ultimaAdrenalinaS !== undefined && { ultimaAdrenalinaS }),
     dadas,
     chocarAgora,
+    ...(carregadoJ !== undefined && { carregadoJ }),
+    ...(viaAvancadaS !== undefined && { viaAvancadaS }),
+    acesso: ate.some((e) => e.tipo === 'acesso'),
   };
   return { ...estado, proximaAcao: proximaAcao(cenario, estado, agoraS) };
 }

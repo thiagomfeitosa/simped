@@ -22,29 +22,35 @@ export type MensagemCanal =
    */
   | { tipo: 'trocarCaso'; casoId: string; variacao?: 'variar' | 'original' | 'manter' };
 
-interface Envelope {
+interface Envelope<M> {
   id: string;
   de: string;
-  msg: MensagemCanal;
+  msg: M;
 }
 
-export interface Canal {
-  enviar: (msg: MensagemCanal) => void;
+export interface Canal<M = MensagemCanal> {
+  enviar: (msg: M) => void;
   fechar: () => void;
 }
 
-const NOME = 'simped-sessao';
-const CHAVE = 'simped.canal';
+/** Nome do canal e gaveta do armazenamento (cada assunto tem o seu; a gaveta começa por "simped.canal"). */
+export interface OpcoesCanal {
+  nome: string;
+  chave: string;
+}
+
+const PADRAO: OpcoesCanal = { nome: 'simped-sessao', chave: 'simped.canal' };
 
 function novoId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 /** Abre o canal. `aoReceber` só recebe mensagens de OUTRAS janelas, uma vez cada. */
-export function abrirCanal(aoReceber: (msg: MensagemCanal) => void, eu: string = novoId()): Canal {
+export function abrirCanal<M = MensagemCanal>(aoReceber: (msg: M) => void, eu: string = novoId(), opcoes: OpcoesCanal = PADRAO): Canal<M> {
+  const { nome: NOME, chave: CHAVE } = opcoes;
   const vistos = new Set<string>();
   const receber = (env: unknown) => {
-    const e = env as Envelope | null;
+    const e = env as Envelope<M> | null;
     if (!e || typeof e !== 'object' || typeof e.id !== 'string' || !e.msg || e.de === eu || vistos.has(e.id)) return;
     vistos.add(e.id);
     if (vistos.size > 500) vistos.clear();
@@ -71,7 +77,7 @@ export function abrirCanal(aoReceber: (msg: MensagemCanal) => void, eu: string =
 
   return {
     enviar: (msg) => {
-      const env: Envelope = { id: novoId(), de: eu, msg };
+      const env: Envelope<M> = { id: novoId(), de: eu, msg };
       try {
         bc?.postMessage(env);
       } catch {

@@ -22,7 +22,7 @@ const TELAS = {
   prescrever: telaSobDemanda(() => import('./telas/Prescrever').then((m) => m.Prescrever)),
   treino: telaSobDemanda(() => import('./telas/TreinoContas').then((m) => m.TreinoContas)),
   calculadoras: telaSobDemanda(() => import('./telas/Calculadoras').then((m) => m.Calculadoras)),
-  parada: telaSobDemanda(() => import('./telas/CodigoParada').then((m) => m.CodigoParada)),
+  parada: telaSobDemanda(() => import('./telas/parada/CodigoParada').then((m) => m.CodigoParada)),
   recemNascido: telaSobDemanda(() => import('./telas/neonatal/RecemNascido').then((m) => m.RecemNascido)),
   atencaoBasica: telaSobDemanda(() => import('./telas/atencao-basica/AtencaoBasica').then((m) => m.AtencaoBasica)),
   casos: telaSobDemanda(() => import('./telas/EditorCasos').then((m) => m.EditorCasos)),
