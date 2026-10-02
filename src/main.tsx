@@ -4,7 +4,9 @@ import { App } from './App';
 import { instalarCapturaDeErros } from './diagnostico/coletar';
 import { ProtecaoDeErro } from './diagnostico/ProtecaoDeErro';
 import { iniciarPwa } from './pwa/pwa';
-// A ordem importa: primeiro a base (cores, fonte, botões), depois cada tela, a barra dos modos e, por fim, tablet/celular.
+// A ordem importa: primeiro as peças padronizadas (B19: cores, fonte, botões, campos), depois cada tela,
+// a barra dos modos e, por fim, tablet/celular.
+import './estilos-base.css';
 import './componentes/passo-a-passo/estilos.css';
 import './telas/estilos-prescrever.css';
 import './telas/estilos-paginas.css';

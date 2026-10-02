@@ -1,0 +1,201 @@
+/* ==========================================================================
+   SimPed — peças visuais padronizadas (B19)
+   Um só conjunto de cores, fontes, cantos, sombras, botões, campos e cartões
+   para TODAS as abas. Telas novas usam estas peças (guia: docs/estilo-visual.md).
+   Carregado antes de todos os outros estilos (src/main.tsx).
+   ========================================================================== */
+
+:root {
+  --fundo: #eef2f7;
+  --superficie: #ffffff;
+  --superficie-2: #f6f8fb;
+  --texto: #1c2635;
+  --texto-suave: #5a6778;
+  --borda: #d7dee8;
+  --primaria: #0f6fb5;
+  --primaria-escura: #0a4f82;
+  --seta: #ef7d1a;
+  --ok: #22935a;
+  --atencao: #b7791f;
+  --atencao-fundo: #fff5dc;
+  --perigo: #c2413b;
+
+  --secao-1: #5b6b82;
+  --secao-2: #1f8fc4;
+  --secao-3: #d97a1e;
+  --secao-4: #b8860b;
+  --secao-5: #7b4fd6;
+  --secao-6: #d0427a;
+  --secao-7: #188f7c;
+  --secao-8: #3474cf;
+  --secao-9: #8a5a3c;
+  --secao-revisao: #22935a;
+  --secao-final: #0a4f82;
+
+  /* tons das faixas (réguas, barras) */
+  --tom-normal: #2fa56a;
+  --tom-atencao: #e3a326;
+  --tom-perigo: #d2493f;
+  --tom-info: #3a86d4;
+
+  /* velocidade das animações (1 = normal; o app muda pelo seletor "Animações") */
+  --ritmo: 1;
+
+  /* líquidos (cores didáticas) */
+  --liq-medicacao: #b58cf2;
+  --liq-medicacao2: #f28cb8;
+  --liq-sf: #bfe0fb;
+  --liq-agua: #b5eef2;
+  --liq-glicose: #f7dc6f;
+  --liq-adrenalina: #f39b94;
+  --liq-mistura: #f8c9c4;
+
+  /* cantos */
+  --raio-pequeno: 8px;
+  --raio-medio: 12px;
+  --raio: 14px;
+  --raio-pilula: 999px;
+  /* sombras e foco do teclado */
+  --sombra: 0 1px 2px rgb(20 40 70 / 6%), 0 6px 20px rgb(20 40 70 / 7%);
+  --sombra-leve: 0 1px 2px rgb(20 40 70 / 7%), 0 2px 8px rgb(20 40 70 / 5%);
+  --foco: 0 0 0 3px rgb(15 111 181 / 32%);
+
+  /* superfícies de apoio */
+  --primaria-suave: #e7f1fa;
+  --perigo-suave: #fdecea;
+  --ok-suave: #e6f5ec;
+  --fundo-pagina: linear-gradient(180deg, #f4f7fb 0, #eaf0f6 360px, #eaf0f6 100%);
+
+  /* controles (botões e campos) */
+  --altura-controle: 36px;
+  --transicao: 0.15s ease;
+  --fonte: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --fonte-mao: 'Segoe Print', 'Bradley Hand', 'Chalkboard SE', 'Comic Sans MS', cursive;
+
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo-pagina);
+  background-attachment: fixed;
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Foco do teclado visível em tudo (acessibilidade), igual em todas as abas */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--foco);
+}
+
+/* ---- Botões ------------------------------------------------------------------
+   .botao (padrão) · .botao-principal (ação principal) · .botao-perigo · .botao-discreto
+   Os botões sem classe das abas de prática recebem o mesmo visual (estilos-prescrever.css). */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--altura-controle);
+  padding: 6px 14px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--superficie);
+  color: var(--texto);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background var(--transicao),
+    border-color var(--transicao),
+    color var(--transicao);
+}
+
+.botao:hover {
+  border-color: var(--primaria);
+  background: var(--primaria-suave);
+}
+
+.botao-principal {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+}
+
+.botao-principal:hover {
+  border-color: var(--primaria-escura);
+  background: var(--primaria-escura);
+  color: #fff;
+}
+
+.botao-perigo {
+  border-color: var(--perigo);
+  color: var(--perigo);
+}
+
+.botao-perigo:hover {
+  background: var(--perigo-suave);
+  border-color: var(--perigo);
+}
+
+.botao-discreto {
+  border-color: transparent;
+  background: transparent;
+  color: var(--primaria);
+}
+
+.botao:disabled,
+.botao[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Cartões / painéis ---------------------------------------------------- */
+.cartao {
+  padding: 14px 16px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-medio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-leve);
+}
+
+/* ---- Selos ---------------------------------------------------------------- */
+.selo {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--raio-pilula);
+  background: var(--superficie-2);
+  color: var(--texto-suave);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.selo-perigo {
+  background: var(--perigo-suave);
+  color: var(--perigo);
+}
+
+.selo-ok {
+  background: var(--ok-suave);
+  color: var(--ok);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botao {
+    transition: none;
+  }
+}

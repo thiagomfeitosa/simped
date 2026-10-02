@@ -17,10 +17,21 @@ function lerRitmoSalvo(): Ritmo {
   }
 }
 
+/** Celular (B17): a lista de casos começa recolhida para o passo a passo aparecer logo. */
+function telaEstreita(): boolean {
+  try {
+    return window.matchMedia('(max-width: 700px)').matches;
+  } catch {
+    return false;
+  }
+}
+
 /** Modo "Passo a passo": escolha do caso, velocidade das animações e o passo a passo da prescrição. */
 export function TelaPassoAPasso() {
   const [idRoteiro, setIdRoteiro] = useState(PRIMEIRO_ROTEIRO.id);
   const [ritmo, setRitmo] = useState<Ritmo>(lerRitmoSalvo);
+  // a lista de casos abre na entrada (no celular, começa recolhida) e se recolhe depois da escolha
+  const [listaAberta, setListaAberta] = useState(() => !telaEstreita());
   const roteiro = ROTEIROS.find((r) => r.id === idRoteiro) ?? PRIMEIRO_ROTEIRO;
   const fator = fatorDoRitmo(ritmo);
 
@@ -50,29 +61,43 @@ export function TelaPassoAPasso() {
           </div>
         </header>
 
-        <nav className="escolha-roteiro" aria-label="Escolha o caso">
-          {TEMAS.filter((tema) => ROTEIROS.some((r) => r.tema === tema)).map((tema) => (
-            <div key={tema} className="tema-grupo">
-              <span className="tema-titulo">{tema}</span>
-              <div className="tema-botoes">
-                {ROTEIROS.filter((r) => r.tema === tema).map((r) => (
-                  <button
-                    key={r.id}
-                    type="button"
-                    aria-pressed={r.id === roteiro.id}
-                    className={`roteiro-botao ${r.id === roteiro.id ? 'ativo' : ''}`}
-                    onClick={() => setIdRoteiro(r.id)}
-                  >
-                    <strong>{r.titulo}</strong>
-                    <span>
-                      {r.paciente.nome} · {r.paciente.descricao}
-                    </span>
-                  </button>
-                ))}
+        <details className="escolha-roteiro-caixa" open={listaAberta} onToggle={(e) => setListaAberta(e.currentTarget.open)}>
+          <summary>
+            <span className="escolha-roteiro-atual">
+              📚 <strong>{roteiro.titulo}</strong>
+              <small>
+                {roteiro.paciente.nome} · {roteiro.paciente.descricao}
+              </small>
+            </span>
+            <span className="escolha-roteiro-acao">{listaAberta ? 'Recolher a lista ▴' : `Trocar de caso (${ROTEIROS.length}) ▾`}</span>
+          </summary>
+          <nav className="escolha-roteiro" aria-label="Escolha o caso">
+            {TEMAS.filter((tema) => ROTEIROS.some((r) => r.tema === tema)).map((tema) => (
+              <div key={tema} className="tema-grupo">
+                <span className="tema-titulo">{tema}</span>
+                <div className="tema-botoes">
+                  {ROTEIROS.filter((r) => r.tema === tema).map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      aria-pressed={r.id === roteiro.id}
+                      className={`roteiro-botao ${r.id === roteiro.id ? 'ativo' : ''}`}
+                      onClick={() => {
+                        setIdRoteiro(r.id);
+                        setListaAberta(false);
+                      }}
+                    >
+                      <strong>{r.titulo}</strong>
+                      <span>
+                        {r.paciente.nome} · {r.paciente.descricao}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </nav>
+            ))}
+          </nav>
+        </details>
 
         <p className="aviso">
           <strong>Ferramenta de treinamento.</strong> Não substitui protocolos institucionais nem o julgamento clínico. Doses e condutas marcadas{' '}

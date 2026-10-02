@@ -5,8 +5,8 @@
 > **Feitas em out/2026 (pedido "faz B4, B7 e B8")**: B4, B7 e B8.
 > **Feitas em out/2026 (pedido "faz B16, B17 e B18")**: B16, B17 e B18.
 > Como testar cada uma: `docs/fase-1/guia-das-funcionalidades.md` ("Novidades das bases"). Dados provisórios: `docs/a-validar-dados-novos.md`.
-> **Feita em out/2026 (pedido "FAZER" com a lista de próximos passos)**: B20 (e B19, ver abaixo).
-> Ainda livres para escolher: B19.
+> **Feitas em out/2026 (pedido "FAZER" com a lista de próximos passos)**: B19 (guia em `docs/estilo-visual.md`) e B20.
+> Todas as bases B1–B20 estão feitas.
 > Regra de sempre: dado clínico novo entra como valor fictício **"A VALIDAR"**, em arquivo de dados separado.
 
 Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com valor fictício e o usuário corrige quando puder.
@@ -53,7 +53,7 @@ Legenda "Dado do usuário": **nenhum** = só código; **depois** = funciona com 
 |---|---|---|---|
 | ✅ B17 | Layout para tablet e celular | Telas que se reorganizam em iPad/celular (painéis em abas, botões maiores). Base da Fase 6. | nenhum |
 | ✅ B18 | "Instalar" pelo navegador (PWA) | O site vira um app instalável no celular/tablet/computador, funcionando sem internet, antes do Capacitor. | nenhum |
-| B19 | Peças visuais padronizadas | Um só conjunto de botões, campos, painéis e cores para todas as abas (hoje há dois estilos). Acelera telas novas e prepara o tema escuro. | nenhum |
+| ✅ B19 | Peças visuais padronizadas | Um só conjunto de botões, campos, painéis e cores para todas as abas (hoje há dois estilos). Acelera telas novas e prepara o tema escuro. | nenhum |
 | ✅ B20 | Carregar as abas sob demanda | O app abre mais rápido (hoje é um arquivo de ~800 KB): cada aba só carrega quando é aberta. Importante para celular e para o 3D. | nenhum |
 
 ## Ordem sugerida pelo assistente

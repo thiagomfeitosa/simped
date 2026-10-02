@@ -33,3 +33,9 @@ export async function irPara(page: Page, rotulo: string | RegExp): Promise<void>
 export function abaVisivel(page: Page) {
   return page.locator('#raiz > div:not([hidden])');
 }
+
+/** Passo a passo: abre a lista de casos (ela se recolhe depois de cada escolha). */
+export async function abrirListaDeRoteiros(page: Page): Promise<void> {
+  const caixa = page.locator('.escolha-roteiro-caixa');
+  if (!(await caixa.evaluate((el) => (el as HTMLDetailsElement).open))) await caixa.locator('summary').click();
+}

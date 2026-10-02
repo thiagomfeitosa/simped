@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrir } from './ajuda';
+import { abrir, abrirListaDeRoteiros } from './ajuda';
 
 test('percorre um roteiro inteiro até a prescrição com os cálculos', async ({ page }) => {
   const erros = await abrir(page, 'passo-a-passo');
@@ -17,8 +17,11 @@ test('todos os roteiros abrem', async ({ page }) => {
   const total = await botoes.count();
   expect(total).toBeGreaterThanOrEqual(6);
   for (let i = 0; i < total; i++) {
+    await abrirListaDeRoteiros(page);
     await botoes.nth(i).click();
     await expect(botoes.nth(i)).toHaveAttribute('aria-pressed', 'true');
+    // a lista se recolhe e o caso escolhido aparece no resumo
+    await expect(page.locator('.escolha-roteiro-caixa')).not.toHaveAttribute('open', '');
     await page.getByRole('button', { name: /Avançar/ }).click();
   }
   expect(erros).toEqual([]);
@@ -32,6 +35,7 @@ test('percorre todas as etapas de todos os roteiros sem erro', async ({ page }) 
   expect(total).toBeGreaterThanOrEqual(11);
   const avancar = page.getByRole('button', { name: /Avançar/ });
   for (let i = 0; i < total; i++) {
+    await abrirListaDeRoteiros(page);
     await botoes.nth(i).click();
     for (let k = 0; k < 60 && (await avancar.isEnabled()); k++) await avancar.click();
     await expect(avancar).toBeDisabled();

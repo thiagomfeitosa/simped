@@ -1,38 +1,70 @@
-/* Estilos do modo "Prescrever". Tudo fica dentro de .modo-prescrever para não
-   misturar com o modo "Passo a passo" (src/componentes/passo-a-passo/estilos.css). */
+/* Estilos do modo "Prescrever" (e das telas simples: treino, calculadoras, banco...).
+   B19: as cores, cantos, botões e campos vêm das peças padronizadas (src/estilos-base.css);
+   os nomes antigos abaixo são só apelidos para elas. */
 .modo-prescrever {
-  --fundo: #eef1f4;
-  --painel: #ffffff;
-  --texto: #1d2733;
-  --suave: #5b6878;
-  --borda: #d5dbe2;
-  --destaque: #1f4e79;
-  --aviso-fundo: #fff4d6;
+  --painel: var(--superficie);
+  --suave: var(--texto-suave);
+  --destaque: var(--primaria-escura);
+  --aviso-fundo: var(--atencao-fundo);
   --aviso-borda: #e7c45a;
   --papel: #fffdf6;
   --linha-papel: #e5dfcc;
   --prancheta: #8a6a45;
   --monitor: #0e1418;
   --monitor-verde: #3ee07a;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-family: var(--fonte);
   font-size: 16px;
   line-height: normal;
   color: var(--texto);
-  background: var(--fundo);
 }
 
+/* Botões sem classe própria: mesmo visual da peça .botao (src/estilos-base.css) */
 :where(.modo-prescrever) button {
   font: inherit;
+  font-weight: 600;
   cursor: pointer;
   border: 1px solid var(--borda);
-  background: var(--painel);
-  border-radius: 6px;
-  padding: 4px 10px;
+  background: var(--superficie);
+  border-radius: var(--raio-pequeno);
+  padding: 5px 12px;
   color: var(--texto);
+  transition:
+    background var(--transicao),
+    border-color var(--transicao);
 }
 
 :where(.modo-prescrever) button:hover {
-  border-color: var(--destaque);
+  border-color: var(--primaria);
+  background: var(--primaria-suave);
+}
+
+:where(.modo-prescrever) button[aria-pressed='true'] {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+}
+
+:where(.modo-prescrever) button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Campos sem classe própria: mesmo canto, borda e foco em todas as abas */
+:where(.modo-prescrever) :is(input:not([type='checkbox'], [type='radio'], [type='range']), select, textarea) {
+  font: inherit;
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  padding: 4px 8px;
+  background: #fff;
+  /* nunca mais largo que o espaço disponível (celular) */
+  max-width: 100%;
+}
+
+:where(.modo-prescrever) :is(input, select, textarea):focus-visible {
+  border-color: var(--primaria);
+  box-shadow: var(--foco);
+  outline: none;
 }
 
 .prescrever {
@@ -42,9 +74,10 @@
 
 .cabecalho {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding: 14px 16px 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 14px 16px 10px;
 }
 
 .cabecalho h1 {
@@ -89,13 +122,15 @@
 .painel {
   background: var(--painel);
   border: 1px solid var(--borda);
-  border-radius: 10px;
+  border-radius: var(--raio-medio);
   padding: 12px 14px;
+  box-shadow: var(--sombra-leve);
 }
 
 .painel h2 {
   margin: 0 0 8px;
   font-size: 1.05rem;
+  color: var(--primaria-escura);
 }
 
 .painel h3 {
@@ -131,7 +166,7 @@
   gap: 6px;
   background: var(--monitor);
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
 }
 
 .vital {
@@ -166,10 +201,12 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-.folha-titulo {
+/* a folha é papel: título em preto, não na cor dos painéis */
+h2.folha-titulo {
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  color: var(--texto);
 }
 
 .secao {
@@ -234,9 +271,15 @@
 .adicionar {
   border: none;
   background: transparent;
-  color: var(--destaque);
+  color: var(--primaria);
   padding: 2px 0;
   font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.adicionar:hover {
+  background: transparent;
+  text-decoration: underline;
 }
 
 .adicionar + .adicionar {
@@ -340,7 +383,7 @@
 .conferencia li {
   margin: 3px 0;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   border-left: 4px solid;
 }
 
@@ -391,7 +434,7 @@
   font-family: ui-monospace, Menlo, Consolas, monospace;
   font-size: 0.9rem;
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 8px;
   background: repeating-linear-gradient(#fff, #fff 23px, #eef2f7 24px);
   line-height: 24px;
@@ -486,7 +529,7 @@
   font: inherit;
   font-size: 0.85rem;
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 2px 4px;
   max-width: 100%;
 }
@@ -516,7 +559,7 @@
   margin: 3px 0;
   padding: 3px 6px;
   background: #f4f7fb;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
 }
 
 .preparo-rotulo {
@@ -628,7 +671,7 @@
   margin: 8px 0;
   padding: 8px 12px;
   border: 2px solid var(--errado);
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: var(--errado-fundo);
   font-size: 0.9rem;
 }
@@ -670,18 +713,30 @@
 }
 
 .alternar-documento button:first-child {
-  border-radius: 6px 0 0 6px;
+  border-radius: var(--raio-pequeno) 0 0 var(--raio-pequeno);
 }
 
 .alternar-documento button:last-child {
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 var(--raio-pequeno) var(--raio-pequeno) 0;
   margin-left: -1px;
 }
 
 .alternar-documento button[aria-pressed='true'] {
-  background: var(--destaque);
-  border-color: var(--destaque);
+  background: var(--primaria);
+  border-color: var(--primaria);
   color: #fff;
+}
+
+/* B19: a ação principal do cabeçalho (relatório) tem o visual de .botao-principal */
+.cabecalho .botao-relatorio {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+}
+
+.cabecalho .botao-relatorio:hover {
+  border-color: var(--primaria-escura);
+  background: var(--primaria-escura);
 }
 
 .coluna-documento {
@@ -781,7 +836,7 @@
 /* Monitor */
 .monitor {
   background: var(--monitor);
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   padding: 6px;
 }
 
@@ -992,7 +1047,7 @@
   font-weight: normal;
   max-width: 28em;
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 2px 4px;
 }
 
@@ -1040,7 +1095,7 @@
   display: flex;
   flex-direction: column;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: var(--a-validar-fundo);
 }
 
@@ -1103,7 +1158,7 @@
 
 .revisao-atual {
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: var(--aviso-fundo);
 }
 
@@ -1176,12 +1231,12 @@
   font-family: var(--fonte-mao, cursive);
   background: var(--papel);
   padding: 6px;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
 }
 
 .folha-leitura {
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: var(--papel);
   font-size: 0.9rem;
 }
@@ -1202,7 +1257,7 @@
   margin: 0 16px 8px;
   padding: 8px 12px;
   border: 2px solid #7b4fd6;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: #f3edff;
 }
 
@@ -1237,7 +1292,7 @@
   margin: 8px 16px 0;
   padding: 8px 12px;
   border: 2px dashed #2f7d5b;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: #ecf8f1;
 }
 

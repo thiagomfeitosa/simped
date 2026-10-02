@@ -25,14 +25,14 @@
   font: inherit;
   color: var(--texto);
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 4px 6px;
   background: #fff;
 }
 
 .opcoes {
   border: 1px solid var(--borda);
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   margin: 6px 0 0;
   padding: 6px 10px;
   font-size: 0.9rem;
@@ -76,7 +76,7 @@
 
 .bloco-editor {
   border: 1px solid var(--borda);
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   padding: 6px 8px;
   margin: 6px 0;
 }
@@ -95,7 +95,7 @@
   align-items: center;
   gap: 2px;
   background: var(--a-validar-fundo);
-  border-radius: 999px;
+  border-radius: var(--raio-pilula);
   padding: 1px 4px 1px 10px;
   font-size: 0.82rem;
 }
@@ -116,7 +116,7 @@
   font: inherit;
   font-size: 1.1rem;
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 4px 8px;
 }
 
@@ -152,7 +152,7 @@
 .resultado-calc {
   margin: 6px 0;
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   background: var(--certo-fundo);
   font-size: 0.92rem;
 }
@@ -169,7 +169,7 @@
 .lista-banco > .linha-botoes input:not([type='checkbox']) {
   font: inherit;
   border: 1px solid var(--borda);
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   padding: 4px 8px;
   min-width: 16em;
 }
@@ -219,7 +219,7 @@
 
 .aviso-erro {
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   color: var(--errado);
   background: var(--errado-fundo);
 }
@@ -229,14 +229,14 @@
   margin: 8px 0 12px;
   padding: 10px 12px;
   border: 2px solid var(--destaque);
-  border-radius: 10px;
+  border-radius: var(--raio-medio);
   background: var(--painel);
 }
 
 .conferir-item fieldset {
   margin: 8px 0;
   border: 1px solid var(--borda);
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
 }
 
 .conferir-item legend {
@@ -286,7 +286,7 @@
 
 .aviso-local {
   padding: 6px 10px;
-  border-radius: 6px;
+  border-radius: var(--raio-pequeno);
   color: var(--atencao);
   background: var(--atencao-fundo);
   font-size: 0.9rem;
@@ -397,7 +397,7 @@
 .aviso-professor {
   margin: 0 12px;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--raio-pequeno);
   background: #f3edff;
   border: 1px solid #7b4fd6;
 }

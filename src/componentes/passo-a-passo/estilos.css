@@ -2,77 +2,7 @@
    SimPed — estilos da tela "Passo a passo"
    ========================================================================== */
 
-:root {
-  --fundo: #eef2f7;
-  --superficie: #ffffff;
-  --superficie-2: #f6f8fb;
-  --texto: #1c2635;
-  --texto-suave: #5a6778;
-  --borda: #d7dee8;
-  --primaria: #0f6fb5;
-  --primaria-escura: #0a4f82;
-  --seta: #ef7d1a;
-  --ok: #22935a;
-  --atencao: #b7791f;
-  --atencao-fundo: #fff5dc;
-  --perigo: #c2413b;
-
-  --secao-1: #5b6b82;
-  --secao-2: #1f8fc4;
-  --secao-3: #d97a1e;
-  --secao-4: #b8860b;
-  --secao-5: #7b4fd6;
-  --secao-6: #d0427a;
-  --secao-7: #188f7c;
-  --secao-8: #3474cf;
-  --secao-9: #8a5a3c;
-  --secao-revisao: #22935a;
-  --secao-final: #0a4f82;
-
-  /* tons das faixas (réguas, barras) */
-  --tom-normal: #2fa56a;
-  --tom-atencao: #e3a326;
-  --tom-perigo: #d2493f;
-  --tom-info: #3a86d4;
-
-  /* velocidade das animações (1 = normal; o app muda pelo seletor "Animações") */
-  --ritmo: 1;
-
-  /* líquidos (cores didáticas) */
-  --liq-medicacao: #b58cf2;
-  --liq-medicacao2: #f28cb8;
-  --liq-sf: #bfe0fb;
-  --liq-agua: #b5eef2;
-  --liq-glicose: #f7dc6f;
-  --liq-adrenalina: #f39b94;
-  --liq-mistura: #f8c9c4;
-
-  --raio: 14px;
-  --sombra: 0 1px 2px rgb(20 40 70 / 6%), 0 6px 20px rgb(20 40 70 / 7%);
-  --fonte: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --fonte-mao: 'Segoe Print', 'Bradley Hand', 'Chalkboard SE', 'Comic Sans MS', cursive;
-
-  color-scheme: light;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: var(--fundo);
-  color: var(--texto);
-  font-family: var(--fonte);
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-button {
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
+/* Cores, fontes, cantos, sombras, botões e campos: peças padronizadas em src/estilos-base.css (B19). */
 
 .app {
   max-width: 1400px;
@@ -133,11 +63,59 @@ button {
   background: var(--primaria);
   color: #fff;
 }
+/* Lista de casos recolhível (B19): o caso atual fica no resumo; "Trocar de caso" abre a lista */
+.escolha-roteiro-caixa {
+  margin-bottom: 12px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-medio);
+  background: var(--superficie);
+  box-shadow: var(--sombra-leve);
+}
+.escolha-roteiro-caixa > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 10px 14px;
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--raio-medio);
+}
+.escolha-roteiro-caixa > summary::-webkit-details-marker {
+  display: none;
+}
+.escolha-roteiro-atual {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.escolha-roteiro-atual small {
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+.escolha-roteiro-acao {
+  padding: 4px 12px;
+  border: 1px solid var(--primaria);
+  border-radius: var(--raio-pilula);
+  color: var(--primaria);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.escolha-roteiro-caixa > summary:hover .escolha-roteiro-acao {
+  background: var(--primaria-suave);
+}
+.escolha-roteiro-caixa[open] > summary {
+  border-bottom: 1px solid var(--borda);
+  border-radius: var(--raio-medio) var(--raio-medio) 0 0;
+}
 .escolha-roteiro {
   display: flex;
-  gap: 10px 18px;
+  gap: 12px 22px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  padding: 12px 14px 14px;
 }
 .tema-grupo {
   display: flex;
@@ -163,7 +141,7 @@ button {
   text-align: left;
   gap: 2px;
   padding: 6px 10px;
-  border-radius: 10px;
+  border-radius: var(--raio-medio);
   border: 2px solid var(--borda);
   background: var(--superficie);
   max-width: 208px;
@@ -2125,7 +2103,7 @@ button {
     background: #fff;
   }
   .topo,
-  .escolha-roteiro,
+  .escolha-roteiro-caixa,
   .trilha,
   .navegacao,
   .pf-topo,

@@ -235,3 +235,19 @@
     height: 20px;
   }
 }
+
+/* B19: no celular, os cartões da lista de casos do Passo a passo ocupam a largura toda */
+@media screen and (max-width: 760px) {
+  .tema-botoes {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .roteiro-botao {
+    max-width: none;
+  }
+
+  .escolha-roteiro-acao {
+    white-space: normal;
+  }
+}
