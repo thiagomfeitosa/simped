@@ -13,6 +13,7 @@ import { hospitalAtual } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { COMPLICACOES } from '../dados/complicacoes';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
+import { valoresNaColeta } from '../motor/laboratorio';
 import { reproduzirEventos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { abrirJanelaProfessor, useSessao } from '../sessao/ContextoSessao';
@@ -143,11 +144,18 @@ export function Professor() {
               </button>
             ))}
           </div>
-          <Monitor sinais={paciente.sinais} idadeDias={atual.variaveis.idade.dias} ritmo={paciente.clinico.ritmo} />
+          <Monitor
+            sinais={paciente.sinais}
+            idadeDias={atual.variaveis.idade.dias}
+            ritmo={paciente.clinico.ritmo}
+            padraoRespiratorio={paciente.clinico.padraoRespiratorio}
+            k={paciente.lab.k}
+          />
           <p className="nota">
             TEC {arredondar(paciente.sinais.tecS, 1)} s · Glasgow {arredondar(paciente.sinais.glasgow)} ·{' '}
             {NOME_PADRAO_RESPIRATORIO[paciente.clinico.padraoRespiratorio]}
           </p>
+          <LaboratorioAgora caso={caso} paciente={paciente} />
         </section>
 
         <AlterarSinais
@@ -341,5 +349,26 @@ function AlterarSinais({
         )}
       </div>
     </section>
+  );
+}
+
+/** Fase 2: o que a gasometria e os eletrólitos mostrariam se fossem colhidos agora (só o professor vê). */
+function LaboratorioAgora({ caso, paciente }: { caso: Parameters<typeof valoresNaColeta>[1]; paciente: Parameters<typeof valoresNaColeta>[2] }) {
+  const exameGaso = caso.resultadosExames?.['gasometria-arterial'] ? 'gasometria-arterial' : 'gasometria-venosa';
+  const g = valoresNaColeta(exameGaso, caso, paciente);
+  const e = valoresNaColeta('eletrolitos', caso, paciente);
+  const partes = [
+    g.ph !== undefined && `pH ${g.ph.toLocaleString('pt-BR')}`,
+    g.pco2 !== undefined && `pCO₂ ${g.pco2.toLocaleString('pt-BR')}`,
+    g.hco3 !== undefined && `HCO₃⁻ ${g.hco3.toLocaleString('pt-BR')}`,
+    g.lactato !== undefined && `lactato ${g.lactato.toLocaleString('pt-BR')}`,
+    e.na !== undefined && `Na ${e.na.toLocaleString('pt-BR')}`,
+    e.k !== undefined && `K ${e.k.toLocaleString('pt-BR')}`,
+  ].filter(Boolean);
+  if (partes.length === 0) return null;
+  return (
+    <p className="nota" aria-label="Exames se colhidos agora">
+      🧪 Se colher agora ({exameGaso === 'gasometria-arterial' ? 'gaso arterial' : 'gaso venosa'} e eletrólitos): {partes.join(' · ')}
+    </p>
   );
 }

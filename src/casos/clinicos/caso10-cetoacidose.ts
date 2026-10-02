@@ -31,7 +31,21 @@ export const caso10: CasoClinico = {
   evolucaoNatural: [muda('fc', 135, 0, 120)],
   respostas: [
     resposta('sf09', [muda('fc', 118, 0, 60), muda('tecS', 2, 0, 60)]),
-    resposta('insulina-regular', [muda('glicemiaMgDl', 250, 60, 300), muda('fr', 26, 120, 300)], 'Glicemia não deve cair rápido demais (edema cerebral).', { mudancasDeEstado: [respiracao('taquipneia', 180), respiracao('normal', 360)] }),
+    // Fase 2: com a insulina, a gasometria melhora devagar (HCO₃⁻ sobe, a compensação respiratória diminui),
+    // a cetonemia cai e o POTÁSSIO CAI (entra na célula). Valores provisórios, A VALIDAR.
+    resposta(
+      'insulina-regular',
+      [
+        muda('glicemiaMgDl', 250, 60, 300),
+        muda('fr', 26, 120, 300),
+        muda('hco3', 12, 60, 360),
+        muda('pco2', 26, 60, 360),
+        muda('bhb', 2, 60, 360),
+        muda('k', 3.9, 30, 240),
+      ],
+      'Glicemia não deve cair rápido demais (edema cerebral). O potássio cai com a insulina: repor no soro.',
+      { mudancasDeEstado: [respiracao('taquipneia', 180), respiracao('normal', 360)] },
+    ),
     resposta('soro', [muda('fc', 110, 60, 240)]),
   ],
   resultadosExames: {

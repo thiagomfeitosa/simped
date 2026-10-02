@@ -265,3 +265,281 @@
   color: var(--texto-suave, #5b6b80);
   font-size: 15px;
 }
+
+/* ==========================================================================
+   Fase 2 — tira de ECG em papel (abre por cima de tudo; imprime só a tira)
+   ========================================================================== */
+.tira-ecg-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(15 25 40 / 55%);
+}
+
+.tira-ecg {
+  width: min(980px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 18px 20px;
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+}
+
+.tira-ecg-cabecalho {
+  font-size: 14px;
+  color: var(--texto);
+}
+
+.tira-ecg-cabecalho span {
+  color: var(--texto-suave);
+}
+
+.tira-ecg-cabecalho p {
+  margin: 4px 0;
+}
+
+.tira-ecg-papel {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 8px 0;
+  border: 1px solid #e08a8a;
+}
+
+.tira-ecg-papel .papel-fundo {
+  fill: #fff7f5;
+}
+
+.tira-ecg-papel .grade-fina {
+  stroke: #f3c4c0;
+  stroke-width: 0.08;
+}
+
+.tira-ecg-papel .grade-grossa {
+  stroke: #e08a8a;
+  stroke-width: 0.22;
+}
+
+.tira-ecg-papel .tracado {
+  fill: none;
+  stroke: #111;
+  stroke-width: 0.35;
+  stroke-linejoin: round;
+}
+
+.tira-ecg-dica {
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.tira-ecg-botoes {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.tira-ecg-botoes button {
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tira-ecg-botoes button:first-child {
+  border-color: var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+}
+
+@media print {
+  body.imprimindo-tira > :not(.tira-ecg-fundo) {
+    display: none !important;
+  }
+
+  body.imprimindo-tira .tira-ecg-fundo {
+    position: static;
+    padding: 0;
+    background: none;
+  }
+
+  body.imprimindo-tira .tira-ecg {
+    width: 100%;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  body.imprimindo-tira .tira-ecg-botoes {
+    display: none;
+  }
+
+  /* papel milimetrado de verdade: 1 unidade do desenho = 1 mm */
+  body.imprimindo-tira .tira-ecg-papel {
+    width: 160mm;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* ==========================================================================
+   Fase 2 — respiração animada (bloco "Beira do leito")
+   ========================================================================== */
+.respiracao-animada {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: var(--superficie-2);
+}
+
+.respiracao-animada svg {
+  flex: 0 0 84px;
+  width: 84px;
+  height: 84px;
+}
+
+.respiracao-animada figcaption {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--texto);
+}
+
+.respiracao-animada .resp-pele {
+  fill: #f6d7c3;
+  stroke: #b98a6d;
+  stroke-width: 1.2;
+}
+
+.respiracao-animada .resp-costela {
+  fill: none;
+  stroke: #c79c80;
+  stroke-width: 1;
+}
+
+.respiracao-animada .resp-nariz {
+  fill: #9b6b52;
+}
+
+.respiracao-animada .resp-tiragem {
+  fill: none;
+  stroke: #8a3b2e;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.respiracao-animada .resp-bolsa {
+  fill: #9fd0f2;
+  stroke: #3a7fb5;
+  stroke-width: 1.2;
+}
+
+.respiracao-animada .resp-torax {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: resp-inspira var(--duracao-resp) ease-in-out infinite;
+}
+
+@keyframes resp-inspira {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  45% {
+    transform: scale(calc(1 + var(--amplitude-resp)), calc(1 + var(--amplitude-resp) * 0.7));
+  }
+}
+
+/* desconforto: a pele afunda (tiragem) e o nariz "bate" a cada inspiração */
+.respiracao-animada.padrao-desconforto .resp-tiragem {
+  animation: resp-tiragem var(--duracao-resp) ease-in-out infinite;
+}
+
+.respiracao-animada.padrao-desconforto .resp-nariz {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: resp-asa-nasal var(--duracao-resp) ease-in-out infinite;
+}
+
+@keyframes resp-tiragem {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes resp-asa-nasal {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.8);
+  }
+}
+
+/* gasping: suspiro curto e longa pausa */
+.respiracao-animada.padrao-gasping .resp-torax {
+  animation-name: resp-gasping;
+}
+
+@keyframes resp-gasping {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  6% {
+    transform: scale(calc(1 + var(--amplitude-resp)), calc(1 + var(--amplitude-resp) * 0.7));
+  }
+  22% {
+    transform: scale(1, 1);
+  }
+}
+
+/* ventilação assistida: a bolsa aperta junto com a subida do tórax */
+.respiracao-animada.padrao-assistida .resp-bolsa {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: resp-bolsa var(--duracao-resp) ease-in-out infinite;
+}
+
+@keyframes resp-bolsa {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.7, 0.55);
+  }
+}
+
+.respiracao-animada.parado .resp-torax {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .respiracao-animada .resp-torax,
+  .respiracao-animada .resp-tiragem,
+  .respiracao-animada .resp-nariz,
+  .respiracao-animada .resp-bolsa {
+    animation: none;
+  }
+
+  .respiracao-animada.padrao-desconforto .resp-tiragem {
+    opacity: 1;
+  }
+}

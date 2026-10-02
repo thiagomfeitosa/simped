@@ -47,7 +47,8 @@ describe('registro da sessão', () => {
     expect(s.minutoCaso).toBe(5);
     expect(s.prescricao.itens.medicacoes).toHaveLength(1);
     expect(s.prescricao.itens.exames.map((i) => i.tipo === 'texto' && i.texto)).toEqual(['Hemograma']);
-    expect(s.pedidos).toEqual([{ id: 1, exameId: 'hemograma', pedidoNoMinuto: 5 }]);
+    // eventos até a coleta: tempo, dipirona e a anotação do pedido
+    expect(s.pedidos).toEqual([{ id: 1, exameId: 'hemograma', pedidoNoMinuto: 5, eventosAte: 3 }]);
     expect(s.registrosBalanco[0]).toMatchObject({ id: 1, minuto: 5, volumeMl: 50 });
     expect(s.infusoes[0]).toMatchObject({ inicioMin: 5, vazaoMlH: 40 });
     expect(s.receita).toHaveLength(1);

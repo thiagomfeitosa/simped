@@ -177,9 +177,21 @@ export interface ResultadoExame {
 
 export type NomeSinal = keyof SinaisVitais;
 
-/** Um sinal vai do valor atual até o alvo em linha reta, começando após o atraso. */
+/**
+ * Fase 2 — variáveis de laboratório que mudam com o que acontece no caso (gasometria e eletrólitos
+ * ligados ao paciente). Começam nos valores dos exames do caso e andam como os sinais vitais.
+ * O pH e o BE não entram aqui: são CALCULADOS a partir do HCO₃⁻ e da pCO₂ (src/motor/laboratorio.ts).
+ */
+export type VariavelLab = 'pco2' | 'hco3' | 'lactato' | 'k' | 'na' | 'cl' | 'bhb';
+
+export const VARIAVEIS_LAB: readonly VariavelLab[] = ['pco2', 'hco3', 'lactato', 'k', 'na', 'cl', 'bhb'];
+
+/** O que uma mudança pode mexer: um sinal vital ou uma variável de laboratório. */
+export type NomeVariavel = NomeSinal | VariavelLab;
+
+/** Um sinal (ou variável de laboratório) vai do valor atual até o alvo em linha reta, começando após o atraso. */
 export interface MudancaDeSinal {
-  sinal: NomeSinal;
+  sinal: NomeVariavel;
   alvo: number;
   /** Minutos entre o evento e o início da mudança. */
   atrasoMin: number;

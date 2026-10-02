@@ -28,7 +28,8 @@ export const caso15: CasoClinico = {
   estadoInicial: { padraoRespiratorio: 'taquipneia' },
   sinaisIniciais: { fc: 150, fr: 40, spo2: 94, paSistolica: 90, paDiastolica: 55, temperaturaC: 36.9, glicemiaMgDl: 90, tecS: 2, glasgow: 8 },
   evolucaoNatural: [muda('spo2', 90, 0, 30), muda('fc', 165, 0, 30)],
-  respostas: [resposta('nacl3', [muda('fc', 135, 5, 10), muda('spo2', 96, 5, 10), muda('fr', 34, 5, 10), muda('glasgow', 13, 5, 15)], 'A convulsão para; Na 122 após o bolus.', { mudancasDeEstado: [respiracao('normal', 20)] })],
+  // Fase 2: o sódio dos eletrólitos sobe para 122 com o bolus (como diz a observação do caso)
+  respostas: [resposta('nacl3', [muda('fc', 135, 5, 10), muda('spo2', 96, 5, 10), muda('fr', 34, 5, 10), muda('glasgow', 13, 5, 15), muda('na', 122, 0, 15)], 'A convulsão para; Na 122 após o bolus.', { mudancasDeEstado: [respiracao('normal', 20)] })],
   resultadosExames: {
     eletrolitos: { valores: { na: 118, k: 3.6, cl: 88, cai: 1.15, mg: 1.9 }, status: 'A_VALIDAR' },
     glicemia: { valores: { glicose: 90 }, status: 'A_VALIDAR' },

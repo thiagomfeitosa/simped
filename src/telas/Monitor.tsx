@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Ritmo, SinaisVitais } from '../casos/tipos';
+import type { PadraoRespiratorio, Ritmo, SinaisVitais } from '../casos/tipos';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { LIMITES_ALARME } from '../dados/limites-alarme';
-import { alarmesAtivos, ecgDoRitmo, limitesParaIdade, nomeDoRitmo, pletismografiaDoRitmo, semMedida } from '../monitor/monitor';
+import { alarmesAtivos, ecgDoRitmo, limitesParaIdade, nomeDoRitmo, pletismografiaDoRitmo, respiracaoDoPadrao, semMedida } from '../monitor/monitor';
+import { type DadosTira, TiraEcg } from './TiraEcg';
 
 function formatar(valor: number, casas = 0): string {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
@@ -93,11 +94,18 @@ interface Props {
   idadeDias: number;
   /** Ritmo cardíaco (B10/B11); padrão: sinusal. */
   ritmo?: Ritmo;
+  /** Fase 2: padrão respiratório (curva de respiração do monitor). */
+  padraoRespiratorio?: PadraoRespiratorio;
+  /** Fase 2: potássio do paciente (muda a onda T). */
+  k?: number;
+  /** Cabeçalho da tira de ECG impressa. */
+  identificacao?: DadosTira['identificacao'];
 }
 
 /** Monitor multiparamétrico: ECG e pletismografia em movimento, números e alarmes por idade (A VALIDAR). */
-export function Monitor({ sinais, idadeDias, ritmo = 'sinusal' }: Props) {
+export function Monitor({ sinais, idadeDias, ritmo = 'sinusal', padraoRespiratorio = 'normal', k, identificacao }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const [tira, setTira] = useState<DadosTira | null>(null);
   const [som, setSom] = useState(false);
   const [silenciadoAte, setSilenciadoAte] = useState(0);
   const { config } = useConfiguracoes();
@@ -107,8 +115,9 @@ export function Monitor({ sinais, idadeDias, ritmo = 'sinusal' }: Props) {
   const sem = semMedida(ritmo);
 
   useTracado(canvas, () => [
-    { cor: '#3ee07a', valor: (t) => ecgDoRitmo(t, sinais.fc, ritmo), min: -0.8, max: 1.1 },
+    { cor: '#3ee07a', valor: (t) => ecgDoRitmo(t, sinais.fc, ritmo, k), min: -0.8, max: 1.1 },
     { cor: '#38c8f0', valor: (t) => pletismografiaDoRitmo(t, sinais.fc, ritmo) * (sinais.spo2 >= 85 ? 1 : 0.5), min: -0.1, max: 1.2 },
+    { cor: '#f5d547', valor: (t) => respiracaoDoPadrao(t, sinais.fr, padraoRespiratorio), min: -0.2, max: 1.8 },
   ]);
 
   // bipe a cada 1,5 s enquanto houver alarme, com som ligado e sem silêncio
@@ -134,7 +143,7 @@ export function Monitor({ sinais, idadeDias, ritmo = 'sinusal' }: Props) {
 
   return (
     <div className="monitor" aria-label="Monitor">
-      <canvas ref={canvas} height={110} className="monitor-tela" aria-label="ECG (verde) e pletismografia (azul)" />
+      <canvas ref={canvas} height={160} className="monitor-tela" aria-label="ECG (verde), pletismografia (azul) e respiração (amarelo)" />
       {/* no modo prova o aluno reconhece o ritmo sozinho */}
       <p className="monitor-ritmo" aria-label="Ritmo no monitor">
         {config.modo === 'prova' ? 'Ritmo: reconheça pelo traçado' : `Ritmo: ${nomeDoRitmo(ritmo, sinais.fc, limites)}`}
@@ -159,7 +168,24 @@ export function Monitor({ sinais, idadeDias, ritmo = 'sinusal' }: Props) {
             Silenciar 2 min
           </button>
         )}
+        <button
+          type="button"
+          title="Congela os últimos 6 segundos do ECG em papel milimetrado, para imprimir ou salvar em PDF"
+          onClick={() =>
+            setTira({
+              ritmo,
+              fc: sinais.fc,
+              ...(k !== undefined && { k }),
+              instanteS: performance.now() / 1000,
+              ...(config.modo !== 'prova' && { nomeRitmo: nomeDoRitmo(ritmo, sinais.fc, limites) }),
+              ...(identificacao && { identificacao }),
+            })
+          }
+        >
+          🧾 Tira de ECG
+        </button>
       </div>
+      {tira && <TiraEcg dados={tira} aoFechar={() => setTira(null)} />}
       <p className="nota">
         Limites de alarme para {limites.nome}: {LIMITES_ALARME.status === 'A_VALIDAR' ? 'A VALIDAR' : 'conferidos'}. Traçados
         didáticos.

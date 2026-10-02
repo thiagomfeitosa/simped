@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { CasoClinico } from '../casos/tipos';
 import { EXAMES } from '../dados/exames';
 import { type PedidoExame, type ResultadoPedido, resultadoDoPedido, valoresDoResultado } from '../exames/exames';
 import { interpretarGasometria } from '../exames/gasometria';
+import { type EstadoPaciente, type EventoPaciente, reproduzirEventos } from '../motor/paciente';
 import { formatarNumero } from '../prescricao/comum';
 import { formatarTempo } from './ControlesCaso';
 
@@ -10,16 +11,30 @@ interface Props {
   caso: CasoClinico;
   agoraMin: number;
   pedidos: readonly PedidoExame[];
+  /** Fase 2: eventos do paciente, para o exame mostrar o paciente no minuto da coleta. */
+  eventos?: readonly EventoPaciente[];
   aoPedir: (exameId: string) => void;
 }
 
 const GRUPOS = [...new Set(EXAMES.map((e) => e.grupo))];
 
 /** Pedido de exames e resultados que chegam com o relógio do caso. */
-export function PainelExames({ caso, agoraMin, pedidos, aoPedir }: Props) {
+export function PainelExames({ caso, agoraMin, pedidos, eventos, aoPedir }: Props) {
   const [escolhido, setEscolhido] = useState(EXAMES[0]?.id ?? '');
+  // o paciente na coleta de cada pedido não muda depois (os eventos até a coleta ficam fixos): calcula uma vez só
+  const coletas = useMemo(() => new Map<string, EstadoPaciente>(), [caso]);
+  const naColeta = (p: PedidoExame): EstadoPaciente | undefined => {
+    if (!eventos || p.eventosAte === undefined) return undefined;
+    const chave = `${p.id}:${p.eventosAte}`;
+    let estado = coletas.get(chave);
+    if (!estado) {
+      estado = reproduzirEventos(caso, eventos.slice(0, p.eventosAte));
+      coletas.set(chave, estado);
+    }
+    return estado;
+  };
   const resultados = pedidos
-    .map((p) => ({ pedido: p, resultado: resultadoDoPedido(p, caso, agoraMin) }))
+    .map((p) => ({ pedido: p, resultado: resultadoDoPedido(p, caso, agoraMin, naColeta(p)) }))
     .filter((r): r is { pedido: PedidoExame; resultado: ResultadoPedido } => r.resultado !== null)
     .reverse();
   // eletrólitos mais recentes prontos (para o ânion gap da gasometria)
@@ -44,7 +59,10 @@ export function PainelExames({ caso, agoraMin, pedidos, aoPedir }: Props) {
           Pedir
         </button>
       </div>
-      <p className="nota">O pedido entra na seção 7 da folha. Tempos e valores de referência: A VALIDAR.</p>
+      <p className="nota">
+        O pedido entra na seção 7 da folha. O resultado mostra o paciente no momento da coleta: o que você fez antes (insulina,
+        bicarbonato…) aparece no exame. Tempos, referências e efeitos: A VALIDAR.
+      </p>
 
       <ul className="lista-exames">
         {resultados.map(({ pedido, resultado }) => (

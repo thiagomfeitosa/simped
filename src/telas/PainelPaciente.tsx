@@ -3,6 +3,7 @@ import { type CasoClinico, ESTADO_CLINICO_PADRAO, type EstadoClinico, NOME_PADRA
 import type { PacienteAtual } from '../paciente/atual';
 import { formatarDataHora, lerDataHora, textoSemanasEDias } from '../paciente/variaveis';
 import { Monitor } from './Monitor';
+import { RespiracaoAnimada } from './RespiracaoAnimada';
 
 function formatar(valor: number, casas = 0): string {
   return valor.toLocaleString('pt-BR', { minimumFractionDigits: casas, maximumFractionDigits: casas });
@@ -18,10 +19,12 @@ interface Props {
   pesoEstimadoKg?: number;
   /** Fonte usada para o nome da faixa etária (mostrada ao lado). */
   fonteDaFaixa?: string;
+  /** Fase 2: potássio do paciente agora (muda a onda T do monitor). */
+  k?: number;
   children?: ReactNode;
 }
 
-export function PainelPaciente({ caso, paciente, sinais, clinico = ESTADO_CLINICO_PADRAO, pesoEstimadoKg, fonteDaFaixa = 'SBP', children }: Props) {
+export function PainelPaciente({ caso, paciente, sinais, clinico = ESTADO_CLINICO_PADRAO, pesoEstimadoKg, fonteDaFaixa = 'SBP', k, children }: Props) {
   const v = paciente.variaveis;
   const menorDeUmAno = v.idade.anos < 1;
 
@@ -101,7 +104,14 @@ export function PainelPaciente({ caso, paciente, sinais, clinico = ESTADO_CLINIC
       </details>
 
       <h3>Monitor</h3>
-      <Monitor sinais={sinais} idadeDias={v.idade.dias} ritmo={clinico.ritmo} />
+      <Monitor
+        sinais={sinais}
+        idadeDias={v.idade.dias}
+        ritmo={clinico.ritmo}
+        padraoRespiratorio={clinico.padraoRespiratorio}
+        {...(k !== undefined && { k })}
+        identificacao={{ nome: paciente.nome, idade: v.idadeTexto, leito: paciente.leito, quando: formatarDataHora(paciente.agora) }}
+      />
 
       <h3>Beira do leito</h3>
       <dl className="ficha beira-leito" aria-label="Exame à beira do leito">
@@ -115,6 +125,7 @@ export function PainelPaciente({ caso, paciente, sinais, clinico = ESTADO_CLINIC
         <dt>Respiração</dt>
         <dd className={clinico.padraoRespiratorio !== 'normal' ? 'alterado' : undefined}>{NOME_PADRAO_RESPIRATORIO[clinico.padraoRespiratorio]}</dd>
       </dl>
+      <RespiracaoAnimada padrao={clinico.padraoRespiratorio} fr={sinais.fr} />
       <p className="nota">TEC, Glasgow e padrão respiratório dos casos: provisórios (A VALIDAR).</p>
 
       {children}

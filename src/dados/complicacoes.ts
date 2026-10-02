@@ -4,7 +4,7 @@
  * 'soma' = variação somada ao valor do momento (vale para qualquer idade); 'alvo' = valor final.
  */
 
-import type { EstadoClinico, NomeSinal } from '../casos/tipos';
+import type { EstadoClinico, NomeVariavel } from '../casos/tipos';
 import type { StatusValidacao } from './medicacoes/tipos';
 
 export interface Complicacao {
@@ -12,7 +12,8 @@ export interface Complicacao {
   nome: string;
   /** O que o professor vê no botão (ex.: o que vai acontecer). */
   descricao: string;
-  mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
+  /** Sinais vitais e, desde a Fase 2, variáveis de laboratório (ex.: lactato, HCO₃⁻). */
+  mudancas: { sinal: NomeVariavel; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
   clinico?: Partial<EstadoClinico>;
   /** Mensagem sugerida para o aluno (o professor pode mandar ou não). */
   mensagemSugerida?: string;
@@ -25,11 +26,15 @@ export const COMPLICACOES: readonly Complicacao[] = [
   {
     id: 'convulsao',
     nome: 'Convulsão',
-    descricao: 'Glasgow cai, FC e FR sobem, SpO₂ cai.',
+    descricao: 'Glasgow cai, FC e FR sobem, SpO₂ cai; na gasometria, lactato e pCO₂ sobem (acidose mista).',
     mudancas: [
       { sinal: 'glasgow', alvo: 6, duracaoMin: 1 },
       { sinal: 'fc', alvo: 30, duracaoMin: 2, modo: 'soma' },
       { sinal: 'spo2', alvo: -8, duracaoMin: 3, modo: 'soma' },
+      // Fase 2: acidose mista na gasometria (lática + respiratória)
+      { sinal: 'lactato', alvo: 4, duracaoMin: 5, modo: 'soma' },
+      { sinal: 'hco3', alvo: -5, duracaoMin: 5, modo: 'soma' },
+      { sinal: 'pco2', alvo: 15, duracaoMin: 3, modo: 'soma' },
     ],
     clinico: { padraoRespiratorio: 'gasping' },
     mensagemSugerida: 'A enfermagem chama: o paciente está convulsionando (movimentos tônico-clônicos generalizados).',

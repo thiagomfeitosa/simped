@@ -62,3 +62,17 @@ Arquivo único: `src/casos/variacoes-a-validar.ts`. Tudo A VALIDAR, escrito pelo
 | Estatura e peso ao nascer | Regra do assistente (não é dado clínico de dose): a estatura acompanha o peso pela raiz cúbica (criança proporcional); o peso ao nascer acompanha o peso só no período neonatal (mesma % de perda). Sinais vitais, exames e reações do caso **não mudam** com a variação. |
 | Apresentação da farmácia | Para cada medicação do caso, sorteia **uma** apresentação entre as de mesma forma e mesmas vias (ex.: gentamicina 10, 20 ou 40 mg/mL; KCl 19,1% ou 10%; prednisolona 1 ou 3 mg/mL). Comprimidos, soros, sprays e nebulização ficam fora. As apresentações continuam as do rascunho (A VALIDAR). |
 
+
+## Dados novos da Fase 2 — exames ligados ao paciente, ECG e respiração (out/2026)
+
+| Assunto | Arquivo | O que conferir |
+|---|---|---|
+| Valores "normais" de partida do laboratório | `src/dados/laboratorio-dinamico.ts` | pCO₂ 40 (arterial) / 46 (venosa), HCO₃⁻ 24, lactato 1, K 4,2, Na 140, Cl 104, cetonemia 0,2 — usados quando o caso não traz o exame mas algo mexe nele; limites físicos de cada variável. |
+| Efeito geral de medicações nos exames | `src/dados/efeitos-laboratorio.ts` | Bicarbonato (HCO₃⁻ +5 em 15 min, K −0,3, Na +2); insulina (K −0,6 em 1 h); salbutamol (K −0,5); KCl (K +0,4). Valem quando o caso não define o efeito nos exames. |
+| Convulsão (complicação do professor) | `src/dados/complicacoes.ts` | Agora também mexe na gasometria: lactato +4, HCO₃⁻ −5, pCO₂ +15 (acidose mista). |
+| Caso 10 (CAD) — insulina | `src/casos/clinicos/caso10-cetoacidose.ts` | Em 6 h: HCO₃⁻ 6 → 12, pCO₂ 17 → 26, cetonemia 6,5 → 2; K 5,2 → 3,9 em 4 h. |
+| Caso 15 (hiponatremia) — NaCl 3% | `src/casos/clinicos/caso15-hiponatremia.ts` | Na dos eletrólitos 118 → 122 em 15 min (como diz a observação do caso). |
+| Onda T pelo potássio | `src/monitor/monitor.ts` (`ondaTPeloPotassio`) | K ≥ 6: T alta e pontuda; K ≤ 3: T achatada e onda U. Desenho didático. |
+| Curva de respiração e figura animada | `src/monitor/monitor.ts` (`respiracaoDoPadrao`), `src/telas/RespiracaoAnimada.tsx` | Forma de cada padrão (Kussmaul profunda, gasping a cada ~5 s, tiragem no desconforto). |
+
+Química usada (não é dose, mas confira se quiser): pH por Henderson-Hasselbalch, pH = 6,1 + log₁₀(HCO₃⁻ ÷ (0,0307 × pCO₂)); BE = 0,93 × (HCO₃⁻ − 24,4 + 14,8 × (pH − 7,4)).

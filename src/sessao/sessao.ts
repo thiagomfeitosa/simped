@@ -12,7 +12,7 @@
  * Sem tela e sem relógio de verdade: a hora real entra pronta em cada registro.
  */
 
-import { type EstadoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal, type SinaisVitais } from '../casos/tipos';
+import { type EstadoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSinal, type NomeVariavel, type SinaisVitais } from '../casos/tipos';
 import { ehVariacao, type VariacaoCaso } from '../casos/variacao';
 import type { PedidoExame } from '../exames/exames';
 import type { Infusao, RegistroManual } from '../motor/balanco';
@@ -50,7 +50,7 @@ export type AcaoSessao =
       tipo: 'complicacao';
       id: string;
       nome: string;
-      mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
+      mudancas: { sinal: NomeVariavel; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
       clinico?: Partial<EstadoClinico>;
     }
   /** Professor: mensagem que aparece para o aluno. */
@@ -152,10 +152,19 @@ export function aplicarRegistro(estado: EstadoSessao, registro: Pick<RegistroSes
       };
     }
     case 'pedirExame': {
-      const pedido: PedidoExame = { id: estado.pedidos.length + 1, exameId: a.exameId, pedidoNoMinuto: agora };
-      const comPedido = { ...estado, pedidos: [...estado.pedidos, pedido] };
-      const comFolha = { ...comPedido, prescricao: reduzirPrescricao(comPedido.prescricao, { tipo: 'adicionar', secao: 'exames', texto: a.nome }) };
-      return comPaciente(comFolha, { tipo: 'anotacao', descricao: `Exame pedido: ${a.nome}` });
+      // a anotação entra antes: o "paciente na coleta" são os eventos até ela (Fase 2: exame ligado ao paciente)
+      const anotado = comPaciente(estado, { tipo: 'anotacao', descricao: `Exame pedido: ${a.nome}` });
+      const pedido: PedidoExame = {
+        id: estado.pedidos.length + 1,
+        exameId: a.exameId,
+        pedidoNoMinuto: agora,
+        eventosAte: anotado.eventosPaciente.length,
+      };
+      return {
+        ...anotado,
+        pedidos: [...estado.pedidos, pedido],
+        prescricao: reduzirPrescricao(estado.prescricao, { tipo: 'adicionar', secao: 'exames', texto: a.nome }),
+      };
     }
     case 'balanco':
       return {

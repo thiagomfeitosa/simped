@@ -259,6 +259,7 @@ function SessaoCaso() {
             clinico={paciente.clinico}
             pesoEstimadoKg={pesoEstimadoKg}
             fonteDaFaixa={config.fonteFaixa}
+            k={paciente.lab.k}
           >
             <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoPassarTempo={(minutos) => fazer({ tipo: 'tempo', minutos })} />
           </PainelPaciente>
@@ -313,7 +314,7 @@ function SessaoCaso() {
               });
             }}
           />
-          <PainelExames caso={caso} agoraMin={paciente.tempoMin} pedidos={pedidos} aoPedir={pedirExame} />
+          <PainelExames caso={caso} agoraMin={paciente.tempoMin} pedidos={pedidos} eventos={estado.eventosPaciente} aoPedir={pedirExame} />
           <PainelBalanco
             agoraMin={paciente.tempoMin}
             pesoKg={pacienteAtual.pesoKg}

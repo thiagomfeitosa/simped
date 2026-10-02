@@ -3,10 +3,13 @@
  * Tudo que vem dos casos é "A VALIDAR" até o usuário conferir.
  */
 
-import type { CondutaEsperada, MudancaDeEstado, MudancaDeSinal, NomeSinal, PadraoRespiratorio, RespostaAMedicacao, Ritmo } from './tipos';
+import type { CondutaEsperada, MudancaDeEstado, MudancaDeSinal, NomeVariavel, PadraoRespiratorio, RespostaAMedicacao, Ritmo } from './tipos';
 
-/** O sinal vai até `alvo`, começando depois de `atrasoMin` e levando `duracaoMin`. */
-export function muda(sinal: NomeSinal, alvo: number, atrasoMin: number, duracaoMin: number): MudancaDeSinal {
+/**
+ * O sinal (ou variável de laboratório, Fase 2: 'hco3', 'pco2', 'k'...) vai até `alvo`,
+ * começando depois de `atrasoMin` e levando `duracaoMin`.
+ */
+export function muda(sinal: NomeVariavel, alvo: number, atrasoMin: number, duracaoMin: number): MudancaDeSinal {
   return { sinal, alvo, atrasoMin, duracaoMin };
 }
 

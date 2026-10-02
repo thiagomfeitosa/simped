@@ -6,8 +6,10 @@
  * O motor não sabe nada de farmacologia: quanto cada sinal muda vem do arquivo do caso
  * (e, para dose alta, de src/dados/efeitos-sobredose.ts).
  *
- * Dois tipos de variável:
+ * Três tipos de variável:
  * - sinais numéricos (FC, FR, SpO₂, PA, temperatura, glicemia, TEC, Glasgow): vão em linha reta até o alvo;
+ * - laboratório (Fase 2: pCO₂, HCO₃⁻, lactato, K, Na, Cl, cetonemia): igual aos sinais, mas só aparecem
+ *   quando o exame é colhido (src/motor/laboratorio.ts);
  * - estado clínico (ritmo, padrão respiratório): troca de uma vez, num minuto marcado.
  */
 
@@ -18,10 +20,16 @@ import {
   type MudancaDeEstado,
   type MudancaDeSinal,
   type NomeSinal,
+  type NomeVariavel,
   type SinaisVitais,
   SINAIS_PADRAO,
+  VARIAVEIS_LAB,
+  type VariavelLab,
 } from '../casos/tipos';
+import { EFEITOS_LABORATORIO } from '../dados/efeitos-laboratorio';
 import { EFEITOS_SOBREDOSE } from '../dados/efeitos-sobredose';
+import { LIMITES_LAB } from '../dados/laboratorio-dinamico';
+import { labInicial, type ValoresLab } from './laboratorio';
 
 /** B9: como a dose dada se compara com a faixa (calculado na hora de administrar; ver avaliarDose.ts). */
 export interface AvaliacaoDoseEvento {
@@ -40,7 +48,7 @@ export type EventoPaciente =
   | {
       tipo: 'complicacao';
       nome: string;
-      mudancas: { sinal: NomeSinal; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
+      mudancas: { sinal: NomeVariavel; alvo: number; duracaoMin: number; modo?: 'alvo' | 'soma' }[];
       clinico?: Partial<EstadoClinico>;
     }
   /** Só registra na linha do tempo (ex.: exame pedido); não muda o paciente. */
@@ -48,7 +56,7 @@ export type EventoPaciente =
 
 /** Mudança agendada ou em andamento num sinal. */
 interface MudancaAtiva {
-  sinal: NomeSinal;
+  sinal: NomeVariavel;
   alvo: number;
   inicioMin: number;
   fimMin: number;
@@ -74,19 +82,24 @@ export interface RegistroDeEvento {
 export interface EstadoPaciente {
   tempoMin: number;
   sinais: SinaisVitais;
+  /** Fase 2: valores de laboratório agora (o exame mostra os do minuto da coleta). */
+  lab: ValoresLab;
   clinico: EstadoClinico;
   mudancas: MudancaAtiva[];
   trocas: TrocaAgendada[];
   registro: RegistroDeEvento[];
 }
 
-/** Limites físicos dos sinais (nada negativo, SpO₂ até 100, Glasgow 3–15). */
-const LIMITES: Partial<Record<NomeSinal, [number, number]>> = {
+/** Limites físicos dos sinais (nada negativo, SpO₂ até 100, Glasgow 3–15) e do laboratório. */
+const LIMITES: Partial<Record<NomeVariavel, [number, number]>> = {
   spo2: [0, 100],
   glasgow: [3, 15],
+  ...LIMITES_LAB,
 };
 
-function limitar(sinal: NomeSinal, valor: number): number {
+const EH_LAB = new Set<string>(VARIAVEIS_LAB);
+
+function limitar(sinal: NomeVariavel, valor: number): number {
   const [min, max] = LIMITES[sinal] ?? [0, Number.POSITIVE_INFINITY];
   return Math.min(max, Math.max(min, valor));
 }
@@ -110,6 +123,7 @@ export function iniciarPaciente(caso: CasoClinico): EstadoPaciente {
   const inicial: EstadoPaciente = {
     tempoMin: 0,
     sinais: { ...SINAIS_PADRAO, ...caso.sinaisIniciais },
+    lab: labInicial(caso),
     clinico: { ...ESTADO_CLINICO_PADRAO, ...caso.estadoInicial },
     mudancas: agendar(caso.evolucaoNatural ?? [], 0),
     trocas: agendarTrocas(caso.evolucaoDoEstado ?? [], 0),
@@ -127,7 +141,8 @@ export function iniciarPaciente(caso: CasoClinico): EstadoPaciente {
  * - trocas de ritmo/padrão respiratório marcadas até `t` acontecem (na ordem em que foram marcadas).
  */
 function avancarUmMinuto(estado: EstadoPaciente, t: number): EstadoPaciente {
-  const sinais = { ...estado.sinais };
+  // sinais e laboratório andam juntos (as mudanças valem para os dois); no fim, cada um volta ao seu lugar
+  const sinais: Record<NomeVariavel, number> = { ...estado.sinais, ...estado.lab };
   let ativas: MudancaAtiva[] = [];
   const aguardando: MudancaAtiva[] = [];
 
@@ -165,11 +180,17 @@ function avancarUmMinuto(estado: EstadoPaciente, t: number): EstadoPaciente {
     else trocasRestantes.push(troca);
   }
 
-  return { ...estado, tempoMin: t, sinais, clinico, mudancas: restantes, trocas: trocasRestantes };
+  const vitais = {} as SinaisVitais;
+  const lab = {} as ValoresLab;
+  for (const [nome, valor] of Object.entries(sinais) as [NomeVariavel, number][]) {
+    if (EH_LAB.has(nome)) lab[nome as VariavelLab] = valor;
+    else vitais[nome as NomeSinal] = valor;
+  }
+  return { ...estado, tempoMin: t, sinais: vitais, lab, clinico, mudancas: restantes, trocas: trocasRestantes };
 }
 
 /** Leva o sinal em linha reta do valor inicial até o alvo, conforme o minuto t. */
-function aplicarMudanca(sinais: SinaisVitais, m: MudancaAtiva, t: number): void {
+function aplicarMudanca(sinais: Record<NomeVariavel, number>, m: MudancaAtiva, t: number): void {
   const inicial = m.valorInicial ?? sinais[m.sinal];
   if (t >= m.fimMin) {
     sinais[m.sinal] = m.alvo;
@@ -212,9 +233,13 @@ export function aplicarEvento(
         { tempoMin: estado.tempoMin, descricao: `Administrado: ${evento.descricao}${sufixo.length ? ` (${sufixo.join('; ')})` : ''}` },
       ];
       const fracao = nivel === 'subdose' ? (evento.avaliacao?.fracao ?? 0.5) : undefined;
+      // Fase 2: efeito nos exames — o do caso, se ele disser algo sobre exames; senão, o geral (efeitos-laboratorio.ts)
+      const casoMexeNoLab = (resposta?.mudancas ?? []).some((m) => EH_LAB.has(m.sinal));
+      const noLab = casoMexeNoLab ? [] : (EFEITOS_LABORATORIO[evento.medicacaoId]?.mudancas ?? []);
       const mudancas = [
         ...estado.mudancas,
         ...agendar(resposta?.mudancas ?? [], estado.tempoMin, fracao),
+        ...agendar(noLab, estado.tempoMin, fracao),
         ...agendar(sobre?.mudancas ?? [], estado.tempoMin),
       ];
       // na subdose, a troca de ritmo/padrão (ex.: TSV → sinusal) não acontece
@@ -251,7 +276,7 @@ export function aplicarEvento(
         sinais,
         clinico: { ...estado.clinico, ...evento.clinico },
         // o professor manda: mudanças em andamento nesses sinais (e trocas pendentes desses campos) são canceladas
-        mudancas: estado.mudancas.filter((m) => !alterados.includes(m.sinal)),
+        mudancas: estado.mudancas.filter((m) => !(alterados as NomeVariavel[]).includes(m.sinal)),
         trocas: estado.trocas.filter((x) => !trocados.includes(x.campo)),
         registro: [
           ...estado.registro,

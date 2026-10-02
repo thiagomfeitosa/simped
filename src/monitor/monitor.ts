@@ -4,7 +4,7 @@
  */
 
 import { type Faixa, LIMITES_ALARME, type LimitesAlarme } from '../dados/limites-alarme';
-import { NOME_RITMO, type NomeSinal, type Ritmo, RITMOS_SEM_PULSO, type SinaisVitais } from '../casos/tipos';
+import { NOME_RITMO, type NomeSinal, type PadraoRespiratorio, type Ritmo, RITMOS_SEM_PULSO, type SinaisVitais } from '../casos/tipos';
 
 export function limitesParaIdade(idadeDias: number): LimitesAlarme {
   const faixas = LIMITES_ALARME.faixas;
@@ -55,21 +55,35 @@ function gauss(x: number, centro: number, largura: number, altura: number): numb
 }
 
 /**
+ * Fase 2 — forma da onda T (e onda U) pelo potássio do paciente. Desenho didático, A VALIDAR:
+ * K alto → T alta e pontuda ("apiculada"); K baixo → T achatada e onda U aparecendo.
+ */
+export function ondaTPeloPotassio(k?: number): { altura: number; largura: number; u: number } {
+  if (k === undefined || !Number.isFinite(k)) return { altura: 0.3, largura: 1, u: 0 };
+  if (k >= 6) return { altura: Math.min(0.95, 0.3 + 0.3 * (k - 5.5)), largura: 0.65, u: 0 };
+  if (k <= 3) return { altura: Math.max(0.05, 0.3 - 0.15 * (3.5 - k)), largura: 1.1, u: Math.min(0.2, 0.08 + 0.08 * (3 - k)) };
+  return { altura: 0.3, largura: 1, u: 0 };
+}
+
+/**
  * ECG sintético (mV aproximados) no instante t (segundos) para uma FC.
  * As ondas têm duração fixa em segundos e encolhem só quando o batimento fica curto (taquicardia).
+ * `k` (potássio, Fase 2) muda a onda T e a onda U.
  */
-export function ecg(t: number, fc: number): number {
+export function ecg(t: number, fc: number, k?: number): number {
   if (!(fc > 0)) return 0;
   const periodo = 60 / fc;
   const x = ((t % periodo) + periodo) % periodo;
   const escala = Math.min(1, periodo / 0.75);
   const r = 0.22 * escala;
+  const onda = ondaTPeloPotassio(k);
   return (
     gauss(x, r - 0.12 * escala, 0.025 * escala, 0.12) + // P
     gauss(x, r - 0.03 * escala, 0.008 * escala, -0.12) + // Q
     gauss(x, r, 0.01 * escala, 1) + // R
     gauss(x, r + 0.03 * escala, 0.01 * escala, -0.25) + // S
-    gauss(x, r + 0.26 * escala, 0.05 * escala, 0.3) // T
+    gauss(x, r + 0.26 * escala, 0.05 * escala * onda.largura, onda.altura) + // T
+    (onda.u > 0 ? gauss(x, r + 0.42 * escala, 0.04 * escala, onda.u) : 0) // U (potássio baixo)
   );
 }
 
@@ -118,10 +132,10 @@ function ondaP(t: number, porMinuto: number): number {
  * - FV: ondas caóticas de amplitude variável; assistolia: linha quase reta;
  * - AESP: complexos organizados (lentos, se a FC for 0) sem pulso; BAV total: P e QRS largo sem relação.
  */
-export function ecgDoRitmo(t: number, fc: number, ritmo: Ritmo): number {
+export function ecgDoRitmo(t: number, fc: number, ritmo: Ritmo, k?: number): number {
   switch (ritmo) {
     case 'sinusal':
-      return ecg(t, fc);
+      return ecg(t, fc, k);
     case 'tsv': {
       // sem P visível: o QRS e a T do batimento rápido
       const periodo = 60 / Math.max(fc, 1);
@@ -139,7 +153,7 @@ export function ecgDoRitmo(t: number, fc: number, ritmo: Ritmo): number {
     case 'assistolia':
       return 0.02 * Math.sin(2 * Math.PI * 0.3 * t);
     case 'aesp':
-      return ecg(t, fc > 0 ? fc : 45);
+      return ecg(t, fc > 0 ? fc : 45, k);
     case 'bav-total':
       return ondaP(t, 110) + complexoLargo(t, fc > 0 ? fc : 45);
   }
@@ -156,4 +170,37 @@ export function pletismografiaDoRitmo(t: number, fc: number, ritmo: Ritmo): numb
 export function semMedida(ritmo: Ritmo): { fc: boolean; spo2: boolean; pa: boolean } {
   const semPulso = RITMOS_SEM_PULSO.includes(ritmo);
   return { fc: ritmo === 'fv' || ritmo === 'assistolia', spo2: semPulso, pa: semPulso };
+}
+
+/**
+ * Fase 2 — curva de respiração do monitor (impedância torácica), por padrão respiratório.
+ * Desenho didático (0 = expiração; ~1 = inspiração normal):
+ * - normal / taquipneia / bradipneia: ondas suaves na FR do paciente;
+ * - desconforto: rápida, curta, com "entalhe" (tiragem);
+ * - Kussmaul: profunda e regular; gasping: suspiros curtos e raros, linha reta entre eles;
+ * - apneia: linha reta; assistida: ondas "quadradas" da bolsa/ventilador.
+ */
+export function respiracaoDoPadrao(t: number, fr: number, padrao: PadraoRespiratorio): number {
+  if (padrao === 'apneia' || !(fr > 0)) return 0.02 * Math.sin(2 * Math.PI * 0.15 * t);
+  if (padrao === 'gasping') {
+    // um suspiro a cada ~5 s (ou na FR, se for menor), subida rápida e queda lenta
+    const periodo = Math.max(5, 60 / fr);
+    const x = ((t % periodo) + periodo) % periodo;
+    return x < 0.25 ? x / 0.25 : Math.max(0, Math.exp(-(x - 0.25) / 0.35));
+  }
+  const periodo = 60 / fr;
+  const fase = (((t % periodo) + periodo) % periodo) / periodo;
+  const onda = 0.5 - 0.5 * Math.cos(2 * Math.PI * fase); // 0 → 1 → 0
+  switch (padrao) {
+    case 'kussmaul':
+      return 1.6 * onda;
+    case 'desconforto':
+      return 0.6 * onda - 0.12 * Math.max(0, Math.sin(4 * Math.PI * fase)) * (fase < 0.5 ? 1 : 0);
+    case 'assistida':
+      return fase < 0.4 ? Math.min(1, fase / 0.08) : Math.max(0, 1 - (fase - 0.4) / 0.12);
+    case 'taquipneia':
+      return 0.75 * onda;
+    default:
+      return onda;
+  }
 }
