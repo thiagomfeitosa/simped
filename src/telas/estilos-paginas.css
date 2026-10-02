@@ -581,3 +581,237 @@
 .mini-evolucao small {
   color: var(--suave);
 }
+
+/* ==========================================================================
+   Código de parada
+   ========================================================================== */
+.parada-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(0, 340px);
+  gap: 12px;
+  padding: 12px;
+}
+
+.parada-registro {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+  .parada-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.parada-paciente p {
+  margin: 0 0 8px;
+}
+
+.relogio-grande {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--primaria-escura);
+}
+
+.ciclo {
+  margin: 12px 0;
+}
+
+.ciclo-rotulo {
+  font-weight: 600;
+  text-align: center;
+}
+
+.ciclo-barra {
+  height: 12px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: var(--raio-pilula);
+  background: var(--superficie-2);
+  border: 1px solid var(--borda);
+}
+
+.ciclo-barra span {
+  display: block;
+  height: 100%;
+  background: var(--primaria);
+  transition: width 0.2s linear;
+}
+
+.ciclo-barra span.vencido {
+  background: var(--perigo);
+}
+
+.parada-contadores {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 8px;
+}
+
+.contador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--superficie-2);
+  text-align: center;
+}
+
+.contador strong {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+}
+
+.contador span {
+  font-size: 12px;
+  color: var(--suave);
+}
+
+.contador.ok {
+  border-color: var(--ok);
+  background: var(--ok-suave);
+}
+
+.contador.atencao {
+  border-color: var(--atencao);
+  background: var(--atencao-fundo);
+}
+
+.contador.perigo {
+  border-color: var(--perigo);
+  background: var(--perigo-suave);
+}
+
+.parada-botoes {
+  margin-top: 12px;
+}
+
+.velocidade {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.proxima-acao {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--primaria);
+  border-radius: var(--raio-pequeno);
+  background: var(--primaria-suave);
+  font-weight: 600;
+}
+
+.retorno-ok,
+.retorno-erro {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: var(--raio-pequeno);
+}
+
+.retorno-ok {
+  background: var(--ok-suave);
+}
+
+.retorno-erro {
+  background: var(--perigo-suave);
+}
+
+.desfibrilador {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 2px solid #e3a326;
+  border-radius: var(--raio-medio);
+  background: #fffaf0;
+}
+
+.desfibrilador h3 {
+  margin: 0 0 6px;
+}
+
+:where(.modo-prescrever) .botao-choque {
+  border-color: #c2413b;
+  background: #c2413b;
+  color: #fff;
+}
+
+.gaveta {
+  margin: 8px 0;
+  border: 1px solid #b7c3d1;
+  border-radius: var(--raio-pequeno);
+  background: linear-gradient(180deg, #f7f9fc, #eaeff5);
+  box-shadow: inset 0 -3px 0 #c8d2de;
+}
+
+.gaveta > summary {
+  position: relative;
+  padding: 10px 12px 10px 34px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.gaveta > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* puxador da gaveta */
+.gaveta > summary::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 12px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: #7c8b99;
+}
+
+.gaveta[open] > summary {
+  border-bottom: 1px solid #c8d2de;
+}
+
+.gaveta-conteudo {
+  padding: 8px 12px;
+  background: var(--superficie);
+  animation: abrir-gaveta 0.25s ease-out;
+}
+
+@keyframes abrir-gaveta {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gaveta-conteudo {
+    animation: none;
+  }
+}
+
+.item-carrinho {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--borda);
+}
+
+.item-carrinho small {
+  color: var(--suave);
+}
+
+.causas ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+
+.avaliacao-parada {
+  margin-top: 12px;
+}

@@ -16,3 +16,4 @@ export * from './conferencia';
 export * from './gotejamento';
 export * from './eletrolitos';
 export * from './neonatal';
+export * from './pesoEstimado';

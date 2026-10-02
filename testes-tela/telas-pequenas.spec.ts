@@ -3,7 +3,7 @@ import { abaVisivel, abrir } from './ajuda';
 
 /** B17 — Tablet e celular: a página nunca rola de lado e o Prescrever mostra um painel por vez. */
 
-const ABAS = ['passo-a-passo', 'prescrever', 'treino', 'calculadoras', 'casos', 'banco', 'professor', 'configuracoes'];
+const ABAS = ['passo-a-passo', 'prescrever', 'parada', 'treino', 'calculadoras', 'casos', 'banco', 'professor', 'configuracoes'];
 
 const APARELHOS = [
   { nome: 'celular', viewport: { width: 390, height: 844 } },

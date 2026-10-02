@@ -4,6 +4,7 @@ import { abrir, irPara } from './ajuda';
 const ABAS: { rotulo: RegExp; titulo: RegExp }[] = [
   { rotulo: /Passo a passo/, titulo: /Passo a passo/i },
   { rotulo: /Prescrever/, titulo: /^Prescrever$/ },
+  { rotulo: /Parada/, titulo: /Código de parada/ },
   { rotulo: /Treino/, titulo: /Treino/i },
   { rotulo: /Calculadoras/, titulo: /Calculadoras/i },
   { rotulo: /Casos/, titulo: /casos/i },

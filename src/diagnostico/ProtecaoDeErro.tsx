@@ -79,8 +79,8 @@ export function RelatarProblema() {
   const relato = aberto ? relatoAtual({ descricao }) : '';
   return (
     <>
-      <button type="button" className="botao-relatar" onClick={() => setAberto(true)} title="Copiar o que aconteceu para colar na conversa">
-        🐞 Relatar problema
+      <button type="button" className="botao-relatar" aria-label="Relatar problema" onClick={() => setAberto(true)} title="Relatar problema: copiar o que aconteceu para colar na conversa">
+        🐞 <span className="texto-relatar">Relatar problema</span>
       </button>
       {aberto && (
         <div className="relatar-fundo" role="dialog" aria-modal="true" aria-label="Relatar problema">

@@ -6,6 +6,8 @@ import {
   gotasPorMinuto,
   hollidaySegarMlDia,
   misturarDuasSolucoes,
+  pesoEstimadoAntigo,
+  pesoEstimadoApls,
   sodioCorrigido,
   type UnidadeDeMassa,
   vazaoMlPorHora,
@@ -14,6 +16,7 @@ import {
 } from '../calculos';
 import { EQUIPOS } from '../dados/equipos';
 import { calcularVariaveis, lerDataHora, textoSemanasEDias } from '../paciente/variaveis';
+import { FolhaEmergencia } from './FolhaEmergencia';
 import { formatarNumero, lerNumero } from '../prescricao/comum';
 
 const n = formatarNumero;
@@ -61,6 +64,8 @@ export function Calculadoras() {
   const [de, setDe] = useState<UnidadeDeMassa>('mg');
   const na = useNumeros({ na: '131', glic: '480', atual: '118', desejado: '125', peso: '8' });
   const [idade, setIdade] = useState({ nascimento: '2026-09-01T08:00', agora: '2026-10-01T08:00', semanas: '32', dias: '0', peso: '1,8', estatura: '' });
+  const emerg = useNumeros({ anos: '3', meses: '0', peso: '' });
+  const [folhaPeso, setFolhaPeso] = useState<{ pesoKg: number; idadeAnos: number } | null>(null);
 
   return (
     <div className="pagina-simples calculadoras">
@@ -332,7 +337,45 @@ export function Calculadoras() {
           />
           <p className="nota">Fórmulas do rascunho (fatores 1,6 e 0,6): A VALIDAR. Subir no máx. 8–10 mEq/L em 24 h.</p>
         </section>
+
+        <section className="painel" aria-label="Peso estimado e folha de emergência">
+          <h2>🚨 Peso estimado e folha de emergência</h2>
+          <p className="nota">Na emergência sem balança: estime pela idade e pese assim que puder.</p>
+          <div className="linha-botoes">
+            <Num rotulo="Idade" unidade="anos" valor={emerg.v.anos} aoMudar={emerg.muda('anos')} />
+            <Num rotulo="+" unidade="meses" valor={emerg.v.meses} aoMudar={emerg.muda('meses')} />
+            <Num rotulo="Peso real (se tiver)" unidade="kg" valor={emerg.v.peso} aoMudar={emerg.muda('peso')} />
+          </div>
+          <Resultado
+            calcular={() => {
+              const anos = emerg.ler('anos') ?? 0;
+              const meses = emerg.ler('meses') ?? 0;
+              const totalMeses = anos * 12 + meses;
+              const apls = pesoEstimadoApls(totalMeses);
+              const antigo = pesoEstimadoAntigo(totalMeses / 12);
+              const real = emerg.ler('peso');
+              const usar = real !== null && real > 0 ? real : apls.pesoKg;
+              return (
+                <>
+                  APLS: <strong>{n(apls.pesoKg)} kg</strong> = {apls.conta}
+                  {antigo && (
+                    <>
+                      <br />
+                      Fórmula antiga: {antigo.conta}
+                    </>
+                  )}
+                  <br />
+                  <button type="button" className="botao botao-principal" onClick={() => setFolhaPeso({ pesoKg: usar, idadeAnos: totalMeses / 12 })}>
+                    📄 Folha de emergência para {n(usar)} kg
+                  </button>
+                </>
+              );
+            }}
+          />
+          <p className="nota">Fórmulas (APLS) e doses da folha: A VALIDAR.</p>
+        </section>
       </div>
+      {folhaPeso && <FolhaEmergencia pesoKg={folhaPeso.pesoKg} idadeAnos={folhaPeso.idadeAnos} aoFechar={() => setFolhaPeso(null)} />}
     </div>
   );
 }

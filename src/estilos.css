@@ -62,9 +62,30 @@
 }
 
 /* a descrição das abas principais só cabe em telas bem largas (senão a barra quebra em duas linhas) */
-@media (max-width: 1599px) {
+@media (max-width: 1919px) {
   .modo-aba small {
     display: none;
+  }
+}
+
+/* telas médias (notebook): abas mais justas, para as 9 caberem numa linha */
+@media (min-width: 1101px) and (max-width: 1400px) {
+  .modos {
+    padding: 8px 12px;
+  }
+
+  .modos-marca {
+    margin-right: 4px;
+    font-size: 22px;
+  }
+
+  .modo-aba {
+    padding: 4px 9px;
+  }
+
+  .modo-aba.secundaria {
+    padding: 6px 7px;
+    font-size: 0.85rem;
   }
 }
 
@@ -114,6 +135,13 @@
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;
+}
+
+/* B19: em telas médias o botão vira só o ícone, para a barra do topo caber numa linha */
+@media (max-width: 1919px) {
+  .botao-relatar .texto-relatar {
+    display: none;
+  }
 }
 
 .botao-relatar:hover {
@@ -564,5 +592,90 @@
 
   .respiracao-animada.padrao-desconforto .resp-tiragem {
     opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Folha de emergência por peso (abre por cima de tudo; imprime só a folha)
+   ========================================================================== */
+.folha-emergencia-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(15 25 40 / 55%);
+}
+
+.folha-emergencia {
+  width: min(1000px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 18px 20px;
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  color: var(--texto);
+}
+
+.folha-emergencia h2 {
+  margin: 0 0 4px;
+  color: var(--perigo);
+}
+
+.tabela-emergencia {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabela-emergencia th,
+.tabela-emergencia td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabela-emergencia th {
+  background: var(--superficie-2);
+}
+
+.tabela-emergencia small {
+  display: block;
+  color: var(--texto-suave);
+}
+
+.tabela-emergencia .valor {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.folha-emergencia-botoes {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+@media print {
+  body.imprimindo-folha-emergencia > :not(.folha-emergencia-fundo) {
+    display: none !important;
+  }
+
+  body.imprimindo-folha-emergencia .folha-emergencia-fundo {
+    position: static;
+    padding: 0;
+    background: none;
+  }
+
+  body.imprimindo-folha-emergencia .folha-emergencia {
+    width: 100%;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  body.imprimindo-folha-emergencia .folha-emergencia-botoes {
+    display: none;
   }
 }
