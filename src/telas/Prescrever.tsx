@@ -6,7 +6,8 @@ import { EXAMES } from '../dados/exames';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import { calcularBalanco, pesoPeloBalanco } from '../motor/balanco';
 import { avaliarDose } from '../motor/avaliarDose';
-import { reproduzirEventos } from '../motor/paciente';
+import { oxigenar } from '../motor/oxigenacao';
+import { reproduzirEventos, sinaisVistos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { lerDataHora } from '../paciente/variaveis';
 import { itensParaAprazar } from '../prescricao/aprazamento';
@@ -16,6 +17,7 @@ import type { CamposMedicacao } from '../prescricao/itemMedicacao';
 import { gerarRelatorio } from '../relatorio/relatorio';
 import { useSessao } from '../sessao/ContextoSessao';
 import { temTrabalho } from '../sessao/sessao';
+import { ControleOxigenio } from './ControleOxigenio';
 import { ControlesCaso, formatarTempo } from './ControlesCaso';
 import { FolhaPrescricao } from './FolhaPrescricao';
 import { PainelBalanco } from './PainelBalanco';
@@ -68,6 +70,9 @@ function SessaoCaso() {
   const despachar = (acao: AcaoPrescricao) => fazer({ tipo: 'prescricao', acao });
   // o paciente é sempre recalculado a partir da lista de eventos (motor estado + eventos)
   const paciente = useMemo(() => reproduzirEventos(caso, estado.eventosPaciente), [caso, estado.eventosPaciente]);
+  // sinais como o monitor mostra (SpO₂ com o O₂ instalado)
+  const sinais = useMemo(() => sinaisVistos(paciente), [paciente]);
+  const o2SemEfeito = oxigenar({ spo2Ar: paciente.sinais.spo2, oxigenio: paciente.oxigenio, pco2: paciente.lab.pco2, padrao: paciente.clinico.padraoRespiratorio }).semEfeito;
   // idade, faixa e superfície corporal no minuto atual do relógio do caso
   const pacienteAtual = useMemo(
     () => pacienteNoMinuto(caso, paciente.tempoMin, config.fonteFaixa),
@@ -245,8 +250,8 @@ function SessaoCaso() {
         </div>
         {/* o paciente reagindo, mesmo com outro painel aberto */}
         <span className="sinais-resumo" aria-label="Sinais agora">
-          ⏱ {formatarTempo(paciente.tempoMin)} · FC {Math.round(paciente.sinais.fc)} · SpO₂ {Math.round(paciente.sinais.spo2)}% · FR{' '}
-          {Math.round(paciente.sinais.fr)} · PA {Math.round(paciente.sinais.paSistolica)}×{Math.round(paciente.sinais.paDiastolica)}
+          ⏱ {formatarTempo(paciente.tempoMin)} · FC {Math.round(sinais.fc)} · SpO₂ {Math.round(sinais.spo2)}% · FR {Math.round(sinais.fr)} · PA{' '}
+          {Math.round(sinais.paSistolica)}×{Math.round(sinais.paDiastolica)}
         </span>
       </nav>
 
@@ -255,13 +260,14 @@ function SessaoCaso() {
           <PainelPaciente
             caso={caso}
             paciente={pacienteAtual}
-            sinais={paciente.sinais}
+            sinais={sinais}
             clinico={paciente.clinico}
             pesoEstimadoKg={pesoEstimadoKg}
             fonteDaFaixa={config.fonteFaixa}
             k={paciente.lab.k}
           >
             <ControlesCaso paciente={paciente} agora={pacienteAtual.agora} aoPassarTempo={(minutos) => fazer({ tipo: 'tempo', minutos })} />
+            <ControleOxigenio atual={paciente.oxigenio} semEfeito={o2SemEfeito} aoInstalar={(oxigenio, descricao) => fazer({ tipo: 'oxigenio', oxigenio, descricao })} />
           </PainelPaciente>
         )}
         <div className="coluna-documento">

@@ -3,7 +3,7 @@ import type { CasoClinico } from '../casos/tipos';
 import { hospitalAtual } from '../configuracoes/configuracoes';
 import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
-import { reproduzirEventos } from '../motor/paciente';
+import { reproduzirEventos, sinaisVistos } from '../motor/paciente';
 import { descreverRegistro, guardarSessao, type RegistroSessao, reproduzirSessao } from '../sessao/sessao';
 import { formatarTempo } from './ControlesCaso';
 import { FolhaSomenteLeitura } from './FolhaSomenteLeitura';
@@ -46,7 +46,8 @@ export function RevisaoSessao({ caso, registros, aoFechar }: Props) {
     return () => window.clearTimeout(id);
   }, [tocando, ate, registros.length]);
 
-  const s = paciente.sinais;
+  // SpO₂ como o monitor mostrava (com o O₂ instalado)
+  const s = sinaisVistos(paciente);
   const r1 = (n: number) => Math.round(n * 10) / 10;
 
   return (

@@ -1329,3 +1329,32 @@ h2.folha-titulo {
   font-weight: 700;
   padding: 6px 14px;
 }
+
+/* Oxigenoterapia à beira do leito */
+.controle-oxigenio {
+  margin: 10px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--superficie-2);
+}
+
+.controle-oxigenio h3 {
+  margin: 0 0 4px;
+}
+
+.controle-oxigenio p {
+  margin: 0 0 6px;
+}
+
+.controle-oxigenio select {
+  max-width: 100%;
+}
+
+.alerta-oxigenio {
+  padding: 4px 8px;
+  border-radius: var(--raio-pequeno);
+  background: var(--perigo-suave);
+  color: var(--perigo);
+  font-weight: 600;
+}

@@ -29,7 +29,9 @@ import {
 import { EFEITOS_LABORATORIO } from '../dados/efeitos-laboratorio';
 import { EFEITOS_SOBREDOSE } from '../dados/efeitos-sobredose';
 import { LIMITES_LAB } from '../dados/laboratorio-dinamico';
+import { MODELO_O2 } from '../dados/oxigenio-a-validar';
 import { labInicial, type ValoresLab } from './laboratorio';
+import { AR_AMBIENTE, dispositivo, type EstadoOxigenio, oxigenar } from './oxigenacao';
 
 /** B9: como a dose dada se compara com a faixa (calculado na hora de administrar; ver avaliarDose.ts). */
 export interface AvaliacaoDoseEvento {
@@ -52,7 +54,9 @@ export type EventoPaciente =
       clinico?: Partial<EstadoClinico>;
     }
   /** Só registra na linha do tempo (ex.: exame pedido); não muda o paciente. */
-  | { tipo: 'anotacao'; descricao: string };
+  | { tipo: 'anotacao'; descricao: string }
+  /** Oxigenoterapia instalada ou trocada (cateter, máscara, CPAP, bolsa, ventilador...). */
+  | { tipo: 'oxigenio'; oxigenio: EstadoOxigenio; descricao: string };
 
 /** Mudança agendada ou em andamento num sinal. */
 interface MudancaAtiva {
@@ -84,6 +88,10 @@ export interface EstadoPaciente {
   sinais: SinaisVitais;
   /** Fase 2: valores de laboratório agora (o exame mostra os do minuto da coleta). */
   lab: ValoresLab;
+  /** Oxigenoterapia em uso. A SpO₂ de `sinais` é a do paciente em ar ambiente (ver `sinaisVistos`). */
+  oxigenio: EstadoOxigenio;
+  /** Padrão respiratório de antes da ventilação (volta quando a bolsa/ventilador sai). */
+  padraoAntesDaVentilacao?: EstadoClinico['padraoRespiratorio'];
   clinico: EstadoClinico;
   mudancas: MudancaAtiva[];
   trocas: TrocaAgendada[];
@@ -124,6 +132,7 @@ export function iniciarPaciente(caso: CasoClinico): EstadoPaciente {
     tempoMin: 0,
     sinais: { ...SINAIS_PADRAO, ...caso.sinaisIniciais },
     lab: labInicial(caso),
+    oxigenio: AR_AMBIENTE,
     clinico: { ...ESTADO_CLINICO_PADRAO, ...caso.estadoInicial },
     mudancas: agendar(caso.evolucaoNatural ?? [], 0),
     trocas: agendarTrocas(caso.evolucaoDoEstado ?? [], 0),
@@ -256,6 +265,35 @@ export function aplicarEvento(
     case 'anotacao':
       return { ...estado, registro: [...estado.registro, { tempoMin: estado.tempoMin, descricao: evento.descricao }] };
 
+    case 'oxigenio': {
+      const ventilaAgora = !!dispositivo(evento.oxigenio.dispositivo).ventila;
+      const ventilavaAntes = !!dispositivo(estado.oxigenio.dispositivo).ventila;
+      let clinico = estado.clinico;
+      let sinais = estado.sinais;
+      let padraoAntesDaVentilacao = estado.padraoAntesDaVentilacao;
+      let mudancas = estado.mudancas;
+      if (ventilaAgora && !ventilavaAntes) {
+        // ventilando: o padrão vira "assistida" e a FR passa a ser a da bolsa/ventilador
+        padraoAntesDaVentilacao = clinico.padraoRespiratorio;
+        clinico = { ...clinico, padraoRespiratorio: 'assistida' };
+        if (sinais.fr < MODELO_O2.frVentilado) sinais = { ...sinais, fr: MODELO_O2.frVentilado };
+        mudancas = mudancas.filter((m) => m.sinal !== 'fr');
+      } else if (!ventilaAgora && ventilavaAntes && clinico.padraoRespiratorio === 'assistida') {
+        clinico = { ...clinico, padraoRespiratorio: padraoAntesDaVentilacao ?? 'normal' };
+        padraoAntesDaVentilacao = undefined;
+      }
+      const { padraoAntesDaVentilacao: _antigo, ...semPadrao } = estado;
+      return {
+        ...semPadrao,
+        ...(padraoAntesDaVentilacao !== undefined && { padraoAntesDaVentilacao }),
+        oxigenio: evento.oxigenio,
+        clinico,
+        sinais,
+        mudancas,
+        registro: [...estado.registro, { tempoMin: estado.tempoMin, descricao: `Oxigênio: ${evento.descricao}` }],
+      };
+    }
+
     case 'complicacao': {
       const mudancas = [...estado.mudancas, ...agendar(evento.mudancas.map((m) => ({ ...m, atrasoMin: 0 })), estado.tempoMin)];
       const registro = [...estado.registro, { tempoMin: estado.tempoMin, descricao: `Complicação: ${evento.nome}` }];
@@ -302,4 +340,13 @@ export function acrescentarEvento(lista: readonly EventoPaciente[], evento: Even
     return [...lista.slice(0, -1), { tipo: 'tempoPassou', minutos: ultimo.minutos + evento.minutos }];
   }
   return [...lista, evento];
+}
+
+/**
+ * Sinais como o monitor mostra: a SpO₂ do motor é a do paciente em ar ambiente; com O₂ instalado,
+ * a SpO₂ medida sai do modelo de oxigenação (src/motor/oxigenacao.ts).
+ */
+export function sinaisVistos(estado: Pick<EstadoPaciente, 'sinais' | 'lab' | 'oxigenio' | 'clinico'>): SinaisVitais {
+  const o = oxigenar({ spo2Ar: estado.sinais.spo2, oxigenio: estado.oxigenio, pco2: estado.lab.pco2, padrao: estado.clinico.padraoRespiratorio });
+  return { ...estado.sinais, spo2: Math.round(o.spo2 * 10) / 10 };
 }

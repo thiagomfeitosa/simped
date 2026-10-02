@@ -14,12 +14,13 @@ import { useConfiguracoes } from '../configuracoes/ContextoConfiguracoes';
 import { COMPLICACOES } from '../dados/complicacoes';
 import { useBanco } from '../dados/medicacoes/ContextoBanco';
 import { valoresNaColeta } from '../motor/laboratorio';
-import { reproduzirEventos } from '../motor/paciente';
+import { reproduzirEventos, sinaisVistos } from '../motor/paciente';
 import { pacienteNoMinuto } from '../paciente/atual';
 import { abrirJanelaProfessor, useSessao } from '../sessao/ContextoSessao';
 import { descreverRegistro } from '../sessao/sessao';
 import { formatarTempo } from './ControlesCaso';
 import { FolhaSomenteLeitura } from './FolhaSomenteLeitura';
+import { descreverOxigenio } from './ControleOxigenio';
 import { Monitor } from './Monitor';
 
 const CAMPOS: { id: NomeSinal; nome: string; casas?: number }[] = [
@@ -145,7 +146,7 @@ export function Professor() {
             ))}
           </div>
           <Monitor
-            sinais={paciente.sinais}
+            sinais={sinaisVistos(paciente)}
             idadeDias={atual.variaveis.idade.dias}
             ritmo={paciente.clinico.ritmo}
             padraoRespiratorio={paciente.clinico.padraoRespiratorio}
@@ -153,7 +154,8 @@ export function Professor() {
           />
           <p className="nota">
             TEC {arredondar(paciente.sinais.tecS, 1)} s · Glasgow {arredondar(paciente.sinais.glasgow)} ·{' '}
-            {NOME_PADRAO_RESPIRATORIO[paciente.clinico.padraoRespiratorio]}
+            {NOME_PADRAO_RESPIRATORIO[paciente.clinico.padraoRespiratorio]} · O₂: {descreverOxigenio(paciente.oxigenio)}
+            {paciente.oxigenio.dispositivo !== 'ar' && ` · SpO₂ em ar ambiente ${Math.round(paciente.sinais.spo2)}% (é a que "Alterar sinais" muda)`}
           </p>
           <LaboratorioAgora caso={caso} paciente={paciente} />
         </section>

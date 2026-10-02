@@ -17,6 +17,7 @@
 import { type CasoClinico, type SinaisVitais, VARIAVEIS_LAB, type VariavelLab } from '../casos/tipos';
 import { examePorId } from '../dados/exames';
 import { LAB_NORMAL, ORIGEM_LAB, PCO2_NORMAL } from '../dados/laboratorio-dinamico';
+import { oxigenar, po2DaSaturacao } from './oxigenacao';
 import type { EstadoPaciente } from './paciente';
 
 export type ValoresLab = Record<VariavelLab, number>;
@@ -67,19 +68,31 @@ function arred(valor: number, casas: number): number {
   return Math.round(valor * f) / f;
 }
 
-const CASAS: Record<string, number> = { ph: 2, pco2: 1, hco3: 1, be: 1, lactato: 1, k: 1, na: 0, cl: 0, bhb: 1, glicose: 0, sato2: 0 };
+const CASAS: Record<string, number> = { ph: 2, pco2: 1, hco3: 1, be: 1, lactato: 1, k: 1, na: 0, cl: 0, bhb: 1, glicose: 0, sato2: 0, po2: 0 };
 
 /**
  * Valores de um exame colhido com o paciente no estado `naColeta`.
  * Devolve só os analitos que têm valor (do caso ou porque mudaram); objeto vazio = nada a mostrar.
  */
-export function valoresNaColeta(exameId: string, caso: CasoClinico, naColeta: Pick<EstadoPaciente, 'lab' | 'sinais'>): Record<string, number> {
+export function valoresNaColeta(
+  exameId: string,
+  caso: CasoClinico,
+  naColeta: Pick<EstadoPaciente, 'lab' | 'sinais'> & Partial<Pick<EstadoPaciente, 'oxigenio' | 'clinico'>>,
+): Record<string, number> {
   const exame = examePorId(exameId);
   if (!exame) return {};
   const doCaso = caso.resultadosExames?.[exameId]?.valores ?? {};
   const inicio = labInicial(caso);
   const sinaisIniciais: Partial<SinaisVitais> = caso.sinaisIniciais;
   const ids = new Set(exame.analitos.map((a) => a.id));
+  // oxigenação na coleta (SatO₂ e pO₂ da gasometria arterial)
+  const oxi = oxigenar({
+    spo2Ar: naColeta.sinais.spo2,
+    oxigenio: naColeta.oxigenio ?? { dispositivo: 'ar', fio2: 0.21 },
+    pco2: naColeta.lab.pco2,
+    padrao: naColeta.clinico?.padraoRespiratorio ?? 'normal',
+  });
+  const mudouOxi = (naColeta.oxigenio?.fio2 ?? 0.21) > 0.21 || (sinaisIniciais.spo2 !== undefined && Math.abs(naColeta.sinais.spo2 - sinaisIniciais.spo2) > 1e-9);
   const r: Record<string, number> = {};
   let mudou = false;
 
@@ -90,12 +103,19 @@ export function valoresNaColeta(exameId: string, caso: CasoClinico, naColeta: Pi
       const delta = naColeta.lab[v] - inicio[v];
       if (Math.abs(delta) > 1e-9) mudou = true;
       // valor do caso neste exame; se o caso não traz, só aparece quando algo mudou (partindo de baseParaExame)
-      const base = doCaso[id] ?? (Math.abs(delta) > 1e-9 ? baseParaExame(caso, v, exameId) : undefined);
+      // (na gasometria arterial com O₂ instalado, mostra a gasometria inteira, não só pO₂/SatO₂)
+      const aparece = Math.abs(delta) > 1e-9 || (mudouOxi && exameId === 'gasometria-arterial');
+      const base = doCaso[id] ?? (aparece ? baseParaExame(caso, v, exameId) : undefined);
       if (base !== undefined) r[id] = base + delta;
     } else if (id === 'glicose' && doCaso.glicose !== undefined && sinaisIniciais.glicemiaMgDl !== undefined) {
       r.glicose = doCaso.glicose + (naColeta.sinais.glicemiaMgDl - sinaisIniciais.glicemiaMgDl);
     } else if (id === 'sato2' && doCaso.sato2 !== undefined && sinaisIniciais.spo2 !== undefined) {
-      r.sato2 = Math.min(100, doCaso.sato2 + (naColeta.sinais.spo2 - sinaisIniciais.spo2));
+      r.sato2 = Math.min(100, doCaso.sato2 + (oxi.spo2 - sinaisIniciais.spo2));
+    } else if (id === 'po2' && sinaisIniciais.spo2 !== undefined && (doCaso.po2 !== undefined || mudouOxi)) {
+      // com O₂ (ou se a SpO₂ mudou), a pO₂ segue o modelo, mantendo a diferença da admissão do caso
+      r.po2 = doCaso.po2 === undefined ? oxi.po2 : mudouOxi ? doCaso.po2 + (oxi.po2 - po2DaSaturacao(sinaisIniciais.spo2)) : doCaso.po2;
+    } else if (id === 'sato2' && mudouOxi) {
+      r.sato2 = oxi.spo2;
     } else if (doCaso[id] !== undefined) {
       r[id] = doCaso[id];
     }

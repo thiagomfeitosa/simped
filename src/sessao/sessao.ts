@@ -16,6 +16,7 @@ import { type EstadoClinico, NOME_PADRAO_RESPIRATORIO, NOME_RITMO, type NomeSina
 import { ehVariacao, type VariacaoCaso } from '../casos/variacao';
 import type { PedidoExame } from '../exames/exames';
 import type { Infusao, RegistroManual } from '../motor/balanco';
+import type { EstadoOxigenio } from '../motor/oxigenacao';
 import { acrescentarEvento, type AvaliacaoDoseEvento, type EventoPaciente } from '../motor/paciente';
 import type { Checagem } from '../prescricao/aprazamento';
 import { type AcaoPrescricao, type EstadoPrescricao, prescricaoVazia, reduzirPrescricao } from '../prescricao/estado';
@@ -38,6 +39,8 @@ export type AcaoSessao =
   /** Dose checada no quadro de horários da enfermagem. */
   | { tipo: 'checarDose'; itemId: number; minutoMarcado: number; medicacaoId: string; descricao: string; avaliacao?: AvaliacaoDoseEvento }
   | { tipo: 'pedirExame'; exameId: string; nome: string }
+  /** Oxigenoterapia instalada ou trocada no paciente. */
+  | { tipo: 'oxigenio'; oxigenio: EstadoOxigenio; descricao: string }
   | { tipo: 'balanco'; registro: Omit<RegistroManual, 'id' | 'minuto'> }
   /** O aluno abriu a conferência de um item (só registra). */
   | { tipo: 'conferir'; itemId: number; descricao: string }
@@ -166,6 +169,8 @@ export function aplicarRegistro(estado: EstadoSessao, registro: Pick<RegistroSes
         prescricao: reduzirPrescricao(estado.prescricao, { tipo: 'adicionar', secao: 'exames', texto: a.nome }),
       };
     }
+    case 'oxigenio':
+      return comPaciente(estado, { tipo: 'oxigenio', oxigenio: a.oxigenio, descricao: a.descricao });
     case 'balanco':
       return {
         ...estado,
@@ -318,6 +323,8 @@ export function descreverRegistro(r: RegistroSessao): string {
       return `Checou dose no horário: ${a.descricao}`;
     case 'pedirExame':
       return `Pediu exame: ${a.nome}`;
+    case 'oxigenio':
+      return `Oxigênio: ${a.descricao}`;
     case 'balanco':
       return `Balanço: ${a.registro.tipo === 'entrada' ? 'entrada' : 'saída'} ${a.registro.volumeMl} mL (${a.registro.descricao})`;
     case 'conferir':
