@@ -6,6 +6,7 @@
  */
 
 import type { Ritmo } from '../casos/tipos';
+import type { TomDePele } from '../neonatal/exame';
 import type { StatusValidacao } from './medicacoes/tipos';
 
 const AV: StatusValidacao = 'A_VALIDAR';
@@ -181,6 +182,8 @@ export interface CenarioParada {
    * 15 no lactente e na criança; 30 no adolescente com puberdade (relação de adulto). Sem valor: 15.
    */
   relacaoCompressaoVentilacao?: 15 | 30;
+  /** Tom de pele do paciente na animação da RCP (sem valor: moreno). Varia entre os cenários para a turma ver diversidade. */
+  pele?: TomDePele;
   status: StatusValidacao;
 }
 
@@ -195,6 +198,7 @@ export const CENARIOS_PARADA: readonly CenarioParada[] = [
     ritmoInicial: 'assistolia',
     retornoQuando: { adrenalinas: 2 },
     relacaoCompressaoVentilacao: 15,
+    pele: 'claro',
     status: AV,
   },
   {
@@ -207,6 +211,7 @@ export const CENARIOS_PARADA: readonly CenarioParada[] = [
     ritmoInicial: 'fv',
     retornoQuando: { choques: 3, adrenalinas: 1, exige: ['amiodarona'] },
     relacaoCompressaoVentilacao: 15,
+    pele: 'negro',
     status: AV,
   },
   {
@@ -220,6 +225,7 @@ export const CENARIOS_PARADA: readonly CenarioParada[] = [
     retornoQuando: { adrenalinas: 1, exige: ['sf-bolus'] },
     causa: { nome: 'Hipovolemia', tratamento: 'SF 0,9% em bolus (e sangue/controle do sangramento)', id: 'sf-bolus' },
     relacaoCompressaoVentilacao: 30,
+    pele: 'moreno',
     status: AV,
   },
 ];

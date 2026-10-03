@@ -52,7 +52,7 @@ test('compressões pela barra de espaço e ventilações pela seta: ritmo, séri
   const erros = await abrir(page, 'parada');
   const aba = abaVisivel(page);
   await aba.getByRole('button', { name: /Iniciar o código/ }).click();
-  const rcp = aba.getByRole('region', { name: 'RCP' });
+  const rcp = aba.getByRole('region', { name: 'RCP', exact: true });
   for (let i = 0; i < 15; i++) {
     await page.keyboard.press('Space');
     await page.clock.runFor(540);

@@ -1,28 +1,76 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NOME_RITMO } from '../../casos/tipos';
 import { toleranciaDe } from '../../configuracoes/configuracoes';
 import { useConfiguracoes } from '../../configuracoes/ContextoConfiguracoes';
 import { CENARIOS_PARADA } from '../../dados/parada-a-validar';
 import { relacaoDoCenario } from '../../parada/debriefing';
 import { estadoDaParada } from '../../parada/parada';
-import { estadoRcp } from '../../parada/rcp';
-import { cenarioDaSala, compressorDaVez, membrosDaSala, papeisDaTela, rcpPelasTeclas, relogioDaSala, tempoDoRelogio } from '../../parada/sala';
+import { CHAVES, cenarioDaSala, compressorDaVez, membrosDaSala, observadoresDaSala, papeisDaTela, rcpPelasTeclas, relogioDaSala, tempoDoRelogio } from '../../parada/sala';
 import { FolhaEmergencia } from '../FolhaEmergencia';
 import { AntesDoCodigo } from './AntesDoCodigo';
-import { Contexto, type ContextoCodigo } from './contexto';
+import { Contexto, type ContextoCodigo, rcpNoTempo } from './contexto';
 import { DepoisDoCodigo } from './Debriefing';
 import { DuranteCodigo } from './DuranteCodigo';
-import { useSalaParada } from './useSalaParada';
+import { TelaObservador } from './TelaObservador';
+import { type SalaNaTela, useSalaParada } from './useSalaParada';
+
+/** Janela aberta para só assistir (professor, telão): ?assistir=parada no endereço. */
+function assistirPeloEndereco(): boolean {
+  try {
+    return new URLSearchParams(window.location.search).get('assistir') === 'parada';
+  } catch {
+    return false;
+  }
+}
+
+/** Guarda (ou tira) o "só assistir" no endereço: recarregar a página mantém o modo. */
+function marcarNoEndereco(assistir: boolean) {
+  try {
+    const url = new URL(window.location.href);
+    if (assistir) url.searchParams.set('assistir', 'parada');
+    else url.searchParams.delete('assistir');
+    window.history.replaceState(window.history.state, '', url.toString());
+  } catch {
+    // endereço que não muda (ex.: arquivo aberto com dois cliques em alguns navegadores): vale só nesta tela
+  }
+}
+
+/**
+ * Modo "só assistir" desta tela, avisado à sala (as telas que só assistem não recebem papéis).
+ * A tela que acabou de abrir espera a sala das outras chegar antes de escrever: senão a sala vazia
+ * dela (uma rodada nova) venceria a da equipe.
+ */
+function useAssistir(s: SalaNaTela) {
+  const [assistindo, setAssistindo] = useState(assistirPeloEndereco);
+  const [esperou, setEsperou] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setEsperou(true), 1000);
+    return () => window.clearTimeout(id);
+  }, []);
+  const naSala = observadoresDaSala(s.sala).has(s.tela);
+  const pronta = s.sala.criadaEm !== 0 || esperou;
+  const { mudar, tela } = s;
+  useEffect(() => {
+    if (assistindo !== naSala && pronta) mudar(CHAVES.observador(tela), assistindo);
+  }, [assistindo, naSala, pronta, mudar, tela]);
+  const trocar = useCallback((assistir: boolean) => {
+    marcarNoEndereco(assistir);
+    setAssistindo(assistir);
+  }, []);
+  return [assistindo, trocar] as const;
+}
 
 /**
  * Código de parada (PCR pediátrica) em três telas: ANTES (cenário, equipe, teclas, briefing),
- * DURANTE (cada membro vê o painel do seu papel e o que a equipe fez) e DEPOIS (avaliação,
- * qualidade da RCP, equipe e debriefing). A equipe pode dividir uma tela ou abrir várias janelas.
+ * DURANTE (a cena da RCP para todos; cada membro vê o painel do seu papel e o que a equipe fez) e
+ * DEPOIS (avaliação, qualidade da RCP, equipe, debriefing e "rever o código"). A equipe pode dividir
+ * uma tela ou abrir várias janelas; o professor ou o telão podem só assistir (?assistir=parada).
  * Doses, tempos e alvos: A VALIDAR.
  */
 export function CodigoParada() {
   const { config } = useConfiguracoes();
   const s = useSalaParada();
+  const [assistindo, setAssistindo] = useAssistir(s);
   const [, setTique] = useState(0);
   const [folhaAberta, setFolhaAberta] = useState(false);
   const cenarioId = cenarioDaSala(s.sala, CENARIOS_PARADA[0]!.id);
@@ -43,8 +91,7 @@ export function CodigoParada() {
   const prova = config.modo === 'prova';
   const relacao = relacaoDoCenario(cenario);
   const teclas = rcpPelasTeclas(s.sala);
-  const recomecos = useMemo(() => eventos.filter((e) => e.tipo === 'checarRitmo' || e.tipo === 'choque').map((e) => e.tS), [eventos]);
-  const rcp = teclas ? estadoRcp(s.sala.marcas, { relacao, recomecosS: recomecos, ...(estado.viaAvancadaS !== undefined && { viaAvancadaS: estado.viaAvancadaS }) }, tS) : null;
+  const rcp = teclas ? rcpNoTempo(s.sala, estado, relacao, tS) : null;
   const ritmos = useMemo(
     () =>
       eventos.map((e, i) => {
@@ -62,13 +109,14 @@ export function CodigoParada() {
     estado,
     tS,
     membros: membrosDaSala(s.sala),
-    meusPapeis: papeisDaTela(s.sala, s.tela, s.vivas),
+    meusPapeis: assistindo ? [] : papeisDaTela(s.sala, s.tela, s.vivas),
     rcp,
     relacao,
     compressorDaVez: compressorDaVez(s.sala, estado.ciclo.numero, s.vivas),
     prova,
     tolerancia: toleranciaDe(config),
     pausado,
+    assistindo,
     ritmoNaChecagem: (i) => ritmos[i],
     abrirFolha: () => setFolhaAberta(true),
   };
@@ -87,9 +135,23 @@ export function CodigoParada() {
         <p className="aviso-treino" role="note">
           ⚠️ Treinamento. Doses, energias, tempos e alvos da RCP: A VALIDAR (PALS). Não substitui protocolos institucionais.
         </p>
-        {fase === 'antes' && <AntesDoCodigo s={s} cenario={cenario} aoAbrirFolha={() => setFolhaAberta(true)} aoIniciar={() => s.iniciar(ctx.meusPapeis.includes('lider') ? 'lider' : ctx.meusPapeis[0])} />}
-        {fase === 'durante' && <DuranteCodigo />}
-        {fase === 'depois' && <DepoisDoCodigo aoRecomecar={s.recomecar} />}
+        {assistindo ? (
+          <TelaObservador fase={fase} aoSair={() => setAssistindo(false)} />
+        ) : (
+          <>
+            {fase === 'antes' && (
+              <AntesDoCodigo
+                s={s}
+                cenario={cenario}
+                aoAbrirFolha={() => setFolhaAberta(true)}
+                aoIniciar={() => s.iniciar(ctx.meusPapeis.includes('lider') ? 'lider' : ctx.meusPapeis[0])}
+                aoAssistir={() => setAssistindo(true)}
+              />
+            )}
+            {fase === 'durante' && <DuranteCodigo />}
+            {fase === 'depois' && <DepoisDoCodigo aoRecomecar={s.recomecar} />}
+          </>
+        )}
         {folhaAberta && <FolhaEmergencia pesoKg={cenario.pesoKg} idadeAnos={cenario.idadeAnos} titulo={`${cenario.titulo} (${cenario.idadeTexto})`} aoFechar={() => setFolhaAberta(false)} />}
       </div>
     </Contexto.Provider>

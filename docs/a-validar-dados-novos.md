@@ -120,3 +120,13 @@ Tudo escrito pelo assistente de memória, **sem conferência**. Cada item tem `s
 | Relação compressão:ventilação | `src/dados/parada-a-validar.ts` (`relacaoCompressaoVentilacao`) | 15:2 no lactente e no escolar; 30:2 no adolescente de 13 anos (descrito "com sinais de puberdade"). |
 | Técnica das drogas | `src/dados/parada-rcp-a-validar.ts` (`ADMINISTRACAO_DROGA`) | Flush de 5–10 mL de SF; elevar o membro 10–20 s no acesso periférico. |
 | Papéis e ordens do líder | `src/dados/parada-briefing-a-validar.ts` | 8 papéis ("Registro e tempo" virou "Tempo" + "Anotação"); 10 ordens prontas. Avisos contam se dados entre 90 s do ciclo e a checagem; adrenalina a partir de 150 s da anterior. |
+
+## Animação da RCP (out/2026)
+Escrito pelo assistente de memória (AHA/PALS 2020 e NRP), **sem conferência**. Cada item tem `status: 'A_VALIDAR'` no arquivo.
+
+| Dado | Arquivo | Valor provisório |
+|---|---|---|
+| Faixa do desenho do paciente | `src/dados/parada-cena-a-validar.ts` (`FAIXAS_CENA`) | RN: menos de 28 dias; lactente: menos de 1 ano; adolescente: a partir de 12 anos **ou** cenário com relação 30:2 (puberdade); entre esses, criança. |
+| Técnica de compressão por faixa | idem (`TECNICA_POR_FAIXA`) | RN: dois polegares no terço inferior do esterno, mãos envolvendo o tórax (1/3 do diâmetro AP). Lactente: dois polegares logo abaixo da linha dos mamilos (1/3, cerca de 4 cm). Criança: uma ou duas mãos na metade inferior do esterno (1/3, cerca de 5 cm). Adolescente: duas mãos, uma sobre a outra (1/3, 5 a 6 cm). |
+| Tom de pele do paciente em cada cenário | `src/dados/parada-a-validar.ts` (`pele`) | Lactente: pele clara; escolar em FV: pele negra; adolescente: pele parda (só para a turma ver diversidade; não é dado clínico). |
+| Tempos da animação | `src/dados/parada-cena-a-validar.ts` (`TEMPOS_CENA`) | **Só visuais** (duração dos movimentos na tela), não clínicos. A RCP automática (sem teclas) usa 110/min e pausa de 3 s para as 2 ventilações; os alvos clínicos continuam em `parada-rcp-a-validar.ts`. |

@@ -1,1 +1,145 @@
 /* Cena animada da RCP (desenho): src/telas/parada/CenaRcp.tsx e src/ilustracoes/rcp/ */
+
+.cena-rcp {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cena-rcp svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: var(--raio-medio);
+  background: #ece6f5;
+  box-shadow: var(--sombra-leve);
+  /* a cena encolhe com a tela (nunca rola de lado) */
+  max-height: min(46vh, 380px);
+}
+
+.cena-rcp--grande svg {
+  max-height: 80vh;
+}
+
+.cena-rcp-legenda {
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  text-align: center;
+  line-height: 1.35;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.cena-rcp--grande .cena-rcp-legenda {
+  font-size: 1.05rem;
+}
+
+/* troca de lugar (troca de compressor, quem chega) */
+.rcp-avatar,
+.rcp-etiqueta {
+  transition: transform 0.7s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+/* nomes e balões */
+.cena-rcp text {
+  font-family: var(--fonte);
+}
+
+.rcp-nome {
+  font-size: 11.5px;
+  font-weight: 700;
+  fill: var(--texto);
+}
+
+.rcp-ritmo {
+  font-size: 9.5px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3px;
+}
+
+.rcp-balao path {
+  fill: #ffffff;
+  stroke: #9aa3b2;
+  stroke-width: 1.2;
+  filter: drop-shadow(0 1px 1.5px rgb(46 20 80 / 18%));
+}
+
+.rcp-balao--lider path {
+  fill: var(--lilas-50);
+  stroke: var(--primaria);
+  stroke-width: 1.8;
+}
+
+.rcp-balao text {
+  font-size: 11.5px;
+  font-weight: 600;
+  fill: var(--texto);
+}
+
+/* avisos por cima da cena */
+.rcp-afastem text {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  fill: #ffffff;
+}
+
+.rcp-afastem rect {
+  animation: rcp-pisca 0.5s steps(2, jump-none) infinite alternate;
+}
+
+.rcp-checagem text {
+  font-size: 13.5px;
+  font-weight: 700;
+  fill: #ffffff;
+}
+
+.rcp-botao-pisca {
+  animation: rcp-pisca 0.4s steps(2, jump-none) infinite alternate;
+}
+
+@keyframes rcp-pisca {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+
+/* rosto e ombros para escolher a aparência */
+.mini-avatar {
+  display: block;
+  flex: none;
+}
+
+.cena-rcp-recorte,
+.cena-rcp-peca {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rcp-avatar,
+  .rcp-etiqueta {
+    transition: none;
+  }
+
+  .rcp-afastem rect,
+  .rcp-botao-pisca {
+    animation: none;
+  }
+
+  /* clarão mais fraco (sem piscar forte na tela) */
+  .rcp-clarao {
+    opacity: 0.25 !important;
+  }
+}

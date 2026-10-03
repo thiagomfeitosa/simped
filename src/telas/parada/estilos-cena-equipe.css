@@ -1,1 +1,71 @@
 /* Parada: painel da cena, tela de quem só assiste, escolha do avatar e "rever o código" */
+/* (o desenho da cena fica em estilos-cena.css; regras de tela pequena: src/estilos-telas-pequenas.css) */
+
+/* ---- Painel da cena (durante o código, para todos) ---- */
+.parada-principal { display: grid; gap: 10px; min-width: 0; }
+.painel-cena {
+  display: grid; gap: 6px; min-width: 0; padding: 8px 10px;
+  border: 1px solid var(--lilas-200); border-radius: var(--raio-medio); background: var(--superficie); box-shadow: var(--sombra-leve);
+}
+.painel-cena.recolhida { justify-items: start; padding: 2px 4px; border: 0; background: transparent; box-shadow: none; }
+.painel-cena-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 10px; min-width: 0; }
+.painel-cena-titulo { color: var(--roxo-700); font-size: 0.85rem; font-weight: 700; }
+.painel-cena-desenho { min-width: 0; max-width: 100%; }
+/* no painel do código, a cena não empurra o painel do papel para fora da tela (o desenho centraliza) */
+.painel-cena.tamanho-normal .painel-cena-desenho svg { max-height: 300px; }
+.espera-equipe { margin: 0; color: var(--roxo-700); font-size: 1.15rem; font-weight: 700; }
+
+/* ---- Tela de quem só assiste (professor, telão) ---- */
+.tela-observador { display: grid; gap: 10px; padding: 0 12px 12px; }
+.barra-observador {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 8px; padding: 8px 12px;
+  border-radius: var(--raio-medio); background: var(--superficie); box-shadow: var(--sombra);
+}
+.barra-observador .relogio-grande { font-size: 40px; }
+.barra-observador-caso { min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.barra-observador > button { margin-left: auto; }
+.observador-grade, .observador-espera { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); gap: 12px; align-items: start; }
+.observador-espera h2 { margin: 0 0 8px; color: var(--roxo-700); }
+.quem-e-quem { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.quem-e-quem li { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.quem-e-quem li > span { display: flex; flex-direction: column; min-width: 0; }
+.quem-e-quem small { color: var(--texto-suave); }
+.numeros-rcp h2 { margin: 0 0 6px; }
+.numeros-rcp dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 6px; margin: 0; }
+.numeros-rcp dl > div { min-width: 0; padding: 6px 8px; border: 2px solid var(--borda); border-radius: var(--raio-pequeno); background: var(--superficie-2); }
+.numeros-rcp dl > div.faixa-boa { border-color: var(--ok); }
+.numeros-rcp dl > div.faixa-lenta, .numeros-rcp dl > div.faixa-rapida { border-color: var(--atencao); }
+.numeros-rcp dt { color: var(--texto-suave); font-size: 12px; }
+.numeros-rcp dd { margin: 0; overflow: hidden; font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; text-overflow: ellipsis; }
+.numeros-rcp dd .unidade { font-size: 12px; font-weight: 700; }
+.numeros-rcp dd small { display: block; font-size: 12px; font-weight: 600; color: var(--texto-suave); }
+.numeros-rcp .nota { margin: 6px 0 0; }
+
+/* ---- Escolha do avatar (Preparar → Equipe) ---- */
+.lista-papeis .papel-equipe { grid-template-columns: 28px minmax(0, 1fr) minmax(90px, 150px) auto auto; }
+.botao-avatar { min-width: 40px; padding: 4px 8px; }
+.escolher-avatar {
+  grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; min-width: 0; padding: 8px 10px;
+  border: 1px solid var(--borda); border-radius: var(--raio-medio); background: var(--superficie-2);
+}
+.previa-avatar { flex: none; }
+.opcoes-avatar { display: grid; flex: 1 1 240px; gap: 6px; min-width: 0; }
+.opcoes-avatar > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.escolher-avatar .amostra-tom, .escolher-avatar .amostra-roupa {
+  width: 30px; height: 30px; padding: 0; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px var(--borda);
+}
+.escolher-avatar .amostra-tom[aria-pressed='true'], .escolher-avatar .amostra-roupa[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--primaria); }
+.botao-cabelo { padding: 3px 10px; }
+
+/* ---- Rever o código (debriefing) ---- */
+.rever-codigo summary { cursor: pointer; }
+.rever-codigo summary small { color: var(--texto-suave); }
+.rever-codigo-conteudo { display: grid; gap: 8px; margin-top: 8px; min-width: 0; }
+.rever-controles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; min-width: 0; }
+.rever-controles input[type='range'] { flex: 1 1 200px; min-width: 0; accent-color: var(--primaria); }
+.rever-tempo { font-variant-numeric: tabular-nums; font-weight: 700; }
+.rever-controles .velocidade { display: inline-flex; gap: 4px; }
+
+@media print {
+  .painel-cena, .rever-codigo { display: none; }
+}

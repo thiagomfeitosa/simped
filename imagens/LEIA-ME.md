@@ -26,5 +26,18 @@ Para abrir pelo Finder: Finder → menu **Ir → Ir para a Pasta…** → digite
 - **Tamanho**: de preferência igual ou maior que o original (a lista mostra o tamanho em pixels), proporção parecida.
 - **Pacientes reais**: só com consentimento e sem identificar a pessoa.
 
+## Pasta `05-parada-animacao-rcp` (animação da RCP, aba 🚨 Parada)
+- Aqui ficam as peças da **cena animada da RCP**: o paciente na maca (RN, lactente, criança, adolescente, nos 3 tons de pele),
+  os **avatares** da equipe (cada pele, cabelo e cor de roupa) e os objetos (bolsa-válvula-máscara, desfibrilador, seringa...).
+  Ela aparece em `originais/` depois de `npm run exportar-imagens` (e a pasta vazia correspondente em `minhas/`).
+- **Como uma imagem entra numa animação**: o app não "toca um vídeo"; ele monta a cena a cada quadro, mexendo nas **peças separadas**
+  (o tórax afunda, o braço desce, a bolsa é apertada, o clarão do choque). Por isso, para a animação continuar funcionando, a sua imagem
+  deve ser **uma peça por arquivo**, no mesmo enquadramento do original, com **fundo transparente** (`.png` ou `.webp`):
+  - peça que **não se mexe** (maca, carrinho, monitor, roupa do avatar): basta uma imagem;
+  - peça que **se mexe entre duas posições** (tórax em cima × afundado, bolsa cheia × apertada, mãos abaixadas × ao alto): mande **2 quadros**,
+    terminando o nome em `-quadro-1` e `-quadro-2` (o app passa de um para o outro conforme o movimento);
+  - a lista (`LISTA.md`) diz, em cada peça da RCP, o que funciona melhor.
+- Uma foto inteira da cena (tudo junto) **não serve** para a animação: só como referência do estilo que você quer.
+
 ## Para refazer os originais (quando o app ganhar imagens novas)
 `npm run exportar-imagens` (refaz `originais/`, `LISTA.md` e `lista.csv`; não toca em `minhas/`).

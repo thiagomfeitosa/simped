@@ -35,6 +35,17 @@ const CAMPOS: { id: NomeSinal; nome: string; casas?: number }[] = [
   { id: 'glasgow', nome: 'Glasgow' },
 ];
 
+/**
+ * Abre uma janela que só assiste ao código de parada (cena grande, monitor e o que a equipe fez).
+ * Mesmo endereço do app, sem o ?papel=professor (não é a janela do professor do Prescrever).
+ */
+function abrirParadaAoVivo(): void {
+  const url = new URL(window.location.href);
+  url.search = '?assistir=parada';
+  url.hash = 'parada';
+  window.open(url.toString(), 'simped-parada-ao-vivo', 'width=1280,height=860');
+}
+
 function arredondar(v: number, casas = 0): string {
   const f = 10 ** casas;
   return String(Math.round(v * f) / f);
@@ -230,6 +241,17 @@ export function Professor() {
               <pre className="revisao-rascunho">{estado.rascunho}</pre>
             </>
           )}
+        </section>
+
+        <section className="painel" aria-label="Parada ao vivo">
+          <h2>🚨 Parada ao vivo</h2>
+          <p className="nota">
+            Para o professor ou o telão: uma janela que só assiste ao código de parada da equipe (aba 🚨 Parada), com a animação da RCP em tamanho grande, o
+            monitor e o que a equipe fez — sem fazer nenhum papel.
+          </p>
+          <button type="button" onClick={abrirParadaAoVivo}>
+            👀 Assistir ao código (janela nova)
+          </button>
         </section>
 
         <section className="painel" aria-label="Últimas ações">

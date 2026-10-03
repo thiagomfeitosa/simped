@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FASES_DEBRIEFING, ITENS_CRM, PAPEIS_EQUIPE } from '../../dados/parada-briefing-a-validar';
 import { metricasDoCodigo, qualidadeDaRcp, textoDoDebriefing } from '../../parada/debriefing';
 import { descreverEventos, metricasDaEquipe, participacao, quemFez } from '../../parada/equipe';
 import { avaliarParada, mmss } from '../../parada/parada';
 import { briefingDaSala, CHAVES, crmDaSala, rcpPelasTeclas, respostasDaSala } from '../../parada/sala';
+import { DesenhoCenaRcp } from './CenaRcp';
 import { useCodigo } from './contexto';
+import { cenaNoTempo, semMovimento, useMenosMovimento } from './PainelCena';
 
 function baixarTexto(nome: string, texto: string) {
   const url = URL.createObjectURL(new Blob([texto], { type: 'text/plain;charset=utf-8' }));
@@ -30,9 +32,95 @@ function ListaMetricas({ itens, rotulo }: { itens: readonly Linha[]; rotulo: str
   );
 }
 
+const VELOCIDADES_REVER = [1, 4] as const;
+
 /**
- * Depois do código: resultado, algoritmo, qualidade da RCP, equipe e o debriefing (GAS/PEARLS)
- * para anotar e baixar. Tudo dividido entre as telas da equipe.
+ * Rever o código: a cena da RCP em qualquer momento (a cena é função do tempo: é só pedi-la num
+ * tempo passado). Controle deslizante, tocar/pausar e velocidade 1× ou 4×. Começa recolhida.
+ */
+function ReverCodigo() {
+  const ctx = useCodigo();
+  const { eventos, marcas } = ctx.s.sala;
+  const inicio = eventos.find((e) => e.tipo === 'iniciar')?.tS ?? 0;
+  const fim = Math.max(inicio, eventos.find((e) => e.tipo === 'encerrar')?.tS ?? Math.max(eventos[eventos.length - 1]?.tS ?? 0, marcas[marcas.length - 1]?.tS ?? 0));
+  const [aberto, setAberto] = useState(false);
+  const [t, setT] = useState(inicio);
+  const [tocando, setTocando] = useState(false);
+  const [velocidade, setVelocidade] = useState<(typeof VELOCIDADES_REVER)[number]>(1);
+  const menos = useMenosMovimento();
+  const alvo = useRef<HTMLDivElement>(null);
+  const agora = Math.min(fim, Math.max(inicio, t));
+
+  // tocando: o tempo do código anda (na velocidade escolhida) até o fim
+  useEffect(() => {
+    if (!tocando || !aberto) return;
+    let id = 0;
+    let antes = performance.now();
+    const passo = (ms: number) => {
+      const dt = Math.max(0, ms - antes) / 1000;
+      antes = ms;
+      // aba escondida: não anda
+      if (alvo.current?.offsetParent !== null) setT((x) => Math.min(fim, x + dt * velocidade));
+      id = requestAnimationFrame(passo);
+    };
+    id = requestAnimationFrame(passo);
+    return () => cancelAnimationFrame(id);
+  }, [tocando, aberto, velocidade, fim]);
+  useEffect(() => {
+    if (tocando && agora >= fim) setTocando(false);
+  }, [tocando, agora, fim]);
+
+  const tocar = () => {
+    if (!tocando && agora >= fim) setT(inicio);
+    setTocando(!tocando);
+  };
+  const cena = aberto ? cenaNoTempo(ctx, agora) : null;
+
+  return (
+    <details className="painel rever-codigo" onToggle={(e) => setAberto(e.currentTarget.open)}>
+      <summary>
+        🎬 <strong>Rever o código</strong> <small>— a cena da RCP em qualquer momento</small>
+      </summary>
+      {cena && (
+        <div ref={alvo} className="rever-codigo-conteudo" role="region" aria-label="Rever o código" data-tempo={agora.toFixed(1)}>
+          <div className="rever-controles">
+            <button type="button" className="botao-principal" onClick={tocar} aria-label={tocando ? 'Pausar' : 'Tocar'}>
+              {tocando ? '⏸' : '▶'}
+            </button>
+            <input
+              type="range"
+              min={inicio}
+              max={fim}
+              step="any"
+              value={agora}
+              aria-label="Momento do código"
+              aria-valuetext={`${mmss(agora - inicio)} de ${mmss(fim - inicio)}`}
+              onChange={(e) => setT(Number(e.target.value))}
+            />
+            <span className="rever-tempo">
+              {mmss(agora - inicio)} / {mmss(fim - inicio)}
+            </span>
+            <span className="velocidade" role="group" aria-label="Velocidade">
+              {VELOCIDADES_REVER.map((v) => (
+                <button key={v} type="button" aria-pressed={velocidade === v} onClick={() => setVelocidade(v)}>
+                  {v}×
+                </button>
+              ))}
+            </span>
+          </div>
+          <div className="painel-cena-desenho">
+            <DesenhoCenaRcp cena={menos ? semMovimento(cena) : cena} />
+          </div>
+        </div>
+      )}
+    </details>
+  );
+}
+
+/**
+ * Depois do código: resultado, algoritmo, qualidade da RCP, equipe, o debriefing (GAS/PEARLS)
+ * para anotar e baixar e o "rever o código" (a cena da RCP em qualquer momento).
+ * Tudo dividido entre as telas da equipe.
  */
 export function DepoisDoCodigo({ aoRecomecar }: { aoRecomecar: () => void }) {
   const { s, cenario, membros, tolerancia, ritmoNaChecagem } = useCodigo();
@@ -158,6 +246,8 @@ export function DepoisDoCodigo({ aoRecomecar }: { aoRecomecar: () => void }) {
         </div>
         {!teclas && <p className="nota">A fração de compressão é estimada (RCP automática). Roteiro A VALIDAR (GAS/PEARLS).</p>}
       </section>
+
+      <ReverCodigo />
 
       <details className="painel">
         <summary>Linha do tempo completa</summary>

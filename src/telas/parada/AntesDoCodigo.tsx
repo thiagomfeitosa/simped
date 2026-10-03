@@ -3,10 +3,14 @@ import { pesoEstimadoApls } from '../../calculos';
 import { nomeDaTecla, teclaValida } from '../../configuracoes/configuracoes';
 import { useConfiguracoes } from '../../configuracoes/ContextoConfiguracoes';
 import { type CenarioParada, CENARIOS_PARADA } from '../../dados/parada-a-validar';
-import { CHECKLIST_BRIEFING, PAPEIS_EQUIPE } from '../../dados/parada-briefing-a-validar';
+import { CHECKLIST_BRIEFING, PAPEIS_EQUIPE, type PapelEquipe } from '../../dados/parada-briefing-a-validar';
+import { NOME_TOM } from '../../ilustracoes/pele';
+import { TONS_DE_PELE } from '../../neonatal/exame';
+import { type AparenciaAvatar, aparenciaDoMembro, type Cabelo, CORES_ROUPA, NOME_CABELO } from '../../parada/cena';
 import { relacaoDoCenario } from '../../parada/debriefing';
-import { briefingDaSala, CHAVES, donoDoPapel, membrosDaSala, ordemDasTelas, rcpPelasTeclas } from '../../parada/sala';
+import { briefingDaSala, CHAVES, donoDoPapel, type Membro, membrosDaSala, observadoresDaSala, ordemDasTelas, rcpPelasTeclas } from '../../parada/sala';
 import { formatarNumero } from '../../prescricao/comum';
+import { MiniAvatar } from './CenaRcp';
 import type { SalaNaTela } from './useSalaParada';
 
 const n = formatarNumero;
@@ -48,16 +52,80 @@ function EscolherTecla({ rotulo, atual, outra, aoEscolher }: { rotulo: string; a
   );
 }
 
+const CABELOS = Object.keys(NOME_CABELO) as Cabelo[];
+
+/** Escolha do avatar de um papel (pele, cabelo, cor da roupa), com a prévia. Sem escolha vale a padrão do papel. */
+function EscolherAvatar({ papel, membro, aoMudar }: { papel: PapelEquipe; membro: Membro | undefined; aoMudar: (avatar: AparenciaAvatar | undefined) => void }) {
+  const atual = aparenciaDoMembro(papel.id, membro);
+  const mudar = (parte: Partial<AparenciaAvatar>) => aoMudar({ ...atual, ...parte });
+  return (
+    <div className="escolher-avatar" role="group" aria-label={`Avatar: ${papel.nome}`}>
+      <div className="previa-avatar" data-pele={atual.pele} data-cabelo={atual.cabelo} data-roupa={atual.roupa}>
+        <MiniAvatar aparencia={atual} tamanho={64} rotulo={membro?.nome.trim() || papel.nome} />
+      </div>
+      <div className="opcoes-avatar">
+        <div role="group" aria-label="Pele">
+          {TONS_DE_PELE.map((t) => (
+            <button key={t} type="button" className={`amostra-tom tom-${t}`} aria-pressed={atual.pele === t} title={NOME_TOM[t]} onClick={() => mudar({ pele: t })}>
+              <span className="sr-only">{NOME_TOM[t]}</span>
+            </button>
+          ))}
+        </div>
+        <div role="group" aria-label="Cabelo">
+          {CABELOS.map((c) => (
+            <button key={c} type="button" className="botao-cabelo" aria-pressed={atual.cabelo === c} onClick={() => mudar({ cabelo: c })}>
+              {NOME_CABELO[c]}
+            </button>
+          ))}
+        </div>
+        <div role="group" aria-label="Cor da roupa">
+          {CORES_ROUPA.map((r) => (
+            <button key={r.cor} type="button" className="amostra-roupa" style={{ background: r.cor }} aria-pressed={atual.roupa.toLowerCase() === r.cor.toLowerCase()} title={r.nome} onClick={() => mudar({ roupa: r.cor })}>
+              <span className="sr-only">{r.nome}</span>
+            </button>
+          ))}
+        </div>
+        {membro?.avatar && (
+          <button type="button" className="botao-discreto" onClick={() => aoMudar(undefined)}>
+            Voltar ao padrão
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Antes do código: cenário, equipe (quem faz cada papel e em qual tela), RCP pelas teclas,
  * briefing (opcional) e o botão de iniciar. Nada de botões do código aqui: a tela fica limpa.
  */
-export function AntesDoCodigo({ s, cenario, aoAbrirFolha, aoIniciar }: { s: SalaNaTela; cenario: CenarioParada; aoAbrirFolha: () => void; aoIniciar: () => void }) {
+export function AntesDoCodigo({
+  s,
+  cenario,
+  aoAbrirFolha,
+  aoIniciar,
+  aoAssistir,
+}: {
+  s: SalaNaTela;
+  cenario: CenarioParada;
+  aoAbrirFolha: () => void;
+  aoIniciar: () => void;
+  /** Esta tela passa a só assistir (professor, telão). */
+  aoAssistir: () => void;
+}) {
   const { config, mudar: mudarConfig } = useConfiguracoes();
   const membros = membrosDaSala(s.sala);
   const feitos = briefingDaSala(s.sala);
   const teclas = rcpPelasTeclas(s.sala);
+  const [avatarAberto, setAvatarAberto] = useState<string | null>(null);
   const telas = ordemDasTelas(s.sala, s.vivas);
+  const assistindo = [...observadoresDaSala(s.sala)].filter((t) => s.vivas.has(t)).length;
+  const mudarAvatar = (papel: string, avatar: AparenciaAvatar | undefined) => {
+    const m: Membro = { ...membros[papel], nome: membros[papel]?.nome ?? '' };
+    if (avatar) m.avatar = avatar;
+    else delete m.avatar;
+    s.mudar(CHAVES.membro(papel), m);
+  };
   const variasTelas = telas.length > 1;
   const nomeDaTela = (t: string | undefined) => (t === s.tela ? 'nesta tela' : `Tela ${telas.indexOf(t ?? '') + 1}`);
   const pesoEstimado = cenario.idadeAnos <= 12 ? pesoEstimadoApls(Math.round(cenario.idadeAnos * 12)) : null;
@@ -123,6 +191,17 @@ export function AntesDoCodigo({ s, cenario, aoAbrirFolha, aoIniciar }: { s: Sala
                     )}
                   </span>
                 )}
+                <button
+                  type="button"
+                  className="botao-avatar"
+                  aria-label={`Avatar de ${p.nome}`}
+                  aria-expanded={avatarAberto === p.id}
+                  title="Escolher o avatar (pele, cabelo, roupa)"
+                  onClick={() => setAvatarAberto((a) => (a === p.id ? null : p.id))}
+                >
+                  🎨
+                </button>
+                {avatarAberto === p.id && <EscolherAvatar papel={p} membro={membros[p.id]} aoMudar={(a) => mudarAvatar(p.id, a)} />}
               </li>
             );
           })}
@@ -131,8 +210,12 @@ export function AntesDoCodigo({ s, cenario, aoAbrirFolha, aoIniciar }: { s: Sala
           <button type="button" onClick={abrirOutraTela}>
             ↗ Abrir a tela de um colega
           </button>
+          <button type="button" onClick={aoAssistir} title="Esta tela não faz nenhum papel: mostra a cena grande, o monitor e o que a equipe fez">
+            👀 Só assistir (professor ou telão)
+          </button>
           <span>
-            {variasTelas ? `${telas.length} telas abertas.` : 'Todos nesta tela (um computador ou tablet).'} Cada colega no próprio celular: modo online (fase futura).
+            {variasTelas ? `${telas.length} telas abertas.` : 'Todos nesta tela (um computador ou tablet).'}
+            {assistindo > 0 && ` 👀 ${assistindo} só assistindo.`} Cada colega no próprio celular: modo online (fase futura).
           </span>
         </p>
       </section>

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { PAPEIS_EQUIPE } from '../dados/parada-briefing-a-validar';
 import type { EventoParada } from './parada';
 import {
   acrescentar,
@@ -14,6 +15,8 @@ import {
   mudarCampo,
   mudarVelocidade,
   novaSala,
+  observadoresDaSala,
+  ordemDasTelas,
   papeisDaTela,
   pausarRelogio,
   RELOGIO_PARADO,
@@ -101,5 +104,39 @@ describe('papéis em cada tela', () => {
     expect(compressorDaVez(s0, 2, vivas)).toBe('compressor-1');
     const s = mudarCampo(s0, CHAVES.membro('compressor-2'), { nome: 'Bia' }, 'A', 30);
     expect([1, 2, 3].map((c) => compressorDaVez(s, c, vivas))).toEqual(['compressor-1', 'compressor-2', 'compressor-1']);
+  });
+});
+
+describe('telas que só assistem (professor, telão)', () => {
+  // A abriu primeiro e virou telão; B e C são da equipe
+  const base = entrarNaSala(entrarNaSala(novaSala('A', 0), 'B', 10), 'C', 20);
+  const s = mudarCampo(base, CHAVES.observador('A'), true, 'A', 30);
+  const vivas = new Set(['A', 'B', 'C']);
+  it('ficam fora da ordem das telas da equipe', () => {
+    expect([...observadoresDaSala(s)]).toEqual(['A']);
+    expect(ordemDasTelas(s)).toEqual(['B', 'C']);
+    expect(ordemDasTelas(s, new Set(['A', 'C']))).toEqual(['C']);
+    expect(ordemDasTelas(base)).toEqual(['A', 'B', 'C']);
+    // deixou de assistir: volta para a equipe no lugar de entrada
+    expect(ordemDasTelas(mudarCampo(s, CHAVES.observador('A'), false, 'A', 40))).toEqual(['A', 'B', 'C']);
+  });
+  it('nunca fazem papel: sem escolha, os papéis vão para a 1ª tela da equipe', () => {
+    expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(s, p.id, vivas) === 'B')).toBe(true);
+    expect(papeisDaTela(s, 'A', vivas)).toEqual([]);
+    expect(papeisDaTela(s, 'B', vivas)).toHaveLength(8);
+  });
+  it('papel escolhido numa tela que virou telão vai para a equipe', () => {
+    const escolhida = mudarCampo(base, CHAVES.membro('lider'), { nome: 'Ana', tela: 'A' }, 'A', 25);
+    expect(donoDoPapel(escolhida, 'lider', vivas)).toBe('A');
+    const virouTelao = mudarCampo(escolhida, CHAVES.observador('A'), true, 'A', 30);
+    expect(donoDoPapel(virouTelao, 'lider', vivas)).toBe('B');
+    // só telões abertos: ninguém faz o papel
+    expect(donoDoPapel(virouTelao, 'lider', new Set(['A']))).toBeUndefined();
+  });
+  it('recomeçar o código mantém quem só assiste', () => {
+    const recomecada = recomecarSala(acrescentar(s, { eventos: [ev('1', 1)] }, 50), 'B', 900);
+    expect(recomecada.eventos).toEqual([]);
+    expect([...observadoresDaSala(recomecada)]).toEqual(['A']);
+    expect(ordemDasTelas(recomecada)).toEqual(['B', 'C']);
   });
 });

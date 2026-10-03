@@ -306,3 +306,25 @@
 .barra-opcoes select {
   max-width: 100%;
 }
+
+/* Parada: cena da RCP, tela de quem só assiste e escolha do avatar (estilos em src/telas/parada/estilos-cena-equipe.css) */
+@media screen and (max-width: 1000px) {
+  .observador-grade,
+  .observador-espera {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .painel-cena.tamanho-normal .painel-cena-desenho svg {
+    max-height: 240px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .barra-observador .relogio-grande {
+    font-size: 30px;
+  }
+
+  .numeros-rcp dd {
+    font-size: 18px;
+  }
+}

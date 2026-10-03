@@ -128,6 +128,7 @@ Lista e decisões: `docs/ideias-saude-integral.md`.
 | Atenção básica (D6) | `src/atencao-basica/` (receitas, vacinas, desenvolvimento, quiz); dados `src/dados/atencao-basica/` | `src/telas/atencao-basica/`; desenhos `src/ilustracoes/AtencaoBasica.tsx`, `Desenvolvimento.tsx`; teste: `testes-tela/atencao-basica.spec.ts` |
 | Briefing e debriefing da PCR (D7) | `src/parada/debriefing.ts`; dados `src/dados/parada-briefing-a-validar.ts` | `src/telas/parada/AntesDoCodigo.tsx` e `Debriefing.tsx`; teste: `testes-tela/parada.spec.ts` |
 | Ilustrações realistas (pele, sombras, tons) | `src/ilustracoes/pele.ts`, `formas.ts` | `src/ilustracoes/FiltrosPele.tsx`; estilos `src/telas/estilos-saude.css` |
+| Animação da RCP (cena, avatares, só assistir) | `src/parada/cena.ts` (`montarCena`); dados `src/dados/parada-cena-a-validar.ts` | `src/telas/parada/PainelCena.tsx`, `TelaObservador.tsx`, `CenaRcp.tsx`; desenhos `src/ilustracoes/rcp/`; teste: `testes-tela/parada-cena.spec.ts` |
 
 ## Parada em equipe (E0, out/2026)
 A aba **🚨 Parada** agora tem 3 telas, sem botões misturados:
@@ -136,3 +137,28 @@ A aba **🚨 Parada** agora tem 3 telas, sem botões misturados:
 3. **Debriefing**: algoritmo, **qualidade da RCP** (frequência, fração de compressão medida, pausas, séries 15:2, choque com alguém comprimindo), **equipe** (alça fechada, avisos, anotação, flush) e o roteiro; **↺ Novo código** mantém a equipe.
 - **Cada um na sua tela**: em **Preparar**, **↗ Abrir a tela de um colega** abre outra janela; lá, o colega clica **é meu** no papel dele. Funciona entre janelas do mesmo computador; cada um no próprio celular depende do modo online (Fase 7).
 - Arquivos: lógica `src/parada/rcp.ts`, `sala.ts`, `equipe.ts`; telas `src/telas/parada/`; dados `src/dados/parada-rcp-a-validar.ts` e `parada-briefing-a-validar.ts`; teste `testes-tela/parada.spec.ts`.
+
+## Animação da RCP (out/2026)
+Na aba **🚨 Parada**, todos veem a mesma **cena animada** da RCP: o paciente na maca e a equipe em volta, cada aluno com o seu **avatar** e o seu nome. A cena acontece conforme os alunos agem, em todas as janelas ao mesmo tempo (a do líder, a de cada colega e a do professor/telão).
+
+**Como testar (uma janela só):**
+1. Aba **🚨 Parada** → **Preparar**: escreva os nomes (ex.: Ana no Líder, Bruno em Compressões 1). Clique no **🎨** da linha de um papel: abre a escolha do avatar com a **prévia** (rosto e ombros). Troque a **pele** (3 bolinhas), o **cabelo** (Curto, Raspado, Cacheado, Longo, Preso) e a **cor da roupa** — a prévia muda na hora. **Voltar ao padrão** desfaz. Clique de novo no 🎨 para fechar.
+2. **▶ Iniciar o código**. No alto da coluna principal aparece a **cena** com uma frase embaixo do que acontece agora (ex.: "Bruno comprime — 112/min (no ritmo) · série 9/15").
+3. Aperte **Espaço** várias vezes: a cada aperto o avatar de quem comprime **afunda o tórax na hora**. Depois de 15 (30 no adolescente), aperte **↑**: quem ventila **aperta a bolsa** e o tórax sobe.
+4. Aba do papel **Monitor**: **Carregar** → todos ficam de **mãos ao alto** e aparece "Afastem-se!"; **⚡ Chocar** → **clarão** e o corpo dá um **tranco**. **Checar ritmo** → pausa, todos olham o monitor.
+5. Aba **Medicação**: ao **Administrar** uma droga, o avatar **injeta** no acesso e fala a dose. Aba **Líder**: a ordem aparece em **balão**; quem recebe clica **✔ Entendido** e o balão "Entendido!" aparece no avatar dele.
+6. No 2º ciclo (depois da checagem), os compressores **trocam de lugar** (se o 2º compressor tiver nome).
+7. O paciente muda de tamanho conforme o cenário: **lactente** (técnica dos dois polegares), **escolar** (uma mão), **adolescente** (duas mãos). RN aparece no berço quando houver cenário neonatal.
+8. **Esconder a cena** (canto da cena) deixa a página mais limpa; a escolha fica guardada neste computador. **🎬 Mostrar a cena da RCP** traz de volta.
+9. **Encerrar o código** → no Debriefing, abra **🎬 Rever o código**: arraste o controle para qualquer momento, ou **▶** para tocar (1× ou 4×). A cena mostra o que estava acontecendo naquele segundo.
+
+**Como testar (professor ou telão):**
+- Na aba **👩‍🏫 Professor**, cartão **🚨 Parada ao vivo** → **👀 Assistir ao código (janela nova)**. Ou, na Parada, em **Preparar → Equipe**, **👀 Só assistir (professor ou telão)**.
+- Essa janela **não faz nenhum papel** e não tem teclas da RCP: antes do código mostra "Esperando a equipe começar" e **quem é quem**; durante, a **cena grande**, o monitor, os **números da RCP** (frequência, série) e **O que a equipe fez**; depois, o debriefing. **Sair do modo só assistir** volta ao normal.
+- Abra a equipe em outra janela e comece o código lá: as compressões, a carga e o choque aparecem na janela de quem assiste.
+
+**Bom saber:**
+- Com "Compressões e ventilações apertando teclas" **desligado**, a cena faz as compressões sozinha no ritmo certo (110/min, com as pausas para ventilar).
+- Se o computador estiver com **"Reduzir movimento"** ligado (Mac: Ajustes → Acessibilidade → Tela), a cena mostra quem faz o quê, mas sem o tórax subindo e descendo sem parar e sem o clarão.
+- Técnica de compressão por faixa e as idades de cada desenho: **A VALIDAR** (`src/dados/parada-cena-a-validar.ts`).
+

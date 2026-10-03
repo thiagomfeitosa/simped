@@ -11,6 +11,7 @@ import { formatarNumero } from '../../prescricao/comum';
 import { Monitor } from '../Monitor';
 import { useCodigo } from './contexto';
 import { PainelAnotacao, PainelCompressoes, PainelLider, PainelMedicacao, PainelMonitor, PainelTempo, PainelVentilacao } from './Paineis';
+import { PainelCena } from './PainelCena';
 import { FaixaRcp, useTeclasRcp } from './Rcp';
 
 const n = formatarNumero;
@@ -37,10 +38,23 @@ const PAINEL: Record<PainelPapel, () => React.JSX.Element> = {
 };
 
 /** Sinais do monitor durante o código: sem pulso, o monitor mostra "---" (src/monitor). */
-function sinaisDoCodigo(rce: boolean, ritmo: string, idadeAnos: number): SinaisVitais {
+export function sinaisDoCodigo(rce: boolean, ritmo: string, idadeAnos: number): SinaisVitais {
   const lactente = idadeAnos < 1;
   if (rce) return { fc: lactente ? 140 : 110, fr: lactente ? 30 : 20, spo2: 92, paSistolica: lactente ? 75 : 90, paDiastolica: 50, temperaturaC: 36, glicemiaMgDl: 110, tecS: 3, glasgow: 6 };
   return { fc: ritmo === 'aesp' ? 50 : ritmo === 'tv' ? 200 : 0, fr: 0, spo2: 0, paSistolica: 0, paDiastolica: 0, temperaturaC: 36, glicemiaMgDl: 100, tecS: 6, glasgow: 3 };
+}
+
+/** Monitor do paciente durante o código (o mesmo em todas as telas). */
+export function MonitorDoCodigo() {
+  const { estado, cenario } = useCodigo();
+  return (
+    <Monitor
+      sinais={sinaisDoCodigo(estado.rce, estado.ritmo, cenario.idadeAnos)}
+      idadeDias={cenario.idadeAnos * 365}
+      ritmo={estado.ritmo}
+      padraoRespiratorio={estado.rce || estado.iniciada ? 'assistida' : 'apneia'}
+    />
+  );
 }
 
 /** Barra fixa no alto: tempo de código, pausar e encerrar (o resto fica no painel de cada papel). */
@@ -105,7 +119,7 @@ function Recados() {
 }
 
 /** O que a equipe fez (mais recente primeiro): cada ação com o horário e quem fez. */
-function FeedEquipe() {
+export function FeedEquipe() {
   const { s, membros, ritmoNaChecagem } = useCodigo();
   const [tudo, setTudo] = useState(false);
   const eventos = s.sala.eventos;
@@ -176,12 +190,13 @@ function Consulta() {
 }
 
 /**
- * Durante o código: cada tela mostra só o painel do(s) papel(éis) dela; ao lado, o monitor e o que
- * a equipe fez. Quem comprime e quem ventila têm a faixa da RCP sempre à vista (teclas ou toque).
+ * Durante o código: cada tela mostra a cena da RCP (a mesma para todos) e só o painel do(s) papel(éis)
+ * dela; ao lado, o monitor e o que a equipe fez. Quem comprime e quem ventila têm a faixa da RCP sempre
+ * à vista (teclas ou toque): o aperto vira na hora o movimento do seu avatar na cena.
  */
 export function DuranteCodigo() {
   const ctx = useCodigo();
-  const { s, estado, cenario, meusPapeis, rcp, compressorDaVez } = ctx;
+  const { s, meusPapeis, rcp, compressorDaVez } = ctx;
   const paineis = [...new Set(PAPEIS_EQUIPE.filter((p) => meusPapeis.includes(p.id)).map((p) => p.painel))];
   const [escolhido, setEscolhido] = useState<PainelPapel | null>(null);
   const painel = escolhido && paineis.includes(escolhido) ? escolhido : paineis[0];
@@ -227,22 +242,20 @@ export function DuranteCodigo() {
         </nav>
       )}
       <div className="parada-durante-grade">
-        {Painel && papelDoPainel && (
-          <section className="painel painel-papel" aria-label={`Painel: ${NOME_PAINEL[painel!]}`}>
-            <h2>
-              {papelDoPainel.icone} {NOME_PAINEL[painel!]}
-              {papelDoPainel.painel !== 'compressoes' && <small> — {quemFez(papelDoPainel.id, ctx.membros)}</small>}
-            </h2>
-            <Painel />
-          </section>
-        )}
+        <div className="parada-principal">
+          <PainelCena />
+          {Painel && papelDoPainel && (
+            <section className="painel painel-papel" aria-label={`Painel: ${NOME_PAINEL[painel!]}`}>
+              <h2>
+                {papelDoPainel.icone} {NOME_PAINEL[painel!]}
+                {papelDoPainel.painel !== 'compressoes' && <small> — {quemFez(papelDoPainel.id, ctx.membros)}</small>}
+              </h2>
+              <Painel />
+            </section>
+          )}
+        </div>
         <aside className="parada-lateral">
-          <Monitor
-            sinais={sinaisDoCodigo(estado.rce, estado.ritmo, cenario.idadeAnos)}
-            idadeDias={cenario.idadeAnos * 365}
-            ritmo={estado.ritmo}
-            padraoRespiratorio={estado.rce || estado.iniciada ? 'assistida' : 'apneia'}
-          />
+          <MonitorDoCodigo />
           <FeedEquipe />
           <Consulta />
         </aside>
