@@ -18,6 +18,7 @@
     "arquivo-unico": "vite build --mode arquivo-unico && node scripts/arquivo-unico.mjs",
     "nova-versao-banco": "node scripts/nova-versao-banco.mjs",
     "gerar-planilha": "node scripts/gerar-planilha.mjs",
+    "exportar-imagens": "node scripts/exportar-imagens.mjs",
     "desktop": "node node_modules/electron/install.js && npm run arquivo-unico && electron .",
     "empacotar:mac": "npm run arquivo-unico && electron-builder --mac",
     "empacotar:win": "npm run arquivo-unico && electron-builder --win",
