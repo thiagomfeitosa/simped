@@ -11,6 +11,7 @@
  */
 
 import { PAPEIS_EQUIPE } from '../dados/parada-briefing-a-validar';
+import type { AparenciaAvatar } from './cena';
 import type { EventoParada } from './parada';
 import type { MarcaRcp } from './rcp';
 
@@ -93,7 +94,7 @@ export function acrescentar(sala: SalaParada, novos: { eventos?: readonly Evento
 
 /** Recomeça o código com a mesma equipe e o mesmo cenário (briefing, eventos e relógio zeram). */
 export function recomecarSala(sala: SalaParada, tela: string, agoraMs: number): SalaParada {
-  const fica = Object.fromEntries(Object.entries(sala.campos).filter(([k]) => k === CHAVES.cenario || k === CHAVES.teclas || k.startsWith('membro:')));
+  const fica = Object.fromEntries(Object.entries(sala.campos).filter(([k]) => k === CHAVES.cenario || k === CHAVES.teclas || k.startsWith('membro:') || k.startsWith('observador:')));
   return { ...novaSala(tela, agoraMs, agoraMs), campos: fica, telas: { ...sala.telas } };
 }
 
@@ -159,6 +160,8 @@ export const CHAVES = {
   briefing: (item: string) => `briefing:${item}`,
   resposta: (fase: string) => `resposta:${fase}`,
   crm: (item: string) => `crm:${item}`,
+  /** Tela que só assiste (professor, telão): não faz nenhum papel. */
+  observador: (tela: string) => `observador:${tela}`,
 } as const;
 
 const valorDe = (sala: SalaParada, chave: string): unknown => sala.campos[chave]?.valor;
@@ -181,15 +184,26 @@ export interface Membro {
   nome: string;
   /** Tela (janela) de quem faz o papel; sem tela = a primeira tela da sala. */
   tela?: string;
+  /** Aparência do avatar na animação da RCP (sem escolha: uma padrão pelo papel). */
+  avatar?: AparenciaAvatar;
 }
 
 export function membrosDaSala(sala: SalaParada): Record<string, Membro> {
   const r: Record<string, Membro> = {};
   for (const p of PAPEIS_EQUIPE) {
     const v = valorDe(sala, CHAVES.membro(p.id)) as Partial<Membro> | undefined;
-    r[p.id] = { nome: typeof v?.nome === 'string' ? v.nome : '', ...(typeof v?.tela === 'string' && { tela: v.tela }) };
+    r[p.id] = { nome: typeof v?.nome === 'string' ? v.nome : '', ...(typeof v?.tela === 'string' && { tela: v.tela }), ...(aparenciaValida(v?.avatar) && { avatar: v.avatar }) };
   }
   return r;
+}
+
+const TONS = ['claro', 'moreno', 'negro'];
+const CABELOS = ['curto', 'raspado', 'cacheado', 'longo', 'preso'];
+
+/** Aparência que chegou de outra tela (formato estranho = ignorada, fica a padrão). */
+export function aparenciaValida(x: unknown): x is AparenciaAvatar {
+  const a = x as AparenciaAvatar | null | undefined;
+  return !!a && typeof a === 'object' && TONS.includes(a.pele) && CABELOS.includes(a.cabelo) && typeof a.roupa === 'string' && /^#[0-9a-f]{6}$/i.test(a.roupa);
 }
 
 /** Mapa "prefixo:x" → valor, só com os valores do tipo certo. */
@@ -214,10 +228,17 @@ export function crmDaSala(sala: SalaParada): Record<string, number> {
 
 // ---- Telas e papéis ------------------------------------------------------------------------
 
-/** Telas da sala em ordem de entrada (só as vivas, se informado). */
+/** Telas que só assistem (professor, telão): ficam fora dos papéis. */
+export function observadoresDaSala(sala: SalaParada): Set<string> {
+  const m = mapaDe(sala, 'observador', (v): v is boolean => typeof v === 'boolean');
+  return new Set(Object.keys(m).filter((t) => m[t]));
+}
+
+/** Telas da equipe em ordem de entrada (só as vivas, se informado). As que só assistem ficam de fora. */
 export function ordemDasTelas(sala: SalaParada, vivas?: ReadonlySet<string>): string[] {
+  const observadores = observadoresDaSala(sala);
   return Object.entries(sala.telas)
-    .filter(([t]) => !vivas || vivas.has(t))
+    .filter(([t]) => (!vivas || vivas.has(t)) && !observadores.has(t))
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))
     .map(([t]) => t);
 }
@@ -225,7 +246,7 @@ export function ordemDasTelas(sala: SalaParada, vivas?: ReadonlySet<string>): st
 /** Tela de quem faz o papel: a escolhida (se ainda aberta) ou a primeira tela aberta. */
 export function donoDoPapel(sala: SalaParada, papel: string, vivas: ReadonlySet<string>): string | undefined {
   const escolhida = membrosDaSala(sala)[papel]?.tela;
-  if (escolhida && vivas.has(escolhida)) return escolhida;
+  if (escolhida && vivas.has(escolhida) && !observadoresDaSala(sala).has(escolhida)) return escolhida;
   return ordemDasTelas(sala, vivas)[0];
 }
 

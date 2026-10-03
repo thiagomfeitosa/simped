@@ -13,6 +13,8 @@ import './telas/estilos-paginas.css';
 // abas Recém-nascido e Atenção básica (ilustrações)
 import './telas/estilos-saude.css';
 import './telas/parada/estilos-parada.css';
+import './telas/parada/estilos-cena.css';
+import './telas/parada/estilos-cena-equipe.css';
 import './estilos.css';
 // B17: tablet e celular (por cima de tudo)
 import './estilos-telas-pequenas.css';

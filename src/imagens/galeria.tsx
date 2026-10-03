@@ -6,6 +6,8 @@ import '../telas/estilos-prescrever.css';
 import '../telas/estilos-paginas.css';
 import '../telas/estilos-saude.css';
 import '../telas/parada/estilos-parada.css';
+import '../telas/parada/estilos-cena.css';
+import '../telas/parada/estilos-cena-equipe.css';
 import '../estilos.css';
 import { catalogoDeImagens, NOME_DAS_PASTAS } from './catalogo';
 
