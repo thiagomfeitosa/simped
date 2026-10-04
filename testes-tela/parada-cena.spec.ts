@@ -89,7 +89,7 @@ test('só assistir (professor ou telão): vê a compressão, a carga e o choque 
   const telao = await context.newPage();
   const errosTelao: string[] = [];
   telao.on('pageerror', (e) => errosTelao.push(e.message));
-  await telao.goto('./?assistir=parada#parada');
+  await telao.goto('./?janela=parada&assistir=parada#parada');
   await esperarAba(telao);
   const t = abaVisivel(telao);
   await expect(t.getByText('👀 Só assistindo')).toBeVisible();
@@ -138,6 +138,8 @@ test('só assistir (professor ou telão): vê a compressão, a carga e o choque 
   await t.getByRole('button', { name: 'Sair do modo só assistir' }).click();
   await expect(t.getByText('👀 Só assistindo')).toHaveCount(0);
   expect(new URL(telao.url()).searchParams.get('assistir')).toBeNull();
+  // a marca da janela fica: recarregar não a transforma em dona da sessão do aluno
+  expect(new URL(telao.url()).searchParams.get('janela')).toBe('parada');
   expect(erros).toEqual([]);
   expect(errosTelao).toEqual([]);
 });
@@ -149,6 +151,7 @@ test('aba Professor abre a janela que só assiste à parada', async ({ page, con
   const nova = await janela;
   await nova.waitForLoadState();
   expect(new URL(nova.url()).searchParams.get('assistir')).toBe('parada');
+  expect(new URL(nova.url()).searchParams.get('janela')).toBe('parada');
   expect(new URL(nova.url()).searchParams.get('papel')).toBeNull();
   await esperarAba(nova);
   await expect(abaVisivel(nova).getByText('Esperando a equipe começar')).toBeVisible();
@@ -211,6 +214,25 @@ test('rever o código no debriefing: a cena em qualquer momento', async ({ page 
   expect(erros).toEqual([]);
 });
 
+test('no computador, ao iniciar, a faixa da RCP fica logo abaixo da cena e à vista (fora da barra do relógio)', async ({ page }) => {
+  const erros = await abrir(page, 'parada');
+  const aba = abaVisivel(page);
+  const botao = aba.getByRole('button', { name: /Iniciar o código/ });
+  await botao.scrollIntoViewIfNeeded();
+  await botao.click();
+  const cena = aba.getByRole('region', { name: 'Cena da RCP' }).locator('svg').first();
+  await expect(cena).toBeVisible();
+  const comprimir = aba.getByRole('button', { name: /Comprimir/ });
+  const barra = aba.getByRole('group', { name: 'Relógio do código' });
+  await expect
+    .poll(async () => {
+      const [c, b, s] = [await comprimir.boundingBox(), await barra.boundingBox(), await cena.boundingBox()];
+      return !!c && !!b && !!s && s.y >= b.y + b.height && c.y >= s.y + s.height && c.y + c.height <= 900;
+    })
+    .toBe(true);
+  expect(erros).toEqual([]);
+});
+
 test.describe('celular', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
@@ -224,6 +246,26 @@ test.describe('celular', () => {
     await expect(aba.getByRole('region', { name: 'Cena da RCP' })).toBeVisible();
     await page.waitForTimeout(400);
     expect(await rolagem()).toBeLessThanOrEqual(390);
+    expect(erros).toEqual([]);
+  });
+
+  test('ao iniciar, a página sobe até o código: a cena e o botão de comprimir ficam à vista juntos', async ({ page }) => {
+    const erros = await abrir(page, 'parada');
+    const aba = abaVisivel(page);
+    const botao = aba.getByRole('button', { name: /Iniciar o código/ });
+    await botao.scrollIntoViewIfNeeded();
+    await botao.tap();
+    const cena = aba.getByRole('region', { name: 'Cena da RCP' }).locator('svg').first();
+    await expect(cena).toBeVisible();
+    const naTela = async (l: Locator) => {
+      const b = await l.boundingBox();
+      return !!b && b.y >= 0 && b.y + b.height <= 844;
+    };
+    await expect.poll(() => naTela(cena)).toBe(true);
+    await expect.poll(() => naTela(aba.getByRole('button', { name: /Comprimir/ }))).toBe(true);
+    // a barra do relógio fica baixa (antes: 177 px, com os botões um embaixo do outro)
+    const barra = await aba.getByRole('group', { name: 'Relógio do código' }).boundingBox();
+    expect(barra!.height).toBeLessThan(120);
     expect(erros).toEqual([]);
   });
 });

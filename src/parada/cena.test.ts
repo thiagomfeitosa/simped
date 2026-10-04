@@ -102,6 +102,22 @@ describe('compressões pelas teclas', () => {
     expect(depois.expansao).toBe(0);
     expect(avatar(depois, 'via-aerea')?.acao).toBe('segurando-mascara');
   });
+  it('15:2: logo depois da 15ª compressão é pausa (ninguém "comprime e ventila" ao mesmo tempo)', () => {
+    // 15ª compressão em 17,7 s; a 1ª ventilação vem 0,3 s depois (dentro do tempo em que ainda contaria como comprimindo)
+    const serie = corrida(10, 15, 0.55);
+    const membros = { 'compressor-1': { nome: 'Bruno' }, 'via-aerea': { nome: 'Carla' } };
+    // o último aperto ainda aparece inteiro
+    expect(avatar(cena({ tS: 17.75, marcas: serie, membros }), 'compressor-1')?.acao).toBe('comprimindo');
+    // terminou o aperto: mãos paradas no tórax, à espera das ventilações
+    const espera = cena({ tS: 18.1, marcas: serie, membros });
+    expect(avatar(espera, 'compressor-1')?.acao).toBe('maos-no-torax');
+    expect(espera.legenda).toBe('Pausa: 2 ventilações');
+    // ventilando: a legenda mostra a pausa e quem ventila, sem "comprime"
+    const ventilando = cena({ tS: 18.3, marcas: [...serie, vent(18)], membros });
+    expect(avatar(ventilando, 'compressor-1')?.acao).toBe('maos-no-torax');
+    expect(ventilando.legenda).toBe('Pausa: 2 ventilações · Carla ventila');
+    expect(ventilando.legenda).not.toContain('comprime');
+  });
   it('revendo um código longo (milhares de marcas) em qualquer tempo', () => {
     const marcas = corrida(0, 10_000, 0.5);
     expect(cena({ tS: 1000 + T.descidaCompressaoS / 2, marcas }).compressao).toBeCloseTo(0.5);
@@ -181,7 +197,7 @@ describe('checagem de ritmo, carga e choque', () => {
   it('carregado: "afastem-se", mãos ao alto e o tórax parado', () => {
     const c = cena({ tS: 124, eventos, teclas: false, marcas: [] });
     expect(c).toMatchObject({ carregado: true, checandoRitmo: false, compressao: 0, choque: 0 });
-    expect(avatar(c, 'monitor')).toMatchObject({ lugar: 'desfibrilador', acao: 'carregando', balao: 'Carregando 40 J… Afastem-se!' });
+    expect(avatar(c, 'monitor')).toMatchObject({ lugar: 'desfibrilador', acao: 'carregando', balao: 'Carregando 40\u00a0J… Afastem-se!' });
     expect(c.avatares.filter((a) => a.papel !== 'monitor').every((a) => a.acao === 'maos-ao-alto')).toBe(true);
     expect(c.legenda).toBe('⚡ Afastem-se: desfibrilador carregado');
     // com teclas, mesmo apertando a compressão, a cena mostra todos afastados
@@ -195,7 +211,7 @@ describe('checagem de ritmo, carga e choque', () => {
     expect(c.carregado).toBe(false);
     expect(avatar(c, 'monitor')).toMatchObject({ acao: 'chocando', balao: 'Choque!' });
     expect(avatar(c, 'via-aerea')?.acao).toBe('maos-ao-alto');
-    expect(c.legenda).toBe('⚡ Choque de 40 J');
+    expect(c.legenda).toBe('⚡ Choque de 40\u00a0J');
     const depois = cena({ tS: 125 + T.choqueS + 0.06, eventos, teclas: false });
     expect(depois.choque).toBe(0);
     expect(avatar(depois, 'compressor-1')?.acao).toBe('comprimindo');
@@ -238,9 +254,9 @@ describe('equipe: balões e ações', () => {
     expect(puncao.legenda).toContain('🩸 Carlos: acesso intraósseo');
     expect(cena({ tS: 40 + T.acaoCurtaS, eventos, teclas: false }).acesso).toBe('intraosseo');
     const droga = cena({ tS: 71, eventos, membros, teclas: false });
-    expect(avatar(droga, 'medicacao')).toMatchObject({ acao: 'injetando', balao: 'Adrenalina 1:10.000 — 2 mL' });
-    expect(droga.legenda).toContain('💉 Carlos: Adrenalina 1:10.000 — 2 mL');
-    expect(avatar(cena({ tS: 91, eventos, teclas: false }), 'medicacao')?.balao).toBe('SF 0,9% 400 mL');
+    expect(avatar(droga, 'medicacao')).toMatchObject({ acao: 'injetando', balao: 'Adrenalina 1:10.000 — 2\u00a0mL' });
+    expect(droga.legenda).toContain('💉 Carlos: Adrenalina 1:10.000 — 2\u00a0mL');
+    expect(avatar(cena({ tS: 91, eventos, teclas: false }), 'medicacao')?.balao).toBe('SF 0,9% 400\u00a0mL');
     expect(avatar(cena({ tS: 70 + T.acaoCurtaS + 0.1, eventos, teclas: false }), 'medicacao')?.acao).toBe('parado');
     const periferico: EventoParada[] = [INICIAR, { id: 'a', tipo: 'acesso', tS: 10, descricao: 'Acesso venoso periférico' }];
     expect(cena({ tS: 20, eventos: periferico, teclas: false }).acesso).toBe('periferico');

@@ -82,7 +82,7 @@ function BotaoRcp({ tipo, rotulo, tecla, total, aoApertar }: { tipo: TipoMarca; 
 }
 
 /**
- * Faixa da RCP (sempre à vista na tela de quem comprime ou ventila): botões grandes, frequência,
+ * Faixa da RCP (logo abaixo da cena, na tela de quem comprime ou ventila): botões grandes, frequência,
  * contagem da série e os avisos (pausar para ventilar, ventilação fora da hora, hiperventilação).
  */
 export function FaixaRcp({ comprime, ventila, aoApertar }: { comprime: boolean; ventila: boolean; aoApertar: (t: TipoMarca) => void }) {

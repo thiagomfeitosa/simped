@@ -104,6 +104,8 @@ export function ProvedorSessao({ children }: { children: ReactNode }) {
   const [papel] = useState<Papel>(papelDaJanela);
   // professor e janelas extras da Parada só espelham a sessão da janela do aluno
   const espelho = papel !== 'aluno';
+  // janela extra da Parada (telão, tela de um colega): só mostra; o Prescrever e o Professor dela não mexem na sessão do aluno
+  const soLeitura = papel === 'parada';
   const { personalizados } = useCasos();
   const { config } = useConfiguracoes();
   const { banco } = useBanco();
@@ -143,11 +145,12 @@ export function ProvedorSessao({ children }: { children: ReactNode }) {
 
   const fazer = useCallback(
     (acao: AcaoSessao, autor: Autor = 'aluno') => {
+      if (soLeitura) return;
       // na janela do professor, a ação vai para a janela do aluno (que aplica e devolve o estado)
-      if (espelho) canal.current?.enviar({ tipo: 'acao', acao });
+      if (espelho) canal.current?.enviar({ tipo: 'acao', acao, de: 'professor' });
       else setSessao((s) => fazerNaSessao(s, acao, new Date(), autor));
     },
-    [espelho],
+    [espelho, soLeitura],
   );
 
   // B15: canal entre janelas
@@ -164,8 +167,9 @@ export function ProvedorSessao({ children }: { children: ReactNode }) {
       return;
     }
     if (msg.tipo === 'ola') canal.current?.enviar({ tipo: 'estado', casoId: caso.id, geracao, registros: sessao.registros, variacao });
-    else if (msg.tipo === 'acao') fazer(msg.acao, 'professor');
-    else if (msg.tipo === 'trocarCaso' && casos.some((c) => c.id === msg.casoId)) {
+    // só o professor manda ações e troca o caso (as janelas extras da Parada só olham)
+    else if (msg.tipo === 'acao' && msg.de === 'professor') fazer(msg.acao, 'professor');
+    else if (msg.tipo === 'trocarCaso' && msg.de === 'professor' && casos.some((c) => c.id === msg.casoId)) {
       // professor: 'variar' sorteia, 'original' tira a variação, 'manter' recomeça igual; sem nada, vale a Configuração
       const variar = msg.variacao === 'variar' || (msg.variacao === undefined && config.variarCasos);
       if (msg.variacao === 'manter' && msg.casoId === caso.id) {
@@ -228,20 +232,24 @@ export function ProvedorSessao({ children }: { children: ReactNode }) {
     geracao,
     fazer,
     trocarCaso: (id) => {
-      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: id });
+      if (soLeitura) return;
+      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: id, de: 'professor' });
       abrirCaso(id, config.variarCasos);
     },
     recomecar: () => {
-      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'manter' });
+      if (soLeitura) return;
+      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'manter', de: 'professor' });
       apagarSessaoGuardada();
       novaSessao(caso.id, [], variacao);
     },
     variarCaso: () => {
-      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'variar' });
+      if (soLeitura) return;
+      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'variar', de: 'professor' });
       abrirCaso(caso.id, true);
     },
     voltarAoOriginal: () => {
-      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'original' });
+      if (soLeitura) return;
+      if (espelho) return canal.current?.enviar({ tipo: 'trocarCaso', casoId: caso.id, variacao: 'original', de: 'professor' });
       abrirCaso(caso.id, false);
     },
     continuar: (g) => novaSessao(g.casoId, g.registros, g.variacao ?? null),

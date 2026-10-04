@@ -10,10 +10,10 @@ describe('canal entre janelas (B15)', () => {
     const a = abrirCanal((m) => recebidosA.push(m), 'A');
     const b = abrirCanal((m) => recebidosB.push(m), 'B');
     a.enviar({ tipo: 'ola' });
-    b.enviar({ tipo: 'acao', acao: { tipo: 'mensagem', texto: 'oi' } });
+    b.enviar({ tipo: 'acao', acao: { tipo: 'mensagem', texto: 'oi' }, de: 'professor' });
     await esperar();
     expect(recebidosB).toEqual([{ tipo: 'ola' }]);
-    expect(recebidosA).toEqual([{ tipo: 'acao', acao: { tipo: 'mensagem', texto: 'oi' } }]);
+    expect(recebidosA).toEqual([{ tipo: 'acao', acao: { tipo: 'mensagem', texto: 'oi' }, de: 'professor' }]);
     a.fechar();
     b.fechar();
   });

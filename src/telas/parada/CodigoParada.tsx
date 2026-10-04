@@ -5,7 +5,7 @@ import { useConfiguracoes } from '../../configuracoes/ContextoConfiguracoes';
 import { CENARIOS_PARADA } from '../../dados/parada-a-validar';
 import { relacaoDoCenario } from '../../parada/debriefing';
 import { estadoDaParada } from '../../parada/parada';
-import { CHAVES, cenarioDaSala, compressorDaVez, membrosDaSala, observadoresDaSala, papeisDaTela, rcpPelasTeclas, relogioDaSala, tempoDoRelogio } from '../../parada/sala';
+import { CHAVES, cenarioDaSala, compressorDaVez, marcaDeAssistir, membrosDaSala, observadoresDaSala, papeisDaTela, rcpPelasTeclas, relogioDaSala, tempoDoRelogio } from '../../parada/sala';
 import { FolhaEmergencia } from '../FolhaEmergencia';
 import { AntesDoCodigo } from './AntesDoCodigo';
 import { Contexto, type ContextoCodigo, rcpNoTempo } from './contexto';
@@ -49,11 +49,12 @@ function useAssistir(s: SalaNaTela) {
   }, []);
   const naSala = observadoresDaSala(s.sala).has(s.tela);
   const pronta = s.sala.criadaEm !== 0 || esperou;
-  const { mudar, tela } = s;
+  const { mudar, tela, sala } = s;
   useEffect(() => {
-    // ao deixar de assistir, grava a hora: a tela volta para a equipe no fim da fila (não toma os papéis de ninguém)
-    if (assistindo !== naSala && pronta) mudar(CHAVES.observador(tela), assistindo ? true : Date.now());
-  }, [assistindo, naSala, pronta, mudar, tela]);
+    // ao deixar de assistir durante o código, grava a hora: a tela volta no fim da fila (não toma os papéis de ninguém);
+    // antes de começar, volta ao lugar de entrada
+    if (assistindo !== naSala && pronta) mudar(CHAVES.observador(tela), marcaDeAssistir(sala, assistindo, Date.now()));
+  }, [assistindo, naSala, pronta, mudar, tela, sala]);
   const trocar = useCallback((assistir: boolean) => {
     marcarNoEndereco(assistir);
     setAssistindo(assistir);

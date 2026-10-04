@@ -314,14 +314,48 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* a cena cresce com a altura da tela (tablet em pé: quase a largura toda) sem empurrar a faixa da RCP para fora */
   .painel-cena.tamanho-normal .painel-cena-desenho svg {
-    max-height: 240px;
+    max-height: min(34vh, 380px);
+  }
+
+  /* a barra do topo rola junto: a página sobe até a barra do relógio */
+  .parada-durante {
+    scroll-margin-top: 0;
   }
 }
 
 @media screen and (max-width: 760px) {
   .barra-observador .relogio-grande {
     font-size: 30px;
+  }
+
+  /* barra do relógio do código baixa no celular: a cena e o botão de comprimir cabem juntos na tela */
+  .barra-codigo {
+    gap: 2px 10px;
+    padding: 6px 10px;
+  }
+
+  .barra-codigo .relogio-grande {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .barra-codigo .eu-sou {
+    font-size: 0.8rem;
+  }
+
+  .barra-codigo-botoes {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .barra-codigo-botoes > button {
+    flex: 1 1 40%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
   }
 
   .numeros-rcp dd {

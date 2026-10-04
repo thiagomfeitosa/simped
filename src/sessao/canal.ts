@@ -14,13 +14,16 @@ export type MensagemCanal =
   | { tipo: 'ola' }
   /** Janela do aluno manda a sessão inteira (caso + registros). */
   | { tipo: 'estado'; casoId: string; geracao: number; registros: RegistroSessao[]; variacao?: VariacaoCaso | null }
-  /** Janela do professor manda uma ação (alterar sinais, complicação, mensagem, tempo). */
-  | { tipo: 'acao'; acao: AcaoSessao }
+  /**
+   * Janela do professor manda uma ação (alterar sinais, complicação, mensagem, tempo). `de`: quem manda
+   * (a janela do aluno só aceita ações e trocas de caso do professor; as janelas extras da Parada só olham).
+   */
+  | { tipo: 'acao'; acao: AcaoSessao; de: 'professor' }
   /**
    * Professor troca o caso do aluno (ou recomeça). B16: 'variar' sorteia outro peso/idade/apresentação,
    * 'original' tira a variação, 'manter' recomeça com a mesma; sem isso, vale a Configuração da janela do aluno.
    */
-  | { tipo: 'trocarCaso'; casoId: string; variacao?: 'variar' | 'original' | 'manter' };
+  | { tipo: 'trocarCaso'; casoId: string; variacao?: 'variar' | 'original' | 'manter'; de: 'professor' };
 
 interface Envelope<M> {
   id: string;

@@ -240,6 +240,16 @@ export function observadoresDaSala(sala: SalaParada): Set<string> {
 }
 
 /**
+ * Marca que a tela grava ao ligar (true) ou desligar o "só assistir". Durante o código, a hora da volta
+ * (entra no fim da fila e não toma os papéis de quem já está agindo); antes de começar, false (volta ao
+ * lugar de entrada: quem só testou o modo no Preparar não perde os papéis).
+ */
+export function marcaDeAssistir(sala: SalaParada, assistir: boolean, agoraMs: number): boolean | number {
+  if (assistir) return true;
+  return sala.eventos.some((e) => e.tipo === 'iniciar') ? agoraMs : false;
+}
+
+/**
  * Telas da equipe em ordem de entrada (só as vivas, se informado). As que só assistem ficam de fora;
  * a que deixou de assistir entra no fim da fila (a hora em que voltou), para não tomar os papéis de quem já está no código.
  */

@@ -36,7 +36,8 @@ kbd {
 .botao-iniciar { font-size: 1.25rem; padding: 12px 28px; min-height: 52px; }
 
 /* ---- Durante ---- */
-.parada-durante { padding: 0 12px 12px; }
+/* ao começar o código, a página sobe até aqui (no computador, logo abaixo da barra do topo, que fica fixa) */
+.parada-durante { padding: 0 12px 12px; scroll-margin-top: 58px; }
 .barra-codigo {
   position: sticky; top: 64px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
   margin: 8px 0; padding: 8px 12px; border-radius: var(--raio-medio); background: var(--superficie);
@@ -73,6 +74,8 @@ kbd {
 .regua-alvo { position: absolute; top: 0; bottom: 0; background: var(--ok-suave); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
 .regua-ponteiro { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--texto); }
 .abas-papeis { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+/* faixa da RCP e abas dos papéis logo abaixo da cena (o espaço vem da grade) */
+.parada-principal > .faixa-rcp, .parada-principal > .abas-papeis { margin-bottom: 0; }
 .abas-papeis .selo { margin-left: 4px; }
 .parada-durante-grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 12px; align-items: start; }
 @media (max-width: 1000px) { .parada-durante-grade { grid-template-columns: minmax(0, 1fr); } }

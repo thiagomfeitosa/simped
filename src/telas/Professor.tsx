@@ -41,7 +41,8 @@ const CAMPOS: { id: NomeSinal; nome: string; casas?: number }[] = [
  */
 function abrirParadaAoVivo(): void {
   const url = new URL(window.location.href);
-  url.search = '?assistir=parada';
+  // janela=parada: a janela nasce espelho (nunca dona da sessão do aluno), mesmo se sair do "só assistir" e recarregar
+  url.search = '?janela=parada&assistir=parada';
   url.hash = 'parada';
   window.open(url.toString(), 'simped-parada-ao-vivo', 'width=1280,height=860');
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SinaisVitais } from '../../casos/tipos';
 import { pesoEstimadoApls } from '../../calculos';
 import { CAUSAS_REVERSIVEIS } from '../../dados/parada-a-validar';
@@ -191,11 +191,18 @@ function Consulta() {
 
 /**
  * Durante o código: cada tela mostra a cena da RCP (a mesma para todos) e só o painel do(s) papel(éis)
- * dela; ao lado, o monitor e o que a equipe fez. Quem comprime e quem ventila têm a faixa da RCP sempre
- * à vista (teclas ou toque): o aperto vira na hora o movimento do seu avatar na cena.
+ * dela; ao lado, o monitor e o que a equipe fez. Quem comprime e quem ventila têm a faixa da RCP logo
+ * abaixo da cena (teclas ou toque): o aperto vira na hora o movimento do seu avatar, à vista.
  */
 export function DuranteCodigo() {
   const ctx = useCodigo();
+  const raiz = useRef<HTMLDivElement>(null);
+  // ao começar o código, a página sobe até o relógio: a cena e a faixa da RCP à vista (a página estava rolada
+  // lá embaixo, no "Iniciar o código"); numa aba escondida (outra tela começou o código) não mexe
+  useEffect(() => {
+    const el = raiz.current;
+    if (el && el.offsetParent !== null) el.scrollIntoView?.({ block: 'start' });
+  }, []);
   const { s, meusPapeis, rcp, compressorDaVez } = ctx;
   const paineis = [...new Set(PAPEIS_EQUIPE.filter((p) => meusPapeis.includes(p.id)).map((p) => p.painel))];
   const [escolhido, setEscolhido] = useState<PainelPapel | null>(null);
@@ -219,31 +226,32 @@ export function DuranteCodigo() {
   const papelDoPainel = PAPEIS_EQUIPE.find((p) => p.painel === painel);
 
   return (
-    <div className="parada-durante">
+    <div className="parada-durante" ref={raiz}>
       <BarraDoCodigo />
       <Recados />
-      <FaixaRcp comprime={comprime} ventila={ventila} aoApertar={apertar} />
-      {paineis.length > 1 && (
-        <nav className="abas-papeis" aria-label="Papéis nesta tela">
-          {paineis.map((pp) => {
-            const pend = pendentesDoPainel(pp);
-            const papel = PAPEIS_EQUIPE.find((p) => p.painel === pp)!;
-            return (
-              <button key={pp} type="button" aria-pressed={pp === painel} onClick={() => setEscolhido(pp)}>
-                <span aria-hidden="true">{papel.icone}</span> {NOME_PAINEL[pp]}
-                {pend > 0 && (
-                  <span className="selo selo-perigo" aria-label={`${pend} ordem(ns)`}>
-                    {pend}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-      )}
       <div className="parada-durante-grade">
         <div className="parada-principal">
           <PainelCena />
+          {/* logo abaixo da cena: quem comprime pelo toque vê o próprio avatar afundar o tórax */}
+          <FaixaRcp comprime={comprime} ventila={ventila} aoApertar={apertar} />
+          {paineis.length > 1 && (
+            <nav className="abas-papeis" aria-label="Papéis nesta tela">
+              {paineis.map((pp) => {
+                const pend = pendentesDoPainel(pp);
+                const papel = PAPEIS_EQUIPE.find((p) => p.painel === pp)!;
+                return (
+                  <button key={pp} type="button" aria-pressed={pp === painel} onClick={() => setEscolhido(pp)}>
+                    <span aria-hidden="true">{papel.icone}</span> {NOME_PAINEL[pp]}
+                    {pend > 0 && (
+                      <span className="selo selo-perigo" aria-label={`${pend} ordem(ns)`}>
+                        {pend}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+          )}
           {Painel && papelDoPainel && (
             <section className="painel painel-papel" aria-label={`Painel: ${NOME_PAINEL[painel!]}`}>
               <h2>

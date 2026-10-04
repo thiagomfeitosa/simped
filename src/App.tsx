@@ -253,6 +253,12 @@ export function App() {
           👩‍🏫 Janela do professor — o que você faz aqui aparece na janela do aluno. A aba Prescrever desta janela mostra a mesma sessão do aluno.
         </p>
       )}
+      {/* janela extra da Parada: fora da Parada, só mostra a sessão do aluno (não mexe nela) */}
+      {JANELA_DA_PARADA && modo !== 'parada' && (
+        <p className="banner-professor banner-janela-parada">
+          🚨 Janela da Parada — aqui o Prescrever e o Professor só mostram a sessão do aluno: o que se faz nesta janela não muda a sessão dele.
+        </p>
+      )}
 
       {/* Toda aba aberta continua aberta: trocar de aba não apaga a prescrição nem a etapa do passo a passo. */}
       {MODOS.filter((m) => m.semProvedores).map(aba)}

@@ -128,7 +128,7 @@ Lista e decisões: `docs/ideias-saude-integral.md`.
 | Atenção básica (D6) | `src/atencao-basica/` (receitas, vacinas, desenvolvimento, quiz); dados `src/dados/atencao-basica/` | `src/telas/atencao-basica/`; desenhos `src/ilustracoes/AtencaoBasica.tsx`, `Desenvolvimento.tsx`; teste: `testes-tela/atencao-basica.spec.ts` |
 | Briefing e debriefing da PCR (D7) | `src/parada/debriefing.ts`; dados `src/dados/parada-briefing-a-validar.ts` | `src/telas/parada/AntesDoCodigo.tsx` e `Debriefing.tsx`; teste: `testes-tela/parada.spec.ts` |
 | Ilustrações realistas (pele, sombras, tons) | `src/ilustracoes/pele.ts`, `formas.ts` | `src/ilustracoes/FiltrosPele.tsx`; estilos `src/telas/estilos-saude.css` |
-| Animação da RCP (cena, avatares, só assistir) | `src/parada/cena.ts` (`montarCena`); dados `src/dados/parada-cena-a-validar.ts` | `src/telas/parada/PainelCena.tsx`, `TelaObservador.tsx`, `CenaRcp.tsx`; desenhos `src/ilustracoes/rcp/`; teste: `testes-tela/parada-cena.spec.ts` |
+| Animação da RCP (cena, avatares, só assistir) | `src/parada/cena.ts` (`montarCena`); dados `src/dados/parada-cena-a-validar.ts` | `src/telas/parada/PainelCena.tsx`, `TelaObservador.tsx`, `CenaRcp.tsx`; desenhos `src/ilustracoes/rcp/`; testes: `testes-tela/parada-cena.spec.ts`, `parada-janelas.spec.ts` |
 
 ## Parada em equipe (E0, out/2026)
 A aba **🚨 Parada** agora tem 3 telas, sem botões misturados:
@@ -143,10 +143,12 @@ Na aba **🚨 Parada**, todos veem a mesma **cena animada** da RCP: o paciente n
 
 **Como testar (uma janela só):**
 1. Aba **🚨 Parada** → **Preparar**: escreva os nomes (ex.: Ana no Líder, Bruno em Compressões 1). Clique no **🎨** da linha de um papel: abre a escolha do avatar com a **prévia** (rosto e ombros). Troque a **pele** (3 bolinhas), o **cabelo** (Curto, Raspado, Cacheado, Longo, Preso) e a **cor da roupa** — a prévia muda na hora. **Voltar ao padrão** desfaz. Clique de novo no 🎨 para fechar.
-2. **▶ Iniciar o código**. No alto da coluna principal aparece a **cena** com uma frase embaixo do que acontece agora (ex.: "Bruno comprime — 112/min (no ritmo) · série 9/15").
-3. Aperte **Espaço** várias vezes: a cada aperto o avatar de quem comprime **afunda o tórax na hora**. Depois de 15 (30 no adolescente), aperte **↑**: quem ventila **aperta a bolsa** e o tórax sobe.
-4. Aba do papel **Monitor**: **Carregar** → todos ficam de **mãos ao alto** e aparece "Afastem-se!"; **⚡ Chocar** → **clarão** e o corpo dá um **tranco**. **Checar ritmo** → pausa, todos olham o monitor.
-5. Aba **Medicação**: ao **Administrar** uma droga, o avatar **injeta** no acesso e fala a dose. Aba **Líder**: a ordem aparece em **balão**; quem recebe clica **✔ Entendido** e o balão "Entendido!" aparece no avatar dele.
+2. **▶ Iniciar o código**. A página **sobe sozinha** até o relógio do código (no celular também): no alto da coluna principal aparece a **cena**, com uma frase embaixo do que acontece agora (ex.: "Bruno comprime — 112/min (no ritmo) · série 9/15"), e **logo abaixo dela** os botões **🫀 Comprimir** e **🫁 Ventilar**. No celular, a barra do relógio fica baixa (os 2 botões lado a lado), e a cena e o botão de comprimir cabem juntos na tela.
+3. Aperte **Espaço** várias vezes: a cada aperto o avatar de quem comprime **afunda o tórax na hora**. Depois de 15 (30 no adolescente), a frase muda para **"Pausa: 2 ventilações"** (as mãos param no tórax); aperte **↑**: quem ventila **aperta a bolsa** e o tórax sobe (a frase nunca diz "comprime" e "ventila" ao mesmo tempo na pausa).
+4. Aba do papel **Monitor**: **Carregar** → todos ficam de **mãos ao alto**, aparece "Afastem-se!" e a tela do desfibrilador mostra **CARREGADO** (o líder fica ao lado do carrinho, sem tapar a tela); **⚡ Chocar** → **clarão** na cena inteira (até as bordas) e o corpo dá um **tranco**. **Checar ritmo** → pausa, todos olham o monitor.
+5. Aba **Medicação**: ao **Administrar** uma droga, o avatar **injeta** no acesso e fala a dose (o número e a unidade, ex.: "2 mL", nunca ficam em linhas diferentes). Aba **Líder**: a ordem aparece em **balão**; quem recebe clica **✔ Entendido** e o balão "Entendido!" aparece no avatar dele.
+   - **Balões e nomes:** cada balão fica **perto de quem fala**, com a ponta curta e larga apontando para o nome, a bochecha ou o queixo dele; um balão não cobre outro nem esconde a ponta do outro. Se precisar, o **nome de quem não está falando sai do lugar** (vai para o lado, com um tracinho até a cabeça, ou para o peito, como um crachá). Teste no celular com os 8 papéis com nome: Tempo → "Avisar: 2 minutos" e Monitor → "Checar ritmo" ou "Carregar" — os dois balões ficam perto de cada um, sem cobrir nomes.
+   - **Nomes compostos** que não cabem ficam com as palavras inteiras: "Ana Beatriz" vira "Ana" no celular; "Ana Beatriz Souza" vira "Ana Beatriz" no computador (nada de "Ana Beat…").
 6. No 2º ciclo (depois da checagem), os compressores **trocam de lugar** (se o 2º compressor tiver nome).
 7. O paciente muda de tamanho conforme o cenário: **lactente** (técnica dos dois polegares), **escolar** (uma mão), **adolescente** (duas mãos). RN aparece no berço quando houver cenário neonatal.
 8. **Esconder a cena** (canto da cena) deixa a página mais limpa; a escolha fica guardada neste computador. **🎬 Mostrar a cena da RCP** traz de volta.
@@ -156,6 +158,10 @@ Na aba **🚨 Parada**, todos veem a mesma **cena animada** da RCP: o paciente n
 - Na aba **👩‍🏫 Professor**, cartão **🚨 Parada ao vivo** → **👀 Assistir ao código (janela nova)**. Ou, na Parada, em **Preparar → Equipe**, **👀 Só assistir (professor ou telão)**.
 - Essa janela **não faz nenhum papel** e não tem teclas da RCP: antes do código mostra "Esperando a equipe começar" e **quem é quem**; durante, a **cena grande**, o monitor, os **números da RCP** (frequência, série) e **O que a equipe fez**; depois, o debriefing. **Sair do modo só assistir** volta ao normal.
 - Abra a equipe em outra janela e comece o código lá: as compressões, a carga e o choque aparecem na janela de quem assiste.
+- **Quem é dono da sessão do Prescrever** não muda com o "só assistir": a janela que a aba Professor abre e a **tela de um colega** (↗ Abrir a tela de um colega) são **janelas da Parada** (`?janela=parada` no endereço) e continuam só mostrando a sessão do aluno, mesmo depois de sair do "só assistir" e recarregar (F5): não perguntam "Continuar o caso" e não apagam nada. Fora da aba Parada, elas mostram a faixa **"🚨 Janela da Parada"** e o Prescrever/Professor delas não mexem na folha nem trocam o caso do aluno.
+- Já a **janela do aluno** que liga o "só assistir" e recarrega continua sendo a do aluno: a Parada lembra o modo e o Prescrever funciona (e oferece continuar o caso).
+- No **Preparar**, ligar e desligar o "só assistir" devolve todos os papéis à tela; **durante o código**, quem volta entra no fim da fila (não toma os papéis de quem já está agindo).
+- No app de computador (Electron), as janelas abertas a partir de outra (professor → telão) também abrem no tamanho certo, e os links da internet (catálogo de fontes) abrem no navegador.
 
 **Bom saber:**
 - Com "Compressões e ventilações apertando teclas" **desligado**, a cena faz as compressões sozinha no ritmo certo (110/min, com as pausas para ventilar).

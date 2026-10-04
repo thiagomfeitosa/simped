@@ -200,6 +200,12 @@ function carrinhoEm(x: number, chao: number, escala = 1): Carrinho {
   };
 }
 
+/** Monitor/desfibrilador em cima do carrinho (tela e botões), no mundo — o mesmo desenho de Pecas.tsx (Carrinho). */
+export function caixaDoDesfibrilador(c: Carrinho): { x: number; y: number; w: number; h: number } {
+  const e = c.escala;
+  return { x: c.x - 34 * e, y: c.topo - 42 * e, w: 66 * e, h: 42 * e };
+}
+
 /**
  * Monta o lugar de cada um em volta do leito (mundo) e a câmera que enquadra todos.
  * Três faixas de profundidade (cada vez menores e mais altas na tela):
@@ -237,8 +243,10 @@ function layout(faixa: FaixaPaciente): LayoutFaixa {
   const depois = xAcesso + DISTANCIA_LADO_A_LADO - 4;
   const xEspera = depois <= x1 - 6 ? depois : xCompressor - DISTANCIA_LADO_A_LADO;
   const xCabeca = x0 - (berco ? 24 : 26);
-  const xLider = x1 + 30;
-  const carrinho = carrinhoEm(x1 + 46, 280, 0.84);
+  // o líder fica nos pés do leito, um pouco para dentro, e o carrinho um pouco para fora: a cabeça do líder
+  // não tapa a tela do desfibrilador ("CARREGADO") nem a mão de quem carrega
+  const xLider = x1 + 16;
+  const carrinho = carrinhoEm(x1 + 60, 280, 0.84);
   const lugares: Record<LugarNaCena, LugarGeo> = {
     tempo: { x: carrinho.x + 98, y: 276, escala: 0.8, giro: -0.4, camada: 'fundo' },
     registro: { x: xCabeca - 50, y: 280, escala: 0.8, giro: 0.35, camada: 'fundo' },
@@ -649,15 +657,43 @@ export function alcanceCompressao(tecnica: TecnicaCompressao): number {
   return Math.sqrt((BRACO_AVATAR + ANTEBRACO_AVATAR) ** 2 * 0.997 - (tecnica === 'duas-maos' ? (MEIO_OMBRO - 2) ** 2 : 0));
 }
 
-/** Corta nomes longos para a etiqueta. */
+/** Palavras que não terminam um nome ("Maria de" fica "Maria"). */
+const LIGACOES = new Set(['de', 'da', 'do', 'das', 'dos', 'e']);
+
+/**
+ * Encurta nomes longos para a etiqueta sem cortar palavra no meio: fica com as palavras inteiras que cabem
+ * ("Ana Beatriz Souza" → "Ana Beatriz"; no celular, "Maria Eduarda" → "Maria"). Só corta com "…" quando
+ * nem o primeiro nome sozinho cabe.
+ */
 export function nomeCurto(nome: string, maximo = 12): string {
-  const n = nome.trim();
-  return n.length <= maximo ? n : `${n.slice(0, maximo - 1).trimEnd()}…`;
+  const n = nome.trim().replace(/\s+/g, ' ');
+  if (n.length <= maximo) return n;
+  const palavras = n.split(' ');
+  let r = palavras[0]!;
+  if (r.length > maximo) return `${r.slice(0, maximo - 1)}…`;
+  for (const p of palavras.slice(1)) {
+    if (`${r} ${p}`.length > maximo) break;
+    r = `${r} ${p}`;
+  }
+  const partes = r.split(' ');
+  while (partes.length > 1 && LIGACOES.has(partes[partes.length - 1]!.toLowerCase())) partes.pop();
+  return partes.join(' ');
 }
 
-/** Quebra o texto do balão em linhas (sem quebrar palavras, no máximo `linhas`). */
+/** Unidade que vem depois de um número (o detalhe da ordem é digitado pelo aluno com espaço comum). */
+const UNIDADE = /^(mL|ml|L|J|mg|mcg|µg|g|kg|UI|mEq|mmol|min|s|h|%)(?![\p{L}\d])/u;
+
+/**
+ * Quebra o texto do balão em linhas (sem quebrar palavras, no máximo `linhas`). O número e a unidade
+ * ("2 mL", "40 J") ficam sempre na mesma linha; o espaço que não quebra (\u00a0) também segura.
+ */
 export function quebrarTexto(texto: string, porLinha: number, linhas = 3): string[] {
-  const palavras = texto.trim().split(/\s+/);
+  const palavras: string[] = [];
+  for (const p of texto.trim().split(/[^\S\u00a0]+/)) {
+    const antes = palavras[palavras.length - 1];
+    if (antes !== undefined && /\d$/.test(antes) && UNIDADE.test(p)) palavras[palavras.length - 1] = `${antes} ${p}`;
+    else palavras.push(p);
+  }
   const r: string[] = [];
   let atual = '';
   for (const p of palavras) {

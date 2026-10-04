@@ -10,6 +10,7 @@ import {
   continuarRelogio,
   donoDoPapel,
   entrarNaSala,
+  marcaDeAssistir,
   membrosDaSala,
   mesclarSalas,
   mudarCampo,
@@ -127,6 +128,16 @@ describe('telas que só assistem (professor, telão)', () => {
     expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(voltou, p.id, vivas) === 'B')).toBe(true);
     // sozinha na sala, faz todos os papéis
     expect(papeisDaTela(voltou, 'A', new Set(['A']))).toHaveLength(8);
+  });
+  it('antes de começar o código, ligar e desligar o "só assistir" devolve o lugar de entrada (e os papéis)', () => {
+    expect(marcaDeAssistir(s, true, 40)).toBe(true);
+    const testou = mudarCampo(s, CHAVES.observador('A'), marcaDeAssistir(s, false, 40), 'A', 40);
+    expect(ordemDasTelas(testou)).toEqual(['A', 'B', 'C']);
+    expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(testou, p.id, vivas) === 'A')).toBe(true);
+    // depois de iniciar: volta no fim da fila
+    const iniciado = acrescentar(s, { eventos: [{ id: 'i', tipo: 'iniciar', tS: 0 }] }, 35);
+    expect(marcaDeAssistir(iniciado, false, 40)).toBe(40);
+    expect(ordemDasTelas(mudarCampo(iniciado, CHAVES.observador('A'), marcaDeAssistir(iniciado, false, 40), 'A', 40))).toEqual(['B', 'C', 'A']);
   });
   it('nunca fazem papel: sem escolha, os papéis vão para a 1ª tela da equipe', () => {
     expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(s, p.id, vivas) === 'B')).toBe(true);

@@ -15,7 +15,7 @@ import type { Ponto } from '../../ilustracoes/formas';
 import { idSvg, PALETAS } from '../../ilustracoes/pele';
 import { AvatarRcp, Cabeca, DefsAvatar } from '../../ilustracoes/rcp/AvatarRcp';
 import { arred } from '../../ilustracoes/rcp/caminhos';
-import { ALTURA_AVATAR, ALTURA_CENA, type Camera, cameraDaCena, corpoDoPaciente, LARGURA_CENA, layoutDaFaixa, type LugarGeo, naTela, nomeCurto } from '../../ilustracoes/rcp/geometria';
+import { ALTURA_AVATAR, ALTURA_CENA, type Camera, caixaDoDesfibrilador, cameraDaCena, corpoDoPaciente, LARGURA_CENA, layoutDaFaixa, type LugarGeo, naTela, nomeCurto } from '../../ilustracoes/rcp/geometria';
 import { PacienteRcp } from '../../ilustracoes/rcp/PacienteRcp';
 import { arrumarRotulos, type Caixa, caminhoBalao, medidas, type PedidoRotulo } from '../../ilustracoes/rcp/rotulos';
 import {
@@ -153,31 +153,54 @@ const PAPEL_CURTO: Record<string, string> = { 'Ventilação e via aérea': 'Via 
 /** No celular (letra maior), mais curto ainda. */
 const PAPEL_CURTISSIMO: Record<string, string> = { 'Compressões 1': 'Compr. 1', 'Compressões 2': 'Compr. 2' };
 
-/** Caixa (na tela) de cada cabeça e do paciente, para os balões não cobrirem ninguém. */
-function obstaculos(postos: AvatarPosto[], mundo: Mundo, camera: Camera): { cabecas: Caixa[]; paciente: Caixa } {
+/** Ações em que as mãos de quem fala contam a história (o próprio balão evita cobrir o tronco e as mãos). */
+const ACAO_COM_AS_MAOS: ReadonlySet<string> = new Set(['carregando', 'chocando', 'injetando', 'puncionando', 'intubando', 'ventilando', 'anotando']);
+
+/**
+ * Caixas (na tela) do que os balões não devem cobrir: cada cabeça, o paciente, o desfibrilador (tela e botões)
+ * e o tronco/mãos de quem está fazendo algo com elas.
+ */
+function obstaculos(postos: AvatarPosto[], mundo: Mundo, camera: Camera): { cabecas: Caixa[]; paciente: Caixa; desfibrilador: Caixa; maos: (Caixa | undefined)[] } {
   const caixa = (a: Ponto, b: Ponto): Caixa => {
     const p = naTela(camera, a);
     const q = naTela(camera, b);
     return { x: Math.min(p.x, q.x), y: Math.min(p.y, q.y), w: Math.abs(q.x - p.x), h: Math.abs(q.y - p.y) };
   };
   const cabecas = postos.map(({ lugar: L }) => caixa({ x: L.x - 16 * L.escala, y: L.y - (ALTURA_AVATAR + 1) * L.escala }, { x: L.x + 16 * L.escala, y: L.y - (ALTURA_AVATAR - 44) * L.escala }));
+  const maos = postos.map(({ av, lugar: L }) =>
+    ACAO_COM_AS_MAOS.has(av.acao) ? caixa({ x: L.x - 32 * L.escala, y: L.y - (ALTURA_AVATAR - 46) * L.escala }, { x: L.x + 32 * L.escala, y: L.y - 92 * L.escala }) : undefined,
+  );
   const c = mundo.repouso;
   const topo = Math.min(c.tuboTopo.y, c.naCabeca(0.5, 1).y, c.em(c.P.mamilos, c.P.apTorax * 1.1).y);
   const paciente = caixa({ x: c.em(0, 0).x - 2, y: topo - 4 }, { x: Math.max(c.perna.ponta.x, c.braco.ponta.x) + 2, y: mundo.layout.leito.topo + mundo.layout.leito.meiaProf * 0.5 });
-  return { cabecas, paciente };
+  const d = caixaDoDesfibrilador(mundo.layout.carrinho);
+  const desfibrilador = caixa({ x: d.x, y: d.y }, { x: d.x + d.w, y: d.y + d.h });
+  return { cabecas, paciente, desfibrilador, maos };
 }
 
-function Etiquetas({ postos, mundo, camera, fonte }: { postos: AvatarPosto[]; mundo: Mundo; camera: Camera; fonte: number }) {
+/** Nomes e balões da cena arrumados na tela (viewBox), com o que eles evitam cobrir — também para os testes. */
+export function rotulosDaCena(cena: CenaRcp, fonte: number) {
+  const { mundo, postos } = montarMundo(cena);
+  const camera = cameraDaCena(cena.faixa, postos.map((p) => p.av.lugar));
+  return arrumarEtiquetas(postos, mundo, camera, fonte);
+}
+
+function arrumarEtiquetas(postos: AvatarPosto[], mundo: Mundo, camera: Camera, fonte: number) {
   const compacto = fonte > 15;
-  const pedidos: PedidoRotulo[] = postos.map(({ av, lugar }) => ({
+  const { cabecas, paciente, desfibrilador, maos } = obstaculos(postos, mundo, camera);
+  const pedidos: PedidoRotulo[] = postos.map(({ av, lugar }, i) => ({
     papel: av.papel,
     ancora: naTela(camera, { x: lugar.x, y: lugar.y - (ALTURA_AVATAR + 1) * lugar.escala }),
     nome: nomeCurto((compacto ? PAPEL_CURTISSIMO[av.nome] : undefined) ?? PAPEL_CURTO[av.nome] ?? av.nome, compacto ? 9 : 13) + (av.ritmo ? ` ${(compacto ? SIMBOLO_RITMO : TEXTO_RITMO)[av.ritmo]}` : ''),
     ...(av.balao && { balao: av.balao }),
     prioridade: av.lugar === 'torax' ? 0 : av.papel === 'lider' ? 1 : 2,
+    ...(maos[i] && { maos: maos[i] }),
   }));
-  const { cabecas, paciente } = obstaculos(postos, mundo, camera);
-  const { rotulos, baloes } = arrumarRotulos(pedidos, cabecas, paciente, fonte);
+  return { pedidos, cabecas, paciente, desfibrilador, ...arrumarRotulos(pedidos, cabecas, paciente, fonte, [desfibrilador]) };
+}
+
+function Etiquetas({ postos, mundo, camera, fonte }: { postos: AvatarPosto[]; mundo: Mundo; camera: Camera; fonte: number }) {
+  const { pedidos, rotulos, baloes } = arrumarEtiquetas(postos, mundo, camera, fonte);
   const M = medidas(fonte);
   return (
     <g className="rcp-etiquetas" style={{ fontSize: `${arred(fonte)}px` }}>
@@ -221,7 +244,10 @@ function Avisos({ cena, escala }: { cena: CenaRcp; escala: number }) {
   const yAfastem = ALTURA_CENA - 6 - 17 * e;
   return (
     <g className="rcp-avisos">
-      {cena.choque > 0 && <rect className="rcp-clarao" x="0" y="0" width={LARGURA_CENA} height={ALTURA_CENA} fill="#ffffff" opacity={arred(Math.min(1, cena.choque) * 0.7)} />}
+      {/* o clarão passa bem das bordas do desenho: cobre também as faixas dos lados (a caixa do <svg> corta o que sobrar) */}
+      {cena.choque > 0 && (
+        <rect className="rcp-clarao" x={-LARGURA_CENA} y={-ALTURA_CENA} width={LARGURA_CENA * 3} height={ALTURA_CENA * 3} fill="#ffffff" opacity={arred(Math.min(1, cena.choque) * 0.7)} />
+      )}
       {cena.carregado && (
         <g className="rcp-afastem" transform={`translate(${LARGURA_CENA / 2} ${arred(yAfastem)}) scale(${e})`}>
           <rect x="-112" y="-17" width="224" height="34" rx="9" fill="#c2413b" stroke="#ffd23f" strokeWidth="3" />
@@ -279,14 +305,19 @@ export function DesenhoCenaRcp({ cena, tamanho = 'normal' }: PropsDesenhoCena) {
   );
 }
 
-/** Largura em que o desenho aparece na tela (px), para a letra dos nomes continuar legível quando encolhe. */
+/**
+ * Largura em que o desenho aparece na tela (px), para a letra dos nomes continuar legível quando encolhe.
+ * É a do desenho, não a da caixa: com a altura limitada (tablet em pé, painel do computador), o desenho
+ * fica centralizado e mais estreito que a caixa do <svg>.
+ */
 function useLargura(ref: { current: SVGSVGElement | null }): number {
   const [largura, setLargura] = useState(LARGURA_CENA);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const medir = () => {
-      const w = Math.round(el.getBoundingClientRect().width);
+      const r = el.getBoundingClientRect();
+      const w = Math.round(Math.min(r.width, (r.height * LARGURA_CENA) / ALTURA_CENA));
       if (w > 0) setLargura((antes) => (Math.abs(antes - w) > 4 ? w : antes));
     };
     medir();

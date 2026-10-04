@@ -299,6 +299,8 @@ const TEXTO_AVISO: Record<AvisoTempo, string> = {
 const TEXTO_FAIXA: Record<FaixaRitmo, string> = { boa: 'no ritmo', lenta: 'lento', rapida: 'rápido' };
 
 const n = formatarNumero;
+/** Espaço que não quebra: a dose nunca fica separada da unidade ("2" numa linha e "mL" na outra). */
+const NBSP = '\u00a0';
 
 /** Acesso intraósseo pela descrição ("Acesso intraósseo (IO)"). */
 const ehIntraosseo = (descricao: string) => /intra[óo]sse/i.test(descricao) || /\bIO\b/.test(descricao);
@@ -385,11 +387,11 @@ export function montarCena(en: EntradaCena): CenaRcp {
         break;
       case 'droga': {
         const nome = DROGAS_PARADA.find((d) => d.id === e.drogaId)?.nome ?? e.drogaId;
-        injecao = { tS: e.tS, texto: `${nome} — ${n(e.volumeMl)} mL` };
+        injecao = { tS: e.tS, texto: `${nome} — ${n(e.volumeMl)}${NBSP}mL` };
         break;
       }
       case 'fluido':
-        injecao = { tS: e.tS, texto: `SF 0,9% ${n(e.volumeMl)} mL` };
+        injecao = { tS: e.tS, texto: `SF 0,9% ${n(e.volumeMl)}${NBSP}mL` };
         break;
       case 'acesso': {
         const io = ehIntraosseo(e.descricao);
@@ -465,7 +467,13 @@ export function montarCena(en: EntradaCena): CenaRcp {
     let ventilacaoDesde = -Infinity;
     if (teclas) {
       if (ultCompressao) compressao = afundamento(tS - ultCompressao.tS);
-      comprimindo = !!ultCompressao && tS - ultCompressao.tS < T.comprimindoAteS;
+      // 15:2 (ou 30:2): depois da última compressão da série, as mãos param para as ventilações — a pausa
+      // começa quando alguém ventila ou quando o último aperto termina (não "comprime e ventila" ao mesmo tempo)
+      const pausaDaSerie =
+        rcp.modo === 'sincronizado' &&
+        !!ultCompressao &&
+        ((!!ultVentilacao && ultVentilacao.tS > ultCompressao.tS) || (rcp.fase === 'ventilar' && tS - ultCompressao.tS >= T.descidaCompressaoS + T.subidaCompressaoS));
+      comprimindo = !!ultCompressao && tS - ultCompressao.tS < T.comprimindoAteS && !pausaDaSerie;
       if (comprimindo) {
         serie = rcp.modo === 'sincronizado' ? rcp.serie : undefined;
         ritmo = rcp.faixaCompressao;
@@ -519,7 +527,7 @@ export function montarCena(en: EntradaCena): CenaRcp {
     if (carregado && carga) {
       for (const p of PAPEIS_EQUIPE) if (p.id !== 'monitor') propor(p.id, 'maos-ao-alto', 0, PRIORIDADE.choque, carga.tS);
       propor('monitor', 'carregando', (tS - carga.tS) / T.cargaS, PRIORIDADE.choque, carga.tS);
-      falar('monitor', `Carregando ${n(carga.joules)} J… Afastem-se!`, carga.tS, Infinity);
+      falar('monitor', `Carregando ${n(carga.joules)}${NBSP}J… Afastem-se!`, carga.tS, Infinity);
     }
     if (choque && choqueAgora > 0) {
       for (const p of PAPEIS_EQUIPE) if (p.id !== 'monitor') propor(p.id, 'maos-ao-alto', 0, PRIORIDADE.choque, choque.tS);
@@ -560,7 +568,7 @@ export function montarCena(en: EntradaCena): CenaRcp {
   if (!estado.iniciada) principal = 'Aguardando o início do código';
   else if (estado.encerrada) principal = rce ? 'Código encerrado · ✔ Retorno da circulação' : 'Código encerrado';
   else if (en.pausado) principal = '⏸ Relógio pausado';
-  else if (choqueAgora > 0 && choque) principal = `⚡ Choque de ${n(choque.joules)} J`;
+  else if (choqueAgora > 0 && choque) principal = `⚡ Choque de ${n(choque.joules)}${NBSP}J`;
   else if (carregado) principal = '⚡ Afastem-se: desfibrilador carregado';
   else if (checandoRitmo) principal = '🔍 Checagem de ritmo';
   else if (comprimindo) {

@@ -21,8 +21,8 @@ const n = formatarNumero;
  */
 function abrirOutraTela() {
   const url = new URL(window.location.href);
-  url.searchParams.delete('assistir');
-  url.searchParams.set('janela', 'parada');
+  // a consulta inteira: aberta da janela do professor, a do colega não herda ?papel=professor nem o "só assistir"
+  url.search = '?janela=parada';
   url.hash = 'parada';
   window.open(url.toString(), '_blank');
 }
