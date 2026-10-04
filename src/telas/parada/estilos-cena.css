@@ -39,7 +39,8 @@
   font-size: 1.05rem;
 }
 
-/* troca de lugar (troca de compressor, quem chega) */
+/* troca de lugar (troca de compressor, quem chega) e câmera que se ajusta a quem está na cena */
+.rcp-camera,
 .rcp-avatar,
 .rcp-etiqueta {
   transition: transform 0.7s cubic-bezier(0.45, 0, 0.25, 1);
@@ -51,7 +52,6 @@
 }
 
 .rcp-nome {
-  font-size: 11.5px;
   font-weight: 700;
   fill: var(--texto);
 }
@@ -78,7 +78,6 @@
 }
 
 .rcp-balao text {
-  font-size: 11.5px;
   font-weight: 600;
   fill: var(--texto);
 }
@@ -128,6 +127,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .rcp-camera,
   .rcp-avatar,
   .rcp-etiqueta {
     transition: none;

@@ -70,7 +70,75 @@ const NOTA_PACIENTE =
 const NOTA_AVATAR =
   'Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.';
 
+/** Outros momentos do código (cena completa). */
+const MOMENTOS: { arquivo: string; titulo: string; faixa: FaixaPaciente; cena: Partial<CenaRcp> & { mudar?: Record<string, Partial<AvatarNaCena>> } }[] = [
+  {
+    arquivo: 'cena-lactente-tubo-intraossea',
+    titulo: 'Lactente intubado (tubo saindo da boca), ventilação pelo tubo e adrenalina pela intraóssea',
+    faixa: 'lactente',
+    cena: {
+      viaAerea: 'tubo',
+      acesso: 'intraosseo',
+      compressao: 0.6,
+      expansao: 0.7,
+      legenda: 'Bruno comprime · Diego ventila pelo tubo · Elisa: adrenalina 0,8 mL (IO)',
+      mudar: { 'via-aerea': { acao: 'ventilando', fase: 0.8 }, medicacao: { acao: 'injetando', fase: 0.5, balao: 'Adrenalina 0,8 mL feita!' }, lider: { balao: 'Elisa: adrenalina 0,8 mL' } },
+    },
+  },
+  {
+    arquivo: 'cena-crianca-afastem-se',
+    titulo: 'Criança — desfibrilador carregado: todos de mãos ao alto ("afastem-se!")',
+    faixa: 'crianca',
+    cena: {
+      carregado: true,
+      compressao: 0,
+      legenda: 'Fábio carregou 40 J · Afastem-se!',
+      mudar: {
+        'compressor-1': { acao: 'maos-ao-alto', fase: 0 },
+        'via-aerea': { acao: 'maos-ao-alto', fase: 0 },
+        medicacao: { acao: 'maos-ao-alto', fase: 0 },
+        monitor: { acao: 'carregando', fase: 1, balao: 'Carregado! Afastem-se!' },
+        lider: { balao: 'Todos afastados? Chocar!' },
+      },
+    },
+  },
+  {
+    arquivo: 'cena-adolescente-checagem-de-ritmo',
+    titulo: 'Adolescente — pausa para checar o ritmo (todos olham o monitor)',
+    faixa: 'adolescente',
+    cena: {
+      checandoRitmo: true,
+      compressao: 0,
+      legenda: 'Checagem de ritmo',
+      mudar: {
+        'compressor-1': { acao: 'olhando-monitor', fase: 0 },
+        'compressor-2': { acao: 'olhando-monitor', fase: 0 },
+        'via-aerea': { acao: 'segurando-mascara', fase: 0 },
+        medicacao: { acao: 'olhando-monitor', fase: 0 },
+        monitor: { acao: 'olhando-monitor', fase: 0, balao: 'AESP: ritmo organizado, sem pulso' },
+        lider: { balao: 'Que ritmo? Alguém sente pulso?' },
+        tempo: { balao: '2 minutos: checar o ritmo e trocar!' },
+      },
+    },
+  },
+];
+
 function cenas(): ImagemDoCatalogo[] {
+  const momentos = MOMENTOS.map(
+    (m): ImagemDoCatalogo => ({
+      id: `${PASTA}/cena-completa/${m.arquivo}`,
+      titulo: `Cena completa da RCP — ${m.titulo}`,
+      onde: 'Aba 🚨 Parada → Código (painel da cena) e tela de quem só assiste (professor/telão)',
+      animada: true,
+      variaPelaPele: true,
+      nota: NOTA_CENA,
+      desenhar: () => <DesenhoCenaRcp cena={cenaExemplo(m.faixa, m.cena)} />,
+    }),
+  );
+  return [...completas(), ...momentos];
+}
+
+function completas(): ImagemDoCatalogo[] {
   return FAIXAS.map((f) => ({
     id: `${PASTA}/cena-completa/cena-${f}`,
     titulo: `Cena completa da RCP — ${NOME_FAIXA[f]} (alguém comprimindo)`,
@@ -160,6 +228,7 @@ const EXEMPLOS: ExemploAvatar[] = [
   { arquivo: '16-cronometrando', titulo: 'Cronometrando (tempo)', papel: 'tempo', faixa: 'crianca', mudar: { acao: 'cronometrando', balao: '2 minutos: checar o ritmo!' } },
   { arquivo: '17-anotando', titulo: 'Anotando na prancheta', papel: 'registro', faixa: 'crianca', mudar: { acao: 'anotando', fase: 0.3 } },
   { arquivo: '18-lider-dando-ordem', titulo: 'Líder dando uma ordem (aponta e fala)', papel: 'lider', faixa: 'crianca', mudar: { acao: 'parado', balao: 'Fábio: carregar 40 J' } },
+  { arquivo: '19-injetando-veia-do-pe-do-bebe', titulo: 'Injetando no acesso periférico do bebê (veia do pé)', papel: 'medicacao', faixa: 'lactente', cena: { acesso: 'periferico' }, mudar: { acao: 'injetando', fase: 0.5 } },
 ];
 
 function avatares(): ImagemDoCatalogo[] {

@@ -15,7 +15,8 @@ import { HORIZONTE, LARGURA_CENA, type LayoutFaixa, type Leito } from './geometr
 export const FundoSala = memo(function FundoSala({ layout, id }: { layout: LayoutFaixa; id: (n: string) => string }) {
   const L = LARGURA_CENA * 1.4;
   const x0 = -100;
-  const relogio = { x: layout.lugares.tempo.x + 26, y: 74 };
+  // relógio na parede, em cima do carrinho (sempre à vista, qualquer que seja o enquadramento)
+  const relogio = { x: layout.carrinho.x - 6, y: layout.carrinho.topo - 78 };
   const o2 = layout.oxigenio;
   return (
     <g className="rcp-fundo" aria-hidden="true">
@@ -82,28 +83,40 @@ export const FundoSala = memo(function FundoSala({ layout, id }: { layout: Layou
 // ---- Maca e berço aquecido ----------------------------------------------------------------
 
 export const Maca = memo(function Maca({ leito, prancha }: { leito: Leito; prancha?: { x0: number; x1: number } }) {
-  const { x0, x1, topo, chao } = leito;
+  const { x0, x1, topo, meiaProf: m, chao } = leito;
   const meio = (x0 + x1) / 2;
+  // colchão visto um pouco de cima: faixa de cima (lençol) da borda de lá (topo − m) à de cá (topo + m) e a lateral azul
+  const perto = topo + m;
+  const longe = topo - m;
+  const esp = 12;
+  const armacao = perto + esp + 2;
   return (
     <g className="rcp-maca" aria-hidden="true">
-      {/* base: coluna hidráulica, carenagem e rodas */}
-      <path d={`M ${meio - 70} ${chao - 14} L ${meio + 70} ${chao - 14} L ${meio + 58} ${topo + 52} L ${meio - 58} ${topo + 52} Z`} fill="#a9b1be" />
-      <rect x={meio - 82} y={chao - 20} width={164} height={9} rx={4} fill="#7c8696" />
-      <rect x={meio - 12} y={topo + 18} width={24} height={40} fill="#8d97a6" />
-      <rect x={x0 + 8} y={topo + 16} width={x1 - x0 - 16} height={9} rx={3} fill="#6f7a8c" />
-      {[meio - 70, meio + 70].map((x) => (
+      {/* base fechada (carenagem com bandeja), rodas */}
+      <path d={`M ${x0 + 14} ${chao - 16} L ${x1 - 14} ${chao - 16} L ${x1 - 22} ${armacao + 6} L ${x0 + 22} ${armacao + 6} Z`} fill="#b7bfcb" />
+      <path d={`M ${x0 + 14} ${chao - 16} L ${x1 - 14} ${chao - 16} L ${x1 - 16} ${chao - 30} L ${x0 + 16} ${chao - 30} Z`} fill="#9ea7b5" />
+      <rect x={x0 + 30} y={armacao + 20} width={x1 - x0 - 60} height={14} rx={3} fill="#c9d0da" stroke="#a2abb8" strokeWidth="0.8" />
+      <rect x={x0 + 8} y={chao - 20} width={x1 - x0 - 16} height={8} rx={4} fill="#7c8696" />
+      <rect x={x0 + 8} y={armacao} width={x1 - x0 - 16} height={8} rx={3} fill="#6f7a8c" />
+      {[x0 + 26, x1 - 26].map((x) => (
         <g key={x}>
           <circle cx={x} cy={chao - 6} r={7} fill="#2f3440" />
           <circle cx={x} cy={chao - 6} r={2.6} fill="#9aa4b2" />
         </g>
       ))}
       {/* grade lateral abaixada */}
-      <rect x={x0 + 30} y={topo + 26} width={x1 - x0 - 60} height={4} rx={2} fill="#c3cad5" stroke="#8d97a6" strokeWidth="0.6" />
-      {/* colchão com lençol */}
-      <rect x={x0} y={topo} width={x1 - x0} height={16} rx={7} fill="#5d7fa8" />
-      <rect x={x0} y={topo} width={x1 - x0} height={7} rx={3.5} fill="#f6f7fb" />
-      <path d={`M ${x0 + 6} ${topo + 6} Q ${meio} ${topo + 9} ${x1 - 6} ${topo + 6} L ${x1 - 6} ${topo + 11} Q ${meio - 40} ${topo + 15} ${x0 + 6} ${topo + 11} Z`} fill="#e9ecf4" />
-      {prancha && <rect x={prancha.x0} y={topo - 1.5} width={prancha.x1 - prancha.x0} height={4} rx={1.5} fill="#e08a1e" stroke="#b86a12" strokeWidth="0.5" />}
+      <rect x={x0 + 30} y={armacao + 11} width={x1 - x0 - 60} height={4} rx={2} fill="#c3cad5" stroke="#8d97a6" strokeWidth="0.6" />
+      {/* lateral do colchão e lençol por cima */}
+      <rect x={x0} y={perto - 4} width={x1 - x0} height={esp + 4} rx={6} fill="#56769d" />
+      <rect x={x0} y={longe} width={x1 - x0} height={2 * m + 3} rx={7} fill="#e8ebf3" />
+      <rect x={x0 + 1} y={longe} width={x1 - x0 - 2} height={2 * m} rx={7} fill="#f8f9fc" />
+      <path d={`M ${x0 + 8} ${perto - 0.5} Q ${meio} ${perto + 2} ${x1 - 8} ${perto - 0.5}`} stroke="#d7dce8" strokeWidth="1.2" fill="none" />
+      {prancha && (
+        <g>
+          <rect x={prancha.x0} y={topo - m * 0.62} width={prancha.x1 - prancha.x0} height={m * 1.24} rx={2} fill="#f0a24a" stroke="#c77a1c" strokeWidth="0.6" />
+          <rect x={prancha.x0} y={topo + m * 0.62 - 1} width={prancha.x1 - prancha.x0} height={3} rx={1.2} fill="#c77a1c" />
+        </g>
+      )}
     </g>
   );
 });
@@ -112,16 +125,17 @@ export const Maca = memo(function Maca({ leito, prancha }: { leito: Leito; pranc
 export const BercoFundo = memo(function BercoFundo({ leito, id }: { leito: Leito; id: (n: string) => string }) {
   const { x0, x1 } = leito;
   const xc = x1 + 6;
+  const longe = leito.topo - leito.meiaProf;
   return (
     <g aria-hidden="true">
       <defs>
         <linearGradient id={id('calor')} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ff9a3c" stopOpacity="0.35" />
+          <stop offset="0" stopColor="#ff9a3c" stopOpacity="0.32" />
           <stop offset="1" stopColor="#ff9a3c" stopOpacity="0" />
         </linearGradient>
       </defs>
       {/* luz quente sobre o colchão */}
-      <path d={`M ${x0 + 4} 78 L ${x1 - 4} 78 L ${x1 + 10} ${leito.topo} L ${x0 - 10} ${leito.topo} Z`} fill={`url(#${id('calor')})`} />
+      <path d={`M ${x0 + 4} 78 L ${x1 - 4} 78 L ${x1 + 10} ${longe} L ${x0 - 10} ${longe} Z`} fill={`url(#${id('calor')})`} />
       {/* coluna e cúpula de calor */}
       <rect x={xc - 4} y={70} width={9} height={leito.chao - 80} fill="#d4d9e1" stroke="#a6aebb" strokeWidth="0.6" />
       <rect x={xc - 10} y={150} width={20} height={26} rx={3} fill="#eef1f5" stroke="#a6aebb" strokeWidth="0.6" />
@@ -134,24 +148,29 @@ export const BercoFundo = memo(function BercoFundo({ leito, id }: { leito: Leito
 });
 
 export const Berco = memo(function Berco({ leito }: { leito: Leito }) {
-  const { x0, x1, topo, chao } = leito;
+  const { x0, x1, topo, meiaProf: m, chao } = leito;
   const meio = (x0 + x1) / 2;
+  const perto = topo + m;
+  const longe = topo - m;
   return (
     <g className="rcp-berco" aria-hidden="true">
-      <rect x={meio - 18} y={topo + 16} width={36} height={chao - topo - 30} fill="#c9d0da" />
-      <rect x={x0 - 6} y={topo + 30} width={x1 - x0 + 12} height={46} rx={4} fill="#eef1f5" stroke="#b5bdc9" strokeWidth="0.8" />
-      <rect x={x0 + 6} y={topo + 40} width={x1 - x0 - 12} height={14} rx={2} fill="#e3e7ee" stroke="#c3cad5" strokeWidth="0.6" />
-      <rect x={meio - 8} y={topo + 45} width={16} height={3} rx={1.5} fill="#a6aebb" />
-      <rect x={meio - 56} y={chao - 16} width={112} height={7} rx={3} fill="#8d97a6" />
-      {[meio - 48, meio + 48].map((x) => (
+      {/* gabinete fechado até perto do chão (gavetas) e rodas */}
+      <rect x={x0 - 2} y={perto + 10} width={x1 - x0 + 4} height={chao - perto - 26} rx={4} fill="#dfe3ea" stroke="#b5bdc9" strokeWidth="0.8" />
+      <rect x={x0 + 6} y={perto + 31} width={x1 - x0 - 12} height={13} rx={2} fill="#e9ecf1" stroke="#c3cad5" strokeWidth="0.6" />
+      <rect x={x0 + 6} y={perto + 50} width={x1 - x0 - 12} height={13} rx={2} fill="#e9ecf1" stroke="#c3cad5" strokeWidth="0.6" />
+      {[perto + 36, perto + 55].map((y) => (
+        <rect key={y} x={meio - 8} y={y} width={16} height={3} rx={1.5} fill="#a6aebb" />
+      ))}
+      <rect x={x0 + 4} y={chao - 18} width={x1 - x0 - 8} height={8} rx={3} fill="#8d97a6" />
+      {[x0 + 16, x1 - 16].map((x) => (
         <circle key={x} cx={x} cy={chao - 6} r={6} fill="#2f3440" />
       ))}
-      {/* painel de acrílico abaixado (na RCP fica aberto) */}
-      <rect x={x0 + 4} y={topo + 12} width={x1 - x0 - 8} height={14} rx={2} fill="#dff1fb" fillOpacity="0.35" stroke="#ffffff" strokeWidth="0.8" />
-      {/* bandeja e colchão */}
-      <rect x={x0 - 6} y={topo + 6} width={x1 - x0 + 12} height={12} rx={3} fill="#d4d9e1" stroke="#a6aebb" strokeWidth="0.6" />
-      <rect x={x0} y={topo} width={x1 - x0} height={8} rx={4} fill="#8fc1e8" />
-      <rect x={x0} y={topo} width={x1 - x0} height={3.5} rx={1.7} fill="#f6f7fb" />
+      {/* bandeja, colchão (faixa de cima vista de 3/4) e painel de acrílico abaixado (na RCP fica aberto) */}
+      <rect x={x0 - 6} y={perto + 2} width={x1 - x0 + 12} height={12} rx={3} fill="#d4d9e1" stroke="#a6aebb" strokeWidth="0.6" />
+      <rect x={x0} y={perto - 3} width={x1 - x0} height={8} rx={4} fill="#79afdc" />
+      <rect x={x0} y={longe} width={x1 - x0} height={2 * m + 1} rx={6} fill="#cfe5f6" />
+      <rect x={x0 + 1} y={longe} width={x1 - x0 - 2} height={2 * m - 1.5} rx={6} fill="#f3f8fc" />
+      <rect x={x0 + 4} y={perto + 8} width={x1 - x0 - 8} height={13} rx={2} fill="#dff1fb" fillOpacity="0.4" stroke="#ffffff" strokeWidth="0.8" />
     </g>
   );
 });
@@ -160,12 +179,14 @@ export const Berco = memo(function Berco({ leito }: { leito: Leito }) {
 
 export function Carrinho({ layout, carregado, choque, comprimindo, rce }: { layout: LayoutFaixa; carregado: boolean; choque: number; comprimindo: number; rce: boolean }) {
   const c = layout.carrinho;
-  const { x, topo, chao } = c;
-  const w = c.largura;
+  // desenho em coordenadas locais (meio da base no chão), na escala do carrinho (mais ao fundo = menor)
+  const T = -116;
+  const w = 70;
   const gavetas = [0, 1, 2, 3, 4];
-  const corGaveta = ['#e85d5d', '#e85d5d', '#e85d5d', '#e85d5d', '#e85d5d'];
+  const carga = { x: 20, y: T - 26 };
+  const choqueB = { x: 20, y: T - 14 };
   // traçado da tela: artefato da compressão (sobe e desce com o tórax) ou complexos regulares com RCE
-  const tela = { x: x - 30, y: topo - 37, w: 40, h: 24 };
+  const tela = { x: -30, y: T - 37, w: 40, h: 24 };
   const pts: Ponto[] = [];
   for (let i = 0; i <= 20; i++) {
     const t = i / 20;
@@ -178,32 +199,32 @@ export function Carrinho({ layout, carregado, choque, comprimindo, rce }: { layo
     pts.push({ x: tela.x + 2 + t * (tela.w - 4), y });
   }
   return (
-    <g className="rcp-carrinho" aria-hidden="true">
-      <ellipse cx={x} cy={chao + 1} rx={w * 0.62} ry={4} fill="#2b2140" opacity="0.18" />
+    <g className="rcp-carrinho" aria-hidden="true" transform={`translate(${arred(c.x)} ${arred(c.chao)}) scale(${arred(c.escala * 100) / 100})`}>
+      <ellipse cx={0} cy={1} rx={w * 0.62} ry={4} fill="#2b2140" opacity="0.18" />
       {/* cilindro de O₂ ao lado */}
-      <rect x={x + w / 2 - 2} y={topo + 22} width={10} height={64} rx={5} fill="#2f9e5b" />
-      <rect x={x + w / 2} y={topo + 16} width={6} height={8} rx={1.5} fill="#b8c0cc" />
+      <rect x={w / 2 - 2} y={T + 22} width={10} height={64} rx={5} fill="#2f9e5b" />
+      <rect x={w / 2} y={T + 16} width={6} height={8} rx={1.5} fill="#b8c0cc" />
       {/* corpo vermelho com gavetas */}
-      <rect x={x - w / 2} y={topo} width={w} height={chao - topo - 12} rx={4} fill="#c8282e" />
-      <rect x={x - w / 2} y={topo} width={w} height={6} rx={3} fill="#9aa4b2" />
+      <rect x={-w / 2} y={T} width={w} height={-T - 12} rx={4} fill="#c8282e" />
+      <rect x={-w / 2} y={T} width={w} height={6} rx={3} fill="#9aa4b2" />
       {gavetas.map((i) => {
-        const y = topo + 10 + i * 17;
+        const y = T + 10 + i * 17;
         return (
           <g key={i}>
-            <rect x={x - w / 2 + 4} y={y} width={w - 8} height={14} rx={2} fill={corGaveta[i]} stroke="#9e1c22" strokeWidth="0.8" />
-            <rect x={x - 9} y={y + 5} width={18} height={3.4} rx={1.7} fill="#f3f4f7" />
+            <rect x={-w / 2 + 4} y={y} width={w - 8} height={14} rx={2} fill="#e85d5d" stroke="#9e1c22" strokeWidth="0.8" />
+            <rect x={-9} y={y + 5} width={18} height={3.4} rx={1.7} fill="#f3f4f7" />
           </g>
         );
       })}
-      {[x - w / 2 + 8, x + w / 2 - 8].map((xr) => (
+      {[-w / 2 + 8, w / 2 - 8].map((xr) => (
         <g key={xr}>
-          <circle cx={xr} cy={chao - 6} r={6} fill="#2f3440" />
-          <circle cx={xr} cy={chao - 6} r={2.2} fill="#9aa4b2" />
+          <circle cx={xr} cy={-6} r={6} fill="#2f3440" />
+          <circle cx={xr} cy={-6} r={2.2} fill="#9aa4b2" />
         </g>
       ))}
       {/* monitor/desfibrilador */}
-      <rect x={x - 34} y={topo - 42} width={66} height={42} rx={5} fill="#3c4250" />
-      <rect x={x - 34} y={topo - 42} width={66} height={5} rx={2.5} fill="#525a6b" />
+      <rect x={-34} y={T - 42} width={66} height={42} rx={5} fill="#3c4250" />
+      <rect x={-34} y={T - 42} width={66} height={5} rx={2.5} fill="#525a6b" />
       <rect x={tela.x} y={tela.y} width={tela.w} height={tela.h} rx={2} fill="#05110b" />
       <path d={curva(pts)} stroke="#45f07a" strokeWidth="1.1" fill="none" />
       {carregado && (
@@ -212,27 +233,28 @@ export function Carrinho({ layout, carregado, choque, comprimindo, rce }: { layo
         </text>
       )}
       {/* botões: carga (amarelo) e choque (laranja com raio) */}
-      <circle cx={c.botaoCarga.x} cy={c.botaoCarga.y} r={4.2} fill={carregado ? '#ffe066' : '#d9b52c'} stroke="#7a6512" strokeWidth="0.6" />
-      {carregado && <circle cx={c.botaoCarga.x} cy={c.botaoCarga.y} r={7} fill="#ffe066" opacity="0.35" />}
-      <circle cx={c.botaoChoque.x} cy={c.botaoChoque.y} r={4.6} fill={choque > 0 ? '#ffd0a0' : carregado ? '#ff7a1a' : '#c9561a'} stroke="#7a2d0c" strokeWidth="0.6" />
-      {carregado && <circle className="rcp-botao-pisca" cx={c.botaoChoque.x} cy={c.botaoChoque.y} r={7.5} fill="#ff7a1a" opacity="0.4" />}
-      <path d={`M ${c.botaoChoque.x + 0.6} ${c.botaoChoque.y - 3} l -2.2 3.2 h 2 l -1 2.8 l 2.6 -3.6 h -2 z`} fill="#fff" />
-      <circle cx={x + 20} cy={topo - 36} r={2.4} fill="#9aa4b2" />
+      <circle cx={carga.x} cy={carga.y} r={4.2} fill={carregado ? '#ffe066' : '#d9b52c'} stroke="#7a6512" strokeWidth="0.6" />
+      {carregado && <circle cx={carga.x} cy={carga.y} r={7} fill="#ffe066" opacity="0.35" />}
+      <circle cx={choqueB.x} cy={choqueB.y} r={4.6} fill={choque > 0 ? '#ffd0a0' : carregado ? '#ff7a1a' : '#c9561a'} stroke="#7a2d0c" strokeWidth="0.6" />
+      {carregado && <circle className="rcp-botao-pisca" cx={choqueB.x} cy={choqueB.y} r={7.5} fill="#ff7a1a" opacity="0.4" />}
+      <path d={`M ${choqueB.x + 0.6} ${choqueB.y - 3} l -2.2 3.2 h 2 l -1 2.8 l 2.6 -3.6 h -2 z`} fill="#fff" />
+      <circle cx={20} cy={T - 36} r={2.4} fill="#9aa4b2" />
       {/* saída dos cabos */}
-      <rect x={c.saidaCabos.x - 3} y={c.saidaCabos.y - 3} width={6} height={6} rx={1} fill="#2f3440" />
+      <rect x={-33} y={T - 11} width={6} height={6} rx={1} fill="#2f3440" />
     </g>
   );
 }
 
-/** Cabos do monitor e das pás: saem do lado da maca, vão ao chão e chegam ao carrinho. */
+/** Cabos do monitor e das pás: saem do peito, correm pela borda de cá do colchão até os pés do leito e sobem ao carrinho. */
 export function Cabos({ layout, de }: { layout: LayoutFaixa; de: Ponto }) {
   const c = layout.carrinho;
-  const { x1, topo } = layout.leito;
-  const d = `M ${arred(de.x)} ${arred(de.y)} C ${x1 - 10} ${topo + 1}, ${x1 + 4} ${topo + 2}, ${x1 + 6} ${topo + 18} S ${x1 + 26} ${c.chao - 2}, ${(x1 + c.x) / 2} ${c.chao - 6} S ${c.saidaCabos.x - 14} ${c.saidaCabos.y + 30}, ${c.saidaCabos.x} ${c.saidaCabos.y}`;
+  const { x1, topo, meiaProf } = layout.leito;
+  const borda = topo + meiaProf - 2.5;
+  const d = `M ${arred(de.x)} ${arred(de.y)} Q ${arred(de.x + 4)} ${arred(borda)} ${arred(de.x + 14)} ${arred(borda)} L ${arred(x1 - 10)} ${arred(borda + 0.5)} Q ${arred(x1 + 4)} ${arred(borda + 1)} ${arred(x1 + 5)} ${arred(borda + 12)} C ${arred(x1 + 8)} ${arred(borda + 40)}, ${arred(c.saidaCabos.x - 4)} ${arred(c.saidaCabos.y + 50)}, ${arred(c.saidaCabos.x)} ${arred(c.saidaCabos.y)}`;
   return (
     <g aria-hidden="true" fill="none">
-      <path d={d} stroke="#3a3f4a" strokeWidth="1.6" />
-      <path d={d} stroke="#8a94a6" strokeWidth="0.6" transform="translate(0 -1.2)" />
+      <path d={d} stroke="#3a3f4a" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d={d} stroke="#8a94a6" strokeWidth="0.5" transform="translate(0 -0.6)" />
     </g>
   );
 }

@@ -25,6 +25,8 @@ export interface MaoPose {
   angulo?: number;
   /** Braço solto de quem está atrás da maca: desenhado com o corpo (fica atrás do leito). */
   atras?: boolean;
+  /** Mão nas costas: o braço é desenhado antes do tronco (quase todo escondido atrás dele). */
+  nasCostas?: boolean;
 }
 
 export interface PoseAvatar {
@@ -104,7 +106,10 @@ export function AvatarRcp({ aparencia, pose, camada = 'tudo', id }: PropsAvatarR
     const ombro = lado === 'A' ? e.ombroA : e.ombroB;
     return <Braco key={`${lado}-${parte}`} ombro={ombro} mao={m} pal={pal} roupa={roupa} luvas={pose.luvas} parte={parte} distante={lado === longe} id={id} />;
   };
-  const lados = (['A', 'B'] as const).map((l) => ({ l, atras: !!(l === 'A' ? maoA : maoB).atras, longe: l === longe }));
+  const lados = (['A', 'B'] as const).map((l) => {
+    const m = l === 'A' ? maoA : maoB;
+    return { l, atras: !!m.atras || !!m.nasCostas, longe: l === longe || !!m.nasCostas };
+  });
 
   const corpo = (
     <>
@@ -257,21 +262,30 @@ export function Mao({ punho, angulo, forma, cor, contorno }: { punho: Ponto; ang
   const L = MAO_AVATAR;
   const traco = { stroke: contorno, strokeOpacity: 0.5, strokeWidth: 0.5 };
   if (forma === 'apoiada') {
-    // vista de frente, palma no tórax: mão achatada (dedos virados para quem olha)
+    // de frente, mão espalmada no tórax (região tenar e hipotenar no esterno): dorso, nós dos dedos e as pontas viradas para quem olha
+    const s = Math.cos((angulo * Math.PI) / 180) >= 0 ? 1 : -1;
     return (
       <g transform={`translate(${arred(punho.x)} ${arred(punho.y)})`}>
-        <ellipse cx="0" cy="3.4" rx="7.2" ry="4.4" fill={cor} {...traco} />
-        <path d="M -5 4.6 q 5 2.4 10 0" fill="none" stroke={contorno} strokeOpacity="0.45" strokeWidth="0.6" />
+        <path d={capsula({ x: s * 5.2, y: 1.6 }, { x: s * 8.4, y: 4.8 }, 2.7, 2.2)} fill={cor} {...traco} />
+        <path d="M -6.2 0.4 C -6.7 3.4, -6 6, -4.6 7.1 L 4.6 7.1 C 6 6, 6.7 3.4, 6.2 0.4 C 4 -1, -4 -1, -6.2 0.4 Z" fill={cor} {...traco} />
+        {[-4.1, -1.38, 1.38, 4.1].map((x) => (
+          <ellipse key={x} cx={x} cy="7.3" rx="1.45" ry="1.15" fill={cor} {...traco} />
+        ))}
+        <path d="M -4.6 3.7 Q 0 5 4.6 3.7" fill="none" stroke={contorno} strokeOpacity="0.45" strokeWidth="0.55" />
       </g>
     );
   }
   if (forma === 'envolvendo') {
-    // dedos descem pelo lado do tórax, polegar por cima do esterno
+    // dois polegares: dorso da mão no flanco do tórax, dedos descendo (envolvem o tórax) e o polegar por cima do esterno, apontando para o meio
+    const s = Math.cos((angulo * Math.PI) / 180) >= 0 ? 1 : -1;
     return (
       <g transform={`translate(${arred(punho.x)} ${arred(punho.y)})`}>
-        <path d="M -5 -1 C -6 5, -4 11, 0 12 C 4 11, 6 5, 5 -1 Z" fill={cor} {...traco} />
-        <path d="M -2 2 l 0 8 M 1 2 l 0 8.5" stroke={contorno} strokeOpacity="0.35" strokeWidth="0.5" />
-        <path d={capsula({ x: 0, y: -0.5 }, { x: 0, y: 4 }, 3.2, 2.6)} fill={cor} {...traco} transform="rotate(-70)" />
+        <path d="M -4.4 -0.6 C -5 2.6, -4.9 5.6, -4.3 7.4 L 4.3 7.4 C 4.9 5.6, 5 2.6, 4.4 -0.6 Z" fill={cor} {...traco} />
+        {[-3.2, -1.07, 1.07, 3.2].map((x, i) => (
+          <path key={x} d={capsula({ x, y: 6.4 }, { x: x * 1.05, y: i === 0 || i === 3 ? 11.2 : 12.4 }, 2.3, 2)} fill={cor} {...traco} />
+        ))}
+        <path d={capsula({ x: s * 1.6, y: -0.6 }, { x: s * 7.2, y: -1.2 }, 3.1, 2.5)} fill={cor} {...traco} />
+        <path d={`M ${arred(s * 6.2)} -2.1 l ${arred(s * 0.9)} 0.5`} stroke={contorno} strokeOpacity="0.5" strokeWidth="0.5" />
       </g>
     );
   }

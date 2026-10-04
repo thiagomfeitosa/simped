@@ -1,19 +1,23 @@
 /**
- * Desenho da cena da RCP (SVG feito à mão, sem bibliotecas): sala vista de lado, paciente na maca
- * (ou no berço aquecido, no RN) e a equipe em volta, cada um fazendo o que a cena diz.
+ * Desenho da cena da RCP (SVG feito à mão, sem bibliotecas): sala vista de lado e um pouco de cima
+ * (3/4), em plano médio — o paciente (maior que o real, é o protagonista) na maca ou no berço aquecido
+ * (RN), e a equipe em volta, cada um fazendo o que a cena diz. A câmera enquadra quem está presente.
+ * Nomes e balões são arrumados para não se atropelarem (src/ilustracoes/rcp/rotulos.ts) e a letra
+ * cresce quando a cena encolhe (celular).
  * Sem relógio próprio: quem chama monta a cena a cada quadro (src/parada/cena.ts → montarCena).
  * Peças do desenho: src/ilustracoes/rcp/.
  */
 
-import { type ReactNode, useId } from 'react';
+import { type ReactNode, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { AparenciaAvatar, CenaRcp, FaixaPaciente, LugarNaCena } from '../../parada/cena';
 import type { FaixaRitmo } from '../../parada/rcp';
 import type { Ponto } from '../../ilustracoes/formas';
 import { idSvg, PALETAS } from '../../ilustracoes/pele';
 import { AvatarRcp, Cabeca, DefsAvatar } from '../../ilustracoes/rcp/AvatarRcp';
 import { arred } from '../../ilustracoes/rcp/caminhos';
-import { ALTURA_AVATAR, ALTURA_CENA, corpoDoPaciente, LARGURA_CENA, type LayoutFaixa, layoutDaFaixa, type LugarGeo, naTela, nomeCurto, quebrarTexto } from '../../ilustracoes/rcp/geometria';
+import { ALTURA_AVATAR, ALTURA_CENA, type Camera, cameraDaCena, corpoDoPaciente, LARGURA_CENA, layoutDaFaixa, type LugarGeo, naTela, nomeCurto } from '../../ilustracoes/rcp/geometria';
 import { PacienteRcp } from '../../ilustracoes/rcp/PacienteRcp';
+import { arrumarRotulos, type Caixa, caminhoBalao, medidas, type PedidoRotulo } from '../../ilustracoes/rcp/rotulos';
 import {
   Berco,
   BercoFundo,
@@ -93,7 +97,8 @@ export function CamadasMundo({ cena, id, so, fundo = true }: { cena: CenaRcp; id
   const berco = layout.leito.tipo === 'berco';
   const P = corpo.P;
   const prancha = berco ? undefined : { x0: corpo.em(P.ombro - 3, 0).x, x1: corpo.em(P.pube, 0).x };
-  const fimDosFios = corpo.em(P.xifoide + (P.umbigo - P.xifoide) * 0.55, 0);
+  const xFios = P.xifoide + (P.umbigo - P.xifoide) * 0.6;
+  const fimDosFios = corpo.em(xFios, corpo.baseTronco(xFios));
   return (
     <g>
       {fundo && <FundoSala layout={layout} id={id} />}
@@ -102,6 +107,10 @@ export function CamadasMundo({ cena, id, so, fundo = true }: { cena: CenaRcp; id
         <Posto key={p.av.papel} p={p} camada="tudo" id={id} />
       ))}
       {fundo && <Carrinho layout={layout} carregado={cena.carregado} choque={cena.choque} comprimindo={cena.compressao} rce={cena.rce} />}
+      {/* quem cuida do monitor fica ao lado do carrinho, ao fundo (atrás de quem está nos pés do leito) */}
+      {em('carrinho').map((p) => (
+        <Posto key={p.av.papel} p={p} camada="tudo" id={id} />
+      ))}
       {em('atras').map((p) => (
         <g key={p.av.papel}>
           {p.av.lugar === 'torax' && p.lugar.y < 314 && <Degrau x={p.lugar.x} y={p.lugar.y} chao={318} />}
@@ -112,15 +121,15 @@ export function CamadasMundo({ cena, id, so, fundo = true }: { cena: CenaRcp; id
         <Posto key={p.av.papel} p={p} camada="corpo" id={id} />
       ))}
       {berco ? <Berco leito={layout.leito} /> : <Maca leito={layout.leito} {...(prancha && { prancha })} />}
-      <PacienteRcp corpo={corpo} pele={cena.pelePaciente} rce={cena.rce} viaAerea={cena.viaAerea} {...(cena.acesso && { acesso: cena.acesso })} pas={cena.carregado || cena.choque > 0} id={id} />
-      {fundo && <Cabos layout={layout} de={{ x: fimDosFios.x + 10, y: fimDosFios.y - 0.6 }} />}
+      {fundo && <Cabos layout={layout} de={{ x: fimDosFios.x + 12, y: fimDosFios.y + 1 }} />}
+      <PacienteRcp corpo={corpo} pele={cena.pelePaciente} rce={cena.rce} viaAerea={cena.viaAerea} {...(cena.acesso && { acesso: cena.acesso })} pas={cena.carregado || cena.choque > 0} marcas={postos.some((p) => p.av.acao === 'comprimindo')} id={id} />
       {em('atras').map((p) => (
         <Posto key={`${p.av.papel}-b`} p={p} camada="bracos" id={id} />
       ))}
       {em('cabeceira').map((p) => (
         <Posto key={`${p.av.papel}-b`} p={p} camada="bracos" id={id} />
       ))}
-      {[...em('pes'), ...em('carrinho'), ...em('frente')].map((p) => (
+      {[...em('pes'), ...em('frente')].map((p) => (
         <Posto key={p.av.papel} p={p} camada="tudo" id={id} />
       ))}
     </g>
@@ -131,82 +140,70 @@ export function CamadasMundo({ cena, id, so, fundo = true }: { cena: CenaRcp; id
 
 const COR_RITMO: Record<FaixaRitmo, string> = { boa: '#22935a', lenta: '#ef7d1a', rapida: '#ef7d1a' };
 const TEXTO_RITMO: Record<FaixaRitmo, string> = { boa: '✓', lenta: '▼ lento', rapida: '▲ rápido' };
+const SIMBOLO_RITMO: Record<FaixaRitmo, string> = { boa: '✓', lenta: '▼', rapida: '▲' };
 
-/** Topo da cabeça do avatar (mundo), para a etiqueta. */
-function topoDaCabeca(L: LugarGeo): Ponto {
-  return { x: L.x, y: L.y - (ALTURA_AVATAR + 4) * L.escala };
+/** Tamanho da letra dos nomes e balões (unidades do viewBox) para a largura em que a cena aparece. */
+export function fonteDaCena(larguraPx: number): number {
+  // a cena encolhe com a tela: a letra cresce no desenho para continuar legível (≈ 9 px na tela no celular)
+  return 12.5 * Math.min(1.55, Math.max(1, 640 / Math.max(1, larguraPx)));
 }
 
-interface Etiqueta {
-  papel: string;
-  x: number;
-  y: number;
-  nome: string;
-  ritmo?: FaixaRitmo;
-  balao?: string;
-  lider: boolean;
+/** Nome do papel encurtado para a etiqueta (quando o aluno não pôs o nome dele). */
+const PAPEL_CURTO: Record<string, string> = { 'Ventilação e via aérea': 'Via aérea', 'Acesso e medicações': 'Medicação', 'Monitor e desfibrilador': 'Monitor' };
+/** No celular (letra maior), mais curto ainda. */
+const PAPEL_CURTISSIMO: Record<string, string> = { 'Compressões 1': 'Compr. 1', 'Compressões 2': 'Compr. 2' };
+
+/** Caixa (na tela) de cada cabeça e do paciente, para os balões não cobrirem ninguém. */
+function obstaculos(postos: AvatarPosto[], mundo: Mundo, camera: Camera): { cabecas: Caixa[]; paciente: Caixa } {
+  const caixa = (a: Ponto, b: Ponto): Caixa => {
+    const p = naTela(camera, a);
+    const q = naTela(camera, b);
+    return { x: Math.min(p.x, q.x), y: Math.min(p.y, q.y), w: Math.abs(q.x - p.x), h: Math.abs(q.y - p.y) };
+  };
+  const cabecas = postos.map(({ lugar: L }) => caixa({ x: L.x - 16 * L.escala, y: L.y - (ALTURA_AVATAR + 1) * L.escala }, { x: L.x + 16 * L.escala, y: L.y - (ALTURA_AVATAR - 44) * L.escala }));
+  const c = mundo.repouso;
+  const topo = Math.min(c.tuboTopo.y, c.naCabeca(0.5, 1).y, c.em(c.P.mamilos, c.P.apTorax * 1.1).y);
+  const paciente = caixa({ x: c.em(0, 0).x - 2, y: topo - 4 }, { x: Math.max(c.perna.ponta.x, c.braco.ponta.x) + 2, y: mundo.layout.leito.topo + mundo.layout.leito.meiaProf * 0.5 });
+  return { cabecas, paciente };
 }
 
-function larguraTexto(texto: string, tamanho: number): number {
-  return texto.length * tamanho * 0.56;
-}
-
-/** Balões que não se encostam: se bater num já posto, sobe. */
-function posicionarBaloes(etqs: Etiqueta[]): { e: Etiqueta; x: number; y: number; w: number; h: number; linhas: string[] }[] {
-  const r: { e: Etiqueta; x: number; y: number; w: number; h: number; linhas: string[] }[] = [];
-  // as etiquetas dos nomes também são obstáculos
-  const nomes = etqs.map((e) => {
-    const w = Math.max(30, larguraTexto(e.nome, 11.5) + 14);
-    return { x: e.x - w / 2, y: e.y - 17, w, h: 17 };
-  });
-  const comBalao = etqs.filter((e) => e.balao).sort((a, b) => (a.lider === b.lider ? a.x - b.x : a.lider ? -1 : 1));
-  for (const e of comBalao) {
-    const linhas = quebrarTexto(e.balao!, 22, 3);
-    const w = Math.min(190, Math.max(...linhas.map((l) => larguraTexto(l, 11.5))) + 16);
-    const h = linhas.length * 13.5 + 9;
-    const x = Math.min(LARGURA_CENA - w - 4, Math.max(4, e.x - w / 2));
-    let y = e.y - 22 - h;
-    for (let i = 0; i < 6; i++) {
-      const bate = [...r, ...nomes].find((o) => x < o.x + o.w + 4 && x + w + 4 > o.x && y < o.y + o.h + 3 && y + h + 3 > o.y);
-      if (!bate) break;
-      y = bate.y - h - 5;
-    }
-    r.push({ e, x, y: Math.max(2, y), w, h, linhas });
-  }
-  return r;
-}
-
-function Etiquetas({ postos, layout }: { postos: AvatarPosto[]; layout: LayoutFaixa }) {
-  const etqs: Etiqueta[] = postos.map(({ av, lugar }) => {
-    const t = naTela(layout.camera, topoDaCabeca(lugar));
-    const nome = nomeCurto(av.nome) + (av.ritmo ? ` ${TEXTO_RITMO[av.ritmo]}` : '');
-    return { papel: av.papel, x: t.x, y: t.y, nome, ...(av.ritmo && { ritmo: av.ritmo }), ...(av.balao && { balao: av.balao }), lider: av.papel === 'lider' };
-  });
-  const baloes = posicionarBaloes(etqs);
+function Etiquetas({ postos, mundo, camera, fonte }: { postos: AvatarPosto[]; mundo: Mundo; camera: Camera; fonte: number }) {
+  const compacto = fonte > 15;
+  const pedidos: PedidoRotulo[] = postos.map(({ av, lugar }) => ({
+    papel: av.papel,
+    ancora: naTela(camera, { x: lugar.x, y: lugar.y - (ALTURA_AVATAR + 1) * lugar.escala }),
+    nome: nomeCurto((compacto ? PAPEL_CURTISSIMO[av.nome] : undefined) ?? PAPEL_CURTO[av.nome] ?? av.nome, compacto ? 9 : 13) + (av.ritmo ? ` ${(compacto ? SIMBOLO_RITMO : TEXTO_RITMO)[av.ritmo]}` : ''),
+    ...(av.balao && { balao: av.balao }),
+    prioridade: av.lugar === 'torax' ? 0 : av.papel === 'lider' ? 1 : 2,
+  }));
+  const { cabecas, paciente } = obstaculos(postos, mundo, camera);
+  const { rotulos, baloes } = arrumarRotulos(pedidos, cabecas, paciente, fonte);
+  const M = medidas(fonte);
   return (
-    <g className="rcp-etiquetas">
-      {etqs.map((e) => {
-        const w = Math.max(30, larguraTexto(e.nome, 11.5) + 14);
-        const cor = e.ritmo ? COR_RITMO[e.ritmo] : '#b99be6';
+    <g className="rcp-etiquetas" style={{ fontSize: `${arred(fonte)}px` }}>
+      {rotulos.map((r) => {
+        const av = postos.find((p) => p.av.papel === r.papel)!.av;
+        const cor = av.ritmo ? COR_RITMO[av.ritmo] : '#9b7bd4';
+        const { x, y, w, h } = r.caixa;
+        const nome = pedidos.find((p) => p.papel === r.papel)!.nome;
         return (
-          <g key={e.papel} className="rcp-etiqueta" style={{ transform: `translate(${arred(e.x)}px, ${arred(e.y)}px)` }} data-etiqueta={e.papel} {...(e.ritmo && { 'data-ritmo': e.ritmo })}>
-            <rect x={-w / 2} y={-17} width={w} height={17} rx={8.5} fill="#ffffff" fillOpacity="0.94" stroke={cor} strokeWidth={e.ritmo ? 2.2 : 1.3} />
-            <text x="0" y="-4.6" textAnchor="middle" className="rcp-nome" {...(e.ritmo && e.ritmo !== 'boa' && { fill: '#b45309' })}>
-              {e.nome}
+          <g key={r.papel} className="rcp-etiqueta" style={{ transform: `translate(${arred(x)}px, ${arred(y)}px)` }} data-etiqueta={r.papel} {...(av.ritmo && { 'data-ritmo': av.ritmo })}>
+            {r.deslocado && <line x1={arred(w / 2)} y1={arred(h)} x2={arred(r.ancora.x - x)} y2={arred(r.ancora.y - y)} stroke={cor} strokeWidth="1" strokeDasharray="2 2" />}
+            <rect x="0" y="0" width={arred(w)} height={arred(h)} rx={arred(h / 2)} fill="#ffffff" fillOpacity="0.95" stroke={cor} strokeWidth={av.ritmo ? 2.2 : 1.3} />
+            <text x={arred(w / 2)} y={arred(h * 0.72)} textAnchor="middle" className="rcp-nome" {...(av.ritmo && av.ritmo !== 'boa' && { fill: '#b45309' })}>
+              {nome}
             </text>
           </g>
         );
       })}
-      {baloes.map(({ e, x, y, w, h, linhas }) => {
-        const cauda = Math.min(x + w - 10, Math.max(x + 10, e.x));
+      {baloes.map((b) => {
+        const { x, y, w } = b.caixa;
         return (
-          <g key={`b-${e.papel}`} className={`rcp-balao${e.lider ? ' rcp-balao--lider' : ''}`} data-balao={e.papel}>
-            <path
-              d={`M ${arred(x + 8)} ${arred(y)} H ${arred(x + w - 8)} Q ${arred(x + w)} ${arred(y)} ${arred(x + w)} ${arred(y + 8)} V ${arred(y + h - 8)} Q ${arred(x + w)} ${arred(y + h)} ${arred(x + w - 8)} ${arred(y + h)} H ${arred(cauda + 5)} L ${arred(e.x)} ${arred(e.y - 19)} L ${arred(cauda - 5)} ${arred(y + h)} H ${arred(x + 8)} Q ${arred(x)} ${arred(y + h)} ${arred(x)} ${arred(y + h - 8)} V ${arred(y + 8)} Q ${arred(x)} ${arred(y)} ${arred(x + 8)} ${arred(y)} Z`}
-            />
-            <text x={arred(x + w / 2)} y={arred(y + 15)} textAnchor="middle">
-              {linhas.map((l, i) => (
-                <tspan key={i} x={arred(x + w / 2)} dy={i ? 13.5 : 0}>
+          <g key={`b-${b.papel}`} className={`rcp-balao${b.papel === 'lider' ? ' rcp-balao--lider' : ''}`} data-balao={b.papel}>
+            <path d={caminhoBalao(b.caixa, b.alvo)} />
+            <text x={arred(x + w / 2)} y={arred(y + M.folgaBalao * 0.5 + fonte)} textAnchor="middle">
+              {b.linhas.map((l, i) => (
+                <tspan key={i} x={arred(x + w / 2)} dy={i ? arred(M.linhaBalao) : 0}>
                   {l}
                 </tspan>
               ))}
@@ -218,13 +215,15 @@ function Etiquetas({ postos, layout }: { postos: AvatarPosto[]; layout: LayoutFa
   );
 }
 
-/** Avisos por cima da cena: clarão do choque, "afastem-se" e checagem de ritmo. */
-function Avisos({ cena }: { cena: CenaRcp }) {
+/** Avisos por cima da cena: clarão do choque, "afastem-se" e checagem de ritmo (crescem com a letra no celular). */
+function Avisos({ cena, escala }: { cena: CenaRcp; escala: number }) {
+  const e = arred(escala * 100) / 100;
+  const yAfastem = ALTURA_CENA - 6 - 17 * e;
   return (
     <g className="rcp-avisos">
       {cena.choque > 0 && <rect className="rcp-clarao" x="0" y="0" width={LARGURA_CENA} height={ALTURA_CENA} fill="#ffffff" opacity={arred(Math.min(1, cena.choque) * 0.7)} />}
       {cena.carregado && (
-        <g className="rcp-afastem" transform={`translate(${LARGURA_CENA / 2} ${ALTURA_CENA - 34})`}>
+        <g className="rcp-afastem" transform={`translate(${LARGURA_CENA / 2} ${arred(yAfastem)}) scale(${e})`}>
           <rect x="-112" y="-17" width="224" height="34" rx="9" fill="#c2413b" stroke="#ffd23f" strokeWidth="3" />
           <text x="0" y="7" textAnchor="middle">
             ⚡ AFASTEM-SE
@@ -232,7 +231,7 @@ function Avisos({ cena }: { cena: CenaRcp }) {
         </g>
       )}
       {cena.checandoRitmo && (
-        <g className="rcp-checagem" transform={`translate(${LARGURA_CENA / 2} ${ALTURA_CENA - (cena.carregado ? 76 : 34)})`}>
+        <g className="rcp-checagem" transform={`translate(${LARGURA_CENA / 2} ${arred(cena.carregado ? yAfastem - 42 * e : ALTURA_CENA - 6 - 15 * e)}) scale(${e})`}>
           <rect x="-96" y="-15" width="192" height="30" rx="15" fill="#2e1450" fillOpacity="0.9" stroke="#b99be6" strokeWidth="1.5" />
           <text x="0" y="5.5" textAnchor="middle">
             🔍 Checagem de ritmo
@@ -253,12 +252,14 @@ function DefsCena({ id }: { id: (n: string) => string }) {
 /** Desenha a cena da RCP (sem relógio próprio: quem chama monta a cena a cada quadro). */
 export function DesenhoCenaRcp({ cena, tamanho = 'normal' }: PropsDesenhoCena) {
   const id = idSvg(useId());
-  const layout = layoutDaFaixa(cena.faixa);
-  const cam = layout.camera;
-  const { postos } = montarMundo(cena);
+  const ref = useRef<SVGSVGElement>(null);
+  const largura = useLargura(ref);
+  const { mundo, postos } = montarMundo(cena);
+  const cam = cameraDaCena(cena.faixa, postos.map((p) => p.av.lugar));
   return (
     <figure className={`cena-rcp cena-rcp--${tamanho}${cena.ativo ? '' : ' cena-rcp--parada'}`}>
       <svg
+        ref={ref}
         viewBox={`0 0 ${LARGURA_CENA} ${ALTURA_CENA}`}
         role="img"
         aria-label={`Animação da RCP: ${cena.legenda}`}
@@ -267,15 +268,34 @@ export function DesenhoCenaRcp({ cena, tamanho = 'normal' }: PropsDesenhoCena) {
         preserveAspectRatio="xMidYMid meet"
       >
         <DefsCena id={id} />
-        <g transform={`scale(${arred(cam.zoom * 1000) / 1000}) translate(${arred(-cam.x)} ${arred(-cam.y)})`}>
+        <g className="rcp-camera" style={{ transform: `scale(${arred(cam.zoom * 1000) / 1000}) translate(${arred(-cam.x)}px, ${arred(-cam.y)}px)` }}>
           <CamadasMundo cena={cena} id={id} />
         </g>
-        <Etiquetas postos={postos} layout={layout} />
-        <Avisos cena={cena} />
+        <Etiquetas postos={postos} mundo={mundo} camera={cam} fonte={fonteDaCena(largura)} />
+        <Avisos cena={cena} escala={fonteDaCena(largura) / 12.5} />
       </svg>
       <figcaption className="cena-rcp-legenda">{cena.legenda}</figcaption>
     </figure>
   );
+}
+
+/** Largura em que o desenho aparece na tela (px), para a letra dos nomes continuar legível quando encolhe. */
+function useLargura(ref: { current: SVGSVGElement | null }): number {
+  const [largura, setLargura] = useState(LARGURA_CENA);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const medir = () => {
+      const w = Math.round(el.getBoundingClientRect().width);
+      if (w > 0) setLargura((antes) => (Math.abs(antes - w) > 4 ? w : antes));
+    };
+    medir();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return largura;
 }
 
 /** Rosto e ombros do avatar (para escolher a aparência no "Preparar"). */
@@ -312,25 +332,26 @@ export function RecorteCena({ cena, recorte, so, fundo = true, rotulo }: { cena:
 export function recortePaciente(faixa: FaixaPaciente): { x: number; y: number; w: number; h: number } {
   const L = layoutDaFaixa(faixa);
   const c = repousoDe(faixa);
-  const x0 = L.leito.x0 - 12;
-  const x1 = Math.max(c.perna.ponta.x, c.braco.ponta.x) + 16;
-  const topo = c.em(0, c.P.profCabeca * 1.5).y - 6;
-  return { x: x0, y: topo, w: Math.max(x1 - x0, 90), h: L.leito.topo + 26 - topo };
+  const x0 = L.leito.x0 - 8;
+  const x1 = Math.max(c.perna.ponta.x, c.braco.ponta.x, L.leito.x0 + 40) + 14;
+  const topo = Math.min(c.naCabeca(0.5, 1).y, c.tuboTopo.y) - 10;
+  return { x: x0, y: topo, w: Math.max(x1 - x0, 90), h: L.leito.topo + L.leito.meiaProf + 18 - topo };
 }
 
 /** Recorte em volta de um lugar (avatar inteiro e o que ele alcança). */
-export function recorteDoLugar(cena: CenaRcp, papel: string, margem = 40): { x: number; y: number; w: number; h: number } {
+export function recorteDoLugar(cena: CenaRcp, papel: string, margem = 30): { x: number; y: number; w: number; h: number } {
   const { postos, mundo } = montarMundo(cena);
   const p = postos.find((x) => x.av.papel === papel);
   if (!p) return { x: 0, y: 0, w: LARGURA_CENA, h: ALTURA_CENA };
   const L = p.lugar;
-  const alvoX = [L.x - 40 * L.escala, L.x + 40 * L.escala];
-  if (p.lugar.camada === 'cabeceira' || p.lugar.camada === 'frente' || p.lugar.camada === 'carrinho' || p.lugar.camada === 'atras') alvoX.push(mundo.corpo.torax.x, mundo.corpo.boca.x);
-  if (p.lugar.camada === 'carrinho') alvoX.push(mundo.layout.carrinho.x - 40);
-  if (p.lugar.camada === 'frente') alvoX.push(mundo.corpo.tibia.x);
-  const x0 = Math.min(...alvoX.filter((x) => Math.abs(x - L.x) < 140)) - margem / 2;
-  const x1 = Math.max(...alvoX.filter((x) => Math.abs(x - L.x) < 140)) + margem / 2;
-  const topo = L.y - (ALTURA_AVATAR + 12) * L.escala;
+  const c = mundo.corpo;
+  const xs = [L.x - 36 * L.escala, L.x + 36 * L.escala];
+  // quem mexe no paciente: o recorte pega o paciente inteiro (ou o pedaço onde mexe)
+  if (L.camada !== 'fundo' && L.camada !== 'carrinho' && L.camada !== 'pes') xs.push(Math.max(c.em(0, 0).x, L.x - 120), Math.min(c.perna.ponta.x, L.x + 120));
+  if (L.camada === 'carrinho') xs.push(mundo.layout.carrinho.x - mundo.layout.carrinho.largura / 2 - 6);
+  const x0 = Math.min(...xs) - margem / 2;
+  const x1 = Math.max(...xs) + margem / 2;
+  const topo = Math.min(L.y - (ALTURA_AVATAR + 12) * L.escala, p.av.acao === 'maos-ao-alto' ? L.y - (ALTURA_AVATAR + 40) * L.escala : Infinity);
   const baixo = Math.min(ALTURA_CENA, L.y + 8);
   return { x: x0, y: topo, w: x1 - x0, h: baixo - topo };
 }
@@ -361,7 +382,7 @@ export function PecaLeito({ faixa = 'crianca' }: { faixa?: FaixaPaciente }) {
   const berco = L.leito.tipo === 'berco';
   const x = L.leito.x0 - 24;
   const w = L.leito.x1 - L.leito.x0 + 48;
-  const topo = berco ? 58 : L.leito.topo - 30;
+  const topo = berco ? 58 : L.leito.topo - L.leito.meiaProf - 20;
   return (
     <SvgPeca viewBox={`${x} ${topo} ${w} ${L.leito.chao + 6 - topo}`} rotulo={berco ? 'Berço de calor radiante' : 'Maca'}>
       {berco && <BercoFundo leito={L.leito} id={id} />}
@@ -374,8 +395,9 @@ export function PecaLeito({ faixa = 'crianca' }: { faixa?: FaixaPaciente }) {
 export function PecaCarrinho({ carregado = false }: { carregado?: boolean }) {
   const L = layoutDaFaixa('crianca');
   const c = L.carrinho;
+  const e = c.escala;
   return (
-    <SvgPeca viewBox={`${c.x - 48} ${c.topo - 52} 104 ${c.chao - c.topo + 60}`} rotulo="Carrinho de parada com monitor e desfibrilador">
+    <SvgPeca viewBox={`${arred(c.x - 48 * e)} ${arred(c.topo - 52 * e)} ${arred(104 * e)} ${arred(c.chao - c.topo + 60 * e)}`} rotulo="Carrinho de parada com monitor e desfibrilador">
       <Carrinho layout={L} carregado={carregado} choque={0} comprimindo={0.5} rce={false} />
     </SvgPeca>
   );

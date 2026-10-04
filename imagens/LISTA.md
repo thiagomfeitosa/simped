@@ -1,6 +1,6 @@
 # Lista de imagens do SimPed
 
-Gerada por `npm run exportar-imagens` — 297 imagens. **Não edite à mão** (é refeita a cada exportação).
+Gerada por `npm run exportar-imagens` — 301 imagens. **Não edite à mão** (é refeita a cada exportação).
 
 Como usar: veja a imagem atual em `originais/<pasta>/<nome>.jpg` e salve a sua com **o mesmo nome e a mesma pasta** dentro de `minhas/` (a sua pode ser .png, .jpg ou .webp). Detalhes em `LEIA-ME.md`.
 
@@ -564,98 +564,110 @@ Legenda: 🎨 muda com o tom de pele (o original é na pele clara; ver LEIA-ME) 
 - **`cena-completa/cena-adolescente`** 🎨 🎞️ — Cena completa da RCP — adolescente (alguém comprimindo)  
   _Onde:_ Aba 🚨 Parada → Código (painel da cena) e tela de quem só assiste (professor/telão). _Tamanho do original:_ 680 × 454 px.  
   _Obs.:_ A cena é montada a cada quadro (60 por segundo) juntando peças separadas: fundo, maca, paciente e cada pessoa. Para pôr um desenho ou foto seu, o melhor é trocar uma PEÇA (ex.: só o paciente, só o fundo) e não a cena inteira: com fundo transparente (PNG) e o mesmo enquadramento da peça original.
+- **`cena-completa/cena-lactente-tubo-intraossea`** 🎨 🎞️ — Cena completa da RCP — Lactente intubado (tubo saindo da boca), ventilação pelo tubo e adrenalina pela intraóssea  
+  _Onde:_ Aba 🚨 Parada → Código (painel da cena) e tela de quem só assiste (professor/telão). _Tamanho do original:_ 680 × 454 px.  
+  _Obs.:_ A cena é montada a cada quadro (60 por segundo) juntando peças separadas: fundo, maca, paciente e cada pessoa. Para pôr um desenho ou foto seu, o melhor é trocar uma PEÇA (ex.: só o paciente, só o fundo) e não a cena inteira: com fundo transparente (PNG) e o mesmo enquadramento da peça original.
+- **`cena-completa/cena-crianca-afastem-se`** 🎨 🎞️ — Cena completa da RCP — Criança — desfibrilador carregado: todos de mãos ao alto ("afastem-se!")  
+  _Onde:_ Aba 🚨 Parada → Código (painel da cena) e tela de quem só assiste (professor/telão). _Tamanho do original:_ 680 × 419 px.  
+  _Obs.:_ A cena é montada a cada quadro (60 por segundo) juntando peças separadas: fundo, maca, paciente e cada pessoa. Para pôr um desenho ou foto seu, o melhor é trocar uma PEÇA (ex.: só o paciente, só o fundo) e não a cena inteira: com fundo transparente (PNG) e o mesmo enquadramento da peça original.
+- **`cena-completa/cena-adolescente-checagem-de-ritmo`** 🎨 🎞️ — Cena completa da RCP — Adolescente — pausa para checar o ritmo (todos olham o monitor)  
+  _Onde:_ Aba 🚨 Parada → Código (painel da cena) e tela de quem só assiste (professor/telão). _Tamanho do original:_ 680 × 419 px.  
+  _Obs.:_ A cena é montada a cada quadro (60 por segundo) juntando peças separadas: fundo, maca, paciente e cada pessoa. Para pôr um desenho ou foto seu, o melhor é trocar uma PEÇA (ex.: só o paciente, só o fundo) e não a cena inteira: com fundo transparente (PNG) e o mesmo enquadramento da peça original.
 - **`paciente/rn-1-torax-normal`** 🎨 🎞️ — Paciente recém-nascido — quadro 1: tórax em cima (sem circulação)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 376 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 397 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/rn-2-torax-afundado`** 🎨 🎞️ — Paciente recém-nascido — quadro 2: tórax afundado (compressão)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 376 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 397 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/rn-3-tubo-acesso-pas`** 🎨 — Paciente recém-nascido — com tubo traqueal, acesso intraósseo (tíbia) e pás do desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 376 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 397 px.  
   _Obs.:_ Tubo, cateter/agulha e pás são peças por cima do paciente: se trocar o paciente por um desenho seu, mantenha a boca, o braço e a perna nos mesmos lugares.
 - **`paciente/lactente-1-torax-normal`** 🎨 🎞️ — Paciente lactente — quadro 1: tórax em cima (sem circulação)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 355 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 373 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/lactente-2-torax-afundado`** 🎨 🎞️ — Paciente lactente — quadro 2: tórax afundado (compressão)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 355 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 373 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/lactente-3-tubo-acesso-pas`** 🎨 — Paciente lactente — com tubo traqueal, acesso intraósseo (tíbia) e pás do desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 355 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 373 px.  
   _Obs.:_ Tubo, cateter/agulha e pás são peças por cima do paciente: se trocar o paciente por um desenho seu, mantenha a boca, o braço e a perna nos mesmos lugares.
 - **`paciente/crianca-1-torax-normal`** 🎨 🎞️ — Paciente criança — quadro 1: tórax em cima (sem circulação)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 259 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 280 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/crianca-2-torax-afundado`** 🎨 🎞️ — Paciente criança — quadro 2: tórax afundado (compressão)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 259 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 280 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/crianca-3-tubo-acesso-pas`** 🎨 — Paciente criança — com tubo traqueal, acesso periférico (antebraço) e pás do desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 259 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 280 px.  
   _Obs.:_ Tubo, cateter/agulha e pás são peças por cima do paciente: se trocar o paciente por um desenho seu, mantenha a boca, o braço e a perna nos mesmos lugares.
 - **`paciente/adolescente-1-torax-normal`** 🎨 🎞️ — Paciente adolescente — quadro 1: tórax em cima (sem circulação)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 222 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 250 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/adolescente-2-torax-afundado`** 🎨 🎞️ — Paciente adolescente — quadro 2: tórax afundado (compressão)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 222 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 250 px.  
   _Obs.:_ No app o tórax afunda e volta em cada compressão (a linha do peito desce de verdade). Para trocar por um desenho seu, faça 2 quadros no MESMO enquadramento — tórax normal e tórax afundado —, com fundo transparente (PNG); o app alterna entre eles no ritmo das compressões.
 - **`paciente/adolescente-3-tubo-acesso-pas`** 🎨 — Paciente adolescente — com tubo traqueal, acesso periférico (antebraço) e pás do desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 222 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (depois da intubação, do acesso e com o desfibrilador carregado). _Tamanho do original:_ 680 × 250 px.  
   _Obs.:_ Tubo, cateter/agulha e pás são peças por cima do paciente: se trocar o paciente por um desenho seu, mantenha a boca, o braço e a perna nos mesmos lugares.
 - **`paciente/crianca-4-com-retorno-da-circulacao`** 🎨 — Paciente criança — com retorno da circulação (pele corada, lábios rosados)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (depois do RCE). _Tamanho do original:_ 680 × 259 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (depois do RCE). _Tamanho do original:_ 680 × 280 px.  
   _Obs.:_ Sem circulação a pele fica pálida/arroxeada; com o retorno, corada. Se trocar por desenho seu, faça as duas versões.
 - **`avatar-por-acao/01-comprimindo-duas-maos-em-cima`** 🎨 🎞️ — Avatar: Comprimindo com as duas mãos — em cima (tórax solto)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1274 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 691 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/02-comprimindo-duas-maos-embaixo`** 🎨 🎞️ — Avatar: Comprimindo com as duas mãos — embaixo (tórax afundado)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1274 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 691 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/03-comprimindo-uma-mao`** 🎨 🎞️ — Avatar: Comprimindo com uma mão (criança)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1203 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 651 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/04-comprimindo-dois-polegares`** 🎨 🎞️ — Avatar: Comprimindo com os dois polegares, mãos envolvendo o tórax (lactente)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1274 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 899 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/05-ventilando-bolsa-solta`** 🎨 🎞️ — Avatar: Ventilação: segurando a máscara (bolsa solta)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 971 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 833 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/06-ventilando-bolsa-apertada`** 🎨 🎞️ — Avatar: Ventilação: apertando a bolsa (tórax sobe)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 971 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 833 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/07-ventilando-pelo-tubo`** 🎨 🎞️ — Avatar: Ventilação pelo tubo traqueal  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 902 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 833 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/08-intubando`** 🎨 🎞️ — Avatar: Intubando (laringoscópio e tubo)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 971 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 833 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/09-puncionando-intraosseo`** 🎨 🎞️ — Avatar: Pegando acesso intraósseo (furadeira na tíbia)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1002 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 789 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/10-puncionando-periferico`** 🎨 🎞️ — Avatar: Pegando acesso periférico (antebraço)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 860 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 698 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/11-injetando`** 🎨 🎞️ — Avatar: Injetando a medicação no acesso (êmbolo andando)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 860 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 698 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/12-carregando`** 🎨 🎞️ — Avatar: Carregando o desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 851 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 897 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/13-chocando`** 🎨 🎞️ — Avatar: Chocando (botão do choque)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 851 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 897 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/14-maos-ao-alto`** 🎨 🎞️ — Avatar: Mãos ao alto ("afastem-se!")  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1203 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 726 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/15-olhando-o-monitor`** 🎨 🎞️ — Avatar: Olhando o monitor (checagem de ritmo)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1203 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 651 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/16-cronometrando`** 🎨 🎞️ — Avatar: Cronometrando (tempo)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1217 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1405 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/17-anotando`** 🎨 🎞️ — Avatar: Anotando na prancheta  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1217 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1405 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`avatar-por-acao/18-lider-dando-ordem`** 🎨 🎞️ — Avatar: Líder dando uma ordem (aponta e fala)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1274 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 1493 px.  
+  _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
+- **`avatar-por-acao/19-injetando-veia-do-pe-do-bebe`** 🎨 🎞️ — Avatar: Injetando no acesso periférico do bebê (veia do pé)  
+  _Onde:_ Aba 🚨 Parada → cena da RCP (cada aluno vira um avatar). _Tamanho do original:_ 680 × 789 px.  
   _Obs.:_ Cada pessoa é desenhada pelo app com a pele, o cabelo e a cor do pijama escolhidos pelo aluno, e os braços se mexem até o ponto certo (tórax, bolsa, seringa). Uma foto não acompanha isso; se quiser trocar, faça a pessoa em quadros (ex.: braços em cima / embaixo), fundo transparente e mesma altura dos pés à cabeça.
 - **`aparencia/rosto-cabelo-curto`** 🎨 — Escolha da aparência: cabelo curto, pele clara, pijama azul  
   _Onde:_ Aba 🚨 Parada → Preparar (cada aluno escolhe pele, cabelo e cor do pijama). _Tamanho do original:_ 680 × 296 px.  
@@ -679,16 +691,16 @@ Legenda: 🎨 muda com o tom de pele (o original é na pele clara; ver LEIA-ME) 
   _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 340 px.  
   _Obs.:_ Fundo parado: pode ser uma foto/desenho seu da sala de emergência, no formato 800 × 380 (horizontal), sem pessoas e sem maca.
 - **`pecas/maca`** — Maca (com prancha de RCP)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 340 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 350 px.  
   _Obs.:_ Fundo transparente (PNG), maca vista de lado, mesmo tamanho.
 - **`pecas/berco-aquecido`** — Berço de calor radiante (RN)  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 1073 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 884 px.  
   _Obs.:_ Fundo transparente (PNG), berço visto de lado, mesmo tamanho.
 - **`pecas/carrinho-de-parada-desfibrilador`** — Carrinho de parada com monitor/desfibrilador  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 1129 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 1128 px.  
   _Obs.:_ Os botões de carga e choque acendem no app: se trocar, deixe os botões no mesmo lugar (ou faça 2 quadros: normal e carregado).
 - **`pecas/carrinho-de-parada-carregado`** — Carrinho de parada — desfibrilador carregado  
-  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 1129 px.  
+  _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 1128 px.  
   _Obs.:_ Quadro "carregado" do carrinho (botão de choque aceso).
 - **`pecas/bolsa-valvula-mascara-solta`** — Bolsa-válvula-máscara (bolsa solta)  
   _Onde:_ Aba 🚨 Parada → cena da RCP. _Tamanho do original:_ 680 × 486 px.  

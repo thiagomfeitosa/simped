@@ -6,7 +6,7 @@
 import type { AvatarNaCena, CenaRcp, LugarNaCena } from '../../parada/cena';
 import { lerp, type Ponto } from '../formas';
 import { esqueleto, type FormaMao, type MaoPose, maoSolta, type PoseAvatar } from './AvatarRcp';
-import { ANTEBRACO_AVATAR, alcanceCompressao, BRACO_AVATAR, type CorpoPaciente, DISTANCIA_LADO_A_LADO, type LayoutFaixa, type LugarGeo, MEIO_OMBRO, OMBRO_AVATAR } from './geometria';
+import { ANTEBRACO_AVATAR, alcanceCompressao, BRACO_AVATAR, type CorpoPaciente, desvioDoCompressor, DISTANCIA_LADO_A_LADO, type LayoutFaixa, type LugarGeo, OMBRO_AVATAR } from './geometria';
 import { pontoDeInjecao } from './PacienteRcp';
 import { BolsaValvulaMascara, Caneta, CateterNaMao, Cronometro, FuradeiraIO, geoBolsa, geoSeringa, Laringoscopio, Prancheta, Seringa, TuboNaMao } from './Pecas';
 
@@ -46,14 +46,16 @@ export function lugarDe(lugar: LugarNaCena, m: Mundo, repetido: number): LugarGe
     const t = m.repouso.torax;
     const tec = m.cena.tecnica;
     const punho = t.y - (tec === 'dois-polegares' ? 2.5 : 7);
-    base.x = t.x + (tec === 'uma-mao' ? MEIO_OMBRO - 2 : 0);
-    // articulação do ombro fica 4 abaixo do alto do ombro
-    base.y = punho - alcanceCompressao(tec) + OMBRO_AVATAR - 4;
+    base.x = t.x + desvioDoCompressor(tec);
+    // articulação do ombro fica 4 abaixo do alto do ombro (tudo na escala do avatar)
+    base.y = punho + (OMBRO_AVATAR - 4 - alcanceCompressao(tec)) * base.escala;
   }
   if (lugar === 'acesso') {
     const s = acessoDaCena(m) === 'intraosseo' ? m.repouso.tibia : m.repouso.periferico;
-    base.x = Math.max(s.x + 16, lugarDe('torax', m, 0).x + DISTANCIA_LADO_A_LADO);
+    base.x = Math.max(s.x + 8, lugarDe('torax', m, 0).x + DISTANCIA_LADO_A_LADO);
   }
+  // o 2º compressor fica sempre depois de quem pega o acesso (sem encostar)
+  if (lugar === 'espera' && L.x > m.layout.lugares.torax.x) base.x = Math.max(L.x, lugarDe('acesso', m, 0).x + DISTANCIA_LADO_A_LADO - 4);
   if (repetido > 0) base.x += repetido * 34 * (lugar === 'pes' || lugar === 'desfibrilador' ? 1 : -1);
   return base;
 }
@@ -104,6 +106,8 @@ export function poseDe(av: AvatarNaCena, L: LugarGeo, m: Mundo): PoseAvatar {
   let A: Intencao | undefined;
   let B: Intencao | undefined;
   let soltaAtras = atrasDaMaca;
+  /** A mão B fica nas costas (técnica de uma mão). */
+  let maoNasCostas = false;
   let curvar = L.camada === 'cabeceira' || L.camada === 'frente' || av.lugar === 'acesso';
   /** Curvatura mínima do tronco (quem trabalha na cabeceira se debruça sobre o rosto). */
   let inclinaMin: Ponto | undefined;
@@ -120,13 +124,17 @@ export function poseDe(av: AvatarNaCena, L: LugarGeo, m: Mundo): PoseAvatar {
       pose.giroCabeca = 0;
       curvar = false;
       if (cena.tecnica === 'duas-maos') {
-        A = { contato: { x: t.x - 0.5, y: t.y - 7 }, forma: 'apoiada', cotovelo: 1, direto: true };
-        B = { contato: { x: t.x + 0.5, y: t.y - 7.5 }, forma: 'apoiada', cotovelo: -1, direto: true };
+        // uma mão sobre a outra, dedos entrelaçados, no terço inferior do esterno
+        A = { contato: { x: t.x - 0.6, y: t.y - 7 }, forma: 'apoiada', cotovelo: 1, direto: true, angulo: 180 };
+        B = { contato: { x: t.x + 0.6, y: t.y - 8.6 }, forma: 'apoiada', cotovelo: -1, direto: true, angulo: 0 };
       } else if (cena.tecnica === 'uma-mao') {
-        A = { contato: { x: t.x, y: t.y - 7 }, forma: 'apoiada', cotovelo: 1, direto: true };
+        // uma mão no esterno; a outra nas costas (fora do paciente)
+        A = { contato: { x: t.x, y: t.y - 7 }, forma: 'apoiada', cotovelo: 1, direto: true, angulo: 180 };
+        maoNasCostas = true;
       } else {
-        A = { contato: { x: t.x - 3.2, y: t.y - 2.5 }, forma: 'envolvendo', cotovelo: 1, direto: true };
-        B = { contato: { x: t.x + 3.2, y: t.y - 2 }, forma: 'envolvendo', cotovelo: -1, direto: true };
+        // polegares lado a lado no esterno; o dorso das mãos e os dedos descem pelo flanco (envolvem o tórax)
+        A = { contato: { x: t.x - 6.4, y: t.y - 1.4 }, forma: 'envolvendo', cotovelo: 1, direto: true, angulo: 0 };
+        B = { contato: { x: t.x + 6.4, y: t.y - 1.2 }, forma: 'envolvendo', cotovelo: -1, direto: true, angulo: 180 };
       }
       break;
     }
@@ -135,7 +143,8 @@ export function poseDe(av: AvatarNaCena, L: LugarGeo, m: Mundo): PoseAvatar {
       const tubo = cena.viaAerea === 'tubo';
       const conexao = tubo ? corpo.tuboTopo : corpo.mascaraTopo;
       const bolsa = geoBolsa(conexao, layout.bolsa, av.acao === 'ventilando' ? fase : 0);
-      const pegaMascara = tubo ? { x: corpo.boca.x - 1, y: corpo.boca.y - 3 } : { x: corpo.mascara.x + 1, y: corpo.mascaraTopo.y + 2 };
+      // com tubo, segura o tubo perto da conexão (a boca e a fixação ficam à vista); com máscara, a mão em "C" em cima da máscara
+      const pegaMascara = tubo ? { x: corpo.tuboTopo.x + 0.5, y: lerp(corpo.tuboTopo.y, corpo.boca.y, 0.3) } : { x: corpo.mascara.x + 1, y: corpo.mascaraTopo.y + 2 };
       const longe = L.giro >= 0 ? 'B' : 'A';
       const mascara: Intencao = { contato: loc(pegaMascara), forma: 'fechada', cotovelo: 1, recuo: 6 };
       const aperta: Intencao = { contato: loc({ x: bolsa.pega.x, y: bolsa.pega.y + 1 }), forma: 'fechada', cotovelo: 1, recuo: 6 };
@@ -179,7 +188,9 @@ export function poseDe(av: AvatarNaCena, L: LugarGeo, m: Mundo): PoseAvatar {
         const ponta = { x: s.x - 0.5 - fase * 2.5, y: s.y + fase * 0.6 };
         const pega = { x: ponta.x + 9.5, y: ponta.y - 3.5 };
         A = { contato: loc(pega), forma: 'fechada', cotovelo: -1, recuo: 4 };
-        B = { contato: loc({ x: corpo.braco.punho.x + 3, y: corpo.braco.punho.y - 1 }), forma: 'aberta', cotovelo: -1, recuo: 7 };
+        // a outra mão firma o membro (punho nos maiores, pé nos bebês)
+        const firma = corpo.P.rosto === 'bebe' ? { x: corpo.perna.ponta.x - 2, y: corpo.perna.ponta.y + 2 } : { x: corpo.braco.punho.x + 3, y: corpo.braco.punho.y - 1 };
+        B = { contato: loc(firma), forma: 'aberta', cotovelo: -1, recuo: 7 };
         pose.objetos = noMundo(<CateterNaMao ponta={ponta} angulo={-160} />);
       }
       pose.olharBaixo = 1;
@@ -295,6 +306,7 @@ export function poseDe(av: AvatarNaCena, L: LugarGeo, m: Mundo): PoseAvatar {
   const sk = esqueleto(pose);
   if (A) pose.maoA = resolver(A, sk.ombroA);
   if (B) pose.maoB = resolver(B, sk.ombroB);
+  if (maoNasCostas) pose.maoB = { alvo: { x: sk.tc + 4, y: sk.cintura.y + 6 }, forma: 'fechada', cotovelo: -1, nasCostas: true };
   // mão parada de quem está atrás da maca fica atrás (não aparece por cima do paciente)
   if (soltaAtras) {
     if (!pose.maoA) pose.maoA = { ...maoSolta(pose, 'A'), atras: true };
