@@ -3,7 +3,7 @@ import type { AvatarNaCena, CenaRcp, FaixaPaciente, LugarNaCena } from '../../pa
 import { ANTEBRACO_AVATAR, BRACO_AVATAR, cameraDaCena, corpoDoPaciente, LARGURA_CENA, layoutDaFaixa, naTela } from './geometria';
 import { esqueleto } from './AvatarRcp';
 import { lugarDe, type Mundo, poseDe } from './poses';
-import { arrumarRotulos, batem, type Caixa, dentroDoQuadro } from './rotulos';
+import { arrumarRotulos, batem, type Caixa, caminhoBalao, dentroDoQuadro, ladoDaPonta } from './rotulos';
 
 /** Desenho da cena da RCP: o paciente aparece grande, as mãos tocam o tórax e nomes/balões não se atropelam. */
 
@@ -127,4 +127,34 @@ describe('nomes e balões', () => {
       for (const b of baloes) expect(batem(b.caixa, paciente, 0)).toBe(false);
     });
   }
+});
+
+describe('ponta do balão', () => {
+  it('sai do lado de quem fala: de cima quando a etiqueta está acima do balão', () => {
+    const balao = { x: 500, y: 165, w: 160, h: 50 };
+    expect(ladoDaPonta(balao, { x: 635, y: 52 })).toBe('cima');
+    expect(ladoDaPonta(balao, { x: 560, y: 260 })).toBe('baixo');
+    expect(ladoDaPonta(balao, { x: 480, y: 190 })).toBe('esquerda');
+    expect(ladoDaPonta(balao, { x: 690, y: 190 })).toBe('direita');
+    // a ponta de cima sobe até perto do alvo (antes ela descia, para longe de quem fala)
+    expect(caminhoBalao(balao, { x: 635, y: 52 })).toContain('L 635 53');
+  });
+  it('quem fala encostado no alto do quadro (letra grande): a ponta aponta para a sua etiqueta e o balão não cobre o próprio rosto', () => {
+    const paciente: Caixa = { x: 200, y: 230, w: 400, h: 70 };
+    const fonte = 19.4;
+    const xs = [60, 180, 300, 420, 540, 660, 750];
+    const pedidos = xs.map((x, i) => ({ papel: `p${i}`, ancora: { x, y: 34 }, nome: `Nome ${i}`, ...(i === 6 && { balao: 'Hora da adrenalina!' }), prioridade: 2 }));
+    const cabecas = pedidos.map((p) => ({ x: p.ancora.x - 20, y: p.ancora.y, w: 40, h: 50 }));
+    const { rotulos, baloes } = arrumarRotulos(pedidos, cabecas, paciente, fonte);
+    const b = baloes[0]!;
+    const et = rotulos.find((r) => r.papel === b.papel)!.caixa;
+    expect(batem(b.caixa, cabecas[6]!, 0)).toBe(false);
+    const lado = ladoDaPonta(b.caixa, b.alvo);
+    if (lado === 'cima') expect(b.alvo.y).toBeLessThanOrEqual(b.caixa.y);
+    if (lado === 'baixo') expect(b.alvo.y).toBeGreaterThanOrEqual(b.caixa.y + b.caixa.h);
+    // a ponta aponta para a etiqueta de quem fala ou para o queixo dele
+    const pertoDaEtiqueta = b.alvo.x >= et.x - 1 && b.alvo.x <= et.x + et.w + 1;
+    const noQueixo = Math.abs(b.alvo.y - (cabecas[6]!.y + cabecas[6]!.h)) < 1;
+    expect(pertoDaEtiqueta || noQueixo).toBe(true);
+  });
 });

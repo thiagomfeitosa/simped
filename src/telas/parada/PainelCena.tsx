@@ -86,7 +86,9 @@ export function cenaNoTempo(ctx: ContextoCodigo, tS: number, pausado = false): C
     estado,
     rcp: rcpPelasTeclas(s.sala) ? rcpNoTempo(s.sala, estado, relacao, tS) : null,
     relacao,
-    compressorDaVez: compressorDaVez(s.sala, estado.ciclo.numero, s.vivas),
+    // o revezamento sai só da sala (todas as telas que estiveram no código), não das janelas abertas agora:
+    // rever depois que um colega fechou a janela mostra o mesmo compressor que estava no tórax
+    compressorDaVez: compressorDaVez(s.sala, estado.ciclo.numero, new Set(Object.keys(s.sala.telas))),
     pausado,
   });
 }
@@ -99,15 +101,23 @@ export function useQuadros(alvo: RefObject<HTMLElement | null>, andando: boolean
   const [, setQuadro] = useState(0);
   useEffect(() => {
     if (!andando) return;
-    let id = 0;
+    let quadro = 0;
+    let espera = 0;
     const passo = () => {
       const el = alvo.current;
-      // aba escondida (as abas ficam abertas) ou janela atrás: não redesenha, só espera
-      if (el && el.offsetParent !== null && document.visibilityState !== 'hidden') setQuadro((q) => (q + 1) % 1_000_000);
-      id = requestAnimationFrame(passo);
+      // aba escondida (as abas ficam abertas) ou janela atrás: não redesenha e confere de novo só 4 vezes por segundo
+      if (!el || el.offsetParent === null || document.visibilityState === 'hidden') {
+        espera = window.setTimeout(passo, 250);
+        return;
+      }
+      setQuadro((q) => (q + 1) % 1_000_000);
+      quadro = requestAnimationFrame(passo);
     };
-    id = requestAnimationFrame(passo);
-    return () => cancelAnimationFrame(id);
+    quadro = requestAnimationFrame(passo);
+    return () => {
+      cancelAnimationFrame(quadro);
+      window.clearTimeout(espera);
+    };
   }, [alvo, andando]);
 }
 

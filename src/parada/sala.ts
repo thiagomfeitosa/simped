@@ -160,7 +160,10 @@ export const CHAVES = {
   briefing: (item: string) => `briefing:${item}`,
   resposta: (fase: string) => `resposta:${fase}`,
   crm: (item: string) => `crm:${item}`,
-  /** Tela que só assiste (professor, telão): não faz nenhum papel. */
+  /**
+   * Tela que só assiste (professor, telão): true = assistindo (não faz nenhum papel);
+   * número = hora (ms) em que deixou de assistir e voltou para a equipe (entra no fim da fila).
+   */
   observador: (tela: string) => `observador:${tela}`,
 } as const;
 
@@ -228,17 +231,27 @@ export function crmDaSala(sala: SalaParada): Record<string, number> {
 
 // ---- Telas e papéis ------------------------------------------------------------------------
 
+const marcaDeObservador = (v: unknown): v is boolean | number => typeof v === 'boolean' || typeof v === 'number';
+
 /** Telas que só assistem (professor, telão): ficam fora dos papéis. */
 export function observadoresDaSala(sala: SalaParada): Set<string> {
-  const m = mapaDe(sala, 'observador', (v): v is boolean => typeof v === 'boolean');
-  return new Set(Object.keys(m).filter((t) => m[t]));
+  const m = mapaDe(sala, 'observador', marcaDeObservador);
+  return new Set(Object.keys(m).filter((t) => m[t] === true));
 }
 
-/** Telas da equipe em ordem de entrada (só as vivas, se informado). As que só assistem ficam de fora. */
+/**
+ * Telas da equipe em ordem de entrada (só as vivas, se informado). As que só assistem ficam de fora;
+ * a que deixou de assistir entra no fim da fila (a hora em que voltou), para não tomar os papéis de quem já está no código.
+ */
 export function ordemDasTelas(sala: SalaParada, vivas?: ReadonlySet<string>): string[] {
-  const observadores = observadoresDaSala(sala);
+  const marcas = mapaDe(sala, 'observador', marcaDeObservador);
+  const entrada = (t: string, ms: number) => {
+    const voltou = marcas[t];
+    return typeof voltou === 'number' ? Math.max(ms, voltou) : ms;
+  };
   return Object.entries(sala.telas)
-    .filter(([t]) => (!vivas || vivas.has(t)) && !observadores.has(t))
+    .filter(([t]) => (!vivas || vivas.has(t)) && marcas[t] !== true)
+    .map(([t, ms]) => [t, entrada(t, ms)] as const)
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))
     .map(([t]) => t);
 }

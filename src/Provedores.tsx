@@ -10,15 +10,15 @@ import { PerguntaContinuar } from './sessao/PerguntaContinuar';
  * casos e a sessão do aluno) fica neste pedaço do app, baixado à parte.
  * O Passo a passo não depende dele: abre sem esperar o banco e os casos.
  */
-export default function Provedores({ children, janelaDoProfessor }: { children: ReactNode; janelaDoProfessor: boolean }) {
+export default function Provedores({ children, janelaEspelho }: { children: ReactNode; janelaEspelho: boolean }) {
   return (
     <ProvedorConfiguracoes>
       <ProvedorBanco>
         <ProvedorCasos>
           <ProvedorSessao>
             {children}
-            {/* B13: continuar de onde parou (só na janela do aluno) */}
-            {!janelaDoProfessor && <PerguntaContinuar />}
+            {/* B13: continuar de onde parou (só na janela do aluno; a do professor e as extras da Parada só espelham) */}
+            {!janelaEspelho && <PerguntaContinuar />}
           </ProvedorSessao>
         </ProvedorCasos>
       </ProvedorBanco>

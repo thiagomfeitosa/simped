@@ -155,6 +155,30 @@ test('aba Professor abre a janela que só assiste à parada', async ({ page, con
   expect(erros).toEqual([]);
 });
 
+test('a janela que só assiste não mexe na sessão do aluno (sem "continuar", folha do professor intacta)', async ({ page, context }) => {
+  const erros = await abrir(page, 'prescrever');
+  await abaVisivel(page).locator('.secao').filter({ hasText: '3. Dieta' }).getByRole('button', { name: '+ item em texto' }).click();
+  await abaVisivel(page).getByLabel('Item 1 — Dieta').fill('Dieta geral para a idade');
+  // janela do professor (B15) vê a folha do aluno
+  const prof = await context.newPage();
+  await prof.goto('./?papel=professor#professor');
+  await esperarAba(prof);
+  await expect(abaVisivel(prof).getByLabel('Folha do aluno ao vivo')).toContainText('Dieta geral para a idade');
+  // o professor abre o telão da parada
+  const janela = context.waitForEvent('page');
+  await abaVisivel(prof).getByRole('region', { name: 'Parada ao vivo' }).getByRole('button', { name: /Assistir ao código/ }).click();
+  const telao = await janela;
+  await telao.waitForLoadState();
+  await esperarAba(telao);
+  await expect(abaVisivel(telao).getByText('Esperando a equipe começar')).toBeVisible();
+  await telao.waitForTimeout(600);
+  // o telão não pergunta "continuar" (não é dono da sessão) e a folha do professor continua com a dieta
+  await expect(telao.getByRole('dialog', { name: 'Continuar o caso' })).toHaveCount(0);
+  await expect(abaVisivel(prof).getByLabel('Folha do aluno ao vivo')).toContainText('Dieta geral para a idade');
+  expect(await page.evaluate(() => window.localStorage.getItem('simped.sessao-em-andamento'))).toContain('Dieta geral para a idade');
+  expect(erros).toEqual([]);
+});
+
 test('rever o código no debriefing: a cena em qualquer momento', async ({ page }) => {
   const erros = await abrir(page, 'parada');
   const aba = abaVisivel(page);

@@ -17,15 +17,17 @@ function criarJanela() {
   });
   janela.loadFile(path.join(__dirname, '..', 'dist-arquivo', 'SimPed.html'));
   // links para fora do app abrem no navegador do computador;
-  // a "janela do professor" (o próprio app com ?papel=professor) abre como outra janela do SimPed
+  // o próprio app abre como outra janela do SimPed: a "janela do professor" (?papel=professor),
+  // o telão que só assiste à parada (?assistir=parada) e a tela de um colega na parada (?janela=parada)
   janela.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('file:') && url.includes('papel=professor')) {
+    if (url.startsWith('file:') && /SimPed\.html/.test(url)) {
+      const professor = url.includes('papel=professor');
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
-          width: 1200,
-          height: 850,
-          title: 'SimPed — professor',
+          width: professor ? 1200 : 1280,
+          height: professor ? 850 : 860,
+          title: professor ? 'SimPed — professor' : 'SimPed — parada',
           autoHideMenuBar: true,
           webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false },
         },

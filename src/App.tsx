@@ -152,11 +152,13 @@ const MODOS: readonly DefinicaoModo[] = [
 
 /** Janela do professor (B15): aberta pelo painel do professor, com ?papel=professor. */
 const JANELA_DO_PROFESSOR = papelDaJanela() === 'professor';
+/** Janela extra da Parada (telão que só assiste ou tela de um colega): abre na Parada e não é dona da sessão. */
+const JANELA_DA_PARADA = papelDaJanela() === 'parada';
 
 /** O modo fica no endereço (#prescrever), então recarregar a página mantém a aba escolhida. */
 function modoDoEndereco(): string {
   const id = window.location.hash.slice(1);
-  return MODOS.some((m) => m.id === id) ? id : JANELA_DO_PROFESSOR ? 'professor' : 'passo-a-passo';
+  return MODOS.some((m) => m.id === id) ? id : JANELA_DO_PROFESSOR ? 'professor' : JANELA_DA_PARADA ? 'parada' : 'passo-a-passo';
 }
 
 /**
@@ -256,7 +258,7 @@ export function App() {
       {MODOS.filter((m) => m.semProvedores).map(aba)}
       <ProtecaoDeErro onde="SimPed">
         <Suspense fallback={precisaDosProvedores ? <CarregandoAba /> : null}>
-          <Provedores janelaDoProfessor={JANELA_DO_PROFESSOR}>{MODOS.filter((m) => !m.semProvedores).map(aba)}</Provedores>
+          <Provedores janelaEspelho={JANELA_DO_PROFESSOR || JANELA_DA_PARADA}>{MODOS.filter((m) => !m.semProvedores).map(aba)}</Provedores>
         </Suspense>
       </ProtecaoDeErro>
       {/* B18: versão nova do site */}

@@ -15,9 +15,16 @@ import type { SalaNaTela } from './useSalaParada';
 
 const n = formatarNumero;
 
-/** Abre outra janela do SimPed na Parada (a tela de um colega, no mesmo computador). */
+/**
+ * Abre outra janela do SimPed na Parada (a tela de um colega, no mesmo computador). Com ?janela=parada
+ * ela só espelha a sessão do Prescrever (não pergunta "continuar" nem grava por cima da do aluno).
+ */
 function abrirOutraTela() {
-  window.open(`${window.location.pathname}${window.location.search}#parada`, '_blank');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('assistir');
+  url.searchParams.set('janela', 'parada');
+  url.hash = 'parada';
+  window.open(url.toString(), '_blank');
 }
 
 /** Botão que espera a próxima tecla apertada para virar a tecla da compressão/ventilação. */

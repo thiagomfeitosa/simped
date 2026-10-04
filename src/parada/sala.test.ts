@@ -117,8 +117,16 @@ describe('telas que só assistem (professor, telão)', () => {
     expect(ordemDasTelas(s)).toEqual(['B', 'C']);
     expect(ordemDasTelas(s, new Set(['A', 'C']))).toEqual(['C']);
     expect(ordemDasTelas(base)).toEqual(['A', 'B', 'C']);
-    // deixou de assistir: volta para a equipe no lugar de entrada
+    // marca antiga (false): volta no lugar de entrada
     expect(ordemDasTelas(mudarCampo(s, CHAVES.observador('A'), false, 'A', 40))).toEqual(['A', 'B', 'C']);
+  });
+  it('quem deixa de assistir volta no FIM da fila e não toma os papéis da equipe', () => {
+    const voltou = mudarCampo(s, CHAVES.observador('A'), 40, 'A', 40);
+    expect([...observadoresDaSala(voltou)]).toEqual([]);
+    expect(ordemDasTelas(voltou)).toEqual(['B', 'C', 'A']);
+    expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(voltou, p.id, vivas) === 'B')).toBe(true);
+    // sozinha na sala, faz todos os papéis
+    expect(papeisDaTela(voltou, 'A', new Set(['A']))).toHaveLength(8);
   });
   it('nunca fazem papel: sem escolha, os papéis vão para a 1ª tela da equipe', () => {
     expect(PAPEIS_EQUIPE.every((p) => donoDoPapel(s, p.id, vivas) === 'B')).toBe(true);

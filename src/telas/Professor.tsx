@@ -66,7 +66,8 @@ export function Professor() {
   const [mensagem, setMensagem] = useState('');
   const [mandarSugerida, setMandarSugerida] = useState(true);
   const [aviso, setAviso] = useState('');
-  const espelho = papel === 'professor';
+  // janela do professor ou janela extra da Parada: espelho da sessão da janela do aluno
+  const espelho = papel !== 'aluno';
   const avisar = (texto: string) => {
     setAviso(texto);
     window.setTimeout(() => setAviso(''), 2500);

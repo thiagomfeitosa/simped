@@ -51,7 +51,8 @@ function useAssistir(s: SalaNaTela) {
   const pronta = s.sala.criadaEm !== 0 || esperou;
   const { mudar, tela } = s;
   useEffect(() => {
-    if (assistindo !== naSala && pronta) mudar(CHAVES.observador(tela), assistindo);
+    // ao deixar de assistir, grava a hora: a tela volta para a equipe no fim da fila (não toma os papéis de ninguém)
+    if (assistindo !== naSala && pronta) mudar(CHAVES.observador(tela), assistindo ? true : Date.now());
   }, [assistindo, naSala, pronta, mudar, tela]);
   const trocar = useCallback((assistir: boolean) => {
     marcarNoEndereco(assistir);

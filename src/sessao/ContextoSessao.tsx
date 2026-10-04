@@ -102,7 +102,8 @@ const Contexto = createContext<ValorSessao | null>(null);
  */
 export function ProvedorSessao({ children }: { children: ReactNode }) {
   const [papel] = useState<Papel>(papelDaJanela);
-  const espelho = papel === 'professor';
+  // professor e janelas extras da Parada só espelham a sessão da janela do aluno
+  const espelho = papel !== 'aluno';
   const { personalizados } = useCasos();
   const { config } = useConfiguracoes();
   const { banco } = useBanco();
